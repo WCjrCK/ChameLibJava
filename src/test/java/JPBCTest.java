@@ -22,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class JPBCTest {
     @BeforeAll
     static void initTest() {
-        PairingFactory.getInstance().setUsePBCWhenPossible(true);
         assertTrue(PairingFactory.getInstance().isPBCAvailable(),
                 "need config lib: http://gas.dia.unisa.it/projects/jpbc/docs/pbcwrapper.html");
+        PairingFactory.getInstance().setUsePBCWhenPossible(true);
     }
 
     void baseRun(Pairing pairing) {

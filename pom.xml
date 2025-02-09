@@ -60,6 +60,15 @@
             <scope>system</scope>
         </dependency>
 
+        <!-- MCL JNI -->
+        <dependency>
+            <groupId>com.herumi.mcl</groupId>
+            <artifactId>mcl-jna</artifactId>
+            <version>1.0.0</version>
+            <systemPath>${pom.basedir}/mcl/mcl-jna.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+
         <!-- JUnit-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
