@@ -14,4 +14,73 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <!-- JPBC API -->
+        <dependency>
+            <groupId>it.unisa.dia.gas</groupId>
+            <artifactId>jpbc-api</artifactId>
+            <version>2.0.0</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/jpbc/jars/jpbc-api-2.0.0.jar</systemPath>
+        </dependency>
+
+        <!-- JPBC Cryptography -->
+        <dependency>
+            <groupId>it.unisa.dia.gas</groupId>
+            <artifactId>jpbc-crypto</artifactId>
+            <version>2.0.0</version>
+            <systemPath>${pom.basedir}/jpbc/jars/jpbc-crypto-2.0.0.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+
+        <!-- JPBC PBC（基于配对的密码学） -->
+        <dependency>
+            <groupId>it.unisa.dia.gas</groupId>
+            <artifactId>jpbc-pbc</artifactId>
+            <version>2.0.0</version>
+            <systemPath>${pom.basedir}/jpbc/jars/jpbc-pbc-2.0.0.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+
+        <!-- JPBC Plaf -->
+        <dependency>
+            <groupId>it.unisa.dia.gas</groupId>
+            <artifactId>jpbc-plaf</artifactId>
+            <version>2.0.0</version>
+            <systemPath>${pom.basedir}/jpbc/jars/jpbc-plaf-2.0.0.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+
+        <!-- JPBC JNA -->
+        <dependency>
+            <groupId>it.unisa.dia.gas</groupId>
+            <artifactId>jpbc-jna</artifactId>
+            <version>3.2.5</version>
+            <systemPath>${pom.basedir}/jpbc/jars/jna-3.2.5.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+
+        <!-- JUnit-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.12.0-RC1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.12.0-RC1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>
