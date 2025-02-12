@@ -4,13 +4,14 @@ import org.junit.jupiter.api.Test;
 import com.herumi.mcl.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static utils.func.InitialLib;
 
 @SuppressWarnings("SuspiciousNameCombination")
 @DisplayName("MCL base test")
 public class MCLTest {
     @BeforeAll
     static void initTest() {
-        System.loadLibrary("mcljava");
+        InitialLib();
     }
 
     public static void BLSsignature(G2 Q) {

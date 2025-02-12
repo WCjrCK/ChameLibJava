@@ -17,6 +17,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static utils.func.InitialLib;
 
 @DisplayName("jPBC base test")
 public class JPBCTest {
@@ -24,7 +25,7 @@ public class JPBCTest {
     static void initTest() {
         assertTrue(PairingFactory.getInstance().isPBCAvailable(),
                 "need config lib: http://gas.dia.unisa.it/projects/jpbc/docs/pbcwrapper.html");
-        PairingFactory.getInstance().setUsePBCWhenPossible(true);
+        InitialLib();
     }
 
     void baseRun(Pairing pairing) {
