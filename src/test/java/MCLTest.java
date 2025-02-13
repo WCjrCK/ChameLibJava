@@ -22,7 +22,7 @@ public class MCLTest {
 
         byte[] m = "signature test".getBytes();
         G1 H = new G1();
-        Mcl.hashAndMapToG1(H, m); // H = Hash(m)
+        Mcl.hashAndMapToG1(H, m); // H = Hash.java(m)
         G1 sign = new G1();
         Mcl.mul(sign, H, s); // signature of m = s H
 
@@ -40,11 +40,11 @@ public class MCLTest {
         Fr z = new Fr(5);
         assertFalse(x.equals(y), "x != y");
         assertTrue(x.equals(z), "x == z");
-        assertEquals(x.toString(), "5", "x == 5");
+        assertEquals("5", x.toString(), "x == 5");
         Mcl.add(x, x, y);
-        assertEquals(x.toString(), "3", "x == 3");
+        assertEquals("3", x.toString(), "x == 3");
         Mcl.mul(x, x, x);
-        assertEquals(x.toString(), "9", "x == 9");
+        assertEquals("9", x.toString(), "x == 9");
         assertEquals((new Fr("12")).toString(), "12", "x == 12");
         assertEquals((new Fr("12", 16)).toString(), "18", "x == 18");
         assertEquals((new Fr("255")).toString(16), "ff", "x == ff");

@@ -7,8 +7,6 @@ import java.math.BigInteger;
 public class func {
     public static void InitialLib() {
         System.loadLibrary("mcljava");
-        System.loadLibrary("gmp4j");
-        System.loadLibrary("gmp");
         PairingFactory.getInstance().setUsePBCWhenPossible(true);
     }
 
