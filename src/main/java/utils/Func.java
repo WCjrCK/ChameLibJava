@@ -22,6 +22,10 @@ public class Func {
         return gcd(b, a.mod(b));
     }
 
+    public static BigInteger lcm(BigInteger a, BigInteger b) {
+        return a.multiply(b).divide(gcd(a, b));
+    }
+
     public static BigInteger getZq(Random rand, BigInteger q) {
         BigInteger res;
         do {
