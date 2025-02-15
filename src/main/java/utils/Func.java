@@ -4,7 +4,7 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
 import java.math.BigInteger;
 
-public class func {
+public class Func {
     public static void InitialLib() {
         System.loadLibrary("mcljava");
         PairingFactory.getInstance().setUsePBCWhenPossible(true);
