@@ -19,6 +19,10 @@ public class Hash {
         return res;
     }
 
+    static public BigInteger H(BigInteger m) {
+        return new BigInteger(1, HASH(m.toString()));
+    }
+
     static public BigInteger H(BigInteger m1, BigInteger m2) {
         return new BigInteger(1, HASH(m1.toString() + "|" + m2.toString()));
     }

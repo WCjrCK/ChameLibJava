@@ -3,22 +3,37 @@ package AE.RSA;
 import java.math.BigInteger;
 import java.util.Random;
 
-import static utils.func.phi;
-import static utils.func.gcd;
+import static utils.Func.phi;
+import static utils.Func.gcd;
 
 public class RSA {
     static public void KeyGen(PublicKey pk, SecretKey sk) {
         Random rand = new Random();
         pk.e = new BigInteger("65537");
-        BigInteger p = BigInteger.probablePrime(1024, rand);
-        BigInteger q = BigInteger.probablePrime(1024, rand);
-        BigInteger phi = phi(p, q);
+        sk.p = BigInteger.probablePrime(1024, rand);
+        sk.q = BigInteger.probablePrime(1024, rand);
+        BigInteger phi = phi(sk.p, sk.q);
         while (gcd(phi, pk.e).compareTo(BigInteger.ONE) != 0) {
-            p = BigInteger.probablePrime(1024, rand);
-            q = BigInteger.probablePrime(1024, rand);
-            phi = phi(p, q);
+            sk.p = BigInteger.probablePrime(1024, rand);
+            sk.q = BigInteger.probablePrime(1024, rand);
+            phi = phi(sk.p, sk.q);
         }
-        pk.N = p.multiply(q);
+        pk.N = sk.p.multiply(sk.q);
+        sk.d = pk.e.modInverse(phi);
+    }
+
+    static public void KeyGen(PublicKey pk, SecretKey sk, int e_bit, int p_bit) {
+        Random rand = new Random();
+        pk.e = BigInteger.probablePrime(e_bit, rand);
+        sk.p = BigInteger.probablePrime(p_bit, rand);
+        sk.q = BigInteger.probablePrime(p_bit, rand);
+        BigInteger phi = phi(sk.p, sk.q);
+        while (gcd(phi, pk.e).compareTo(BigInteger.ONE) != 0) {
+            sk.p = BigInteger.probablePrime(p_bit, rand);
+            sk.q = BigInteger.probablePrime(p_bit, rand);
+            phi = phi(sk.p, sk.q);
+        }
+        pk.N = sk.p.multiply(sk.q);
         sk.d = pk.e.modInverse(phi);
     }
 

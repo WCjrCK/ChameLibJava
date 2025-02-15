@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import com.herumi.mcl.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static utils.func.InitialLib;
+import static utils.Func.InitialLib;
 
 @SuppressWarnings("SuspiciousNameCombination")
 @DisplayName("MCL base test")

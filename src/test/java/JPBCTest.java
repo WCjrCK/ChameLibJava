@@ -17,7 +17,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static utils.func.InitialLib;
+import static utils.Func.InitialLib;
 
 @DisplayName("jPBC base test")
 public class JPBCTest {
