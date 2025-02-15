@@ -1,14 +1,58 @@
 package utils;
 
+import curve.Group;
+import curve.PBC;
+import curve.params;
+import it.unisa.dia.gas.jpbc.Field;
+import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
 import java.math.BigInteger;
 import java.util.Random;
 
+@SuppressWarnings("rawtypes")
 public class Func {
     public static void InitialLib() {
         System.loadLibrary("mcljava");
         PairingFactory.getInstance().setUsePBCWhenPossible(true);
+    }
+
+    @SuppressWarnings("unused")
+    public static Field GetPBCField(Pairing pairing, Group group) {
+        switch (group) {
+            case G1: return pairing.getG1();
+            case G2: return pairing.getG2();
+            case GT: return pairing.getGT();
+            default: throw new IllegalArgumentException("Unknown group");
+        }
+    }
+
+    public static Pairing PairingGen(PBC curve) {
+        switch (curve) {
+//            case A_80: return PairingFactory.getPairing(params.a_param_80);
+//            case A_112: return PairingFactory.getPairing(params.a_param_112);
+//            case A_128: return PairingFactory.getPairing(params.a_param_128);
+//            case A_160: return PairingFactory.getPairing(params.a_param_160);
+            case A: return PairingFactory.getPairing(params.a_param);
+
+            case A1: return PairingFactory.getPairing(params.a1_param);
+
+            case D_159: return PairingFactory.getPairing(params.d159_param);
+            case D_201: return PairingFactory.getPairing(params.d201_param);
+            case D_224: return PairingFactory.getPairing(params.d224_param);
+            case D_105171_196_185: return PairingFactory.getPairing(params.d105171_196_185_param);
+            case D_277699_175_167: return PairingFactory.getPairing(params.d277699_175_167_param);
+            case D_278027_190_181: return PairingFactory.getPairing(params.d278027_190_181_param);
+
+            case E: return PairingFactory.getPairing(params.e_param);
+
+            case F: return PairingFactory.getPairing(params.f_param);
+            case SM_9: return PairingFactory.getPairing(params.sm9_param);
+
+            case G_149: return PairingFactory.getPairing(params.g149_param);
+
+            default: throw new IllegalArgumentException("Unknown curve");
+        }
     }
 
     public static BigInteger phi(BigInteger p, BigInteger q) {

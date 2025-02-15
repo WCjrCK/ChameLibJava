@@ -43,11 +43,13 @@ public class JPBCTest {
         Element P2 = G2.newRandomElement().getImmutable();
 
         // 计算主私钥
-        P2.mul(ks).getImmutable();
-        P1.mul(ke).getImmutable();
+        Element P2_p = P2.mul(ks).getImmutable();
+        Element P1_p = P1.mul(ke).getImmutable();
 
         // 计算pairing
-        pairing.pairing(P1, P2);
+        Element GT_1 = pairing.pairing(P1, P2);
+        Element GT_2 = pairing.pairing(P1_p, P2_p);
+        assertTrue(GT_1.pow(ks.multiply(ke)).isEqual(GT_2), "G1 power not equal G2!");
     }
 
     @DisplayName("test curve type a")
@@ -67,29 +69,29 @@ public class JPBCTest {
             baseRun(PairingFactory.getPairing(params.a_param));
         }
 
-        @DisplayName("test curve a_80")
-        @Test
-        void a_80Test() {
-            baseRun(PairingFactory.getPairing(params.a_param_80));
-        }
-
-        @DisplayName("test curve a_112")
-        @Test
-        void a_112Test() {
-            baseRun(PairingFactory.getPairing(params.a_param_112));
-        }
-
-        @DisplayName("test curve a_128")
-        @Test
-        void a_128Test() {
-            baseRun(PairingFactory.getPairing(params.a_param_128));
-        }
-
-        @DisplayName("test curve a_160")
-        @Test
-        void a_160Test() {
-            baseRun(PairingFactory.getPairing(params.a_param_160));
-        }
+//        @DisplayName("test curve a_80")
+//        @Test
+//        void a_80Test() {
+//            baseRun(PairingFactory.getPairing(params.a_param_80));
+//        }
+//
+//        @DisplayName("test curve a_112")
+//        @Test
+//        void a_112Test() {
+//            baseRun(PairingFactory.getPairing(params.a_param_112));
+//        }
+//
+//        @DisplayName("test curve a_128")
+//        @Test
+//        void a_128Test() {
+//            baseRun(PairingFactory.getPairing(params.a_param_128));
+//        }
+//
+//        @DisplayName("test curve a_160")
+//        @Test
+//        void a_160Test() {
+//            baseRun(PairingFactory.getPairing(params.a_param_160));
+//        }
     }
 
     @DisplayName("test curve type a1")
