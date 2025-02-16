@@ -25,18 +25,18 @@ public class CHTest {
         @Test
         void CH_KEF_NoMH_AM_2004_Test() {
             Random rand = new Random();
-            scheme.CH.CH_KEF_NoMH_AM_2004 scheme = new scheme.CH.CH_KEF_NoMH_AM_2004();
-            scheme.CH.CH_KEF_NoMH_AM_2004.PublicKey pk = new scheme.CH.CH_KEF_NoMH_AM_2004.PublicKey();
-            scheme.CH.CH_KEF_NoMH_AM_2004.SecretKey sk = new scheme.CH.CH_KEF_NoMH_AM_2004.SecretKey();
+            scheme.CH.CH_KEF_NoMH_AM_2004.Native scheme = new scheme.CH.CH_KEF_NoMH_AM_2004.Native();
+            scheme.CH.CH_KEF_NoMH_AM_2004.Native.PublicKey pk = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.PublicKey();
+            scheme.CH.CH_KEF_NoMH_AM_2004.Native.SecretKey sk = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.SecretKey();
             scheme.KeyGen(pk, sk, 512);
             BigInteger m1 = new BigInteger(256, rand);
             BigInteger m2 = new BigInteger(256, rand);
             assertTrue(m1.compareTo(m2) != 0, "m1 != m2");
-            scheme.CH.CH_KEF_NoMH_AM_2004.HashValue h1 = new scheme.CH.CH_KEF_NoMH_AM_2004.HashValue();
-            scheme.CH.CH_KEF_NoMH_AM_2004.HashValue h2 = new scheme.CH.CH_KEF_NoMH_AM_2004.HashValue();
-            scheme.CH.CH_KEF_NoMH_AM_2004.Randomness r1 = new scheme.CH.CH_KEF_NoMH_AM_2004.Randomness();
-            scheme.CH.CH_KEF_NoMH_AM_2004.Randomness r2 = new scheme.CH.CH_KEF_NoMH_AM_2004.Randomness();
-            scheme.CH.CH_KEF_NoMH_AM_2004.Randomness r1_p = new scheme.CH.CH_KEF_NoMH_AM_2004.Randomness();
+            scheme.CH.CH_KEF_NoMH_AM_2004.Native.HashValue h1 = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.HashValue();
+            scheme.CH.CH_KEF_NoMH_AM_2004.Native.HashValue h2 = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.HashValue();
+            scheme.CH.CH_KEF_NoMH_AM_2004.Native.Randomness r1 = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.Randomness();
+            scheme.CH.CH_KEF_NoMH_AM_2004.Native.Randomness r2 = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.Randomness();
+            scheme.CH.CH_KEF_NoMH_AM_2004.Native.Randomness r1_p = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.Randomness();
             scheme.Hash(h1, r1, pk, m1);
             assertTrue(scheme.Check(h1, r1, pk, m1), "H(m1) valid");
             scheme.Hash(h2, r2, pk, m2);
@@ -53,22 +53,22 @@ public class CHTest {
         @Test
         void CH_KEF_MH_RSA_F_AM_2004_Test() {
             Random rand = new Random();
-            scheme.CH.CH_KEF_MH_RSA_F_AM_2004 scheme = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004();
-            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.PublicParam pp = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.PublicParam();
+            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native scheme = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native();
+            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicParam pp = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicParam();
             scheme.SetUp(pp, 512, 1024);
-            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.PublicKey pk = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.PublicKey();
-            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.SecretKey sk = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.SecretKey();
+            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicKey pk = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicKey();
+            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.SecretKey sk = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.SecretKey();
             scheme.KeyGen(pk, sk, pp);
             BigInteger m1 = new BigInteger(256, rand);
             BigInteger m2 = new BigInteger(256, rand);
             BigInteger L1 = new BigInteger(512, rand);
             BigInteger L2 = new BigInteger(512, rand);
             assertTrue(m1.compareTo(m2) != 0, "m1 != m2");
-            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.HashValue h1 = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.HashValue();
-            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.HashValue h2 = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.HashValue();
-            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Randomness r1 = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Randomness();
-            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Randomness r2 = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Randomness();
-            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Randomness r1_p = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Randomness();
+            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue h1 = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue();
+            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue h2 = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue();
+            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r1 = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
+            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r2 = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
+            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r1_p = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
             scheme.Hash(h1, r1, pk, L1, m1, pp);
             assertTrue(scheme.Check(h1, r1, pk, L1, m1, pp), "H(L1, m1) valid");
             assertFalse(scheme.Check(h1, r1, pk, L2, m1, pp), "not H(L2, m1)");
@@ -90,20 +90,20 @@ public class CHTest {
         @Test
         void CH_KEF_MH_RSANN_F_AM_2004_Test() {
             Random rand = new Random();
-            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004 scheme = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004();
-            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.PublicKey pk = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.PublicKey();
-            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.SecretKey sk = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.SecretKey();
+            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native scheme = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native();
+            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.PublicKey pk = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.PublicKey();
+            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.SecretKey sk = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.SecretKey();
             scheme.KeyGen(pk, sk, 512);
             BigInteger m1 = new BigInteger(256, rand);
             BigInteger m2 = new BigInteger(256, rand);
             BigInteger L1 = new BigInteger(512, rand);
             BigInteger L2 = new BigInteger(512, rand);
             assertTrue(m1.compareTo(m2) != 0, "m1 != m2");
-            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.HashValue h1 = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.HashValue();
-            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.HashValue h2 = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.HashValue();
-            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Randomness r1 = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Randomness();
-            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Randomness r2 = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Randomness();
-            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Randomness r1_p = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Randomness();
+            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue h1 = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue();
+            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue h2 = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue();
+            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r1 = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
+            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r2 = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
+            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r1_p = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
             scheme.Hash(h1, r1, pk, L1, m1);
             assertTrue(scheme.Check(h1, r1, pk, L1, m1), "H(L1, m1) valid");
             assertFalse(scheme.Check(h1, r1, pk, L2, m1), "not H(L2, m1)");

@@ -1,4 +1,4 @@
-package scheme.CH;
+package scheme.CH.CH_KEF_MH_RSA_F_AM_2004;
 
 /*
  * On the Key Exposure Problem in Chameleon Hashes
@@ -12,7 +12,7 @@ import utils.Hash;
 import java.math.BigInteger;
 import java.util.Random;
 
-public class CH_KEF_MH_RSA_F_AM_2004 {
+public class Native {
     public static class PublicParam {
         public int tau, k;
     }
