@@ -1,4 +1,3 @@
-import curve.PBC;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -26,7 +25,7 @@ public class CHTest {
         @Test
         void CH_KEF_NoMH_AM_2004_Test() {
             Random rand = new Random();
-            scheme.CH.CH_KEF_NoMH_AM_2004.CH_KEF_NoMH_AM_2004 scheme = new scheme.CH.CH_KEF_NoMH_AM_2004.CH_KEF_NoMH_AM_2004();
+            scheme.CH.CH_KEF_NoMH_AM_2004 scheme = new scheme.CH.CH_KEF_NoMH_AM_2004();
             scheme.CH.CH_KEF_NoMH_AM_2004.PublicKey pk = new scheme.CH.CH_KEF_NoMH_AM_2004.PublicKey();
             scheme.CH.CH_KEF_NoMH_AM_2004.SecretKey sk = new scheme.CH.CH_KEF_NoMH_AM_2004.SecretKey();
             scheme.KeyGen(pk, sk, 512);
@@ -54,7 +53,7 @@ public class CHTest {
         @Test
         void CH_KEF_MH_RSA_F_AM_2004_Test() {
             Random rand = new Random();
-            scheme.CH.CH_KEF_MH_RSA_F_AM_2004.CH_KEF_MH_RSA_F_AM_2004 scheme = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.CH_KEF_MH_RSA_F_AM_2004();
+            scheme.CH.CH_KEF_MH_RSA_F_AM_2004 scheme = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004();
             scheme.CH.CH_KEF_MH_RSA_F_AM_2004.PublicParam pp = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.PublicParam();
             scheme.SetUp(pp, 512, 1024);
             scheme.CH.CH_KEF_MH_RSA_F_AM_2004.PublicKey pk = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.PublicKey();
@@ -91,7 +90,7 @@ public class CHTest {
         @Test
         void CH_KEF_MH_RSANN_F_AM_2004_Test() {
             Random rand = new Random();
-            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.CH_KEF_MH_RSANN_F_AM_2004 scheme = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.CH_KEF_MH_RSANN_F_AM_2004();
+            scheme.CH.CH_KEF_MH_RSANN_F_AM_2004 scheme = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004();
             scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.PublicKey pk = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.PublicKey();
             scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.SecretKey sk = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.SecretKey();
             scheme.KeyGen(pk, sk, 512);
@@ -125,12 +124,12 @@ public class CHTest {
         @DisplayName("test CH_KEF_MH_SDH_DL_AM_2004")
         @Nested
         class CH_KEF_MH_SDH_DL_AM_2004_Test {
-            @DisplayName("test JPBC")
+            @DisplayName("test PBC")
             @ParameterizedTest(name = "test curve {0}")
             @EnumSource(names = {"A", "A1", "E"})
-            void JPBC(PBC curve) {
+            void JPBC(curve.PBC curve) {
                 Random rand = new Random();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.CH_KEF_MH_SDH_DL_AM_2004 scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.CH_KEF_MH_SDH_DL_AM_2004(curve);
+                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC(curve);
                 scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicKey pk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicKey();
                 scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.SecretKey sk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.SecretKey();
                 scheme.KeyGen(pk, sk);

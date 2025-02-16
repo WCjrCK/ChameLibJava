@@ -17,7 +17,6 @@ public class Func {
         PairingFactory.getInstance().setUsePBCWhenPossible(true);
     }
 
-    @SuppressWarnings("unused")
     public static Field GetPBCField(Pairing pairing, Group group) {
         switch (group) {
             case G1: return pairing.getG1();
@@ -59,15 +58,8 @@ public class Func {
         return p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
     }
 
-    public static BigInteger gcd(BigInteger a, BigInteger b) {
-        if (b.compareTo(BigInteger.ZERO) == 0) {
-            return a;
-        }
-        return gcd(b, a.mod(b));
-    }
-
     public static BigInteger lcm(BigInteger a, BigInteger b) {
-        return a.multiply(b).divide(gcd(a, b));
+        return a.multiply(b).divide(a.gcd(b));
     }
 
     public static BigInteger getZq(Random rand, BigInteger q) {

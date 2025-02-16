@@ -1,4 +1,4 @@
-package scheme.CH.CH_KEF_NoMH_AM_2004;
+package scheme.CH;
 
 /*
 * On the Key Exposure Problem in Chameleon Hashes
@@ -12,6 +12,22 @@ import java.math.BigInteger;
 import java.util.Random;
 
 public class CH_KEF_NoMH_AM_2004 {
+    public static class PublicKey {
+        public BigInteger p, q, g, y;
+    }
+
+    public static class SecretKey {
+        public BigInteger x;
+    }
+
+    public static class HashValue {
+        public BigInteger h;
+    }
+
+    public static class Randomness {
+        public BigInteger r, s;
+    }
+
     Random rand = new Random();
 
     private BigInteger getHashValue(Randomness R, PublicKey pk, BigInteger m) {

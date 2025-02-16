@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.Random;
 
 import static utils.Func.phi;
-import static utils.Func.gcd;
 
 public class RSA {
     static public void KeyGen(PublicKey pk, SecretKey sk) {
@@ -13,7 +12,7 @@ public class RSA {
         sk.p = BigInteger.probablePrime(1024, rand);
         sk.q = BigInteger.probablePrime(1024, rand);
         BigInteger phi = phi(sk.p, sk.q);
-        while (gcd(phi, pk.e).compareTo(BigInteger.ONE) != 0) {
+        while (phi.gcd(pk.e).compareTo(BigInteger.ONE) != 0) {
             sk.p = BigInteger.probablePrime(1024, rand);
             sk.q = BigInteger.probablePrime(1024, rand);
             phi = phi(sk.p, sk.q);
@@ -28,7 +27,7 @@ public class RSA {
         sk.p = BigInteger.probablePrime(p_bit, rand);
         sk.q = BigInteger.probablePrime(p_bit, rand);
         BigInteger phi = phi(sk.p, sk.q);
-        while (gcd(phi, pk.e).compareTo(BigInteger.ONE) != 0) {
+        while (phi.gcd(pk.e).compareTo(BigInteger.ONE) != 0) {
             sk.p = BigInteger.probablePrime(p_bit, rand);
             sk.q = BigInteger.probablePrime(p_bit, rand);
             phi = phi(sk.p, sk.q);

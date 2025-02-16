@@ -1,4 +1,4 @@
-package scheme.CH.CH_KEF_MH_RSA_F_AM_2004;
+package scheme.CH;
 
 /*
  * On the Key Exposure Problem in Chameleon Hashes
@@ -13,6 +13,37 @@ import java.math.BigInteger;
 import java.util.Random;
 
 public class CH_KEF_MH_RSA_F_AM_2004 {
+    public static class PublicParam {
+        public int tau, k;
+    }
+
+    public static class PublicKey {
+        public BigInteger n, e;
+
+        public void CopyFrom(AE.RSA.PublicKey pk) {
+            n = pk.N;
+            e = pk.e;
+        }
+    }
+
+    public static class SecretKey {
+        public BigInteger p, q, d;
+
+        public void CopyFrom(AE.RSA.SecretKey sk) {
+            p = sk.p;
+            q = sk.q;
+            d = sk.d;
+        }
+    }
+
+    public static class HashValue {
+        public BigInteger h;
+    }
+
+    public static class Randomness {
+        public BigInteger r;
+    }
+
     Random rand = new Random();
 
     private BigInteger C(BigInteger m, int bit_len) {

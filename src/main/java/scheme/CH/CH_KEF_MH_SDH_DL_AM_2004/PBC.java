@@ -1,11 +1,11 @@
-package scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC;
+package scheme.CH.CH_KEF_MH_SDH_DL_AM_2004;
 
 /*
  * On the Key Exposure Problem in Chameleon Hashes
  * P12. Scheme based on SDH and DL
  */
 
-import curve.PBC;
+import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
 import utils.Func;
@@ -15,12 +15,29 @@ import java.math.BigInteger;
 import java.util.Random;
 
 @SuppressWarnings("rawtypes")
-public class CH_KEF_MH_SDH_DL_AM_2004 {
+public class PBC {
+    public static class PublicKey {
+        public Element h, g;
+    }
+
+    public static class SecretKey {
+        public BigInteger x;
+    }
+
+    public static class HashValue {
+        public Element h;
+    }
+
+    public static class Randomness {
+        public Element g_r;
+    }
+
+
     Random rand = new Random();
     Pairing pairing;
     Field G;
 
-    public CH_KEF_MH_SDH_DL_AM_2004(PBC curve) {
+    public PBC(curve.PBC curve) {
         pairing = Func.PairingGen(curve);
         G = pairing.getG1();
     }
@@ -35,28 +52,9 @@ public class CH_KEF_MH_SDH_DL_AM_2004 {
         BigInteger r_ = Func.getZq(rand, G.getOrder());
         r.g_r = pk.g.pow(r_).getImmutable();
         h.h = pk.g.pow(Hash.H(m)).mul(pk.g.pow(Hash.H(L)).mul(pk.h).pow(r_)).getImmutable();
-//        h.h = pk.g.pow(Hash.H(m)).mul(pk.g.pow(Hash.H(L))).getImmutable();
-//        System.out.println(h.h);
-//        System.out.println("123");
-//        System.out.println(pk.g.pow(Hash.H(m).add(Hash.H(L))));
-//        System.out.println("123");
-//        System.out.println(pk.g.add(pk.g));
-//        System.out.println("123");
-//        System.out.println(pk.g.pow(Hash.H(m)));
-//        System.out.println("123");
-//        System.out.println(h.h.div(pk.g.pow(Hash.H(m))));
-//        System.out.println("123");
-//        System.out.println(pk.g);
-//        System.out.println("123");
     }
 
     public boolean Check(HashValue h, Randomness r, PublicKey pk, BigInteger L, BigInteger m) {
-//        System.out.println(h.h);
-//        System.out.println("456");
-//        System.out.println(pk.g.pow(Hash.H(m)));
-//        System.out.println("456");
-//        System.out.println(h.h.div(pk.g.pow(Hash.H(m))));
-//        System.out.println(pairing.pairing(r.g_r, pk.h.mul(pk.g.pow(Hash.H(L)))));
         return pairing.pairing(pk.g, h.h.div(pk.g.pow(Hash.H(m)))).isEqual(pairing.pairing(r.g_r, pk.h.mul(pk.g.pow(Hash.H(L)))));
     }
 
