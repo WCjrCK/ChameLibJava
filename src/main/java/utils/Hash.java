@@ -1,5 +1,7 @@
 package utils;
 
+import it.unisa.dia.gas.jpbc.Element;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -19,11 +21,19 @@ public class Hash {
         return res;
     }
 
-    static public BigInteger H(BigInteger m) {
+    static public BigInteger H_native_1_1(BigInteger m) {
         return new BigInteger(1, HASH(m.toString()));
     }
 
-    static public BigInteger H(BigInteger m1, BigInteger m2) {
+    static public BigInteger H_native_2_1(BigInteger m1, BigInteger m2) {
         return new BigInteger(1, HASH(m1.toString() + "|" + m2.toString()));
+    }
+
+    static public BigInteger H_PBC_1_native_1(Element m1) {
+        return new BigInteger(1, HASH(m1.toString()));
+    }
+
+    static public BigInteger H_PBC_3_native_1(Element m1, Element m2, Element m3) {
+        return new BigInteger(1, HASH(m1.toString() + "|" + m2.toString() + "|" + m3.toString()));
     }
 }

@@ -30,9 +30,13 @@ public class Native {
 
     Random rand = new Random();
 
+    private static BigInteger H(BigInteger m) {
+        return Hash.H_native_1_1(m);
+    }
+
     private BigInteger getHashValue(Randomness r, PublicKey pk, BigInteger L, BigInteger m) {
         BigInteger mod_n2 = pk.n.pow(2);
-        return m.multiply(pk.n).add(BigInteger.ONE).multiply(Hash.H(L).modPow(r.r_1, mod_n2).multiply(r.r_2.modPow(pk.n, mod_n2))).mod(mod_n2);
+        return m.multiply(pk.n).add(BigInteger.ONE).multiply(H(L).modPow(r.r_1, mod_n2).multiply(r.r_2.modPow(pk.n, mod_n2))).mod(mod_n2);
     }
 
     private BigInteger L(BigInteger x, BigInteger n) {
@@ -59,7 +63,7 @@ public class Native {
         BigInteger mod_n2 = pk.n.pow(2);
         BigInteger C_p = h.h.multiply(BigInteger.ONE.subtract(m_p.multiply(pk.n))).mod(mod_n2);
         BigInteger lambda = Func.lcm(sk.p.subtract(BigInteger.ONE), sk.q.subtract(BigInteger.ONE));
-        BigInteger h_ = Hash.H(L);
+        BigInteger h_ = H(L);
         r_p.r_1 = L(C_p.modPow(lambda, mod_n2), pk.n).multiply(L(h_.modPow(lambda, mod_n2), pk.n).modInverse(pk.n)).mod(pk.n);
         r_p.r_2 = h.h.multiply(h_.modPow(r_p.r_1.negate(), pk.n)).modPow(pk.n.modInverse(lambda), pk.n);
     }

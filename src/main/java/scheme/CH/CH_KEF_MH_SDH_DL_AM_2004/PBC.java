@@ -32,10 +32,13 @@ public class PBC {
         public Element g_r;
     }
 
-
     Random rand = new Random();
     Pairing pairing;
     Field G;
+
+    private static BigInteger H(BigInteger m) {
+        return Hash.H_native_1_1(m);
+    }
 
     public PBC(curve.PBC curve) {
         pairing = Func.PairingGen(curve);
@@ -51,14 +54,14 @@ public class PBC {
     public void Hash(HashValue h, Randomness r, PublicKey pk, BigInteger L, BigInteger m) {
         BigInteger r_ = Func.getZq(rand, G.getOrder());
         r.g_r = pk.g.pow(r_).getImmutable();
-        h.h = pk.g.pow(Hash.H(m)).mul(pk.g.pow(Hash.H(L)).mul(pk.h).pow(r_)).getImmutable();
+        h.h = pk.g.pow(H(m)).mul(pk.g.pow(H(L)).mul(pk.h).pow(r_)).getImmutable();
     }
 
     public boolean Check(HashValue h, Randomness r, PublicKey pk, BigInteger L, BigInteger m) {
-        return pairing.pairing(pk.g, h.h.div(pk.g.pow(Hash.H(m)))).isEqual(pairing.pairing(r.g_r, pk.h.mul(pk.g.pow(Hash.H(L)))));
+        return pairing.pairing(pk.g, h.h.div(pk.g.pow(H(m)))).isEqual(pairing.pairing(r.g_r, pk.h.mul(pk.g.pow(Hash.H_native_1_1(L)))));
     }
 
     public void Adapt(Randomness r_p, Randomness r, PublicKey pk, SecretKey sk, BigInteger L, BigInteger m, BigInteger m_p) {
-        r_p.g_r = r.g_r.mul(pk.g.pow(Hash.H(m).subtract(Hash.H(m_p)).multiply(sk.x.add(Hash.H(L)).modInverse(G.getOrder())).mod(G.getOrder()))).getImmutable();
+        r_p.g_r = r.g_r.mul(pk.g.pow(H(m).subtract(H(m_p)).multiply(sk.x.add(H(L)).modInverse(G.getOrder())).mod(G.getOrder()))).getImmutable();
     }
 }

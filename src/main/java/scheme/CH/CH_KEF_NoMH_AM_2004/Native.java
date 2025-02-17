@@ -30,8 +30,12 @@ public class Native {
 
     Random rand = new Random();
 
+    private static BigInteger H(BigInteger m1, BigInteger m2) {
+        return Hash.H_native_2_1(m1, m2);
+    }
+
     private BigInteger getHashValue(Randomness R, PublicKey pk, BigInteger m) {
-        return R.r.subtract(pk.y.modPow(Hash.H(m, R.r), pk.p).multiply(pk.g.modPow(R.s, pk.p)).mod(pk.p)).mod(pk.q);
+        return R.r.subtract(pk.y.modPow(H(m, R.r), pk.p).multiply(pk.g.modPow(R.s, pk.p)).mod(pk.p)).mod(pk.q);
     }
 
     public void KeyGen(PublicKey pk, SecretKey sk, int k) {
@@ -59,6 +63,6 @@ public class Native {
     public void Adapt(Randomness R_p, HashValue H, PublicKey pk, SecretKey sk, BigInteger m_p) {
         BigInteger k_p = Func.getZq(rand, pk.q);
         R_p.r = H.h.add(pk.g.modPow(k_p, pk.p)).mod(pk.q);
-        R_p.s = k_p.subtract(Hash.H(m_p, R_p.r).multiply(sk.x)).mod(pk.q);
+        R_p.s = k_p.subtract(H(m_p, R_p.r).multiply(sk.x)).mod(pk.q);
     }
 }

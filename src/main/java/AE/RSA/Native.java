@@ -5,7 +5,15 @@ import java.util.Random;
 
 import static utils.Func.phi;
 
-public class RSA {
+public class Native {
+    public static class PublicKey {
+        public BigInteger N, e;
+    }
+
+    public static class SecretKey {
+        public BigInteger p, q, d;
+    }
+
     static public void KeyGen(PublicKey pk, SecretKey sk) {
         Random rand = new Random();
         pk.e = new BigInteger("65537");

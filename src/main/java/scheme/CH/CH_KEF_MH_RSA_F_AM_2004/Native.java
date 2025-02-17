@@ -5,7 +5,6 @@ package scheme.CH.CH_KEF_MH_RSA_F_AM_2004;
  * P9. Key Exposure Freeness with Message Hiding
  */
 
-import AE.RSA.RSA;
 import utils.Func;
 import utils.Hash;
 
@@ -20,7 +19,7 @@ public class Native {
     public static class PublicKey {
         public BigInteger n, e;
 
-        public void CopyFrom(AE.RSA.PublicKey pk) {
+        public void CopyFrom(AE.RSA.Native.PublicKey pk) {
             n = pk.N;
             e = pk.e;
         }
@@ -29,7 +28,7 @@ public class Native {
     public static class SecretKey {
         public BigInteger p, q, d;
 
-        public void CopyFrom(AE.RSA.SecretKey sk) {
+        public void CopyFrom(AE.RSA.Native.SecretKey sk) {
             p = sk.p;
             q = sk.q;
             d = sk.d;
@@ -46,12 +45,16 @@ public class Native {
 
     Random rand = new Random();
 
+    private static BigInteger H(BigInteger m) {
+        return Hash.H_native_1_1(m);
+    }
+
     private BigInteger C(BigInteger m, int bit_len) {
-        return Hash.H(m).mod(BigInteger.TWO.pow(bit_len));
+        return H(m).mod(BigInteger.TWO.pow(bit_len));
     }
 
     private BigInteger H(BigInteger m, int bit_len) {
-        return Hash.H(m).mod(BigInteger.TWO.pow(bit_len));
+        return H(m).mod(BigInteger.TWO.pow(bit_len));
     }
 
     private BigInteger getHashValue(Randomness r, PublicKey pk, BigInteger m, BigInteger L, PublicParam pp) {
@@ -64,9 +67,9 @@ public class Native {
     }
 
     public void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp) {
-        AE.RSA.PublicKey rsa_pk = new AE.RSA.PublicKey();
-        AE.RSA.SecretKey rsa_sk = new AE.RSA.SecretKey();
-        RSA.KeyGen(rsa_pk, rsa_sk, pp.tau, pp.k);
+        AE.RSA.Native.PublicKey rsa_pk = new AE.RSA.Native.PublicKey();
+        AE.RSA.Native.SecretKey rsa_sk = new AE.RSA.Native.SecretKey();
+        AE.RSA.Native.KeyGen(rsa_pk, rsa_sk, pp.tau, pp.k);
         pk.CopyFrom(rsa_pk);
         sk.CopyFrom(rsa_sk);
     }
