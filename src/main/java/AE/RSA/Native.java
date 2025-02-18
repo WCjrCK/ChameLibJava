@@ -44,6 +44,22 @@ public class Native {
         sk.d = pk.e.modInverse(phi);
     }
 
+    static public void KeyGen(PublicKey pk, SecretKey sk, BigInteger n, BigInteger e, int p_bit) {
+        Random rand = new Random();
+        pk.e = e;
+        sk.p = BigInteger.probablePrime(p_bit, rand);
+        sk.q = BigInteger.probablePrime(p_bit, rand);
+        pk.N = sk.p.multiply(sk.q);
+        BigInteger phi = phi(sk.p, sk.q);
+        while (phi.gcd(pk.e).compareTo(BigInteger.ONE) != 0 || n.gcd(pk.N).compareTo(BigInteger.ONE) != 0) {
+            sk.p = BigInteger.probablePrime(p_bit, rand);
+            sk.q = BigInteger.probablePrime(p_bit, rand);
+            pk.N = sk.p.multiply(sk.q);
+            phi = phi(sk.p, sk.q);
+        }
+        sk.d = pk.e.modInverse(phi);
+    }
+
     static public BigInteger Encrypt(BigInteger pt, PublicKey pk) {
         return pt.modPow(pk.e, pk.N);
     }
