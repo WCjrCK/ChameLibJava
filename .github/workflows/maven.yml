@@ -26,12 +26,6 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Install gmp
-        run: sudo apt-get install libgmp-dev flex bison m4 g++
-
-      - name: Install PBC
-        run: sudo wget https://crypto.stanford.edu/pbc/files/pbc-0.5.14.tar.gz && sudo tar -xzvf pbc-0.5.14.tar.gz && cd pbc-0.5.14 && sudo ./configure && sudo make && sudo make install && cd ..
-
       # 将job的工作目录指向$GITHUB_WORSPACES checkout@v2比较旧不推荐使用
       - name: Checkout codes
         uses: actions/checkout@v3
@@ -49,6 +43,12 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+      - name: Install gmp
+        run: sudo apt-get install libgmp-dev flex bison m4 g++
+
+      - name: Install PBC
+        run: sudo wget https://crypto.stanford.edu/pbc/files/pbc-0.5.14.tar.gz && sudo tar -xzvf pbc-0.5.14.tar.gz && cd pbc-0.5.14 && sudo ./configure && sudo make && sudo make install && cd ..
+
       - name: Test with Maven
         env:
           LD_LIBRARY_PATH: ./lib
