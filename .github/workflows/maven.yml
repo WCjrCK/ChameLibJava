@@ -1,0 +1,46 @@
+# action name
+name: Test with Junit
+
+# 什么时候触发这个workflow
+on:
+  # push 到master分之的时候 这里可以指定多个
+  push:
+    branches:
+      - master
+  # pull request 到master分之的时候, 这里可以指定多个
+  pull_request:
+    branches:
+      - master
+
+# 一个workflow可以由多个job组成，多个job可以并行运行
+jobs:
+  junit:
+    strategy:
+      matrix:
+        # 指定jdk 版本。可以指定多个版本 比如[8,11,17]
+        java: [11]
+        # 指定运行 os 版本 也是多个
+        os: [ 'windows-latest', 'ubuntu-latest' ]
+    # 运行环境，这里就是上面定义的多个 os
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # 将job的工作目录指向$GITHUB_WORSPACES checkout@v2比较旧不推荐使用
+      - name: Checkout codes
+        uses: actions/checkout@v3
+      # 设置jdk环境
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      # 设置maven 仓库缓存 避免每次构建时都重新下载依赖
+      - name: Cache local Maven repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Test with Maven
+        run: mvn clean test -B -U
