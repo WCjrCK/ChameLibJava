@@ -308,5 +308,44 @@ public class CHTest {
                 assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not adapt m1");
             }
         }
+
+        @DisplayName("test CH_CDK_2017")
+        @Nested
+        class CH_CDK_2017_Test {
+            @DisplayName("test Native impl")
+            @ParameterizedTest(name = "test lambda = {0}")
+            @ValueSource(ints = {256, 512, 1024, 2048})
+            void NativeTest(int lambda) {
+                Random rand = new Random();
+                scheme.CH.CH_CDK_2017.Native scheme = new scheme.CH.CH_CDK_2017.Native(lambda);
+                scheme.CH.CH_CDK_2017.Native.PublicKey pk = new scheme.CH.CH_CDK_2017.Native.PublicKey();
+                scheme.CH.CH_CDK_2017.Native.SecretKey sk = new scheme.CH.CH_CDK_2017.Native.SecretKey();
+                scheme.KeyGen(pk, sk);
+                BigInteger m1 = new BigInteger(lambda, rand);
+                BigInteger m2 = new BigInteger(lambda, rand);
+                BigInteger l1 = new BigInteger(lambda, rand);
+                BigInteger l2 = new BigInteger(lambda, rand);
+                scheme.CH.CH_CDK_2017.Native.HashValue h1 = new scheme.CH.CH_CDK_2017.Native.HashValue();
+                scheme.CH.CH_CDK_2017.Native.HashValue h2 = new scheme.CH.CH_CDK_2017.Native.HashValue();
+                scheme.CH.CH_CDK_2017.Native.Randomness r1 = new scheme.CH.CH_CDK_2017.Native.Randomness();
+                scheme.CH.CH_CDK_2017.Native.Randomness r1_p = new scheme.CH.CH_CDK_2017.Native.Randomness();
+                scheme.CH.CH_CDK_2017.Native.Randomness r2 = new scheme.CH.CH_CDK_2017.Native.Randomness();
+                scheme.Hash(h1, r1, pk, l1, m1);
+                assertTrue(scheme.Check(h1, r1, pk, l1, m1), "H(l1, m1) valid");
+                assertFalse(scheme.Check(h1, r1, pk, l2, m1), "not H(l2, m1)");
+
+                scheme.Hash(h2, r2, pk, l2, m2);
+                assertTrue(scheme.Check(h2, r2, pk, l2, m2), "H(l2, m2) valid");
+                assertFalse(scheme.Check(h2, r2, pk, l1, m2), "not H(l1, m2)");
+
+                assertFalse(scheme.Check(h1, r1, pk, l1, m2), "not H(l1, m2)");
+                assertFalse(scheme.Check(h2, r2, pk, l2, m1), "not H(l2, m1)");
+
+                scheme.Adapt(r1_p, r1, pk, sk, l1, m1, l2, m2);
+                assertTrue(scheme.Check(h1, r1_p, pk, l2, m2), "adapt m2 valid");
+                assertFalse(scheme.Check(h1, r1_p, pk, l2, m1), "not adapt m1");
+                assertFalse(scheme.Check(h1, r1_p, pk, l1, m2), "not adapt l1");
+            }
+        }
     }
 }
