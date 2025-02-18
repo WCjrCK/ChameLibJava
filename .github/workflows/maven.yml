@@ -51,14 +51,17 @@ jobs:
         run: cd lib && sudo tar -xzf pbc-0.5.14.tar.gz && cd pbc-0.5.14 && sudo ./configure && sudo make && sudo make install && cd ../..
 
       - name: Install JPBC
-        run: cd lib && sudo tar -xzf jpbc-2.0.0.tar.gz && cd jpbc-pbc && sudo cmake . && sudo make && sudo cp build/libjpbc-pbc.so ../../lib  && cd ../..
+        run: cd lib && sudo tar -xzf jpbc-2.0.0.tar.gz && cd jpbc-pbc && sudo cmake . && sudo make && sudo cp build/libjpbc-pbc.so /usr/local/lib  && cd ../..
+
+      - name: Install MCL
+        run: sudo cp ./lib/libmcljava.so /usr/local/lib
 
       - name: Test ENV
         env:
-          LD_LIBRARY_PATH: ./lib
+          LD_LIBRARY_PATH: /usr/local/lib/
         run: mvn -Dtest=JPBCTest test -B -U
 
       - name: Test with Maven
         env:
-          LD_LIBRARY_PATH: ./lib
+          LD_LIBRARY_PATH: /usr/local/lib/
         run: mvn clean test -B -U
