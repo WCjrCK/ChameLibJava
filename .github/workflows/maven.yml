@@ -56,11 +56,6 @@ jobs:
       - name: Install MCL
         run: sudo cp ./lib/libmcljava.so /usr/local/lib
 
-      - name: Test ENV
-        env:
-          LD_LIBRARY_PATH: /usr/local/lib/
-        run: mvn -Dtest=JPBCTest test -B -U
-
       - name: Test with Maven
         env:
           LD_LIBRARY_PATH: /usr/local/lib/
