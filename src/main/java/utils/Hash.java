@@ -48,4 +48,9 @@ public class Hash {
 //    static public BigInteger H_PBC_3_native_1(Element m1, Element m2, Element m3) {
 //        return new BigInteger(1, HASH(m1.toString() + "|" + m2.toString() + "|" + m3.toString()));
 //    }
+
+    static public void H_string_1_PBC_1(Element res, String m1){
+        byte[] hash = HASH(m1);
+        res.setFromHash(hash, 0, hash.length); 
+    }
 }

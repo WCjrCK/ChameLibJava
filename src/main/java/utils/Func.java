@@ -13,7 +13,7 @@ import java.util.Random;
 @SuppressWarnings("rawtypes")
 public class Func {
     public static void InitialLib() {
-        System.loadLibrary("mcljava");
+        // System.loadLibrary("mcljava");
         PairingFactory.getInstance().setUsePBCWhenPossible(true);
     }
 
