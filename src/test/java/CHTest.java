@@ -235,4 +235,43 @@ public class CHTest {
             }
         }
     }
+
+    @DisplayName("test paper 《Chameleon-Hashes with Ephemeral Trapdoors And Applications to Invisible Sanitizable Signatures》")
+    @Nested
+    class ChameleonHashesWithEphemeralTrapdoorsAndApplicationsToInvisibleSanitizableSignaturesTest {
+        @DisplayName("test CH_ET_BC_CDK_2017")
+        @Nested
+        class CH_ET_BC_CDK_2017_Test {
+            @DisplayName("test Native impl")
+            @ParameterizedTest(name = "test lambda = {0}")
+            @ValueSource(ints = {256, 512, 1024, 2048})
+            void NativeTest(int lambda) {
+                Random rand = new Random();
+                scheme.CH.CH_ET_BC_CDK_2017.Native scheme = new scheme.CH.CH_ET_BC_CDK_2017.Native(lambda);
+                scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey pk = new scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
+                scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey sk = new scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+                scheme.KeyGen(pk, sk);
+                BigInteger m1 = new BigInteger(lambda, rand);
+                BigInteger m2 = new BigInteger(lambda, rand);
+                scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue h1 = new scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue();
+                scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue h2 = new scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue();
+                scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness r1 = new scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness();
+                scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness r1_p = new scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness();
+                scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness r2 = new scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness();
+                scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd1 = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
+                scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd2 = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
+                scheme.Hash(h1, r1, etd1, pk, m1);
+                assertTrue(scheme.Check(h1, r1, pk, m1), "H(m1) valid");
+                scheme.Hash(h2, r2, etd2, pk, m2);
+                assertTrue(scheme.Check(h2, r2, pk, m2), "H(m2) valid");
+
+                assertFalse(scheme.Check(h1, r1, pk, m2), "not H(m1)");
+                assertFalse(scheme.Check(h2, r2, pk, m1), "not H(m2)");
+
+                scheme.Adapt(r1_p, h1, r1, etd1, pk, sk, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, pk, m2), "adapt m2 valid");
+                assertFalse(scheme.Check(h1, r1_p, pk, m1), "not adapt m1");
+            }
+        }
+    }
 }
