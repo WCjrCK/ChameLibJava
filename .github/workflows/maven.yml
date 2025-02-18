@@ -15,6 +15,7 @@ on:
 # 一个workflow可以由多个job组成，多个job可以并行运行
 jobs:
   junit:
+    if: ${{ contains(github.event.head_commit.message, 'Run Action')}}
     strategy:
       matrix:
         # 指定jdk 版本。可以指定多个版本 比如[8,11,17]
@@ -25,6 +26,12 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Install gmp
+        run: sudo apt-get install libgmp-dev flex bison m4 g++
+
+      - name: Install PBC
+        run: git clone https://github.com/blynn/pbc.git && cd pbc && ./configure && make && make install
+
       # 将job的工作目录指向$GITHUB_WORSPACES checkout@v2比较旧不推荐使用
       - name: Checkout codes
         uses: actions/checkout@v3
