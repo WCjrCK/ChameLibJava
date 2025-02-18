@@ -43,6 +43,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Copy lib
-        run: export LD_LIBRARY_PATH=./lib/
+        run: mkdir -p /usr/java/packages/lib && cp lib/* /usr/java/packages/lib
       - name: Test with Maven
         run: mvn clean test -B -U
