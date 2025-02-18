@@ -1,3 +1,4 @@
+![Test with Junit](https://github.com/WCjrCK/ChameLibJava/actions/workflows/maven.yml/badge.svg)
 # ChameLibJava
 Java version of https://github.com/hyj666-maker/ChameLib
 
