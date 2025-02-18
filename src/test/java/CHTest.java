@@ -1,5 +1,6 @@
 import curve.Group;
 import curve.PBC;
+import it.unisa.dia.gas.jpbc.Element;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -148,16 +149,15 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0}")
             @EnumSource(names = {"A", "A1", "E"})
             void JPBCTest(PBC curve) {
-                Random rand = new Random();
                 scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC(curve);
                 scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicKey pk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicKey();
                 scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.SecretKey sk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.SecretKey();
                 scheme.KeyGen(pk, sk);
-                BigInteger m1 = new BigInteger(256, rand);
-                BigInteger m2 = new BigInteger(256, rand);
-                BigInteger L1 = new BigInteger(512, rand);
-                BigInteger L2 = new BigInteger(512, rand);
-                assertTrue(m1.compareTo(m2) != 0, "m1 != m2");
+                Element m1 = scheme.GetZrElement();
+                Element m2 = scheme.GetZrElement();
+                Element L1 = scheme.GetZrElement();
+                Element L2 = scheme.GetZrElement();
+                assertFalse(m1.isEqual(m2), "m1 != m2");
 
                 scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.HashValue h1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.HashValue();
                 scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.HashValue h2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.HashValue();
@@ -194,16 +194,17 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                Random rand = new Random();
                 scheme.CH.CH_KEF_DLP_LLA_2012.PBC.LabelManager LM = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.LabelManager();
                 scheme.CH.CH_KEF_DLP_LLA_2012.PBC scheme = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC(LM, curve, group);
                 scheme.CH.CH_KEF_DLP_LLA_2012.PBC.PublicKey pk = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.PublicKey();
                 scheme.CH.CH_KEF_DLP_LLA_2012.PBC.SecretKey sk = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.SecretKey();
                 scheme.KeyGen(LM, pk, sk);
-                BigInteger m1 = new BigInteger(256, rand);
-                BigInteger m2 = new BigInteger(256, rand);
-                BigInteger m3 = new BigInteger(256, rand);
-                assertTrue(m1.compareTo(m2) != 0, "m1 != m2");
+                Element m1 = scheme.GetZrElement();
+                Element m2 = scheme.GetZrElement();
+                Element m3 = scheme.GetZrElement();
+                assertFalse(m1.isEqual(m2), "m1 != m2");
+                assertFalse(m1.isEqual(m3), "m1 != m3");
+                assertFalse(m2.isEqual(m3), "m2 != m3");
                 scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Label L1 = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Label();
                 scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Label L2 = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Label();
                 scheme.CH.CH_KEF_DLP_LLA_2012.PBC.HashValue h1 = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.HashValue();
