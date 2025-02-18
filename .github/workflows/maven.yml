@@ -1,0 +1,62 @@
+# action name
+name: Test with Junit
+
+# 什么时候触发这个workflow
+on:
+  # push 到master分之的时候 这里可以指定多个
+  push:
+    branches:
+      - main
+  # pull request 到master分之的时候, 这里可以指定多个
+  pull_request:
+    branches:
+      - main
+
+# 一个workflow可以由多个job组成，多个job可以并行运行
+jobs:
+  junit:
+    if: ${{ contains(github.event.head_commit.message, 'Run Action')}}
+    strategy:
+      matrix:
+        # 指定jdk 版本。可以指定多个版本 比如[8,11,17]
+        java: [11]
+        # 指定运行 os 版本 也是多个
+        os: [ 'ubuntu-latest' ]
+    # 运行环境，这里就是上面定义的多个 os
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # 将job的工作目录指向$GITHUB_WORSPACES checkout@v2比较旧不推荐使用
+      - name: Checkout codes
+        uses: actions/checkout@v3
+      # 设置jdk环境
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      # 设置maven 仓库缓存 避免每次构建时都重新下载依赖
+      - name: Cache local Maven repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install gmp
+        run: sudo apt-get install flex bison m4 g++ && cd lib && sudo tar -xJf gmp-6.3.0.tar.xz && cd gmp-6.3.0 && sudo ./configure && sudo make && sudo make install && cd ../..
+
+      - name: Install PBC
+        run: cd lib && sudo tar -xzf pbc-0.5.14.tar.gz && cd pbc-0.5.14 && sudo ./configure && sudo make && sudo make install && cd ../..
+
+      - name: Install JPBC
+        run: cd lib && sudo tar -xzf jpbc-2.0.0.tar.gz && cd jpbc-pbc && sudo cmake . && sudo make && sudo cp build/libjpbc-pbc.so /usr/local/lib  && cd ../..
+
+      - name: Install MCL
+        run: sudo cp ./lib/libmcljava.so /usr/local/lib
+
+      - name: Test with Maven
+        env:
+          LD_LIBRARY_PATH: /usr/local/lib/
+        run: mvn clean test -B -U
