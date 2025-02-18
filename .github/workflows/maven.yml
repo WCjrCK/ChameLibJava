@@ -56,7 +56,7 @@ jobs:
       - name: Test ENV
         env:
           LD_LIBRARY_PATH: ./lib
-        run: mvn clean test -B -U
+        run: mvn -Dtest=JPBCTest test -B -U
 
       - name: Test with Maven
         env:
