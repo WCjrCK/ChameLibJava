@@ -6,11 +6,11 @@ on:
   # push 到master分之的时候 这里可以指定多个
   push:
     branches:
-      - master
+      - main
   # pull request 到master分之的时候, 这里可以指定多个
   pull_request:
     branches:
-      - master
+      - main
 
 # 一个workflow可以由多个job组成，多个job可以并行运行
 jobs:
@@ -20,7 +20,7 @@ jobs:
         # 指定jdk 版本。可以指定多个版本 比如[8,11,17]
         java: [11]
         # 指定运行 os 版本 也是多个
-        os: [ 'windows-latest', 'ubuntu-latest' ]
+        os: [ 'ubuntu-latest' ]
     # 运行环境，这里就是上面定义的多个 os
     runs-on: ${{ matrix.os }}
 
