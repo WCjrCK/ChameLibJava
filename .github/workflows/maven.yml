@@ -45,7 +45,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Install gmp
-        run: sudo apt-get install flex bison m4 g++ && cd lib && sudo tar -cJf gmp-6.3.0.tar.xz && sudo ./configure && sudo make && sudo make install && cd ../..
+        run: sudo apt-get install flex bison m4 g++ && cd lib && sudo tar -xJf gmp-6.3.0.tar.xz && sudo ./configure && sudo make && sudo make install && cd ../..
 
       - name: Install PBC
         run: cd lib && sudo tar -xzf pbc-0.5.14.tar.gz && cd pbc-0.5.14 && sudo ./configure && sudo make && sudo make install && cd ../..
