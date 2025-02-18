@@ -42,5 +42,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+      - name: Copy lib
+        run: cp lib/* /usr/java/packages/lib
       - name: Test with Maven
         run: mvn clean test -B -U
