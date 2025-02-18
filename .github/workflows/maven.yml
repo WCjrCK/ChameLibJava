@@ -15,7 +15,7 @@ on:
 # 一个workflow可以由多个job组成，多个job可以并行运行
 jobs:
   junit:
-    if: ${{ contains(github.event.head_commit.message, 'Run Action')}}
+    if: ${{ !contains(github.event.head_commit.message, 'Skip Action')}}
     strategy:
       matrix:
         # 指定jdk 版本。可以指定多个版本 比如[8,11,17]
