@@ -49,6 +49,9 @@ jobs:
       - name: Install PBC
         run: sudo wget https://crypto.stanford.edu/pbc/files/pbc-0.5.14.tar.gz && sudo tar -xzvf pbc-0.5.14.tar.gz && cd pbc-0.5.14 && sudo ./configure && sudo make && sudo make install && cd ..
 
+      - name: Install JPBC
+        run: cd jpbc && sudo tar -xzvf jpbc-2.0.0.tar.gz && cd jpbc-2.0.0/jpbc-pbc && sudo ./configure && sudo make && sudo cp build/libjpbc-pbc.so ../../../lib  && cd ../../..
+
       - name: Test with Maven
         env:
           LD_LIBRARY_PATH: ./lib
