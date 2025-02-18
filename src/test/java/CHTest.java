@@ -273,5 +273,40 @@ public class CHTest {
                 assertFalse(scheme.Check(h1, r1_p, pk, m1), "not adapt m1");
             }
         }
+
+        @DisplayName("test CH_ET_KOG_CDK_2017")
+        @Nested
+        class CH_ET_KOG_CDK_2017_Test {
+            @DisplayName("test PBC impl")
+            @ParameterizedTest(name = "test curve {0} group {1}")
+            @MethodSource("CHTest#GetPBCCartesianProduct")
+            void JPBCTest(curve.PBC curve, Group group) {
+                scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicParam pp = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicParam();
+                scheme.CH.CH_ET_KOG_CDK_2017.PBC scheme = new scheme.CH.CH_ET_KOG_CDK_2017.PBC(pp, curve, group, 1024);
+                scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicKey pk = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicKey();
+                scheme.CH.CH_ET_KOG_CDK_2017.PBC.SecretKey sk = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.SecretKey();
+                scheme.KeyGen(pk, sk, pp);
+                Element m1 = scheme.getZrElement();
+                Element m2 = scheme.getZrElement();
+                scheme.CH.CH_ET_KOG_CDK_2017.PBC.HashValue h1 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.HashValue();
+                scheme.CH.CH_ET_KOG_CDK_2017.PBC.HashValue h2 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.HashValue();
+                scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness r1 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness();
+                scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness r1_p = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness();
+                scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness r2 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness();
+                scheme.CH.CH_ET_KOG_CDK_2017.PBC.ETrapdoor etd1 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.ETrapdoor();
+                scheme.CH.CH_ET_KOG_CDK_2017.PBC.ETrapdoor etd2 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.ETrapdoor();
+                scheme.Hash(h1, r1, etd1, pp, pk, m1);
+                assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
+                scheme.Hash(h2, r2, etd2, pp, pk, m2);
+                assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
+
+                assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
+                assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
+
+                scheme.Adapt(r1_p, h1, r1, etd1, pp, pk, sk, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "adapt m2 valid");
+                assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not adapt m1");
+            }
+        }
     }
 }

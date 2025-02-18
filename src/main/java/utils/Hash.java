@@ -28,6 +28,11 @@ public class Hash {
         return G.newElementFromHash(hash, 0, hash.length).getImmutable();
     }
 
+    static public Element H_PBC_2_1(Field G, Element m1, Element m2) {
+        byte[] hash = HASH(m1.toString() + "|" + m2.toString());
+        return G.newElementFromHash(hash, 0, hash.length).getImmutable();
+    }
+
     static public Element H_PBC_3_1(Field G, Element m1, Element m2, Element m3) {
         byte[] hash = HASH(m1.toString() + "|" + m2.toString() + "|" + m3.toString());
         return G.newElementFromHash(hash, 0, hash.length).getImmutable();
