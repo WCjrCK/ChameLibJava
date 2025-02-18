@@ -43,6 +43,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Copy lib
-        run: cp lib/* /usr/java/packages/lib
+        run: cp lib/* /usr/lib
       - name: Test with Maven
         run: mvn clean test -B -U
