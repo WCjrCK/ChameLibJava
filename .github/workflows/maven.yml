@@ -30,7 +30,7 @@ jobs:
         run: sudo apt-get install libgmp-dev flex bison m4 g++
 
       - name: Install PBC
-        run: git clone https://github.com/blynn/pbc.git && cd pbc && ./configure && make && make install
+        run: git clone https://github.com/blynn/pbc.git && cd pbc && sudo ./configure && sudo make && sudo make install
 
       # 将job的工作目录指向$GITHUB_WORSPACES checkout@v2比较旧不推荐使用
       - name: Checkout codes
