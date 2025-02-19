@@ -441,7 +441,7 @@ public class CHTest {
                 Element L2;
                 // these group has wrong behave in fromhash
                 if(group == Group.GT && (curve == PBC.D_159 || curve == PBC.D_201 || curve == PBC.D_224 || curve == PBC.D_105171_196_185
-                            || curve == PBC.D_277699_175_167 || curve == PBC.D_278027_190_181 || curve == PBC.F || curve == PBC.SM_9 || curve == PBC.G_149)) {
+                        || curve == PBC.D_277699_175_167 || curve == PBC.D_278027_190_181 || curve == PBC.F || curve == PBC.SM_9 || curve == PBC.G_149)) {
                     L1 = SP.GetGElement();
                     L2 = SP.GetGElement();
                 } else {
@@ -468,6 +468,56 @@ public class CHTest {
                 scheme.Adapt(r1_p, r1, SP, sk, L1, m1, m2);
                 assertTrue(scheme.Check(h1, r1_p, SP, L1, m2), "Adapt(m2) valid");
                 assertFalse(scheme.Check(h2, r1_p, SP, L1, m1), "not Adapt(m1)");
+            }
+        }
+    }
+
+    @DisplayName("test paper 《Discrete logarithm based chameleon hashing and signatures withoutkey exposure》")
+    @Nested
+    class DiscreteLogarithmBasedChameleonHashingAndSignaturesWithoutkeyExposureTest {
+        @DisplayName("test CH_KEF_DL_CZT_2011")
+        @Nested
+        class CH_KEF_DL_CZT_2011_Test {
+            @DisplayName("test PBC impl")
+            @ParameterizedTest(name = "test curve {0} group {1}")
+            @MethodSource("CHTest#GetPBCCartesianProduct")
+            void JPBCTest(curve.PBC curve, Group group) {
+                // these group has wrong behave in fromhash
+                if(group == Group.GT && (curve == PBC.D_159 || curve == PBC.D_201 || curve == PBC.D_224 || curve == PBC.D_105171_196_185
+                        || curve == PBC.D_277699_175_167 || curve == PBC.D_278027_190_181 || curve == PBC.F || curve == PBC.SM_9 || curve == PBC.G_149)) {
+                    return;
+                }
+                scheme.CH.CH_KEF_DL_CZT_2011.PBC scheme = new scheme.CH.CH_KEF_DL_CZT_2011.PBC();
+                scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicParam SP = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicParam();
+                scheme.SetUp(SP, curve, group);
+                scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicKey pk = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicKey();
+                scheme.CH.CH_KEF_DL_CZT_2011.PBC.SecretKey sk = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.SecretKey();
+                scheme.KeyGen(pk, sk, SP);
+                Element m1 = scheme.GetZrElement();
+                Element m2 = scheme.GetZrElement();
+                assertFalse(m1.isEqual(m2), "m1 != m2");
+                Element L1 = SP.GetGElement();
+                Element L2 = SP.GetGElement();
+                assertFalse(L1.isEqual(L2), "L1 != L2");
+                scheme.CH.CH_KEF_DL_CZT_2011.PBC.HashValue h1 = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.HashValue();
+                scheme.CH.CH_KEF_DL_CZT_2011.PBC.HashValue h2 = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.HashValue();
+                scheme.CH.CH_KEF_DL_CZT_2011.PBC.Randomness r1 = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.Randomness();
+                scheme.CH.CH_KEF_DL_CZT_2011.PBC.Randomness r2 = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.Randomness();
+                scheme.CH.CH_KEF_DL_CZT_2011.PBC.Randomness r1_p = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.Randomness();
+                scheme.Hash(h1, r1, SP, pk, L1, m1);
+                assertTrue(scheme.Check(h1, r1, SP, pk, L1, m1), "H(L1, m1) valid");
+                assertFalse(scheme.Check(h1, r1, SP, pk, L2, m1), "not H(L2, m1)");
+
+                scheme.Hash(h2, r2, SP, pk, L2, m2);
+                assertTrue(scheme.Check(h2, r2, SP, pk, L2, m2), "H(m2) valid");
+                assertFalse(scheme.Check(h2, r2, SP, pk, L1, m2), "not H(L1, m2)");
+
+                assertFalse(scheme.Check(h1, r1, SP, pk, L2, m2), "not H(m1)");
+                assertFalse(scheme.Check(h2, r2, SP, pk, L1, m1), "not H(m2)");
+
+                scheme.Adapt(r1_p, r1, SP, pk, sk, L1, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, SP, pk, L1, m2), "Adapt(m2) valid");
+                assertFalse(scheme.Check(h2, r1_p, SP, pk, L1, m1), "not Adapt(m1)");
             }
         }
     }
