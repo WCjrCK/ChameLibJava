@@ -7,7 +7,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -17,6 +19,11 @@ import static utils.Func.InitialLib;
 public class IBCHTest {
     public static Stream<Arguments> GetPBCInvert() {
         return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> Stream.of(Arguments.of(a, false), Arguments.of(a, true)));
+    }
+
+    public static Stream<Arguments> GetPBCInvertIdentityLen() {
+        List<Integer> IdentityLen = Arrays.asList(64, 128, 256);
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> IdentityLen.stream().flatMap(b -> Stream.of(Arguments.of(a, b, false), Arguments.of(a, b, true))));
     }
 
     @BeforeAll
@@ -220,6 +227,53 @@ public class IBCHTest {
                 scheme.Adapt(r1_p, r1, pp, sk1, m1, m2);
                 assertTrue(scheme.Check(h1, r1_p, pp, ID1, m2), "Adapt(L1, m2) valid");
                 assertFalse(scheme.Check(h1, r1_p, pp, ID1, m1), "Adapt(L1, m1) invalid");
+            }
+        }
+    }
+
+    @DisplayName("test paper 《Identity-Based Chameleon Hash without Random Oracles and Application in the Mobile Internet》")
+    @Nested
+    class IdentityBasedChameleonHashWithoutRandomOraclesAndApplicationInTheMobileInternetTest {
+        @DisplayName("test ID_B_CollRes_XSL_2021")
+        @Nested
+        class ID_B_CollRes_XSL_2021_Test {
+            @DisplayName("test PBC impl")
+            @ParameterizedTest(name = "test curve {0}, Identity len = {1}, swap_G1G2 {2}")
+            @MethodSource("IBCHTest#GetPBCInvertIdentityLen")
+            void JPBCTest(curve.PBC curve, int n, boolean swap_G1G2) {
+                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC scheme = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC();
+                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.PublicParam SP = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.PublicParam();
+                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.MasterSecretKey msk = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.MasterSecretKey();
+                scheme.SetUp(SP, msk, curve, n, swap_G1G2);
+                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.SecretKey sk1 = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.SecretKey();
+                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.SecretKey sk2 = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.SecretKey();
+                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.Identity ID1 = SP.GenIdentity();
+                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.Identity ID2 = SP.GenIdentity();
+                Element m1 = SP.GetZrElement();
+                Element m2 = SP.GetZrElement();
+                assertFalse(m1.isEqual(m2), "m1 != m2");
+                scheme.KeyGen(sk1, SP, msk, ID1);
+                scheme.KeyGen(sk2, SP, msk, ID2);
+
+                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.HashValue h1 = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.HashValue();
+                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.HashValue h2 = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.HashValue();
+                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.Randomness r1 = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.Randomness();
+                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.Randomness r2 = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.Randomness();
+                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.Randomness r1_p = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.Randomness();
+
+                scheme.Hash(h1, r1, SP, ID1, m1);
+                assertTrue(scheme.Check(h1, r1, SP, ID1, m1), "H(ID1, m1) valid");
+                assertFalse(scheme.Check(h1, r1, SP, ID2, m1), "H(ID2, m1) invalid");
+                assertFalse(scheme.Check(h1, r1, SP, ID1, m2), "H(ID1, m2) invalid");
+
+                scheme.Hash(h2, r2, SP, ID2, m2);
+                assertTrue(scheme.Check(h2, r2, SP, ID2, m2), "H(ID2, m2) valid");
+                assertFalse(scheme.Check(h2, r2, SP, ID1, m2), "H(ID1, m2) invalid");
+                assertFalse(scheme.Check(h2, r2, SP, ID2, m1), "H(ID2, m1) invalid");
+
+                scheme.Adapt(r1_p, r1, sk1, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, SP, ID1, m2), "Adapt(ID1, m2) valid");
+                assertFalse(scheme.Check(h1, r1_p, SP, ID1, m1), "Adapt(ID1, m1) invalid");
             }
         }
     }
