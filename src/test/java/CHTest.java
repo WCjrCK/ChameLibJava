@@ -428,13 +428,6 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                // these group has wrong behave in fromhash
-                if(group == Group.GT) {
-                    if(curve == PBC.D_159 || curve == PBC.D_201 || curve == PBC.D_224 || curve == PBC.D_105171_196_185
-                            || curve == PBC.D_277699_175_167 || curve == PBC.D_278027_190_181 || curve == PBC.F || curve == PBC.SM_9 || curve == PBC.G_149) {
-                        return;
-                    }
-                }
                 scheme.CH.CH_KEF_CZK_2004.PBC scheme = new scheme.CH.CH_KEF_CZK_2004.PBC();
                 scheme.CH.CH_KEF_CZK_2004.PBC.PublicParam SP = new scheme.CH.CH_KEF_CZK_2004.PBC.PublicParam();
                 scheme.SetUp(SP, curve, group);
@@ -444,8 +437,17 @@ public class CHTest {
                 Element m1 = scheme.GetZrElement();
                 Element m2 = scheme.GetZrElement();
                 assertFalse(m1.isEqual(m2), "m1 != m2");
-                Element L1 = SP.H("S11|R11|T11");
-                Element L2 = SP.H("S22|R22|T22");
+                Element L1;
+                Element L2;
+                // these group has wrong behave in fromhash
+                if(group == Group.GT && (curve == PBC.D_159 || curve == PBC.D_201 || curve == PBC.D_224 || curve == PBC.D_105171_196_185
+                            || curve == PBC.D_277699_175_167 || curve == PBC.D_278027_190_181 || curve == PBC.F || curve == PBC.SM_9 || curve == PBC.G_149)) {
+                    L1 = SP.GetGElement();
+                    L2 = SP.GetGElement();
+                } else {
+                    L1 = SP.H("S11|R11|T11");
+                    L2 = SP.H("S22|R22|T22");
+                }
                 assertFalse(L1.isEqual(L2), "L1 != L2");
                 scheme.CH.CH_KEF_CZK_2004.PBC.HashValue h1 = new scheme.CH.CH_KEF_CZK_2004.PBC.HashValue();
                 scheme.CH.CH_KEF_CZK_2004.PBC.HashValue h2 = new scheme.CH.CH_KEF_CZK_2004.PBC.HashValue();

@@ -18,6 +18,10 @@ public class PBC {
         Field G;
         Element g;
 
+        public Element GetGElement() {
+            return G.newRandomElement().getImmutable();
+        }
+
         public Element H(String m) {
             return Hash.H_String_1_PBC_1(G, m);
         }
@@ -52,7 +56,7 @@ public class PBC {
     public void SetUp(PublicParam SP, curve.PBC curve, Group group) {
         Pairing pairing = Func.PairingGen(curve);
         SP.G = Func.GetPBCField(pairing, group);
-        SP.g = SP.G.newRandomElement().getImmutable();
+        SP.g = SP.GetGElement();
         Zr = pairing.getZr();
     }
 
