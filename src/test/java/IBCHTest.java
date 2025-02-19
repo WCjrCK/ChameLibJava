@@ -1,17 +1,25 @@
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
 
 public class IBCHTest { 
+    public static Stream<Arguments> GetPBCCurve() {
+        return Stream.of(curve.PBC.values()).map(Arguments::of);
+    }
+
     @BeforeAll
     static void initTest() {
         PairingFactory.getInstance().setUsePBCWhenPossible(true);
@@ -25,9 +33,9 @@ public class IBCHTest {
         class IB_CH_KEF_CZS_2014_Test{
             @DisplayName("test pbc impl")
             @ParameterizedTest(name = "test curve {0}")
-            @EnumSource(names = {"A", "A1", "E"})
+            @MethodSource("IBCHTest#GetPBCCurve")
             void JPBCTest(curve.PBC curve) {
-                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC ch = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC(curve);       
+                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC ch = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC(curve);
                   
                 scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.PublicParam pp = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.PublicParam();
                 scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.MasterSecrtKey msk = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.MasterSecrtKey();

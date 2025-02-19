@@ -86,9 +86,9 @@ public class PBC extends PbcScheme{
         // r1_p = r1 + (m - m_p) * H(L)
         r_p.r1 = r.r1.add(H2(L).mulZn(m.sub(m_p)));
         
-        // r2_p = r2 * e(SID, H(L))^(m-m_p)
-        r_p.r2 = r.r2.mul(pairing.pairing(td.SID, H2(L)).powZn(m.sub(m_p)));
-    
+        // r2_p = r2 * e(H(L), SID)^(m-m_p)
+        r_p.r2 = r.r2.mul(pairing.pairing(H2(L), td.SID).powZn(m.sub(m_p)));
+
         // check the correctness of the r_p
         // e(r1_p, SID) == r2_p
         if(!pairing.pairing(r_p.r1, td.SID).equals(r_p.r2)){

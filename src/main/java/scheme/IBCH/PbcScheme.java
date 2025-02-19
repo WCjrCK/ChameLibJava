@@ -14,22 +14,12 @@ public class PbcScheme {
     public Field G1,G2,GT,Zn;
     public Pairing pairing;
 
-    // scheme with pairing, symmetric group
+    // scheme with pairing
     public PbcScheme(curve.PBC curve) {
         pairing = Func.PairingGen(curve);
 
         G1 = Func.GetPBCField(pairing, Group.G1);
         G2 = Func.GetPBCField(pairing, Group.G2);
-        GT = Func.GetPBCField(pairing, Group.GT);
-        Zn = pairing.getZr();
-    }
-
-    // scheme with pairing, ssymmetric group
-    public PbcScheme(curve.PBC curve, Group group_G1, Group group_G2) {
-        pairing = Func.PairingGen(curve);
-
-        G1 = Func.GetPBCField(pairing, group_G1);
-        G2 = Func.GetPBCField(pairing, group_G2);
         GT = Func.GetPBCField(pairing, Group.GT);
         Zn = pairing.getZr();
     }
