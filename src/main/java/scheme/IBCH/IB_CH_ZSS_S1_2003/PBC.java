@@ -1,4 +1,4 @@
-package scheme.IBCH.IB_CH_KEF_CZS_2014;
+package scheme.IBCH.IB_CH_ZSS_S1_2003;
 
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
@@ -7,8 +7,8 @@ import utils.Func;
 import utils.Hash;
 
 /*
- * Key exposure free chameleon hash schemes based on discrete logarithm problem
- * P6. 4.1. The proposed identity-based chameleon hash scheme
+ * ID-Based Chameleon Hashes from Bilinear Pairings
+ * P4. 4.1 Scheme 1
  */
 
 @SuppressWarnings("rawtypes")
@@ -24,12 +24,16 @@ public class PBC {
             else return pairing.pairing(g1, g2).getImmutable();
         }
 
-        public Element H_G1(Element m) {
+        public Element H0(Element m) {
             return Hash.H_PBC_1_1(G1, m);
         }
 
-        public Element H_G2(Element m) {
-            return Hash.H_PBC_1_1(G2, m);
+        public Element H1(Element m) {
+            return Hash.H_PBC_1_1(Zr, m);
+        }
+
+        public Element GetG2Element() {
+            return G2.newRandomElement().getImmutable();
         }
 
         public Element GetG1Element() {
@@ -42,7 +46,7 @@ public class PBC {
     }
 
     public static class MasterSecretKey {
-        public Element x;
+        public Element s;
     }
 
     public static class SecretKey {
@@ -54,11 +58,11 @@ public class PBC {
     }
 
     public static class Randomness {
-        public Element r_1, r_2;
+        public Element R;
     }
 
-    private static Element getHashValue(Randomness R, PublicParam SP, Element L, Element m) {
-        return R.r_1.mul(SP.H_G1(L).powZn(m)).getImmutable();
+    private static Element getHashValue(Randomness R, PublicParam SP, Element ID, Element m) {
+        return SP.pairing(R.R, SP.P).mul(SP.pairing(SP.H0(ID).powZn(SP.H1(m)), SP.P_pub)).getImmutable();
     }
 
     public void SetUp(PublicParam SP, MasterSecretKey msk, curve.PBC curve, boolean swap_G1G2) {
@@ -73,29 +77,25 @@ public class PBC {
         }
         SP.GT = SP.pairing.getGT();
         SP.Zr = SP.pairing.getZr();
-        SP.P = SP.GetG1Element();
-        msk.x = SP.GetZrElement();
-        SP.P_pub = SP.P.powZn(msk.x).getImmutable();
+        SP.P = SP.GetG2Element();
+        msk.s = SP.GetZrElement();
+        SP.P_pub = SP.P.powZn(msk.s).getImmutable();
     }
 
     public void KeyGen(SecretKey sk, PublicParam SP, MasterSecretKey msk, Element ID) {
-        sk.S_ID = SP.H_G2(ID).powZn(msk.x).getImmutable();
+        sk.S_ID = SP.H0(ID).powZn(msk.s).getImmutable();
     }
 
-    public void Hash(HashValue H, Randomness R, PublicParam SP, Element ID, Element L, Element m) {
-        Element a = SP.GetZrElement();
-        R.r_1 = SP.P.powZn(a).getImmutable();
-        R.r_2 = SP.pairing(SP.P_pub.powZn(a), SP.H_G2(ID));
-        H.h = getHashValue(R, SP, L, m);
+    public void Hash(HashValue H, Randomness R, PublicParam SP, Element ID, Element m) {
+        R.R = SP.GetG1Element();
+        H.h = getHashValue(R, SP, ID, m);
     }
 
-    public boolean Check(HashValue H, Randomness R, PublicParam SP, Element L, Element m) {
-        return H.h.isEqual(getHashValue(R, SP, L, m));
+    public boolean Check(HashValue H, Randomness R, PublicParam SP, Element ID, Element m) {
+        return H.h.isEqual(getHashValue(R, SP, ID, m));
     }
 
-    public void Adapt(Randomness R_p, Randomness R, PublicParam SP, SecretKey sk, Element L, Element m, Element m_p) {
-        Element delta_m = m.sub(m_p);
-        R_p.r_1 = R.r_1.mul(SP.H_G1(L).powZn(delta_m)).getImmutable();
-        R_p.r_2 = R.r_2.mul(SP.pairing(SP.H_G1(L), sk.S_ID).powZn(delta_m)).getImmutable();
+    public void Adapt(Randomness R_p, Randomness R, PublicParam SP, SecretKey sk, Element m, Element m_p) {
+        R_p.R = R.R.mul(sk.S_ID.powZn(SP.H1(m).sub(SP.H1(m_p)))).getImmutable();
     }
 }
