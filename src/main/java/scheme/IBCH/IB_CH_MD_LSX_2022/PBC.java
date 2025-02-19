@@ -7,8 +7,8 @@ import utils.Func;
 import utils.Hash;
 
 /*
- * Key exposure free chameleon hash schemes based on discrete logarithm problem
- * P6. 4.1. The proposed identity-based chameleon hash scheme
+ * Efficient Identity-Based Chameleon Hash For Mobile Devices
+ * P2. 3. PROPOSED EFFICIENT IB-CH
  */
 
 @SuppressWarnings("rawtypes")
