@@ -417,4 +417,56 @@ public class CHTest {
             }
         }
     }
+
+    @DisplayName("test paper 《Chameleon Hashing without Key Exposure》")
+    @Nested
+    class ChameleonHashingWithoutKeyExposureTest {
+        @DisplayName("test CH_KEF_CZK_2004")
+        @Nested
+        class CH_KEF_CZK_2004_Test {
+            @DisplayName("test PBC impl")
+            @ParameterizedTest(name = "test curve {0} group {1}")
+            @MethodSource("CHTest#GetPBCCartesianProduct")
+            void JPBCTest(curve.PBC curve, Group group) {
+                // these group has wrong behave in fromhash
+                if(group == Group.GT) {
+                    if(curve == PBC.D_159 || curve == PBC.D_201 || curve == PBC.D_224 || curve == PBC.D_105171_196_185
+                            || curve == PBC.D_277699_175_167 || curve == PBC.D_278027_190_181 || curve == PBC.F || curve == PBC.SM_9 || curve == PBC.G_149) {
+                        return;
+                    }
+                }
+                scheme.CH.CH_KEF_CZK_2004.PBC scheme = new scheme.CH.CH_KEF_CZK_2004.PBC();
+                scheme.CH.CH_KEF_CZK_2004.PBC.PublicParam SP = new scheme.CH.CH_KEF_CZK_2004.PBC.PublicParam();
+                scheme.SetUp(SP, curve, group);
+                scheme.CH.CH_KEF_CZK_2004.PBC.PublicKey pk = new scheme.CH.CH_KEF_CZK_2004.PBC.PublicKey();
+                scheme.CH.CH_KEF_CZK_2004.PBC.SecretKey sk = new scheme.CH.CH_KEF_CZK_2004.PBC.SecretKey();
+                scheme.KeyGen(pk, sk, SP);
+                Element m1 = scheme.GetZrElement();
+                Element m2 = scheme.GetZrElement();
+                assertFalse(m1.isEqual(m2), "m1 != m2");
+                Element L1 = SP.H("S11|R11|T11");
+                Element L2 = SP.H("S22|R22|T22");
+                assertFalse(L1.isEqual(L2), "L1 != L2");
+                scheme.CH.CH_KEF_CZK_2004.PBC.HashValue h1 = new scheme.CH.CH_KEF_CZK_2004.PBC.HashValue();
+                scheme.CH.CH_KEF_CZK_2004.PBC.HashValue h2 = new scheme.CH.CH_KEF_CZK_2004.PBC.HashValue();
+                scheme.CH.CH_KEF_CZK_2004.PBC.Randomness r1 = new scheme.CH.CH_KEF_CZK_2004.PBC.Randomness();
+                scheme.CH.CH_KEF_CZK_2004.PBC.Randomness r2 = new scheme.CH.CH_KEF_CZK_2004.PBC.Randomness();
+                scheme.CH.CH_KEF_CZK_2004.PBC.Randomness r1_p = new scheme.CH.CH_KEF_CZK_2004.PBC.Randomness();
+                scheme.Hash(h1, r1, SP, pk, L1, m1);
+                assertTrue(scheme.Check(h1, r1, SP, L1, m1), "H(L1, m1) valid");
+                assertFalse(scheme.Check(h1, r1, SP, L2, m1), "not H(L2, m1)");
+
+                scheme.Hash(h2, r2, SP, pk, L2, m2);
+                assertTrue(scheme.Check(h2, r2, SP, L2, m2), "H(m2) valid");
+                assertFalse(scheme.Check(h2, r2, SP, L1, m2), "not H(L1, m2)");
+
+                assertFalse(scheme.Check(h1, r1, SP, L2, m2), "not H(m1)");
+                assertFalse(scheme.Check(h2, r2, SP, L1, m1), "not H(m2)");
+
+                scheme.Adapt(r1_p, r1, SP, sk, L1, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, SP, L1, m2), "Adapt(m2) valid");
+                assertFalse(scheme.Check(h2, r1_p, SP, L1, m1), "not Adapt(m1)");
+            }
+        }
+    }
 }

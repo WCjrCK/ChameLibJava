@@ -23,6 +23,11 @@ public class Hash {
         return res;
     }
 
+    static public Element H_String_1_PBC_1(Field G, String m) {
+        byte[] hash = HASH(m);
+        return G.newElementFromHash(hash, 0, hash.length).getImmutable();
+    }
+
     static public Element H_PBC_1_1(Field G, Element m) {
         byte[] hash = HASH(m.toString());
         return G.newElementFromHash(hash, 0, hash.length).getImmutable();
