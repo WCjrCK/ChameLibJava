@@ -178,5 +178,49 @@ public class IBCHTest {
                 assertFalse(scheme.Check(h1, r1_p, SP, ID1, m1), "Adapt(L1, m1) invalid");
             }
         }
+
+        @DisplayName("test IB_CH_ZSS_S2_2003")
+        @Nested
+        class IB_CH_ZSS_S2_2003_Test {
+            @DisplayName("test PBC impl")
+            @ParameterizedTest(name = "test curve {0}")
+            @EnumSource(names = {"A", "A1", "E"})
+            void JPBCTest(curve.PBC curve) {
+                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC scheme = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC();
+                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.PublicParam pp = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.PublicParam();
+                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.MasterSecretKey msk = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.MasterSecretKey();
+                scheme.SetUp(pp, msk, curve);
+                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.SecretKey sk1 = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.SecretKey();
+                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.SecretKey sk2 = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.SecretKey();
+                Element ID1 = pp.GetZrElement();
+                Element ID2 = pp.GetZrElement();
+                assertFalse(ID1.isEqual(ID2), "ID1 != ID2");
+                Element m1 = pp.GetZrElement();
+                Element m2 = pp.GetZrElement();
+                assertFalse(m1.isEqual(m2), "m1 != m2");
+                scheme.KeyGen(sk1, pp, msk, ID1);
+                scheme.KeyGen(sk2, pp, msk, ID2);
+
+                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.HashValue h1 = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.HashValue();
+                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.HashValue h2 = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.HashValue();
+                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.Randomness r1 = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.Randomness();
+                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.Randomness r2 = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.Randomness();
+                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.Randomness r1_p = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.Randomness();
+
+                scheme.Hash(h1, r1, pp, ID1, m1);
+                assertTrue(scheme.Check(h1, r1, pp, ID1, m1), "H(ID1, m1) valid");
+                assertFalse(scheme.Check(h1, r1, pp, ID2, m1), "H(ID2, m1) invalid");
+                assertFalse(scheme.Check(h1, r1, pp, ID1, m2), "H(ID1, m2) invalid");
+
+                scheme.Hash(h2, r2, pp, ID2, m2);
+                assertTrue(scheme.Check(h2, r2, pp, ID2, m2), "H(L2, m2) valid");
+                assertFalse(scheme.Check(h2, r2, pp, ID1, m2), "H(L1, m2) invalid");
+                assertFalse(scheme.Check(h2, r2, pp, ID2, m1), "H(L2, m1) invalid");
+
+                scheme.Adapt(r1_p, r1, pp, sk1, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, pp, ID1, m2), "Adapt(L1, m2) valid");
+                assertFalse(scheme.Check(h1, r1_p, pp, ID1, m1), "Adapt(L1, m1) invalid");
+            }
+        }
     }
 }
