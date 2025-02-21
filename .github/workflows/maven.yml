@@ -59,4 +59,4 @@ jobs:
       - name: Test with Maven
         env:
           LD_LIBRARY_PATH: /usr/local/lib/
-        run: mvn clean test -B -U
+        run: mvn -T 1C clean test -B -U
