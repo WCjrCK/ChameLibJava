@@ -4,8 +4,6 @@ import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 import utils.BooleanFormulaParser;
 
-import java.util.Arrays;
-
 @SuppressWarnings("rawtypes")
 public class PBC {
     public static class Matrix {
@@ -16,12 +14,6 @@ public class PBC {
 
         public static class Vector {
             public Element[] v;
-
-            public void Print() {
-                System.out.println("Vector:");
-                System.out.println(Arrays.toString(v));
-                System.out.println();
-            }
         }
 
         public Matrix(Field G) {
@@ -32,14 +24,10 @@ public class PBC {
             M = new Element[n][m];
         }
 
-        public void Print() {
-            System.out.println("Policy:");
-            System.out.println(Arrays.toString(policy));
-            System.out.println("Matrix:");
-            for (Element[] elements : M) {
-                System.out.println(Arrays.toString(elements));
-            }
-            System.out.println();
+        public Element Prodith(Vector y, int i) {
+            Element res = G.newZeroElement().getImmutable();
+            for(int j = 0;j < M[i].length;++j) res = res.add(y.v[j].mul(M[i][j])).getImmutable();
+            return res;
         }
 
         public void Solve(Vector x, BooleanFormulaParser.AttributeList S) {
