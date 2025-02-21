@@ -4,10 +4,7 @@ import base.LSSS.Native;
 import base.LSSS.PBC;
 import it.unisa.dia.gas.jpbc.Element;
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
-//import java.util.HashMap;
-import java.util.Queue;
+import java.util.*;
 
 public class BooleanFormulaParser {
     private enum TokenType {
@@ -24,15 +21,15 @@ public class BooleanFormulaParser {
         public Element[] tag;
     }
 
-//    public static class AttributeList {
-//        public HashMap<String, Integer> attrs = new HashMap<>();
-//
-//        public void Print() {
-//            System.out.println("AttributeList:");
-//            System.out.println(attrs.keySet());
-//            System.out.println();
-//        }
-//    }
+    public static class AttributeList {
+        public Set<String> attrs = new HashSet<>();
+
+        public void Print() {
+            System.out.println("AttributeList:");
+            System.out.println(attrs);
+            System.out.println();
+        }
+    }
 
     public static class PolicyList {
         public String[] policy;
