@@ -40,7 +40,7 @@ public class Native {
     }
 
     Random rand = new Random();
-    int lambda;
+    public int lambda;
 
     private static BigInteger H_n(BigInteger n, BigInteger m) {
         return Hash.H_native_1_1(m).mod(n);

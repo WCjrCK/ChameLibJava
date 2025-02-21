@@ -193,6 +193,7 @@ public class BooleanFormulaParser {
     }
 
     public void SetToPBCMatrix(PBC.Matrix M) {
+        M.formula = formula;
         M.Resize(n, m);
         Element[] zeroList = new Element[m];
         for(int i = 0; i < m; ++i) zeroList[i] = M.G.newZeroElement().getImmutable();

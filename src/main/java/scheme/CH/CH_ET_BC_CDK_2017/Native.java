@@ -8,7 +8,7 @@ import java.math.BigInteger;
  */
 
 public class Native {
-    private static class CH_RSA extends scheme.CH.MCH_CDK_2017.Native {
+    public static class CH_RSA extends scheme.CH.MCH_CDK_2017.Native {
         public CH_RSA(int lambda) {
             super(lambda);
         }
@@ -35,7 +35,7 @@ public class Native {
         public CH_RSA.SecretKey sk_ch_2 = new CH_RSA.SecretKey();
     }
 
-    CH_RSA CH;
+    public CH_RSA CH;
 
     public Native(int lambda) {
         CH = new CH_RSA(lambda);

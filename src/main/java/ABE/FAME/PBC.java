@@ -1,10 +1,5 @@
 package ABE.FAME;
 
-/*
- * FAME: Fast Attribute-based Message Encryption
- * P6. 3 FAME: OUR CP-ABE SCHEME
- */
-
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
@@ -13,6 +8,11 @@ import utils.Func;
 import utils.Hash;
 
 import java.util.HashMap;
+
+/*
+ * FAME: Fast Attribute-based Message Encryption
+ * P6. 3 FAME: OUR CP-ABE SCHEME
+ */
 
 @SuppressWarnings("rawtypes")
 public class PBC {
@@ -69,10 +69,27 @@ public class PBC {
         Element[] ct_0 = new Element[3];
         Element[][] ct;
         Element ct_p;
+
+        public boolean isEqual(CipherText CT_p) {
+            if(ct_0.length != CT_p.ct_0.length) return false;
+            if(ct.length != CT_p.ct.length) return false;
+            if(ct[0].length != CT_p.ct[0].length) return false;
+            for(int i = 0; i < ct_0.length; ++i) {
+                if(!ct_0[i].equals(CT_p.ct_0[i])) return false;
+            }
+            for(int i = 0; i < ct.length; ++i) {
+                for(int j = 0; j < ct[i].length; ++j) {
+                    if(!ct[i][j].equals(CT_p.ct[i][j])) return false;
+                }
+            }
+            return ct_p.isEqual(CT_p.ct_p);
+        }
     }
 
     public static class PlainText {
-        Element m;
+        public Element m;
+
+        public PlainText() {}
 
         public PlainText(Element m) {
             this.m = m;
@@ -156,6 +173,10 @@ public class PBC {
     public void Encrypt(CipherText CT, PublicParam SP, base.LSSS.PBC.Matrix MSP, PlainText PT) {
         Element s_1 = SP.GetZrElement();
         Element s_2 = SP.GetZrElement();
+        Encrypt(CT, SP, MSP, PT, s_1, s_2);
+    }
+
+    public void Encrypt(CipherText CT, PublicParam SP, base.LSSS.PBC.Matrix MSP, PlainText PT, Element s_1, Element s_2) {
         CT.ct_0[0] = SP.H_1.powZn(s_1).getImmutable();
         CT.ct_0[1] = SP.H_2.powZn(s_2).getImmutable();
         CT.ct_0[2] = SP.h.powZn(s_1.add(s_2)).getImmutable();

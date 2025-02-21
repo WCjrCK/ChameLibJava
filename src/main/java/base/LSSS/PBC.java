@@ -12,6 +12,7 @@ public class PBC {
         public Field G;
         public Element[][] M;
         public String[] policy;
+        public String formula;
 
         public static class Vector {
             public Element[] v;
