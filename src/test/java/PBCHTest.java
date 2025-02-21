@@ -1,58 +1,30 @@
-import curve.PBC;
-import it.unisa.dia.gas.jpbc.Element;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import utils.BooleanFormulaParser;
-import utils.Func;
 
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Func.InitialLib;
 
 public class PBCHTest {
+    public static Stream<Arguments> GetPBCSymmAuth() {
+        return Stream.of(curve.PBC.A, curve.PBC.A1, curve.PBC.E).flatMap(a ->
+                Stream.of(16, 32, 64).flatMap(b ->
+                        Stream.of(64, 128, 256).flatMap(c -> Stream.of(Arguments.of(a, b, c)))));
+    }
+
     @BeforeAll
     static void initTest() {
         InitialLib();
     }
-
-    @DisplayName("test LSSS PBC impl")
-    @Test
-    void LSSSPBCTest() {
-        base.LSSS.PBC lsss_gen =  new base.LSSS.PBC();
-        base.LSSS.PBC.Matrix mat =  new base.LSSS.PBC.Matrix(Func.PairingGen(PBC.A).getZr());
-        BooleanFormulaParser.PolicyList pi =  new BooleanFormulaParser.PolicyList();
-//        lsss_gen.GenLSSSMatrices(mat, pi, "P555&(((P1&P2)|(P3&P4))|((P1|P2)&(P3|P4)))");
-//        lsss_gen.GenLSSSMatrices(mat, pi, "P555");
-//        lsss_gen.GenLSSSMatrices(mat, pi, "A&(DDDD|(BB&CCC))");
-        lsss_gen.GenLSSSMatrices(mat, pi, "A&(D|(B&C))");
-//        lsss_gen.GenLSSSMatrices(mat, pi, "A&D&B&C");
-        mat.Print();
-        pi.Print();
-        BooleanFormulaParser.AttributeList S = new BooleanFormulaParser.AttributeList();
-        S.attrs.add("A");
-        S.attrs.add("B");
-        S.attrs.add("C");
-        S.attrs.add("D");
-        S.Print();
-        base.LSSS.PBC.Matrix.Vector omega = new base.LSSS.PBC.Matrix.Vector();
-        mat.Solve(omega, S);
-        omega.Print();
-
-        Element x = mat.G.newElementFromBytes("123".getBytes(StandardCharsets.UTF_8));
-        System.out.println(Arrays.toString(x.toBytes()));
-        System.out.println(Arrays.toString(x.toCanonicalRepresentation()));
-        System.out.println(Arrays.toString("123".getBytes(StandardCharsets.UTF_8)));
-    }
-
 
     @DisplayName("test paper 《Fine-Grained and Controlled Rewriting in Blockchains Chameleon-Hashing Gone Attribute-Based》")
     @Nested
@@ -103,6 +75,85 @@ public class PBCHTest {
             scheme.Adapt(r1_p, h1, r1, pk_PCH, MSP, sk1, m1, m2);
             assertTrue(scheme.Check(h1, r1_p, pk_PCH, m2), "Adapt(m2) valid");
             assertFalse(scheme.Check(h1, r1_p, pk_PCH, m1), "Adapt(m1) invalid");
+        }
+    }
+
+    @DisplayName("test paper 《Redactable Transactions in Consortium Blockchain Controlled by Multi-authority CP-ABE》")
+    @Nested
+    class RedactableTransactionsInConsortiumBlockchainControlledByMultiAuthorityCPABETest {
+        @DisplayName("test PBC impl")
+        @ParameterizedTest(name = "test curve {0} author number {1} lambda = {2}")
+        @MethodSource("PBCHTest#GetPBCSymmAuth")
+        void JPBCTest(curve.PBC curve, int auth_num, int lambda) {
+            Random rand = new Random();
+            scheme.PBCH.MAPCH_ZLW_2021.PBC scheme = new scheme.PBCH.MAPCH_ZLW_2021.PBC(lambda);
+            scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicParam SP = new scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicParam();
+            scheme.SetUp(SP, curve);
+
+            base.LSSS.PBC LSSS = new base.LSSS.PBC();
+            base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(SP.GP.Zr);
+            BooleanFormulaParser.PolicyList pl = new BooleanFormulaParser.PolicyList();
+            LSSS.GenLSSSMatrices(MSP, pl, "(A|FF)&(DDDD|(BB&CCC))");
+
+            String GID1 = "WCjrCK";
+            String GID2 = "gid2";
+            scheme.PBCH.MAPCH_ZLW_2021.PBC.SecretKey SK1 = new scheme.PBCH.MAPCH_ZLW_2021.PBC.SecretKey();
+            scheme.PBCH.MAPCH_ZLW_2021.PBC.SecretKey SK2 = new scheme.PBCH.MAPCH_ZLW_2021.PBC.SecretKey();
+
+            scheme.PBCH.MAPCH_ZLW_2021.PBC.Authority[] auths = new scheme.PBCH.MAPCH_ZLW_2021.PBC.Authority[auth_num];
+            for(int i = 0;i < auth_num;++i) auths[i] = new scheme.PBCH.MAPCH_ZLW_2021.PBC.Authority("auth_" + i, SP);
+
+            auths[0].MA_ABE_Auth.control_attr.add("A");
+            auths[1].MA_ABE_Auth.control_attr.add("BB");
+            auths[2].MA_ABE_Auth.control_attr.add("CCC");
+            auths[3].MA_ABE_Auth.control_attr.add("DDDD");
+            auths[4].MA_ABE_Auth.control_attr.add("E");
+            auths[5].MA_ABE_Auth.control_attr.add("FF");
+
+            scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicKeyGroup PKG = new scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicKeyGroup();
+            for(int i = 0;i < auth_num;++i) scheme.AuthSetup(auths[i]);
+            for(int i = 0;i < auth_num;++i) PKG.AddPK(auths[i]);
+
+            scheme.PBCH.MAPCH_ZLW_2021.PBC.SecretKeyGroup SKG1 = new scheme.PBCH.MAPCH_ZLW_2021.PBC.SecretKeyGroup();
+            scheme.PBCH.MAPCH_ZLW_2021.PBC.SecretKeyGroup SKG3 = new scheme.PBCH.MAPCH_ZLW_2021.PBC.SecretKeyGroup();
+            scheme.KeyGen(auths[0], SK1, GID1, "A");
+            SKG1.AddSK(SK1);
+            SKG3.AddSK(SK1);
+            scheme.KeyGen(auths[3], SK1, GID1, "DDDD");
+            SKG1.AddSK(SK1);
+            scheme.KeyGen(auths[4], SK1, GID1, "E");
+            SKG1.AddSK(SK1);
+
+            scheme.PBCH.MAPCH_ZLW_2021.PBC.SecretKeyGroup SKG2 = new scheme.PBCH.MAPCH_ZLW_2021.PBC.SecretKeyGroup();
+            scheme.KeyGen(auths[1], SK2, GID2, "BB");
+            SKG2.AddSK(SK2);
+            SKG3.AddSK(SK2);
+            scheme.KeyGen(auths[2], SK2, GID2, "CCC");
+            SKG2.AddSK(SK2);
+            SKG3.AddSK(SK2);
+            scheme.KeyGen(auths[5], SK2, GID2, "FF");
+            SKG2.AddSK(SK2);
+
+            BigInteger m1 = new BigInteger(lambda, rand);
+            BigInteger m2 = new BigInteger(lambda, rand);
+
+            scheme.PBCH.MAPCH_ZLW_2021.PBC.HashValue h1 = new scheme.PBCH.MAPCH_ZLW_2021.PBC.HashValue();
+            scheme.PBCH.MAPCH_ZLW_2021.PBC.HashValue h2 = new scheme.PBCH.MAPCH_ZLW_2021.PBC.HashValue();
+
+            scheme.PBCH.MAPCH_ZLW_2021.PBC.Randomness r1 = new scheme.PBCH.MAPCH_ZLW_2021.PBC.Randomness();
+            scheme.PBCH.MAPCH_ZLW_2021.PBC.Randomness r2 = new scheme.PBCH.MAPCH_ZLW_2021.PBC.Randomness();
+            scheme.PBCH.MAPCH_ZLW_2021.PBC.Randomness r1_p = new scheme.PBCH.MAPCH_ZLW_2021.PBC.Randomness();
+
+            scheme.Hash(h1, r1, PKG, SKG1, MSP, m1);
+            scheme.Hash(h2, r2, PKG, MSP, m2);
+            assertTrue(scheme.Check(h1, r1, PKG, m1), "H(m1) valid");
+            assertFalse(scheme.Check(h1, r1, PKG, m2), "H(m2) invalid");
+            assertTrue(scheme.Check(h2, r2, PKG, m2), "H(m2) valid");
+            assertFalse(scheme.Check(h2, r2, PKG, m1), "H(m1) invalid");
+//
+            scheme.Adapt(r1_p, h1, r1, PKG, SKG1, MSP, m1, m2);
+            assertTrue(scheme.Check(h1, r1_p, PKG, m2), "Adapt(m2) valid");
+            assertFalse(scheme.Check(h1, r1_p, PKG, m1), "Adapt(m1) invalid");
         }
     }
 }

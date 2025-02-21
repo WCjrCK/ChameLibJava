@@ -137,7 +137,6 @@ public class PBC {
         SK.K = GP.g.powZn(Auth.msk.alpha).mul(GP.H(GID).powZn(Auth.msk.y)).mul(GP.F(u).powZn(t)).getImmutable();
         SK.GID = GID;
         SK.u = u;
-        Auth.control_attr.add(u);
     }
 
     public void Encrypt(CipherText CT, PublicParam GP, PublicKeyGroup PKG, base.LSSS.PBC.Matrix MSP, PlainText PT) {
