@@ -19,7 +19,7 @@ import java.util.List;
 @SuppressWarnings("rawtypes")
 public class PBC {
     public static class Authority {
-        MasterSecretKey msk = new MasterSecretKey();
+        public MasterSecretKey msk = new MasterSecretKey();
         public PublicKey pk = new PublicKey();
         public List<String> control_attr = new ArrayList<>();
         public String theta;
@@ -100,6 +100,14 @@ public class PBC {
     public static class CipherText {
         public Element C_0;
         public Element[][] C;
+
+        public boolean isEqual(CipherText ct) {
+            if(C.length != ct.C.length) return false;
+            if(C[0].length != ct.C[0].length) return false;
+            for(int i = 0; i < C.length; ++i)
+                for (int j = 0; j < C[0].length; ++j) if (!C[i][j].isEqual(ct.C[i][j])) return false;
+            return C_0.isEqual(ct.C_0);
+        }
     }
 
     public static class PlainText {
@@ -145,10 +153,18 @@ public class PBC {
         base.LSSS.PBC.Matrix.Vector v = new base.LSSS.PBC.Matrix.Vector();
         v.v = new Element[n];
         for(int i = 0;i < n;++i) v.v[i] = GP.GetZrElement();
+        base.LSSS.PBC.Matrix.Vector t_x = new base.LSSS.PBC.Matrix.Vector();
+        t_x.v = new Element[l];
+        for(int i = 0;i < l;++i) t_x.v[i] = GP.GetZrElement();
         base.LSSS.PBC.Matrix.Vector w = new base.LSSS.PBC.Matrix.Vector();
         w.v = new Element[n];
         w.v[0] = GP.Zr.newZeroElement().getImmutable();
         for(int i = 1;i < n;++i) w.v[i] = GP.GetZrElement();
+        Encrypt(CT, GP, PKG, MSP, PT, v, w, t_x);
+    }
+
+    public void Encrypt(CipherText CT, PublicParam GP, PublicKeyGroup PKG, base.LSSS.PBC.Matrix MSP, PlainText PT, base.LSSS.PBC.Matrix.Vector v, base.LSSS.PBC.Matrix.Vector w, base.LSSS.PBC.Matrix.Vector t_x) {
+        int l = MSP.M.length;
 
         CT.C = new Element[4][l];
         CT.C_0 = PT.m.mul(GP.egg.powZn(v.v[0])).getImmutable();
@@ -157,11 +173,10 @@ public class PBC {
         for(int i = 0;i < l;++i) {
             if(!PKG.rho.containsKey(MSP.policy[i])) throw new RuntimeException("invalid arrtibute");
             rho_x = PKG.rho.get(MSP.policy[i]);
-            Element t_x = GP.GetZrElement();
-            CT.C[0][i] = PKG.PK.get(rho_x).egg_alpha.powZn(t_x).mul(GP.egg.powZn(MSP.Prodith(v, i))).getImmutable();
-            CT.C[1][i] = GP.g.powZn(t_x.negate()).getImmutable();
-            CT.C[2][i] = PKG.PK.get(rho_x).g_y.powZn(t_x).mul(GP.g.powZn(MSP.Prodith(w, i))).getImmutable();
-            CT.C[3][i] = GP.F(MSP.policy[i]).powZn(t_x).getImmutable();
+            CT.C[0][i] = PKG.PK.get(rho_x).egg_alpha.powZn(t_x.v[i]).mul(GP.egg.powZn(MSP.Prodith(v, i))).getImmutable();
+            CT.C[1][i] = GP.g.powZn(t_x.v[i].negate()).getImmutable();
+            CT.C[2][i] = PKG.PK.get(rho_x).g_y.powZn(t_x.v[i]).mul(GP.g.powZn(MSP.Prodith(w, i))).getImmutable();
+            CT.C[3][i] = GP.F(MSP.policy[i]).powZn(t_x.v[i]).getImmutable();
         }
     }
 
