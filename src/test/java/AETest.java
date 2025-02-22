@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class AETest {
     @DisplayName("test RSA")
     @Test
-    void rsaTest() {
+    void RSATest() {
         Native.PublicKey pk = new Native.PublicKey();
         Native.SecretKey sk = new Native.SecretKey();
         Native.KeyGen(pk, sk);

@@ -14,8 +14,8 @@ import java.math.BigInteger;
 public class PBC {
     public static class PublicParam {
         public ABE.MA_ABE.PBC.PublicParam GP = new ABE.MA_ABE.PBC.PublicParam();
-        scheme.CH.CHET_RSA_CDK_2017.Native.PublicKey hk = new scheme.CH.CHET_RSA_CDK_2017.Native.PublicKey();
-        scheme.CH.CHET_RSA_CDK_2017.Native.SecretKey tk = new scheme.CH.CHET_RSA_CDK_2017.Native.SecretKey();
+        scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey hk = new scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
+        scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey tk = new scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
     }
 
     public static class Authority {
@@ -33,21 +33,21 @@ public class PBC {
 
     public static class PublicKey {
         ABE.MA_ABE.PBC.PublicParam GP = new ABE.MA_ABE.PBC.PublicParam();
-        scheme.CH.CHET_RSA_CDK_2017.Native.PublicKey hk = new scheme.CH.CHET_RSA_CDK_2017.Native.PublicKey();
+        scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey hk = new scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
     }
 
     public static class MasterSecretKey {
-        scheme.CH.CHET_RSA_CDK_2017.Native.SecretKey tk = new scheme.CH.CHET_RSA_CDK_2017.Native.SecretKey();
+        scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey tk = new scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
     }
 
     public static class SecretKey {
         ABE.MA_ABE.PBC.SecretKey MA_ABE_SK = new ABE.MA_ABE.PBC.SecretKey();
-        scheme.CH.CHET_RSA_CDK_2017.Native.SecretKey tk = new scheme.CH.CHET_RSA_CDK_2017.Native.SecretKey();
+        scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey tk = new scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
     }
 
     public static class PublicKeyGroup {
         ABE.MA_ABE.PBC.PublicKeyGroup MA_ABE_PKG = new ABE.MA_ABE.PBC.PublicKeyGroup();
-        scheme.CH.CHET_RSA_CDK_2017.Native.PublicKey hk = new scheme.CH.CHET_RSA_CDK_2017.Native.PublicKey();
+        scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey hk = new scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
         ABE.MA_ABE.PBC.PublicParam GP = new ABE.MA_ABE.PBC.PublicParam();
 
         public void AddPK(Authority Auth) {
@@ -59,7 +59,7 @@ public class PBC {
 
     public static class SecretKeyGroup {
         ABE.MA_ABE.PBC.SecretKeyGroup MA_ABE_SKG = new ABE.MA_ABE.PBC.SecretKeyGroup();
-        scheme.CH.CHET_RSA_CDK_2017.Native.SecretKey tk = new scheme.CH.CHET_RSA_CDK_2017.Native.SecretKey();
+        scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey tk = new scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
 
         public void AddSK(SecretKey SK) {
             MA_ABE_SKG.AddSK(SK.MA_ABE_SK);
@@ -68,15 +68,15 @@ public class PBC {
     }
 
     public static class HashValue {
-        scheme.CH.CHET_RSA_CDK_2017.Native.HashValue CHET_H = new scheme.CH.CHET_RSA_CDK_2017.Native.HashValue();
+        scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue CHET_H = new scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue();
         ABE.MA_ABE.PBC.CipherText MA_ABE_C = new ABE.MA_ABE.PBC.CipherText();
     }
 
     public static class Randomness {
-        scheme.CH.CHET_RSA_CDK_2017.Native.Randomness CHET_R = new scheme.CH.CHET_RSA_CDK_2017.Native.Randomness();
+        scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness CHET_R = new scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness();
     }
 
-    scheme.CH.CHET_RSA_CDK_2017.Native CHET;
+    scheme.CH.CH_ET_BC_CDK_2017.Native CHET;
     ABE.MA_ABE.PBC MA_ABE = new ABE.MA_ABE.PBC();
 
     private Element BigInteger2G(Field G, BigInteger m) {
@@ -94,7 +94,7 @@ public class PBC {
     }
 
     public PBC(int lambda) {
-        CHET = new scheme.CH.CHET_RSA_CDK_2017.Native(lambda);
+        CHET = new scheme.CH.CH_ET_BC_CDK_2017.Native(lambda);
     }
 
     public void SetUp(PublicParam SP, curve.PBC curve) {
@@ -112,18 +112,10 @@ public class PBC {
     }
 
     public void Hash(HashValue H, Randomness R, PublicKeyGroup MHKS, base.LSSS.PBC.Matrix MSP, BigInteger m) {
-        scheme.CH.CHET_RSA_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CHET_RSA_CDK_2017.Native.ETrapdoor();
+        scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
         CHET.Hash(H.CHET_H, R.CHET_R, etd, MHKS.hk, m);
-        ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(MHKS.GP.GT.newElementFromBytes(etd.p_p.toByteArray()).getImmutable());
+        ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(BigInteger2G(MHKS.GP.GT, etd.sk_ch_2.d).getImmutable());
         MA_ABE.Encrypt(H.MA_ABE_C, MHKS.GP, MHKS.MA_ABE_PKG, MSP, MA_ABE_PT);
-    }
-
-    public void Hash(HashValue H, Randomness R, PublicKeyGroup MHKS, SecretKeyGroup MSKS, base.LSSS.PBC.Matrix MSP, BigInteger m) {
-        scheme.CH.CHET_RSA_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CHET_RSA_CDK_2017.Native.ETrapdoor();
-        CHET.Hash(H.CHET_H, R.CHET_R, etd, MHKS.hk, m);
-        ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(BigInteger2G(MHKS.GP.GT, etd.p_p).getImmutable());
-        MA_ABE.Encrypt(H.MA_ABE_C, MHKS.GP, MHKS.MA_ABE_PKG, MSP, MA_ABE_PT);
-        MA_ABE.Decrypt(MA_ABE_PT, MHKS.GP, MSKS.MA_ABE_SKG, MSP, H.MA_ABE_C);
     }
 
     public boolean Check(HashValue H, Randomness R, PublicKeyGroup MHKS, BigInteger m) {
@@ -134,11 +126,8 @@ public class PBC {
         if(!Check(H, R, MHKS, m)) throw new RuntimeException("Wrong Hash Value");
         ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(MHKS.GP.GetGTElement());
         MA_ABE.Decrypt(MA_ABE_PT, MHKS.GP, MSKS.MA_ABE_SKG, MSP, H.MA_ABE_C);
-        BigInteger p_p = G2BigInteger(MA_ABE_PT.m);
-        scheme.CH.CHET_RSA_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CHET_RSA_CDK_2017.Native.ETrapdoor();
-        etd.p_p = p_p;
-        if(H.CHET_H.n_p.mod(p_p).compareTo(BigInteger.ZERO) != 0) throw new RuntimeException("Wrong MA_ABE set");
-        etd.q_p = H.CHET_H.n_p.divide(p_p);
+        scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
+        etd.sk_ch_2.d = G2BigInteger(MA_ABE_PT.m);
         CHET.Adapt(R_p.CHET_R, H.CHET_H, R.CHET_R, etd, MHKS.hk, MSKS.tk, m, m_p);
     }
 }

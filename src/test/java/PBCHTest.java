@@ -18,7 +18,7 @@ public class PBCHTest {
     public static Stream<Arguments> GetPBCSymmAuth() {
         return Stream.of(curve.PBC.A, curve.PBC.A1, curve.PBC.E).flatMap(a ->
                 Stream.of(16, 32, 64).flatMap(b ->
-                        Stream.of(64, 128, 256).flatMap(c -> Stream.of(Arguments.of(a, b, c)))));
+                        Stream.of(32, 64, 128).flatMap(c -> Stream.of(Arguments.of(a, b, c)))));
     }
 
     @BeforeAll
@@ -144,7 +144,7 @@ public class PBCHTest {
             scheme.PBCH.MAPCH_ZLW_2021.PBC.Randomness r2 = new scheme.PBCH.MAPCH_ZLW_2021.PBC.Randomness();
             scheme.PBCH.MAPCH_ZLW_2021.PBC.Randomness r1_p = new scheme.PBCH.MAPCH_ZLW_2021.PBC.Randomness();
 
-            scheme.Hash(h1, r1, PKG, SKG1, MSP, m1);
+            scheme.Hash(h1, r1, PKG, MSP, m1);
             scheme.Hash(h2, r2, PKG, MSP, m2);
             assertTrue(scheme.Check(h1, r1, PKG, m1), "H(m1) valid");
             assertFalse(scheme.Check(h1, r1, PKG, m2), "H(m2) invalid");
