@@ -1,4 +1,5 @@
 import Signature.BLS.PBC;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -6,8 +7,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static utils.Func.InitialLib;
 
 public class SignatureTest {
+    @BeforeAll
+    static void initTest() {
+        InitialLib();
+    }
+
     @DisplayName("test BLS")
     @Nested
     class BLSTest {

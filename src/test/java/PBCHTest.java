@@ -20,6 +20,7 @@ public class PBCHTest {
                 Stream.of(16, 32, 64).flatMap(b ->
                         Stream.of(32, 64, 128).flatMap(c -> Stream.of(Arguments.of(a, b, c)))));
     }
+
     public static Stream<Arguments> GetPBCSymmAuthBigLambda() {
         return Stream.of(curve.PBC.A, curve.PBC.A1, curve.PBC.E).flatMap(a ->
                 Stream.of(16, 32, 64).flatMap(b ->
