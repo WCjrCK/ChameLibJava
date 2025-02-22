@@ -521,4 +521,43 @@ public class CHTest {
             }
         }
     }
+
+    @DisplayName("test paper 《Fully Collision-Resistant Chameleon-Hashes from Simpler and Post-Quantum Assumptions》")
+    @Nested
+    class FullyCollisionResistantChameleonHashesFromSimplerAndPostQuantumAssumptionsTest {
+        @DisplayName("test FCR_CH_PreQA_DKS_2020")
+        @Nested
+        class FCR_CH_PreQA_DKS_2020_Test {
+            @DisplayName("test PBC impl")
+            @ParameterizedTest(name = "test curve {0}")
+            @EnumSource(names = {"A", "A1", "E"})
+            void JPBCTest(PBC curve) {
+                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC();
+                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam();
+                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey pk = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey();
+                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey sk = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey();
+                scheme.SetUp(pp, curve);
+                scheme.KeyGen(pk, sk, pp);
+                Element m1 = pp.GetZrElement();
+                Element m2 = pp.GetZrElement();
+                assertFalse(m1.isEqual(m2), "m1 != m2");
+
+                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue h1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
+                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue h2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
+                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
+                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
+                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1_p = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
+                scheme.Hash(h1, r1, pp, pk, m1);
+                assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
+                assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
+                scheme.Hash(h2, r2, pp, pk, m2);
+                assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
+                assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
+
+                scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
+                assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
+            }
+        }
+    }
 }
