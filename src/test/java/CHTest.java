@@ -540,12 +540,12 @@ public class CHTest {
                             break;
 
                         default:
-                            // non symm group there may be different element in string that isEqual returns true.
+                            // non-symmetric group there may be different element in string that isEqual returns true.
                             return;
                     }
                 }
                 if(group == Group.GT && curve == PBC.G_149) {
-                    // type G's GT has wrong behave in fromhash
+                    // type G's GT has wrong behave in GT hash to GT
                     return;
                 }
                 scheme.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC();
@@ -563,6 +563,57 @@ public class CHTest {
                 scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
                 scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
                 scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1_p = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
+                scheme.Hash(h1, r1, pp, pk, m1);
+                assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
+                assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
+                scheme.Hash(h2, r2, pp, pk, m2);
+                assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
+                assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
+
+                scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
+                assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
+            }
+        }
+    }
+
+    @DisplayName("test paper 《Bringing Order to Chaos：The Case of Collision-Resistant Chameleon-Hashes》")
+    @Nested
+    class BringingOrderToChaosTheCaseOfCollisionResistantChameleonHashesTest {
+        @DisplayName("test CR_CH_DSS_2020")
+        @Nested
+        class CR_CH_DSS_2020_Test {
+            @DisplayName("test PBC impl")
+            @ParameterizedTest(name = "test curve {0} group {1}")
+            @MethodSource("CHTest#GetPBCCartesianProduct")
+            void JPBCTest(curve.PBC curve, Group group) {
+                if(group == Group.G2) {
+                    switch (curve) {
+                        case A:
+                        case A1:
+                        case E:
+                            break;
+
+                        default:
+                            // non-symmetric group there may be different element in string that isEqual returns true.
+                            return;
+                    }
+                }
+                scheme.CH.CR_CH_DSS_2020.PBC scheme = new scheme.CH.CR_CH_DSS_2020.PBC();
+                scheme.CH.CR_CH_DSS_2020.PBC.PublicParam pp = new scheme.CH.CR_CH_DSS_2020.PBC.PublicParam();
+                scheme.CH.CR_CH_DSS_2020.PBC.PublicKey pk = new scheme.CH.CR_CH_DSS_2020.PBC.PublicKey();
+                scheme.CH.CR_CH_DSS_2020.PBC.SecretKey sk = new scheme.CH.CR_CH_DSS_2020.PBC.SecretKey();
+                scheme.SetUp(pp, curve, group);
+                scheme.KeyGen(pk, sk, pp);
+                Element m1 = pp.GetGElement();
+                Element m2 = pp.GetGElement();
+                assertFalse(m1.isEqual(m2), "m1 != m2");
+
+                scheme.CH.CR_CH_DSS_2020.PBC.HashValue h1 = new scheme.CH.CR_CH_DSS_2020.PBC.HashValue();
+                scheme.CH.CR_CH_DSS_2020.PBC.HashValue h2 = new scheme.CH.CR_CH_DSS_2020.PBC.HashValue();
+                scheme.CH.CR_CH_DSS_2020.PBC.Randomness r1 = new scheme.CH.CR_CH_DSS_2020.PBC.Randomness();
+                scheme.CH.CR_CH_DSS_2020.PBC.Randomness r2 = new scheme.CH.CR_CH_DSS_2020.PBC.Randomness();
+                scheme.CH.CR_CH_DSS_2020.PBC.Randomness r1_p = new scheme.CH.CR_CH_DSS_2020.PBC.Randomness();
                 scheme.Hash(h1, r1, pp, pk, m1);
                 assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                 assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
