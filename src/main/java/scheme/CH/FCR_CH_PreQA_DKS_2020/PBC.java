@@ -1,5 +1,6 @@
 package scheme.CH.FCR_CH_PreQA_DKS_2020;
 
+import curve.Group;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
@@ -14,13 +15,8 @@ import utils.Hash;
 @SuppressWarnings("rawtypes")
 public class PBC {
     public static class PublicParam {
-        Pairing pairing;
-        Field Zr, G, GT;
+        Field Zr, G;
         Element g_1, g_2;
-
-        public Element pairing(Element g1, Element g2) {
-            return pairing.pairing(g1, g2).getImmutable();
-        }
 
         public Element H(String m) {
             return Hash.H_String_1_PBC_1(Zr, m);
@@ -55,11 +51,10 @@ public class PBC {
         public Element e_1, e_2, s_1_1, s_1_2, s_2;
     }
 
-    public void SetUp(PublicParam pp, curve.PBC curve) {
-        pp.pairing = Func.PairingGen(curve);
-        pp.G = pp.pairing.getG1();
-        pp.GT = pp.pairing.getGT();
-        pp.Zr = pp.pairing.getZr();
+    public void SetUp(PublicParam pp, curve.PBC curve, Group group) {
+        Pairing pairing = Func.PairingGen(curve);
+        pp.G = Func.GetPBCField(pairing, group);
+        pp.Zr = pairing.getZr();
         pp.g_1 = pp.GetGElement();
         pp.g_2 = pp.H_p(pp.g_1);
     }

@@ -529,14 +529,30 @@ public class CHTest {
         @Nested
         class FCR_CH_PreQA_DKS_2020_Test {
             @DisplayName("test PBC impl")
-            @ParameterizedTest(name = "test curve {0}")
-            @EnumSource(names = {"A", "A1", "E"})
-            void JPBCTest(PBC curve) {
+            @ParameterizedTest(name = "test curve {0} group {1}")
+            @MethodSource("CHTest#GetPBCCartesianProduct")
+            void JPBCTest(curve.PBC curve, Group group) {
+                if(group == Group.G2) {
+                    switch (curve) {
+                        case A:
+                        case A1:
+                        case E:
+                            break;
+
+                        default:
+                            // non symm group there may be different element in string that isEqual returns true.
+                            return;
+                    }
+                }
+                if(group == Group.GT && curve == PBC.G_149) {
+                    // type G's GT has wrong behave in fromhash
+                    return;
+                }
                 scheme.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC();
                 scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam();
                 scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey pk = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey();
                 scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey sk = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey();
-                scheme.SetUp(pp, curve);
+                scheme.SetUp(pp, curve, group);
                 scheme.KeyGen(pk, sk, pp);
                 Element m1 = pp.GetZrElement();
                 Element m2 = pp.GetZrElement();
