@@ -741,23 +741,6 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-//                if(group == Group.G2) {
-//                    switch (curve) {
-//                        case A:
-//                        case A1:
-//                        case E:
-//                            break;
-//
-//                        default:
-//                            // non-symmetric group there may be different element in string that isEqual returns true.
-//                            return;
-//                    }
-//                }
-//
-//                if(group == Group.GT && curve == PBC.G_149) {
-//                    // type G's GT has wrong behave in GT hash to GT
-//                    return;
-//                }
 
                 scheme.CH.CH_AMV_2017.PBC scheme = new scheme.CH.CH_AMV_2017.PBC();
                 scheme.CH.CH_AMV_2017.PBC.PublicParam pp = new scheme.CH.CH_AMV_2017.PBC.PublicParam();
@@ -774,16 +757,19 @@ public class CHTest {
                 scheme.CH.CH_AMV_2017.PBC.Randomness r1 = new scheme.CH.CH_AMV_2017.PBC.Randomness();
                 scheme.CH.CH_AMV_2017.PBC.Randomness r2 = new scheme.CH.CH_AMV_2017.PBC.Randomness();
                 scheme.CH.CH_AMV_2017.PBC.Randomness r1_p = new scheme.CH.CH_AMV_2017.PBC.Randomness();
-                scheme.Hash(h1, r1, pp, pk, m1);
-                assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
-                assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
-                scheme.Hash(h2, r2, pp, pk, m2);
-                assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
-                assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
+                scheme.CH.CH_AMV_2017.PBC.EncRandomness er1 = new scheme.CH.CH_AMV_2017.PBC.EncRandomness();
+                scheme.CH.CH_AMV_2017.PBC.EncRandomness er2 = new scheme.CH.CH_AMV_2017.PBC.EncRandomness();
+                scheme.CH.CH_AMV_2017.PBC.EncRandomness er1_p = new scheme.CH.CH_AMV_2017.PBC.EncRandomness();
+                scheme.Hash(h1, er1, r1, pp, pk, m1);
+                assertTrue(scheme.Check(h1, er1, pp, pk, m1), "H(m1) valid");
+                assertFalse(scheme.Check(h1, er1, pp, pk, m2), "not H(m1)");
+                scheme.Hash(h2, er2, r2, pp, pk, m2);
+                assertTrue(scheme.Check(h2, er2, pp, pk, m2), "H(m2) valid");
+                assertFalse(scheme.Check(h2, er2, pp, pk, m1), "not H(m2)");
 
-                scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
-                assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
-                assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
+                scheme.Adapt(er1_p, r1_p, h1, er1, pp, pk, sk, m1, m2);
+                assertTrue(scheme.Check(h1, er1_p, pp, pk, m2), "Adapt(m2) valid");
+                assertFalse(scheme.Check(h1, er1_p, pp, pk, m1), "not Adapt(m1)");
             }
         }
     }

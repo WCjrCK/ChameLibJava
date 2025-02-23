@@ -82,11 +82,6 @@ public class IBCHTest {
 
                 scheme.Adapt(r1_p, r1, SP, sk1, L2, m1, m2);
                 assertFalse(scheme.Check(h1, r1_p, SP, L2, m2), "Adapt(L2, m2) invalid");
-
-//                scheme.Adapt(r1_p, r1, SP, sk2, L1, m1, m2);
-//                System.out.println(r1_p.r_1);
-//                System.out.println(r1_p.r_2);
-//                assertFalse(scheme.Check(h1, r1_p, SP, L1, m2), "Adapt(sk2, L1, m2) invalid");
             }
         }
     }
