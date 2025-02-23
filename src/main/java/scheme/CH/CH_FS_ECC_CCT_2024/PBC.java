@@ -13,30 +13,31 @@ import utils.Hash;
  */
 
 @SuppressWarnings("rawtypes")
-public class PBC {public static class PublicParam {
-    Field Zr, G;
-    Element g;
+public class PBC {
+    public static class PublicParam {
+        Field Zr, G;
+        Element g;
 
-    public Element H(Element m) {
-        return Hash.H_PBC_1_1(G, m);
-    }
+        public Element H(Element m) {
+            return Hash.H_PBC_1_1(G, m);
+        }
 
-    private Element H_p(String m) {
-        return Hash.H_String_1_PBC_1(Zr, m);
-    }
+        private Element H_p(String m) {
+            return Hash.H_String_1_PBC_1(Zr, m);
+        }
 
-    public Element H_p(Element m1, Element m2, Element m3, Element m4) {
-        return H_p(String.format("%s|%s|%s|%s", m1, m2, m3, m4));
-    }
+        public Element H_p(Element m1, Element m2, Element m3, Element m4) {
+            return H_p(String.format("%s|%s|%s|%s", m1, m2, m3, m4));
+        }
 
-    public Element GetGElement() {
-        return G.newRandomElement().getImmutable();
-    }
+        public Element GetGElement() {
+            return G.newRandomElement().getImmutable();
+        }
 
-    public Element GetZrElement() {
-        return Zr.newRandomElement().getImmutable();
+        public Element GetZrElement() {
+            return Zr.newRandomElement().getImmutable();
+        }
     }
-}
 
     public static class PublicKey {
         public Element g_x;

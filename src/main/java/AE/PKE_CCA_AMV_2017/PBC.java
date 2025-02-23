@@ -18,10 +18,10 @@ import java.util.HashMap;
 public class PBC {
     public static class PublicParam {
         Field Zr, G;
-        Element g_1, g_2;
+        public Element g_1, g_2;
         // due to wrong behave in many curve & group at elementfrombyte, have to make map to implement Omega
-        HashMap<String, Element> Omega = new HashMap<>();
-        HashMap<String, Element> Omega_inv = new HashMap<>();
+        public HashMap<String, Element> Omega = new HashMap<>();
+        public HashMap<String, Element> Omega_inv = new HashMap<>();
 
         private Element H(String m) {
             return Hash.H_String_1_PBC_1(Zr, m);
@@ -95,6 +95,10 @@ public class PBC {
 
     public void Encrypt(CipherText CT, PublicParam pp, PublicKey pk, PlainText PT) {
         Element rho = pp.GetZrElement();
+        Encrypt(CT, pp, pk, PT, rho);
+    }
+
+    public void Encrypt(CipherText CT, PublicParam pp, PublicKey pk, PlainText PT, Element rho) {
         CT.c_1 = pp.g_1.powZn(rho).getImmutable();
         CT.c_2 = pp.g_2.powZn(rho).getImmutable();
         CT.c_3 = pk.y_3.powZn(rho).mul(pp.Omega(PT.m)).getImmutable();

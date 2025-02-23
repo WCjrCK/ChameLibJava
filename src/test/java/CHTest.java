@@ -1,12 +1,15 @@
 import curve.Group;
 import curve.PBC;
 import it.unisa.dia.gas.jpbc.Element;
+import it.unisa.dia.gas.jpbc.Field;
+import it.unisa.dia.gas.jpbc.Pairing;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
+import utils.Func;
 
 import java.math.BigInteger;
 import java.util.EnumSet;
@@ -17,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Func.InitialLib;
 
+@SuppressWarnings("rawtypes")
 public class CHTest {
     public static Stream<Arguments> GetPBCCartesianProduct() {
         return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> EnumSet.allOf(Group.class).stream().flatMap(b -> Stream.of(Arguments.of(a, b))));
@@ -25,6 +29,45 @@ public class CHTest {
     @BeforeAll
     static void initTest() {
         InitialLib();
+    }
+
+    @DisplayName("test NIZK")
+    @ParameterizedTest(name = "test curve {0} group {1}")
+    @MethodSource("CHTest#GetPBCCartesianProduct")
+    void NIZKTest(curve.PBC curve, Group group) {
+        Pairing pairing = Func.PairingGen(curve);
+        Field G = Func.GetPBCField(pairing, group);
+        Field Zr = pairing.getZr();
+
+        Element x1 = Zr.newRandomElement().getImmutable();
+        Element g1 = G.newRandomElement().getImmutable();
+        Element y1 = g1.powZn(x1).getImmutable();
+        Element yt = G.newRandomElement().getImmutable();
+
+        base.NIZK.PBC.DL_Proof pi1 = new base.NIZK.PBC.DL_Proof(Zr, x1, g1, y1);
+
+        assertTrue(pi1.Check(g1, y1), "proof pass");
+        assertFalse(pi1.Check(g1, yt), "proof fail");
+
+        Element g2 = G.newRandomElement().getImmutable();
+        Element y2 = g2.powZn(x1).getImmutable();
+
+        base.NIZK.PBC.EQUAL_DL_Proof pi2 = new base.NIZK.PBC.EQUAL_DL_Proof(Zr, x1, g1, y1, g2, y2);
+
+        assertTrue(pi2.Check(g1, y1, g2, y2), "proof pass");
+        assertFalse(pi2.Check(g1, yt, g2, y2), "proof fail");
+        assertFalse(pi2.Check(g1, y1, g2, yt), "proof fail");
+        assertFalse(pi2.Check(g1, y2, g2, y1), "proof fail");
+
+        Element x2 = Zr.newRandomElement().getImmutable();
+        y2 = g2.powZn(x2).getImmutable();
+        Element y3 = y1.mul(y2).getImmutable();
+
+        base.NIZK.PBC.REPRESENT_Proof pi3 = new base.NIZK.PBC.REPRESENT_Proof(Zr, y3, g1, x1, g2, x2);
+
+        assertTrue(pi3.Check(y3, g1, g2), "proof pass");
+        assertFalse(pi3.Check(y3, g1, yt), "proof fail");
+        assertFalse(pi3.Check(y3, g2, g1), "proof fail");
     }
 
     @DisplayName("test paper 《On the Key Exposure Problem in Chameleon Hashes》")
@@ -674,6 +717,63 @@ public class CHTest {
                 scheme.CH.CH_FS_ECC_CCT_2024.PBC.Randomness r1 = new scheme.CH.CH_FS_ECC_CCT_2024.PBC.Randomness();
                 scheme.CH.CH_FS_ECC_CCT_2024.PBC.Randomness r2 = new scheme.CH.CH_FS_ECC_CCT_2024.PBC.Randomness();
                 scheme.CH.CH_FS_ECC_CCT_2024.PBC.Randomness r1_p = new scheme.CH.CH_FS_ECC_CCT_2024.PBC.Randomness();
+                scheme.Hash(h1, r1, pp, pk, m1);
+                assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
+                assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
+                scheme.Hash(h2, r2, pp, pk, m2);
+                assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
+                assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
+
+                scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
+                assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
+            }
+        }
+    }
+
+    @DisplayName("test paper 《Redactable Blockchain or Rewriting History in Bitcoin and Friends》")
+    @Nested
+    class RedactableBlockchainOrRewritingHistoryInBitcoinAndFriendsTest {
+        @DisplayName("test CH_AMV_2017")
+        @Nested
+        class CH_AMV_2017_Test {
+            @DisplayName("test PBC impl")
+            @ParameterizedTest(name = "test curve {0} group {1}")
+            @MethodSource("CHTest#GetPBCCartesianProduct")
+            void JPBCTest(curve.PBC curve, Group group) {
+//                if(group == Group.G2) {
+//                    switch (curve) {
+//                        case A:
+//                        case A1:
+//                        case E:
+//                            break;
+//
+//                        default:
+//                            // non-symmetric group there may be different element in string that isEqual returns true.
+//                            return;
+//                    }
+//                }
+//
+//                if(group == Group.GT && curve == PBC.G_149) {
+//                    // type G's GT has wrong behave in GT hash to GT
+//                    return;
+//                }
+
+                scheme.CH.CH_AMV_2017.PBC scheme = new scheme.CH.CH_AMV_2017.PBC();
+                scheme.CH.CH_AMV_2017.PBC.PublicParam pp = new scheme.CH.CH_AMV_2017.PBC.PublicParam();
+                scheme.CH.CH_AMV_2017.PBC.PublicKey pk = new scheme.CH.CH_AMV_2017.PBC.PublicKey();
+                scheme.CH.CH_AMV_2017.PBC.SecretKey sk = new scheme.CH.CH_AMV_2017.PBC.SecretKey();
+                scheme.SetUp(pp, curve, group);
+                scheme.KeyGen(pk, sk, pp);
+                Element m1 = pp.GetZrElement();
+                Element m2 = pp.GetZrElement();
+                assertFalse(m1.isEqual(m2), "m1 != m2");
+
+                scheme.CH.CH_AMV_2017.PBC.HashValue h1 = new scheme.CH.CH_AMV_2017.PBC.HashValue();
+                scheme.CH.CH_AMV_2017.PBC.HashValue h2 = new scheme.CH.CH_AMV_2017.PBC.HashValue();
+                scheme.CH.CH_AMV_2017.PBC.Randomness r1 = new scheme.CH.CH_AMV_2017.PBC.Randomness();
+                scheme.CH.CH_AMV_2017.PBC.Randomness r2 = new scheme.CH.CH_AMV_2017.PBC.Randomness();
+                scheme.CH.CH_AMV_2017.PBC.Randomness r1_p = new scheme.CH.CH_AMV_2017.PBC.Randomness();
                 scheme.Hash(h1, r1, pp, pk, m1);
                 assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                 assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
