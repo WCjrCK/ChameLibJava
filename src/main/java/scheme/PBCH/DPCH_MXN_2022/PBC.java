@@ -88,18 +88,17 @@ public class PBC {
 
         base.LSSS.PBC.Matrix.Vector t_x = new base.LSSS.PBC.Matrix.Vector();
         t_x.v = new Element[l1];
-        for(int i = 1;i <= l1;++i) t_x.v[i - 1] = pp.GP_MA_ABE.H(String.format("%s%s0%d", Arrays.toString(r_t), MSP.formula, i));
+        for(int i = 1;i <= l1;++i) t_x.v[i - 1] = pp.GP_MA_ABE.Ht(String.format("%s%s0%d", Arrays.toString(r_t), MSP.formula, i));
 
         base.LSSS.PBC.Matrix.Vector v = new base.LSSS.PBC.Matrix.Vector();
         v.v = new Element[l2];
-        v.v[0] = pp.GP_MA_ABE.H(String.format("%s%s", Arrays.toString(r_t), MSP.formula));
-        for(int i = 2;i <= l2;++i) v.v[i - 1] = pp.GP_MA_ABE.H(String.format("%s%s1%d", Arrays.toString(r_t), MSP.formula, i));
+        v.v[0] = pp.GP_MA_ABE.Ht(String.format("%s%s", Arrays.toString(r_t), MSP.formula));
+        for(int i = 2;i <= l2;++i) v.v[i - 1] = pp.GP_MA_ABE.Ht(String.format("%s%s1%d", Arrays.toString(r_t), MSP.formula, i));
 
         base.LSSS.PBC.Matrix.Vector w = new base.LSSS.PBC.Matrix.Vector();
         w.v = new Element[l2];
         w.v[0] = pp.GP_MA_ABE.Zr.newZeroElement().getImmutable();
-        for(int i = 2;i <= l2;++i) w.v[i - 1] = pp.GP_MA_ABE.H(String.format("%s%s2%d", Arrays.toString(r_t), MSP.formula, i));
-
+        for(int i = 2;i <= l2;++i) w.v[i - 1] = pp.GP_MA_ABE.Ht(String.format("%s%s2%d", Arrays.toString(r_t), MSP.formula, i));
 
         MA_ABE.Encrypt(c_MA_ABE, pp.GP_MA_ABE, PKG.MA_ABE_PKG, MSP, pt_MA_ABE, v, w, t_x);
     }

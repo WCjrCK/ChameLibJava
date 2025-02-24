@@ -1,4 +1,5 @@
 import base.BinaryTree.PBC;
+import curve.Group;
 import it.unisa.dia.gas.jpbc.Element;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,6 +39,16 @@ public class PBCHTest {
     public static Stream<Arguments> GetPBCInvertkn() {
         return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
                 Stream.of(128, 256, 512).flatMap(b ->
+                        Stream.of(16, 32, 64).flatMap(c ->
+                                Stream.of(Arguments.of(a, false, b, c), Arguments.of(a, true, b, c))
+                        )
+                )
+        );
+    }
+
+    public static Stream<Arguments> GetPBCInvertGroupn() {
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
+                EnumSet.allOf(Group.class).stream().flatMap(b ->
                         Stream.of(16, 32, 64).flatMap(c ->
                                 Stream.of(Arguments.of(a, false, b, c), Arguments.of(a, true, b, c))
                         )
@@ -410,6 +421,136 @@ public class PBCHTest {
                     assertFalse(scheme.Check(h2, r1_p, mpk, m1), "different time");
                     assertFalse(scheme.Check(h2, r1_p, mpk, m2), "different time");
                 }, "id1 expired");
+            }
+        }
+    }
+
+    @DisplayName("test paper 《Revocable Policy-Based ChameleonHash for Blockchain Rewriting》")
+    @Nested
+    class RevocablePolicyBasedChameleonHashForBlockchainRewritingTest {
+        @DisplayName("test RPCH_TMM_2022")
+        @Nested
+        class RPCH_TMM_2022_Test {
+            @DisplayName("test PBC impl")
+            @ParameterizedTest(name = "test curve {0} swap_G1G2 {1} CH group = {2} leaf node = {3}")
+            @MethodSource("PBCHTest#GetPBCInvertGroupn")
+            void JPBCTest(curve.PBC curve, boolean swap_G1G2, Group group, int n) {
+                scheme.PBCH.RPCH_TMM_2022.PBC scheme = new scheme.PBCH.RPCH_TMM_2022.PBC();
+                scheme.PBCH.RPCH_TMM_2022.PBC.PublicParam SP = new scheme.PBCH.RPCH_TMM_2022.PBC.PublicParam(curve, swap_G1G2, group);
+                scheme.PBCH.RPCH_TMM_2022.PBC.MasterPublicKey mpk = new scheme.PBCH.RPCH_TMM_2022.PBC.MasterPublicKey();
+                scheme.PBCH.RPCH_TMM_2022.PBC.MasterSecretKey msk = new scheme.PBCH.RPCH_TMM_2022.PBC.MasterSecretKey();
+                scheme.SetUp(mpk, msk, SP);
+
+                base.BinaryTree.PBC BT = new PBC(n);
+                base.BinaryTree.PBC.RevokeList rl = new base.BinaryTree.PBC.RevokeList();
+
+                base.LSSS.PBC LSSS = new base.LSSS.PBC();
+                base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(SP.GP.Zr);
+                BooleanFormulaParser.PolicyList pl = new BooleanFormulaParser.PolicyList();
+                LSSS.GenLSSSMatrices(MSP, pl, "A&(DDDD|(BB&CCC))");
+
+                BooleanFormulaParser.AttributeList S1 = new BooleanFormulaParser.AttributeList();
+                S1.attrs.add("A");
+                S1.attrs.add("DDDD");
+
+                BooleanFormulaParser.AttributeList S2 = new BooleanFormulaParser.AttributeList();
+                S2.attrs.add("BB");
+                S2.attrs.add("CCC");
+
+                BooleanFormulaParser.AttributeList S3 = new BooleanFormulaParser.AttributeList();
+                S3.attrs.add("A");
+                S3.attrs.add("BB");
+                S3.attrs.add("CCC");
+
+                Element id1 = SP.GP.GetZrElement();
+                scheme.PBCH.RPCH_TMM_2022.PBC.PublicKey pk1 = new scheme.PBCH.RPCH_TMM_2022.PBC.PublicKey();
+                scheme.PBCH.RPCH_TMM_2022.PBC.SecretKey sk1 = new scheme.PBCH.RPCH_TMM_2022.PBC.SecretKey();
+                scheme.KeyGen(pk1, sk1, BT, SP, mpk, msk, S1, id1);
+
+                Element id2 = SP.GP.GetZrElement();
+                scheme.PBCH.RPCH_TMM_2022.PBC.PublicKey pk2 = new scheme.PBCH.RPCH_TMM_2022.PBC.PublicKey();
+                scheme.PBCH.RPCH_TMM_2022.PBC.SecretKey sk2 = new scheme.PBCH.RPCH_TMM_2022.PBC.SecretKey();
+                scheme.KeyGen(pk2, sk2, BT, SP, mpk, msk, S2, id2);
+
+                scheme.PBCH.RPCH_TMM_2022.PBC.PublicKey pk3 = new scheme.PBCH.RPCH_TMM_2022.PBC.PublicKey();
+                scheme.PBCH.RPCH_TMM_2022.PBC.SecretKey sk3 = new scheme.PBCH.RPCH_TMM_2022.PBC.SecretKey();
+                scheme.KeyGen(pk3, sk3, BT, SP, mpk, msk, S3, id1);
+
+                scheme.Revoke(rl, id1, 10);
+                scheme.Revoke(rl, id2, 100);
+
+                scheme.PBCH.RPCH_TMM_2022.PBC.UpdateKey ku1 = new scheme.PBCH.RPCH_TMM_2022.PBC.UpdateKey();
+                scheme.UpdateKeyGen(ku1, SP, mpk, BT, rl, 5);
+
+                scheme.PBCH.RPCH_TMM_2022.PBC.UpdateKey ku2 = new scheme.PBCH.RPCH_TMM_2022.PBC.UpdateKey();
+                scheme.UpdateKeyGen(ku2, SP, mpk, BT, rl, 50);
+
+                scheme.PBCH.RPCH_TMM_2022.PBC.DecryptKey dk_1_1 = new scheme.PBCH.RPCH_TMM_2022.PBC.DecryptKey();
+                scheme.DecryptKeyGen(dk_1_1, SP, mpk, sk1, ku1, BT, rl);
+
+                scheme.PBCH.RPCH_TMM_2022.PBC.DecryptKey dk_1_2 = new scheme.PBCH.RPCH_TMM_2022.PBC.DecryptKey();
+                scheme.DecryptKeyGen(dk_1_2, SP, mpk, sk1, ku2, BT, rl);
+
+                scheme.PBCH.RPCH_TMM_2022.PBC.DecryptKey dk_2_1 = new scheme.PBCH.RPCH_TMM_2022.PBC.DecryptKey();
+                scheme.DecryptKeyGen(dk_2_1, SP, mpk, sk2, ku1, BT, rl);
+
+                scheme.PBCH.RPCH_TMM_2022.PBC.DecryptKey dk_2_2 = new scheme.PBCH.RPCH_TMM_2022.PBC.DecryptKey();
+                scheme.DecryptKeyGen(dk_2_2, SP, mpk, sk2, ku2, BT, rl);
+
+                scheme.PBCH.RPCH_TMM_2022.PBC.DecryptKey dk_3_1 = new scheme.PBCH.RPCH_TMM_2022.PBC.DecryptKey();
+                scheme.DecryptKeyGen(dk_3_1, SP, mpk, sk3, ku1, BT, rl);
+
+                scheme.PBCH.RPCH_TMM_2022.PBC.DecryptKey dk_3_2 = new scheme.PBCH.RPCH_TMM_2022.PBC.DecryptKey();
+                scheme.DecryptKeyGen(dk_3_2, SP, mpk, sk3, ku2, BT, rl);
+
+                Element m1 = SP.GP_CHET.GetZrElement();
+                Element m2 = SP.GP_CHET.GetZrElement();
+
+                scheme.PBCH.RPCH_TMM_2022.PBC.HashValue h1 = new scheme.PBCH.RPCH_TMM_2022.PBC.HashValue();
+                scheme.PBCH.RPCH_TMM_2022.PBC.HashValue h2 = new scheme.PBCH.RPCH_TMM_2022.PBC.HashValue();
+                scheme.PBCH.RPCH_TMM_2022.PBC.Randomness r1 = new scheme.PBCH.RPCH_TMM_2022.PBC.Randomness();
+                scheme.PBCH.RPCH_TMM_2022.PBC.Randomness r2 = new scheme.PBCH.RPCH_TMM_2022.PBC.Randomness();
+                scheme.PBCH.RPCH_TMM_2022.PBC.Randomness r1_p = new scheme.PBCH.RPCH_TMM_2022.PBC.Randomness();
+
+                scheme.Hash(h1, r1, SP, mpk, pk1, MSP, m1, 5);
+                assertTrue(scheme.Check(h1, r1, pk1, m1), "H(m1) valid");
+                assertFalse(scheme.Check(h1, r1, pk1, m2), "H(m2) invalid");
+                assertFalse(scheme.Check(h1, r1, pk2, m1), "H(pk2, m1) invalid");
+                assertFalse(scheme.Check(h1, r1, pk1, m2), "H(pk2, m2) invalid");
+
+                scheme.Hash(h2, r2, SP, mpk, pk2, MSP, m2, 50);
+                assertTrue(scheme.Check(h2, r2, pk2, m2), "H(m2) valid");
+                assertFalse(scheme.Check(h2, r2, pk2, m1), "H(m1) invalid");
+
+                scheme.Adapt(r1_p, h1, r1, SP, pk1, dk_1_1, MSP, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, pk1, m2), "Adapt(m2) valid");
+                assertFalse(scheme.Check(h1, r1_p, pk1, m1), "Adapt(m1) invalid");
+
+                assertThrows(RuntimeException.class, () -> {
+                    scheme.Adapt(r1_p, h1, r1, SP, pk2, dk_2_1, MSP, m1, m2);
+                    assertFalse(scheme.Check(h1, r1_p, pk2, m2), "policy false");
+                    assertFalse(scheme.Check(h1, r1_p, pk2, m1), "policy false");
+                }, "policy false");
+
+                assertThrows(RuntimeException.class, () -> {
+                    scheme.Adapt(r1_p, h1, r1, SP, pk3, dk_3_1, MSP, m1, m2);
+                    assertFalse(scheme.Check(h1, r1_p, pk3, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h1, r1_p, pk3, m1), "Adapt(m1) invalid");
+                }, "wrong hash");
+
+                assertThrows(RuntimeException.class, () -> {
+                    scheme.Adapt(r1_p, h2, r2, SP, pk1, dk_1_1, MSP, m2, m1);
+                    assertFalse(scheme.Check(h2, r1_p, pk1, m1), "different time");
+                    assertFalse(scheme.Check(h2, r1_p, pk1, m2), "different time");
+                }, "different time");
+
+                try {
+                    scheme.Adapt(r1_p, h2, r2, SP, pk1, dk_1_2, MSP, m2, m1);
+                    assertFalse(scheme.Check(h2, r1_p, pk1, m1), "different time");
+                    assertFalse(scheme.Check(h2, r1_p, pk1, m2), "different time");
+                } catch (Exception e) {
+                    // id1 expired
+                }
             }
         }
     }

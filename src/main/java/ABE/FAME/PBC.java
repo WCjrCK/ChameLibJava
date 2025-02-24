@@ -1,5 +1,6 @@
 package ABE.FAME;
 
+import base.GroupParam.PBC.Asymmetry;
 import it.unisa.dia.gas.jpbc.Element;
 import utils.BooleanFormulaParser;
 import utils.Hash;
@@ -13,13 +14,13 @@ import java.util.HashMap;
 
 public class PBC {
     public static class PublicParam {
-        public base.GroupParam.PBC GP;
+        public Asymmetry GP;
 
         public PublicParam(curve.PBC curve, boolean swap_G1G2) {
-            GP = new base.GroupParam.PBC(curve, swap_G1G2);
+            GP = new Asymmetry(curve, swap_G1G2);
         }
 
-        public PublicParam(base.GroupParam.PBC GP) {
+        public PublicParam(Asymmetry GP) {
             this.GP = GP;
         }
 
@@ -29,11 +30,11 @@ public class PBC {
     }
 
     public static class MasterPublicKey {
-        public Element h, H_1, H_2, T_1, T_2;
+        public Element g, h, H_1, H_2, T_1, T_2;
     }
 
     public static class MasterSecretKey {
-        public Element g, h, b_1, b_2, a_1, a_2, g_d1, g_d2, g_d3;
+        public Element b_1, b_2, a_1, a_2, g_d1, g_d2, g_d3;
     }
 
     public static class SecretKey {
@@ -59,9 +60,9 @@ public class PBC {
     }
 
     public static class CipherText {
-        Element[] ct_0 = new Element[3];
-        Element[][] ct;
-        Element ct_p;
+        public Element[] ct_0 = new Element[3];
+        public Element[][] ct;
+        public Element ct_p;
 
         public boolean isEqual(CipherText CT_p) {
             if(ct_0.length != CT_p.ct_0.length) return false;
@@ -103,10 +104,9 @@ public class PBC {
     public void SetUp(PublicParam SP, MasterPublicKey mpk, MasterSecretKey msk, Element d_1, Element d_2, Element d_3, Element alpha) {
         mpk.h = SP.GP.GetG2Element();
 
-        msk.g = SP.GP.GetG1Element();
-        msk.h = mpk.h;
+        mpk.g = SP.GP.GetG1Element();
 
-        Element egh = SP.GP.pairing(msk.g, msk.h);
+        Element egh = SP.GP.pairing(mpk.g, mpk.h);
 
         msk.a_1 = SP.GP.GetZrElement();
         msk.a_2 = SP.GP.GetZrElement();
@@ -118,9 +118,9 @@ public class PBC {
         mpk.T_1 = egh.powZn(d_1.mul(msk.a_1).add(d_3.div(alpha))).getImmutable();
         mpk.T_2 = egh.powZn(d_2.mul(msk.a_2).add(d_3.div(alpha))).getImmutable();
 
-        msk.g_d1 = msk.g.powZn(d_1).getImmutable();
-        msk.g_d2 = msk.g.powZn(d_2).getImmutable();
-        msk.g_d3 = msk.g.powZn(d_3).getImmutable();
+        msk.g_d1 = mpk.g.powZn(d_1).getImmutable();
+        msk.g_d2 = mpk.g.powZn(d_2).getImmutable();
+        msk.g_d3 = mpk.g.powZn(d_3).getImmutable();
     }
 
     public void KeyGen(SecretKey sk, PublicParam SP, MasterPublicKey mpk, MasterSecretKey msk, BooleanFormulaParser.AttributeList S) {
@@ -136,12 +136,12 @@ public class PBC {
             Element sigma_y = SP.GP.GetZrElement();
             sk.sk_y[i][0] = SP.H(y + "11").powZn(msk.b_1.mul(r_1).div(msk.a_1))
                     .mul(SP.H(y + "21").powZn(msk.b_2.mul(r_2).div(msk.a_1)))
-                    .mul(SP.H(y + "31").powZn(r_1.add(r_2).div(msk.a_1))).mul(msk.g.powZn(sigma_y.div(msk.a_1))).getImmutable();
+                    .mul(SP.H(y + "31").powZn(r_1.add(r_2).div(msk.a_1))).mul(mpk.g.powZn(sigma_y.div(msk.a_1))).getImmutable();
 
             sk.sk_y[i][1] = SP.H(y + "12").powZn(msk.b_1.mul(r_1).div(msk.a_2))
                     .mul(SP.H(y + "22").powZn(msk.b_2.mul(r_2).div(msk.a_2)))
-                    .mul(SP.H(y + "32").powZn(r_1.add(r_2).div(msk.a_2))).mul(msk.g.powZn(sigma_y.div(msk.a_2))).getImmutable();
-            sk.sk_y[i][2] = msk.g.powZn(sigma_y).invert().getImmutable();
+                    .mul(SP.H(y + "32").powZn(r_1.add(r_2).div(msk.a_2))).mul(mpk.g.powZn(sigma_y.div(msk.a_2))).getImmutable();
+            sk.sk_y[i][2] = mpk.g.powZn(sigma_y).invert().getImmutable();
             ++i;
         }
 
@@ -149,13 +149,13 @@ public class PBC {
 
         sk.sk_p[0] = msk.g_d1.mul(SP.H("0111").powZn(msk.b_1.mul(r_1).div(msk.a_1)))
                 .mul(SP.H("0121").powZn(msk.b_2.mul(r_2).div(msk.a_1)))
-                .mul(SP.H("0131").powZn(r_1.add(r_2).div(msk.a_1))).mul(msk.g.powZn(sigma_p.div(msk.a_1))).getImmutable();
+                .mul(SP.H("0131").powZn(r_1.add(r_2).div(msk.a_1))).mul(mpk.g.powZn(sigma_p.div(msk.a_1))).getImmutable();
 
         sk.sk_p[1] = msk.g_d2.mul(SP.H("0112").powZn(msk.b_1.mul(r_1).div(msk.a_2)))
                 .mul(SP.H("0122").powZn(msk.b_2.mul(r_2).div(msk.a_2)))
-                .mul(SP.H("0132").powZn(r_1.add(r_2).div(msk.a_2))).mul(msk.g.powZn(sigma_p.div(msk.a_2))).getImmutable();
+                .mul(SP.H("0132").powZn(r_1.add(r_2).div(msk.a_2))).mul(mpk.g.powZn(sigma_p.div(msk.a_2))).getImmutable();
 
-        sk.sk_p[2] = msk.g_d3.div(msk.g.powZn(sigma_p)).getImmutable();
+        sk.sk_p[2] = msk.g_d3.div(mpk.g.powZn(sigma_p)).getImmutable();
     }
 
     public void Encrypt(CipherText CT, PublicParam SP, MasterPublicKey mpk, base.LSSS.PBC.Matrix MSP, PlainText PT) {

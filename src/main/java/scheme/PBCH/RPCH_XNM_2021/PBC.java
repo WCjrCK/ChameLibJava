@@ -1,5 +1,6 @@
 package scheme.PBCH.RPCH_XNM_2021;
 
+import base.GroupParam.PBC.Asymmetry;
 import it.unisa.dia.gas.jpbc.Element;
 import utils.BooleanFormulaParser;
 import utils.Hash;
@@ -16,16 +17,16 @@ import java.util.Random;
 public class PBC {
     public static class PublicParam {
         public ABE.RABE.PBC.PublicParam SP_RABE;
-        public base.GroupParam.PBC GP;
+        public Asymmetry GP;
 
         public PublicParam(curve.PBC curve, boolean swap_G1G2) {
-            GP = new base.GroupParam.PBC(curve, swap_G1G2);
-            SP_RABE = new ABE.RABE.PBC.PublicParam(GP);
+            GP = new Asymmetry(curve, swap_G1G2);
+            SP_RABE = new ABE.RABE.PBC.PublicParam(ABE.RABE.PBC.TYPE.XNM_2021, GP);
         }
 
-        public PublicParam(base.GroupParam.PBC GP) {
+        public PublicParam(Asymmetry GP) {
             this.GP = GP;
-            SP_RABE = new ABE.RABE.PBC.PublicParam(GP);
+            SP_RABE = new ABE.RABE.PBC.PublicParam(ABE.RABE.PBC.TYPE.XNM_2021, GP);
         }
 
         public Element H(String m) {
@@ -108,11 +109,10 @@ public class PBC {
         rand.nextBytes(k);
         Hash.EncText enc = new Hash.EncText();
         Hash.Encode(enc, SP.GP.GT, new Hash.PlaText(k, r));
-        ABE.RABE.PBC.PlainText pt_RABE = new ABE.RABE.PBC.PlainText(enc.K);
 
         Hash.H_2_element u = new Hash.H_2_element();
         Hash.H_2_element_String_3(u, SP.GP.Zr, Arrays.toString(r), MSP.formula, String.valueOf(t));
-        RABE.Encrypt(H.ct_RABE, SP.SP_RABE, mpk.mpk_RABE, MSP, pt_RABE, t, u.u_1, u.u_2);
+        RABE.Encrypt(H.ct_RABE, SP.SP_RABE, mpk.mpk_RABE, MSP, new ABE.RABE.PBC.PlainText(enc.K), t, u.u_1, u.u_2);
 
         SE.AES.Encrypt(H.ct_SE, new SE.AES.PlainText(etd.sk_ch_2.d.toByteArray()), k);
     }

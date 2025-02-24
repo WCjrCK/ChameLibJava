@@ -42,6 +42,10 @@ public class PBC {
             return Hash.H_String_1_PBC_1(G, m);
         }
 
+        public Element Ht(String m) {
+            return Hash.H_String_1_PBC_1(Zr, m);
+        }
+
         public Element F(String m) {
             return Hash.H_String_1_PBC_1(G, m);
         }

@@ -1,5 +1,6 @@
 package scheme.PBCH.PCH_DSS_2019;
 
+import base.GroupParam.PBC.Asymmetry;
 import utils.BooleanFormulaParser;
 import utils.Hash;
 
@@ -14,15 +15,15 @@ import java.util.Random;
 
 public class PBC {
     public static class PublicParam {
-        public base.GroupParam.PBC GP;
+        public Asymmetry GP;
         ABE.FAME.PBC.PublicParam pp_ABE;
 
         public PublicParam(curve.PBC curve, boolean swap_G1G2) {
-            GP = new base.GroupParam.PBC(curve, swap_G1G2);
+            GP = new Asymmetry(curve, swap_G1G2);
             pp_ABE = new ABE.FAME.PBC.PublicParam(GP);
         }
 
-        public PublicParam(base.GroupParam.PBC GP) {
+        public PublicParam(Asymmetry GP) {
             this.GP = GP;
             pp_ABE = new ABE.FAME.PBC.PublicParam(GP);
         }

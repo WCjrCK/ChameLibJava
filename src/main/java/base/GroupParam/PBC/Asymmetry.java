@@ -1,4 +1,4 @@
-package base.GroupParam;
+package base.GroupParam.PBC;
 
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
@@ -6,7 +6,7 @@ import it.unisa.dia.gas.jpbc.Pairing;
 import utils.Func;
 
 @SuppressWarnings("rawtypes")
-public class PBC {
+public class Asymmetry {
     Pairing pairing;
     boolean swap_G1G2;
     public Field Zr, G1, G2, GT;
@@ -32,7 +32,7 @@ public class PBC {
         return Zr.newRandomElement().getImmutable();
     }
 
-    public PBC(curve.PBC curve, boolean swap_G1G2) {
+    public Asymmetry(curve.PBC curve, boolean swap_G1G2) {
         this.swap_G1G2 = swap_G1G2;
         this.pairing = Func.PairingGen(curve);
         if(swap_G1G2) {
