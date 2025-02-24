@@ -3,10 +3,7 @@ import curve.PBC;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 import utils.Func;
@@ -26,8 +23,8 @@ public class CHTest {
         return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> EnumSet.allOf(Group.class).stream().flatMap(b -> Stream.of(Arguments.of(a, b))));
     }
 
-    @BeforeAll
-    static void initTest() {
+    @BeforeEach
+    void initTest() {
         InitialLib();
     }
 
@@ -525,11 +522,12 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                // these group has wrong behave in fromhash
                 if(group == Group.GT && (curve == PBC.D_159 || curve == PBC.D_201 || curve == PBC.D_224 || curve == PBC.D_105171_196_185
                         || curve == PBC.D_277699_175_167 || curve == PBC.D_278027_190_181 || curve == PBC.F || curve == PBC.SM_9 || curve == PBC.G_149)) {
+                    // BadCaseTest#JPBCBadCase1
                     return;
                 }
+
                 scheme.CH.CH_KEF_DL_CZT_2011.PBC scheme = new scheme.CH.CH_KEF_DL_CZT_2011.PBC();
                 scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicParam SP = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicParam();
                 scheme.SetUp(SP, curve, group);
@@ -583,13 +581,13 @@ public class CHTest {
                             break;
 
                         default:
-                            // non-symmetric group there may be different element in string that isEqual returns true.
+                            // BadCaseTest#JPBCBadCase2
                             return;
                     }
                 }
 
                 if(group == Group.GT && curve == PBC.G_149) {
-                    // type G's GT has wrong behave in GT hash to GT
+                    // BadCaseTest#JPBCBadCase3
                     return;
                 }
 
@@ -640,7 +638,7 @@ public class CHTest {
                             break;
 
                         default:
-                            // non-symmetric group there may be different element in string that isEqual returns true.
+                            // BadCaseTest#JPBCBadCase2
                             return;
                     }
                 }
@@ -692,13 +690,13 @@ public class CHTest {
                             break;
 
                         default:
-                            // non-symmetric group there may be different element in string that isEqual returns true.
+                            // BadCaseTest#JPBCBadCase2
                             return;
                     }
                 }
 
                 if(group == Group.GT && curve == PBC.G_149) {
-                    // type G's GT has wrong behave in GT hash to GT
+                    // BadCaseTest#JPBCBadCase3
                     return;
                 }
 

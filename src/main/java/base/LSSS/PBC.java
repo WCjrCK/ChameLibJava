@@ -4,6 +4,8 @@ import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 import utils.BooleanFormulaParser;
 
+import java.util.BitSet;
+
 @SuppressWarnings("rawtypes")
 public class PBC {
     public static class Matrix {
@@ -42,22 +44,22 @@ public class PBC {
             x.v = new Element[M.length];
             for (int i = 0; i < M.length; i++) x.v[i] = G.newZeroElement().getImmutable();
             if(b.v.length != M[0].length) return;
-            boolean[] tag = new boolean[M.length];
+            BitSet tag = new BitSet(M.length);
             int[] col_res = new int[M.length];
             int[] col_index = new int[M.length];
             for(int i = 0; i < M.length; i++) col_index[i] = -1;
             int row_cnt = 0;
             for(int i = 0;i < policy.length;++i) {
                 if(S.attrs.contains(policy[i])) {
-                    tag[i] = true;
+                    tag.set(i);
                     col_res[row_cnt] = i;
                     ++row_cnt;
-                } else tag[i] = false;
+                }
             }
             Element[][] mat = new Element[M[0].length][row_cnt + 1];
             int j = 0;
             for(int i = 0;i < M.length;++i) {
-                if(tag[i]) {
+                if(tag.get(i)) {
                     for(int k = 0;k < M[i].length;++k) mat[k][j] = M[i][k];
                     ++j;
                 }

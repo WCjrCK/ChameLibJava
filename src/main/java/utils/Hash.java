@@ -10,7 +10,7 @@ import java.security.NoSuchAlgorithmException;
 
 @SuppressWarnings("rawtypes")
 public class Hash {
-    static byte[] HASH(String str) {
+    static public byte[] HASH(String str) {
         MessageDigest messageDigest;
         byte[] res;
         try {

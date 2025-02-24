@@ -1,4 +1,4 @@
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,8 +27,8 @@ public class PBCHTest {
                         Stream.of(256, 512, 1024).flatMap(c -> Stream.of(Arguments.of(a, b, c)))));
     }
 
-    @BeforeAll
-    static void initTest() {
+    @BeforeEach
+    void initTest() {
         InitialLib();
     }
 
@@ -44,12 +44,13 @@ public class PBCHTest {
             void JPBCTest(curve.PBC curve, boolean swap_G1G2) {
                 Random rand = new Random();
                 scheme.PBCH.PCH_DSS_2019.PBC scheme = new scheme.PBCH.PCH_DSS_2019.PBC(128);
-                scheme.PBCH.PCH_DSS_2019.PBC.PublicParam pk_PCH = new scheme.PBCH.PCH_DSS_2019.PBC.PublicParam();
+                scheme.PBCH.PCH_DSS_2019.PBC.PublicParam pp_PCH = new scheme.PBCH.PCH_DSS_2019.PBC.PublicParam(curve, swap_G1G2);
+                scheme.PBCH.PCH_DSS_2019.PBC.MasterPublicKey pk_PCH = new scheme.PBCH.PCH_DSS_2019.PBC.MasterPublicKey();
                 scheme.PBCH.PCH_DSS_2019.PBC.MasterSecretKey sk_PCH = new scheme.PBCH.PCH_DSS_2019.PBC.MasterSecretKey();
-                scheme.SetUp(pk_PCH, sk_PCH, curve, swap_G1G2);
+                scheme.SetUp(pk_PCH, sk_PCH, pp_PCH);
 
                 base.LSSS.PBC LSSS = new base.LSSS.PBC();
-                base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(pk_PCH.mpk_ABE.Zr);
+                base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(pp_PCH.GP.Zr);
                 BooleanFormulaParser.PolicyList pl = new BooleanFormulaParser.PolicyList();
                 LSSS.GenLSSSMatrices(MSP, pl, "A&(DDDD|(BB&CCC))");
 
@@ -63,9 +64,10 @@ public class PBCHTest {
                 S2.attrs.add("CCC");
 
                 scheme.PBCH.PCH_DSS_2019.PBC.SecretKey sk1 = new scheme.PBCH.PCH_DSS_2019.PBC.SecretKey();
+                scheme.KeyGen(sk1, pp_PCH, pk_PCH, sk_PCH, S1);
+
                 scheme.PBCH.PCH_DSS_2019.PBC.SecretKey sk2 = new scheme.PBCH.PCH_DSS_2019.PBC.SecretKey();
-                scheme.KeyGen(sk1, pk_PCH, sk_PCH, S1);
-                scheme.KeyGen(sk2, pk_PCH, sk_PCH, S2);
+                scheme.KeyGen(sk2, pp_PCH, pk_PCH, sk_PCH, S2);
 
                 BigInteger m1 = new BigInteger(512, rand);
                 BigInteger m2 = new BigInteger(512, rand);
@@ -76,12 +78,15 @@ public class PBCHTest {
                 scheme.PBCH.PCH_DSS_2019.PBC.Randomness r2 = new scheme.PBCH.PCH_DSS_2019.PBC.Randomness();
                 scheme.PBCH.PCH_DSS_2019.PBC.Randomness r1_p = new scheme.PBCH.PCH_DSS_2019.PBC.Randomness();
 
-                scheme.Hash(h1, r1, pk_PCH, MSP, m1);
-                scheme.Hash(h2, r2, pk_PCH, MSP, m2);
+                scheme.Hash(h1, r1, pp_PCH, pk_PCH, MSP, m1);
                 assertTrue(scheme.Check(h1, r1, pk_PCH, m1), "H(m1) valid");
                 assertFalse(scheme.Check(h1, r1, pk_PCH, m2), "H(m2) invalid");
 
-                scheme.Adapt(r1_p, h1, r1, pk_PCH, MSP, sk1, m1, m2);
+                scheme.Hash(h2, r2, pp_PCH, pk_PCH, MSP, m2);
+                assertTrue(scheme.Check(h2, r2, pk_PCH, m2), "H(m2) valid");
+                assertFalse(scheme.Check(h2, r2, pk_PCH, m1), "H(m1) invalid");
+
+                scheme.Adapt(r1_p, h1, r1, pp_PCH, pk_PCH, MSP, sk1, m1, m2);
                 assertTrue(scheme.Check(h1, r1_p, pk_PCH, m2), "Adapt(m2) valid");
                 assertFalse(scheme.Check(h1, r1_p, pk_PCH, m1), "Adapt(m1) invalid");
             }

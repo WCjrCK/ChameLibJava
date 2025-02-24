@@ -1,9 +1,6 @@
 import AE.RSA.Native;
 import curve.Group;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -21,8 +18,8 @@ public class AETest {
         return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> EnumSet.allOf(Group.class).stream().flatMap(b -> Stream.of(Arguments.of(a, b))));
     }
 
-    @BeforeAll
-    static void initTest() {
+    @BeforeEach
+    void initTest() {
         InitialLib();
     }
 

@@ -24,10 +24,8 @@ public class BooleanFormulaParser {
     public static class AttributeList {
         public Set<String> attrs = new HashSet<>();
 
-        public void Print() {
-            System.out.println("AttributeList:");
-            System.out.println(attrs);
-            System.out.println();
+        public void CopyFrom(AttributeList al) {
+            attrs = new HashSet<>(al.attrs);
         }
     }
 
@@ -36,12 +34,6 @@ public class BooleanFormulaParser {
 
         public void Resize(int n) {
             policy = new String[n];
-        }
-
-        public void Print() {
-            System.out.println("PolicyList:");
-            System.out.println(Arrays.toString(policy));
-            System.out.println();
         }
     }
 

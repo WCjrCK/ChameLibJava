@@ -8,10 +8,7 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.f.TypeFCurveGenerator;
 import it.unisa.dia.gas.plaf.jpbc.pbc.curve.PBCTypeACurveGenerator;
 import it.unisa.dia.gas.plaf.jpbc.pbc.curve.PBCTypeDCurveGenerator;
 import it.unisa.dia.gas.plaf.jpbc.pbc.curve.PBCTypeGCurveGenerator;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -21,8 +18,8 @@ import static utils.Func.InitialLib;
 
 @DisplayName("jPBC base test")
 public class JPBCTest {
-    @BeforeAll
-    static void initTest() {
+    @BeforeEach
+    void initTest() {
         assertTrue(PairingFactory.getInstance().isPBCAvailable(),
                 "need config lib: http://gas.dia.unisa.it/projects/jpbc/docs/pbcwrapper.html");
         InitialLib();

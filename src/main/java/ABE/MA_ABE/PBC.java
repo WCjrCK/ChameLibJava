@@ -174,7 +174,7 @@ public class PBC {
             if(!PKG.rho.containsKey(MSP.policy[i])) throw new RuntimeException("invalid arrtibute");
             rho_x = PKG.rho.get(MSP.policy[i]);
             CT.C[0][i] = PKG.PK.get(rho_x).egg_alpha.powZn(t_x.v[i]).mul(GP.egg.powZn(MSP.Prodith(v, i))).getImmutable();
-            CT.C[1][i] = GP.g.powZn(t_x.v[i].negate()).getImmutable();
+            CT.C[1][i] = GP.g.powZn(t_x.v[i]).invert().getImmutable();
             CT.C[2][i] = PKG.PK.get(rho_x).g_y.powZn(t_x.v[i]).mul(GP.g.powZn(MSP.Prodith(w, i))).getImmutable();
             CT.C[3][i] = GP.F(MSP.policy[i]).powZn(t_x.v[i]).getImmutable();
         }

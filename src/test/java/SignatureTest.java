@@ -1,5 +1,5 @@
 import Signature.BLS.PBC;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Func.InitialLib;
 
 public class SignatureTest {
-    @BeforeAll
-    static void initTest() {
+    @BeforeEach
+    void initTest() {
         InitialLib();
     }
 

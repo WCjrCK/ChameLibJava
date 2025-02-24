@@ -75,7 +75,7 @@ public class PBC {
 
         R.e_1 = pp.H(
                 pk.y, H.c_1, H.c_2, m,
-                pp.g.powZn(k_1), pk.y.powZn(k_1), pp.g.powZn(R.s_2).mul(pk.y.powZn(R.e_2.negate()))
+                pp.g.powZn(k_1), pk.y.powZn(k_1), pp.g.powZn(R.s_2).div(pk.y.powZn(R.e_2))
         ).sub(R.e_2).getImmutable();
         R.s_1 = k_1.add(R.e_1.mul(xi)).getImmutable();
     }
@@ -83,9 +83,9 @@ public class PBC {
     public boolean Check(HashValue H, Randomness R, PublicParam pp, PublicKey pk, Element m) {
         return R.e_1.add(R.e_2).isEqual(pp.H(
                 pk.y, H.c_1, H.c_2, m,
-                pp.g.powZn(R.s_1).mul(H.c_1.powZn(R.e_1.negate())),
-                pk.y.powZn(R.s_1).mul(H.c_2.div(m).powZn(R.e_1.negate())),
-                pp.g.powZn(R.s_2).mul(pk.y.powZn(R.e_2.negate()))
+                pp.g.powZn(R.s_1).div(H.c_1.powZn(R.e_1)),
+                pk.y.powZn(R.s_1).div(H.c_2.div(m).powZn(R.e_1)),
+                pp.g.powZn(R.s_2).div(pk.y.powZn(R.e_2))
             )
         );
     }
@@ -99,11 +99,12 @@ public class PBC {
 
         R_p.e_2 = pp.H(
                 pk.y, H.c_1, H.c_2, m_p,
-                pp.g.powZn(R_p.s_1).mul(H.c_1.powZn(R_p.e_1.negate())),
-                pk.y.powZn(R_p.s_1).mul(H.c_2.div(m_p).powZn(R_p.e_1.negate())),
+                pp.g.powZn(R_p.s_1).div(H.c_1.powZn(R_p.e_1)),
+                pk.y.powZn(R_p.s_1).div(H.c_2.div(m_p).powZn(R_p.e_1)),
                 pp.g.powZn(k_2)
         ).sub(R_p.e_1).getImmutable();
 
         R_p.s_2 = k_2.add(R_p.e_2.mul(sk.x)).getImmutable();
     }
+
 }

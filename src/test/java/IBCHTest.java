@@ -1,5 +1,5 @@
 import it.unisa.dia.gas.jpbc.Element;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,8 +26,8 @@ public class IBCHTest {
         return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> IdentityLen.stream().flatMap(b -> Stream.of(Arguments.of(a, b, false), Arguments.of(a, b, true))));
     }
 
-    @BeforeAll
-    static void initTest() {
+    @BeforeEach
+    void initTest() {
         InitialLib();
     }
 

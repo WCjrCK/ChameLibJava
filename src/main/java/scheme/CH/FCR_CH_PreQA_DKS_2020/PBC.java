@@ -15,8 +15,8 @@ import utils.Hash;
 @SuppressWarnings("rawtypes")
 public class PBC {
     public static class PublicParam {
-        Field Zr, G;
-        Element g_1, g_2;
+        public Field Zr, G;
+        public Element g_1, g_2;
 
         private Element H(String m) {
             return Hash.H_String_1_PBC_1(Zr, m);
@@ -77,11 +77,11 @@ public class PBC {
         R.s_2 = pp.GetZrElement();
 
         H.O = pp.g_1.powZn(m).mul(pp.g_2.powZn(xi)).getImmutable();
-
+        
         R.e_1 = pp.H(
                 pk.y, H.O, m,
                 pp.g_1.powZn(k_1_1).mul(pp.g_2.powZn(k_1_2)),
-                pp.g_1.powZn(R.s_2).mul(pk.y.powZn(R.e_2.negate()))
+                pp.g_1.powZn(R.s_2).div(pk.y.powZn(R.e_2))
         ).sub(R.e_2);
         R.s_1_1 = k_1_1.add(R.e_1.mul(m));
         R.s_1_2 = k_1_2.add(R.e_1.mul(xi));
@@ -90,8 +90,8 @@ public class PBC {
     public boolean Check(HashValue H, Randomness R, PublicParam pp, PublicKey pk, Element m) {
         return R.e_1.add(R.e_2).isEqual(pp.H(
                 pk.y, H.O, m,
-                pp.g_1.powZn(R.s_1_1).mul(pp.g_2.powZn(R.s_1_2)).mul(H.O.powZn(R.e_1.negate())),
-                pp.g_1.powZn(R.s_2).mul(pk.y.powZn(R.e_2.negate()))
+                pp.g_1.powZn(R.s_1_1).mul(pp.g_2.powZn(R.s_1_2)).div(H.O.powZn(R.e_1)),
+                pp.g_1.powZn(R.s_2).div(pk.y.powZn(R.e_2))
         ));
     }
 
@@ -105,7 +105,7 @@ public class PBC {
 
         R_p.e_2 = pp.H(
                 pk.y, H.O, m_p,
-                pp.g_1.powZn(R_p.s_1_1).mul(pp.g_2.powZn(R_p.s_1_2)).mul(H.O.powZn(R_p.e_1.negate())),
+                pp.g_1.powZn(R_p.s_1_1).mul(pp.g_2.powZn(R_p.s_1_2)).div(H.O.powZn(R_p.e_1)),
                 pp.g_1.powZn(k_2)
         ).sub(R_p.e_1).getImmutable();
 

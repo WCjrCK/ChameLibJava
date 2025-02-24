@@ -5,6 +5,7 @@ import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
 import utils.Func;
 
+import java.util.BitSet;
 import java.util.Random;
 
 /*
@@ -56,18 +57,18 @@ public class PBC {
     }
 
     public static class Identity {
-        boolean[] I;
+        BitSet I;
 
         public Identity(int n) {
-            I = new boolean[n];
+            I = new BitSet(n);
         }
 
         public boolean At(int i) {
-            return I[i - 1];
+            return I.get(i - 1);
         }
 
         public void Set(int i, boolean x) {
-            I[i - 1] = x;
+            I.set(i - 1, x);
         }
     }
 

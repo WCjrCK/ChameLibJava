@@ -1,6 +1,4 @@
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import com.herumi.mcl.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,9 +6,10 @@ import static utils.Func.InitialLib;
 
 @SuppressWarnings("SuspiciousNameCombination")
 @DisplayName("MCL base test")
+@Disabled // for parallel mode
 public class MCLTest {
-    @BeforeAll
-    static void initTest() {
+    @BeforeEach
+    void initTest() {
         InitialLib();
     }
 
