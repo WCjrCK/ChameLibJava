@@ -215,24 +215,15 @@ public class ABETest {
                 ABE.RABE.PBC.SecretKey sk1 = new ABE.RABE.PBC.SecretKey();
                 scheme.KeyGen(sk1, BT, SP, mpk, msk, S1, id1);
 
-//                BT.PrintTheta();
-
                 Element id2 = SP.GP.GetZrElement();
                 ABE.RABE.PBC.SecretKey sk2 = new ABE.RABE.PBC.SecretKey();
                 scheme.KeyGen(sk2, BT, SP, mpk, msk, S2, id2);
 
-//                BT.PrintTheta();
-
                 ABE.RABE.PBC.SecretKey sk3 = new ABE.RABE.PBC.SecretKey();
                 scheme.KeyGen(sk3, BT, SP, mpk, msk, S3, id1);
 
-                BT.PrintTheta();
-
                 scheme.Revoke(rl, id1, 10);
                 scheme.Revoke(rl, id2, 100);
-
-                BT.GetUpdateKeyNode(rl, 50);
-                BT.Print();
 
                 ABE.RABE.PBC.PlainText m1 = new ABE.RABE.PBC.PlainText(SP.GP.GetGTElement());
                 ABE.RABE.PBC.PlainText m2 = new ABE.RABE.PBC.PlainText(SP.GP.GetGTElement());

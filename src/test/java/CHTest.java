@@ -286,13 +286,12 @@ public class CHTest {
             @ParameterizedTest(name = "test lambda = {0}")
             @ValueSource(ints = {256, 512, 1024, 2048})
             void NativeTest(int lambda) {
-                Random rand = new Random();
                 scheme.CH.CH_ET_BC_CDK_2017.Native scheme = new scheme.CH.CH_ET_BC_CDK_2017.Native(lambda);
                 scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey pk = new scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
                 scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey sk = new scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
                 scheme.KeyGen(pk, sk);
-                BigInteger m1 = new BigInteger(lambda, rand);
-                BigInteger m2 = new BigInteger(lambda, rand);
+                String m1 = "WCjrCK";
+                String m2 = "123";
                 scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue h1 = new scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue();
                 scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue h2 = new scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue();
                 scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness r1 = new scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness();
@@ -395,13 +394,12 @@ public class CHTest {
             @ParameterizedTest(name = "test lambda = {0}")
             @ValueSource(ints = {256, 512, 1024, 2048})
             void NativeTest(int lambda) {
-                Random rand = new Random();
                 scheme.CH.MCH_CDK_2017.Native scheme = new scheme.CH.MCH_CDK_2017.Native(lambda);
                 scheme.CH.MCH_CDK_2017.Native.PublicKey pk = new scheme.CH.MCH_CDK_2017.Native.PublicKey();
                 scheme.CH.MCH_CDK_2017.Native.SecretKey sk = new scheme.CH.MCH_CDK_2017.Native.SecretKey();
                 scheme.KeyGen(pk, sk);
-                BigInteger m1 = new BigInteger(lambda, rand);
-                BigInteger m2 = new BigInteger(lambda, rand);
+                String m1 = "WCjrCK";
+                String m2 = "123";
                 scheme.CH.MCH_CDK_2017.Native.HashValue h1 = new scheme.CH.MCH_CDK_2017.Native.HashValue();
                 scheme.CH.MCH_CDK_2017.Native.HashValue h2 = new scheme.CH.MCH_CDK_2017.Native.HashValue();
                 scheme.CH.MCH_CDK_2017.Native.Randomness r1 = new scheme.CH.MCH_CDK_2017.Native.Randomness();

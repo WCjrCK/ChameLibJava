@@ -10,6 +10,12 @@ public class AES {
 
     public static class PlainText {
         public byte[] pt;
+
+        public PlainText() {}
+
+        public PlainText(byte[] pt) {
+            this.pt = pt;
+        }
     }
 
     private static Cipher GetCipher(int mode, byte[] key) throws Exception {

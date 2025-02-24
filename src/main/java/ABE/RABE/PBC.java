@@ -57,9 +57,9 @@ public class PBC {
     }
 
     public static class DecryptKey {
-        int node_id, t;
+        public int node_id, t;
         public ABE.FAME.PBC.SecretKey sk_FAME = new ABE.FAME.PBC.SecretKey();
-        Element sk_0_4;
+        public Element sk_0_4;
 
         public void CopyFrom(SecretKey sk) {
             sk_FAME.CopyFrom(sk.sk_FAME);
@@ -150,6 +150,10 @@ public class PBC {
     public void Encrypt(CipherText CT, PublicParam SP, MasterPublicKey mpk, base.LSSS.PBC.Matrix MSP, PlainText PT, int t) {
         Element s_1 = SP.GP.GetZrElement();
         Element s_2 = SP.GP.GetZrElement();
+        Encrypt(CT, SP, mpk, MSP, PT, t, s_1, s_2);
+    }
+
+    public void Encrypt(CipherText CT, PublicParam SP, MasterPublicKey mpk, base.LSSS.PBC.Matrix MSP, PlainText PT, int t, Element s_1, Element s_2) {
         FAME.Encrypt(CT.ct_FAME, SP.pp_FAME, mpk.mpk_FAME, MSP, new ABE.FAME.PBC.PlainText(PT.m), s_1, s_2);
         CT.ct_0_4 = SP.H("1" + t).powZn(s_1.add(s_2)).getImmutable();
     }

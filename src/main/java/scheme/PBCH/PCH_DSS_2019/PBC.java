@@ -1,7 +1,5 @@
 package scheme.PBCH.PCH_DSS_2019;
 
-import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Field;
 import utils.BooleanFormulaParser;
 import utils.Hash;
 
@@ -14,7 +12,6 @@ import java.util.Random;
  * P26. 4.4 A Concrete PBCH
  */
 
-@SuppressWarnings("rawtypes")
 public class PBC {
     public static class PublicParam {
         public base.GroupParam.PBC GP;
@@ -56,45 +53,6 @@ public class PBC {
         scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness r_CHET = new scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness();
     }
 
-    private static class H4U {
-        public Element u_1, u_2;
-    }
-
-    private void H4(H4U u, Field G, String m1, String m2) {
-        u.u_1 = Hash.H_String_1_PBC_1(G, m1 + "|" + m2);
-        u.u_2 = Hash.H_String_1_PBC_1(G, m2 + "|" + m1);
-    }
-
-    private static class EncText {
-        public Element K;
-    }
-
-    private static class PlaText {
-        public byte[] k;
-        public byte[] r;
-    }
-
-    private void Encode(EncText K, Field G, PlaText P) {
-        byte[] tmp = new byte[G.getLengthInBytes()];
-        tmp[1] = (byte) P.k.length;
-        System.arraycopy(P.k, 0, tmp, 2, P.k.length);
-        tmp[G.getLengthInBytes() / 2 + 1] = (byte) P.r.length;
-        System.arraycopy(P.r, 0, tmp, G.getLengthInBytes() / 2 + 2, P.r.length);
-        K.K = G.newElementFromBytes(tmp).getImmutable();
-    }
-
-    private void Decode(PlaText P, EncText K) {
-        byte[] tmp = K.K.toBytes();
-        int l1 = tmp[1];
-        if(l1 >= tmp.length) throw new RuntimeException("Decode Failed");
-        P.k = new byte[l1];
-        System.arraycopy(tmp, 2, P.k, 0, l1);
-        int l2 = tmp[K.K.getLengthInBytes() / 2 + 1];
-        if(l2 + K.K.getLengthInBytes() / 2 >= tmp.length) throw new RuntimeException("Decode Failed");
-        P.r = new byte[l2];
-        System.arraycopy(tmp, K.K.getLengthInBytes() / 2 + 2, P.r, 0, l2);
-    }
-
     scheme.CH.CH_ET_BC_CDK_2017.Native CHET;
     ABE.FAME.PBC ABE;
     Random rand = new Random();
@@ -114,46 +72,38 @@ public class PBC {
         ABE.KeyGen(sk.sk_ABE, pp_PCH.pp_ABE, pk_PCH.mpk_ABE, sk_PCH.msk_ABE, S);
     }
 
-    public void Hash(HashValue H, Randomness R, PublicParam pp_PCH, MasterPublicKey pk_PCH, base.LSSS.PBC.Matrix MSP, BigInteger m) {
+    public void Hash(HashValue H, Randomness R, PublicParam pp_PCH, MasterPublicKey pk_PCH, base.LSSS.PBC.Matrix MSP, String m) {
         scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
         CHET.Hash(H.h_CHET, R.r_CHET, etd, pk_PCH.pk_CHET, m);
-        byte[] r = new byte[CHET.CH.lambda / 8];
+        byte[] r = new byte[16];
         rand.nextBytes(r);
-        byte[] k = new byte[CHET.CH.lambda / 8];
+        byte[] k = new byte[16];
         rand.nextBytes(k);
 
-        H4U u = new H4U();
-        H4(u, pp_PCH.GP.Zr, Arrays.toString(r), MSP.formula);
+        Hash.H_2_element u = new Hash.H_2_element();
+        Hash.H_2_element_String_2(u, pp_PCH.GP.Zr, Arrays.toString(r), MSP.formula);
 
-        PlaText pla = new PlaText();
-        pla.r = r;
-        pla.k = k;
-        EncText enc = new EncText();
-        Encode(enc, pp_PCH.GP.GT, pla);
+        Hash.EncText enc = new Hash.EncText();
+        Hash.Encode(enc, pp_PCH.GP.GT, new Hash.PlaText(k, r));
 
-        ABE.FAME.PBC.PlainText pt_ABE = new ABE.FAME.PBC.PlainText(enc.K);
-        ABE.Encrypt(H.ct_ABE, pp_PCH.pp_ABE, pk_PCH.mpk_ABE, MSP, pt_ABE, u.u_1, u.u_2);
+        ABE.Encrypt(H.ct_ABE, pp_PCH.pp_ABE, pk_PCH.mpk_ABE, MSP, new ABE.FAME.PBC.PlainText(enc.K), u.u_1, u.u_2);
 
-        SE.AES.PlainText se_pt = new SE.AES.PlainText();
-        se_pt.pt = etd.sk_ch_2.d.toByteArray();
-        SE.AES.Encrypt(H.ct_SE, se_pt, k);
+        SE.AES.Encrypt(H.ct_SE, new SE.AES.PlainText(etd.sk_ch_2.d.toByteArray()), k);
     }
 
-    public boolean Check(HashValue H, Randomness R, MasterPublicKey pk_PCH, BigInteger m) {
+    public boolean Check(HashValue H, Randomness R, MasterPublicKey pk_PCH, String m) {
         return CHET.Check(H.h_CHET, R.r_CHET, pk_PCH.pk_CHET, m);
     }
 
-    public void Adapt(Randomness R_p, HashValue H, Randomness R, PublicParam pp_PCH, MasterPublicKey pk_PCH, base.LSSS.PBC.Matrix MSP, SecretKey sk, BigInteger m, BigInteger m_p) {
+    public void Adapt(Randomness R_p, HashValue H, Randomness R, PublicParam pp_PCH, MasterPublicKey pk_PCH, base.LSSS.PBC.Matrix MSP, SecretKey sk, String m, String m_p) {
         ABE.FAME.PBC.PlainText pt_ABE = new ABE.FAME.PBC.PlainText();
         ABE.Decrypt(pt_ABE, pp_PCH.pp_ABE, MSP, H.ct_ABE, sk.sk_ABE);
 
-        PlaText pla = new PlaText();
-        EncText enc = new EncText();
-        enc.K = pt_ABE.m;
-        Decode(pla, enc);
+        Hash.PlaText pla = new Hash.PlaText();
+        Hash.Decode(pla, new Hash.EncText(pt_ABE.m));
 
-        H4U u = new H4U();
-        H4(u, pp_PCH.GP.Zr, Arrays.toString(pla.r), MSP.formula);
+        Hash.H_2_element u = new Hash.H_2_element();
+        Hash.H_2_element_String_2(u, pp_PCH.GP.Zr, Arrays.toString(pla.r), MSP.formula);
 
         ABE.FAME.PBC.CipherText ct_p = new ABE.FAME.PBC.CipherText();
         ABE.Encrypt(ct_p, pp_PCH.pp_ABE, pk_PCH.mpk_ABE, MSP,pt_ABE, u.u_1, u.u_2);

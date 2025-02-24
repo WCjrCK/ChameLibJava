@@ -1,7 +1,7 @@
 package scheme.PBCH.DPCH_MXN_2022;
 
 import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Field;
+import utils.Hash;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -12,7 +12,6 @@ import java.util.Random;
  * P12. Fig. 3. An instantiation of DPCH.
  */
 
-@SuppressWarnings("rawtypes")
 public class PBC {
     public static class PublicParam {
         public ABE.MA_ABE.PBC.PublicParam GP_MA_ABE = new ABE.MA_ABE.PBC.PublicParam();
@@ -74,36 +73,6 @@ public class PBC {
         scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness r = new scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness();
     }
 
-    private static class EncText {
-        public Element K;
-    }
-
-    private static class PlaText {
-        public byte[] k;
-        public byte[] r;
-    }
-
-    private void Encode(EncText K, Field G, PlaText P) {
-        byte[] tmp = new byte[G.getLengthInBytes()];
-        tmp[1] = (byte) P.k.length;
-        System.arraycopy(P.k, 0, tmp, 2, P.k.length);
-        tmp[G.getLengthInBytes() / 2 + 1] = (byte) P.r.length;
-        System.arraycopy(P.r, 0, tmp, G.getLengthInBytes() / 2 + 2, P.r.length);
-        K.K = G.newElementFromBytes(tmp).getImmutable();
-    }
-
-    private void Decode(PlaText P, EncText K) {
-        byte[] tmp = K.K.toBytes();
-        int l1 = tmp[1];
-        if(l1 >= tmp.length) throw new RuntimeException("Decode Failed");
-        P.k = new byte[l1];
-        System.arraycopy(tmp, 2, P.k, 0, l1);
-        int l2 = tmp[K.K.getLengthInBytes() / 2 + 1];
-        if(l2 + K.K.getLengthInBytes() / 2 >= tmp.length) throw new RuntimeException("Decode Failed");
-        P.r = new byte[l2];
-        System.arraycopy(tmp, K.K.getLengthInBytes() / 2 + 2, P.r, 0, l2);
-    }
-
     Random rand = new Random();
     ABE.MA_ABE.PBC MA_ABE = new ABE.MA_ABE.PBC();
     scheme.CH.CH_ET_BC_CDK_2017.Native CH_ET;
@@ -156,7 +125,7 @@ public class PBC {
         MA_ABE.KeyGen(auth.MA_ABE_Auth, mod.sk_gid_A, A, pp.GP_MA_ABE, "0" + mod.gid);
     }
 
-    public void Hash(HashValue H, Randomness R, PublicKeyGroup PKG, base.LSSS.PBC.Matrix MSP, PublicParam pp, MasterPublicKey pk, BigInteger m) {
+    public void Hash(HashValue H, Randomness R, PublicKeyGroup PKG, base.LSSS.PBC.Matrix MSP, PublicParam pp, MasterPublicKey pk, String m) {
         scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
         CH_ET.Hash(H.h, R.r, etd, pk.pk_CH, m);
         byte[] r_t = new byte[16];
@@ -167,20 +136,17 @@ public class PBC {
         pt_SE.pt = etd.sk_ch_2.d.toByteArray();
         SE.AES.Encrypt(H.c_SE, pt_SE, k);
 
-        PlaText pla = new PlaText();
-        EncText enc = new EncText();
-        pla.k = k;
-        pla.r = r_t;
-        Encode(enc, pp.GP_MA_ABE.GT, pla);
+        Hash.EncText enc = new Hash.EncText();
+        Hash.Encode(enc, pp.GP_MA_ABE.GT, new Hash.PlaText(k, r_t));
         ABE.MA_ABE.PBC.PlainText pt_MA_ABE = new ABE.MA_ABE.PBC.PlainText(enc.K);
         genEncMAABE(H.c_MA_ABE, pt_MA_ABE, PKG, MSP, pp, r_t);
     }
 
-    public boolean Check(HashValue H, Randomness R, MasterPublicKey pk, BigInteger m) {
+    public boolean Check(HashValue H, Randomness R, MasterPublicKey pk, String m) {
         return CH_ET.Check(H.h, R.r, pk.pk_CH, m);
     }
 
-    public void Adapt(Randomness R_p, HashValue H, Randomness R, PublicKeyGroup PKG, SecretKeyGroup SKG, base.LSSS.PBC.Matrix MSP, PublicParam pp, MasterPublicKey pk, MasterSecretKey sk, BigInteger m, BigInteger m_p) {
+    public void Adapt(Randomness R_p, HashValue H, Randomness R, PublicKeyGroup PKG, SecretKeyGroup SKG, base.LSSS.PBC.Matrix MSP, PublicParam pp, MasterPublicKey pk, MasterSecretKey sk, String m, String m_p) {
         if(m.compareTo(m_p) == 0) {
             R_p.r = R.r;
             return;
@@ -189,10 +155,8 @@ public class PBC {
         ABE.MA_ABE.PBC.PlainText pt_MA_ABE = new ABE.MA_ABE.PBC.PlainText(pp.GP_MA_ABE.GetGTElement());
         ABE.MA_ABE.PBC.CipherText ct_MA_ABE = new ABE.MA_ABE.PBC.CipherText();
         MA_ABE.Decrypt(pt_MA_ABE, pp.GP_MA_ABE, SKG.MA_ABE_SKG, MSP, H.c_MA_ABE);
-        PlaText pla = new PlaText();
-        EncText enc = new EncText();
-        enc.K = pt_MA_ABE.m;
-        Decode(pla, enc);
+        Hash.PlaText pla = new Hash.PlaText();
+        Hash.Decode(pla, new Hash.EncText(pt_MA_ABE.m));
         genEncMAABE(ct_MA_ABE, pt_MA_ABE, PKG, MSP, pp, pla.r);
         if(!ct_MA_ABE.isEqual(H.c_MA_ABE)) throw new RuntimeException("illegal decrypt");
 

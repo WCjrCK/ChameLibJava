@@ -1,3 +1,5 @@
+import base.BinaryTree.PBC;
+import it.unisa.dia.gas.jpbc.Element;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -6,12 +8,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import utils.BooleanFormulaParser;
 
-import java.math.BigInteger;
-import java.util.Random;
+import java.util.EnumSet;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static utils.Func.InitialLib;
 
 public class PBCHTest {
@@ -27,6 +27,24 @@ public class PBCHTest {
                         Stream.of(256, 512, 1024).flatMap(c -> Stream.of(Arguments.of(a, b, c)))));
     }
 
+    public static Stream<Arguments> GetPBCInvertk() {
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
+                Stream.of(256, 512, 1024).flatMap(b ->
+                        Stream.of(Arguments.of(a, false, b), Arguments.of(a, true, b))
+                )
+        );
+    }
+
+    public static Stream<Arguments> GetPBCInvertkn() {
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
+                Stream.of(128, 256, 512).flatMap(b ->
+                        Stream.of(16, 32, 64).flatMap(c ->
+                                Stream.of(Arguments.of(a, false, b, c), Arguments.of(a, true, b, c))
+                        )
+                )
+        );
+    }
+
     @BeforeEach
     void initTest() {
         InitialLib();
@@ -39,11 +57,10 @@ public class PBCHTest {
         @Nested
         class PCH_DSS_2019_Test {
             @DisplayName("test PBC impl")
-            @ParameterizedTest(name = "test curve {0} swap_G1G2 {1}")
-            @MethodSource("ABETest#GetPBCInvert")
-            void JPBCTest(curve.PBC curve, boolean swap_G1G2) {
-                Random rand = new Random();
-                scheme.PBCH.PCH_DSS_2019.PBC scheme = new scheme.PBCH.PCH_DSS_2019.PBC(128);
+            @ParameterizedTest(name = "test curve {0} swap_G1G2 {1} k = {2}")
+            @MethodSource("PBCHTest#GetPBCInvertk")
+            void JPBCTest(curve.PBC curve, boolean swap_G1G2, int k) {
+                scheme.PBCH.PCH_DSS_2019.PBC scheme = new scheme.PBCH.PCH_DSS_2019.PBC(k);
                 scheme.PBCH.PCH_DSS_2019.PBC.PublicParam pp_PCH = new scheme.PBCH.PCH_DSS_2019.PBC.PublicParam(curve, swap_G1G2);
                 scheme.PBCH.PCH_DSS_2019.PBC.MasterPublicKey pk_PCH = new scheme.PBCH.PCH_DSS_2019.PBC.MasterPublicKey();
                 scheme.PBCH.PCH_DSS_2019.PBC.MasterSecretKey sk_PCH = new scheme.PBCH.PCH_DSS_2019.PBC.MasterSecretKey();
@@ -69,8 +86,8 @@ public class PBCHTest {
                 scheme.PBCH.PCH_DSS_2019.PBC.SecretKey sk2 = new scheme.PBCH.PCH_DSS_2019.PBC.SecretKey();
                 scheme.KeyGen(sk2, pp_PCH, pk_PCH, sk_PCH, S2);
 
-                BigInteger m1 = new BigInteger(512, rand);
-                BigInteger m2 = new BigInteger(512, rand);
+                String m1 = "WCjrCK";
+                String m2 = "123";
 
                 scheme.PBCH.PCH_DSS_2019.PBC.HashValue h1 = new scheme.PBCH.PCH_DSS_2019.PBC.HashValue();
                 scheme.PBCH.PCH_DSS_2019.PBC.HashValue h2 = new scheme.PBCH.PCH_DSS_2019.PBC.HashValue();
@@ -103,7 +120,6 @@ public class PBCHTest {
             @ParameterizedTest(name = "test curve {0} author number {1} lambda = {2}")
             @MethodSource("PBCHTest#GetPBCSymmAuth")
             void JPBCTest(curve.PBC curve, int auth_num, int lambda) {
-                Random rand = new Random();
                 scheme.PBCH.MAPCH_ZLW_2021.PBC scheme = new scheme.PBCH.MAPCH_ZLW_2021.PBC(lambda);
                 scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicParam SP = new scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicParam();
                 scheme.SetUp(SP, curve);
@@ -153,8 +169,8 @@ public class PBCHTest {
                 scheme.KeyGen(auths[5], SK2, GID2, "FF");
                 SKG2.AddSK(SK2);
 
-                BigInteger m1 = new BigInteger(lambda, rand);
-                BigInteger m2 = new BigInteger(lambda, rand);
+                String m1 = "WCjrCK";
+                String m2 = "123";
 
                 scheme.PBCH.MAPCH_ZLW_2021.PBC.HashValue h1 = new scheme.PBCH.MAPCH_ZLW_2021.PBC.HashValue();
                 scheme.PBCH.MAPCH_ZLW_2021.PBC.HashValue h2 = new scheme.PBCH.MAPCH_ZLW_2021.PBC.HashValue();
@@ -187,7 +203,6 @@ public class PBCHTest {
             @ParameterizedTest(name = "test curve {0} author number {1} lambda = {2}")
             @MethodSource("PBCHTest#GetPBCSymmAuthBigLambda")
             void JPBCTest(curve.PBC curve, int auth_num, int lambda) {
-                Random rand = new Random();
                 scheme.PBCH.DPCH_MXN_2022.PBC scheme = new scheme.PBCH.DPCH_MXN_2022.PBC(lambda);
                 scheme.PBCH.DPCH_MXN_2022.PBC.PublicParam SP = new scheme.PBCH.DPCH_MXN_2022.PBC.PublicParam();
                 scheme.PBCH.DPCH_MXN_2022.PBC.MasterPublicKey MPK = new scheme.PBCH.DPCH_MXN_2022.PBC.MasterPublicKey();
@@ -199,7 +214,7 @@ public class PBCHTest {
                 BooleanFormulaParser.PolicyList pl = new BooleanFormulaParser.PolicyList();
                 LSSS.GenLSSSMatrices(MSP, pl, "(A|FF)&(DDDD|(BB&CCC))");
 
-                String GID1 = "WCjrCK";
+                String GID1 = "WCjrCK_gid";
                 String GID2 = "gid2";
 
                 scheme.PBCH.DPCH_MXN_2022.PBC.Modifier mod1 = new scheme.PBCH.DPCH_MXN_2022.PBC.Modifier(GID1);
@@ -245,8 +260,8 @@ public class PBCHTest {
                 scheme.ModKeyGen(mod2, SP, MPK, auths[5], "FF");
                 SKG2.AddSK(mod2);
 
-                BigInteger m1 = new BigInteger(lambda, rand);
-                BigInteger m2 = new BigInteger(lambda, rand);
+                String m1 = "WCjrCK";
+                String m2 = "123";
 
                 scheme.PBCH.DPCH_MXN_2022.PBC.HashValue h1 = new scheme.PBCH.DPCH_MXN_2022.PBC.HashValue();
                 scheme.PBCH.DPCH_MXN_2022.PBC.HashValue h2 = new scheme.PBCH.DPCH_MXN_2022.PBC.HashValue();
@@ -270,6 +285,131 @@ public class PBCHTest {
                 scheme.Adapt(r1_p, h1, r1, PKG, SKG2, MSP, SP, MPK, MSK, m1, m2);
                 assertTrue(scheme.Check(h1, r1_p, MPK, m2), "Adapt(m2) valid");
                 assertFalse(scheme.Check(h1, r1_p, MPK, m1), "Adapt(m1) invalid");
+            }
+        }
+    }
+
+    @DisplayName("test paper 《Revocable Policy-Based Chameleon Hash》")
+    @Nested
+    class RevocablePolicyBasedChameleonHashTest {
+        @DisplayName("test RPCH_XNM_2021")
+        @Nested
+        class RPCH_XNM_2021_Test {
+            @DisplayName("test PBC impl")
+            @ParameterizedTest(name = "test curve {0} swap_G1G2 {1} k = {2} leaf node = {3}")
+            @MethodSource("PBCHTest#GetPBCInvertkn")
+            void JPBCTest(curve.PBC curve, boolean swap_G1G2, int k, int n) {
+                scheme.PBCH.RPCH_XNM_2021.PBC scheme = new scheme.PBCH.RPCH_XNM_2021.PBC(k);
+                scheme.PBCH.RPCH_XNM_2021.PBC.PublicParam SP = new scheme.PBCH.RPCH_XNM_2021.PBC.PublicParam(curve, swap_G1G2);
+                scheme.PBCH.RPCH_XNM_2021.PBC.MasterPublicKey mpk = new scheme.PBCH.RPCH_XNM_2021.PBC.MasterPublicKey();
+                scheme.PBCH.RPCH_XNM_2021.PBC.MasterSecretKey msk = new scheme.PBCH.RPCH_XNM_2021.PBC.MasterSecretKey();
+                scheme.SetUp(mpk, msk, SP);
+
+                base.BinaryTree.PBC BT = new PBC(n);
+                base.BinaryTree.PBC.RevokeList rl = new base.BinaryTree.PBC.RevokeList();
+
+                base.LSSS.PBC LSSS = new base.LSSS.PBC();
+                base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(SP.GP.Zr);
+                BooleanFormulaParser.PolicyList pl = new BooleanFormulaParser.PolicyList();
+                LSSS.GenLSSSMatrices(MSP, pl, "A&(DDDD|(BB&CCC))");
+
+                BooleanFormulaParser.AttributeList S1 = new BooleanFormulaParser.AttributeList();
+                S1.attrs.add("A");
+                S1.attrs.add("DDDD");
+
+                BooleanFormulaParser.AttributeList S2 = new BooleanFormulaParser.AttributeList();
+                S2.attrs.add("BB");
+                S2.attrs.add("CCC");
+
+                BooleanFormulaParser.AttributeList S3 = new BooleanFormulaParser.AttributeList();
+                S3.attrs.add("A");
+                S3.attrs.add("BB");
+                S3.attrs.add("CCC");
+
+                Element id1 = SP.GP.GetZrElement();
+                scheme.PBCH.RPCH_XNM_2021.PBC.SecretKey sk1 = new scheme.PBCH.RPCH_XNM_2021.PBC.SecretKey();
+                scheme.KeyGen(sk1, BT, SP, mpk, msk, S1, id1);
+
+                Element id2 = SP.GP.GetZrElement();
+                scheme.PBCH.RPCH_XNM_2021.PBC.SecretKey sk2 = new scheme.PBCH.RPCH_XNM_2021.PBC.SecretKey();
+                scheme.KeyGen(sk2, BT, SP, mpk, msk, S2, id2);
+
+                scheme.PBCH.RPCH_XNM_2021.PBC.SecretKey sk3 = new scheme.PBCH.RPCH_XNM_2021.PBC.SecretKey();
+                scheme.KeyGen(sk3, BT, SP, mpk, msk, S3, id1);
+
+                scheme.Revoke(rl, id1, 10);
+                scheme.Revoke(rl, id2, 100);
+
+                scheme.PBCH.RPCH_XNM_2021.PBC.UpdateKey ku1 = new scheme.PBCH.RPCH_XNM_2021.PBC.UpdateKey();
+                scheme.UpdateKeyGen(ku1, SP, mpk, BT, rl, 5);
+
+                scheme.PBCH.RPCH_XNM_2021.PBC.UpdateKey ku2 = new scheme.PBCH.RPCH_XNM_2021.PBC.UpdateKey();
+                scheme.UpdateKeyGen(ku2, SP, mpk, BT, rl, 50);
+
+                scheme.PBCH.RPCH_XNM_2021.PBC.DecryptKey dk_1_1 = new scheme.PBCH.RPCH_XNM_2021.PBC.DecryptKey();
+                scheme.DecryptKeyGen(dk_1_1, SP, mpk, sk1, ku1, BT, rl);
+
+                scheme.PBCH.RPCH_XNM_2021.PBC.DecryptKey dk_1_2 = new scheme.PBCH.RPCH_XNM_2021.PBC.DecryptKey();
+                scheme.DecryptKeyGen(dk_1_2, SP, mpk, sk1, ku2, BT, rl);
+
+                scheme.PBCH.RPCH_XNM_2021.PBC.DecryptKey dk_2_1 = new scheme.PBCH.RPCH_XNM_2021.PBC.DecryptKey();
+                scheme.DecryptKeyGen(dk_2_1, SP, mpk, sk2, ku1, BT, rl);
+
+                scheme.PBCH.RPCH_XNM_2021.PBC.DecryptKey dk_2_2 = new scheme.PBCH.RPCH_XNM_2021.PBC.DecryptKey();
+                scheme.DecryptKeyGen(dk_2_2, SP, mpk, sk2, ku2, BT, rl);
+
+                scheme.PBCH.RPCH_XNM_2021.PBC.DecryptKey dk_3_1 = new scheme.PBCH.RPCH_XNM_2021.PBC.DecryptKey();
+                scheme.DecryptKeyGen(dk_3_1, SP, mpk, sk3, ku1, BT, rl);
+
+                scheme.PBCH.RPCH_XNM_2021.PBC.DecryptKey dk_3_2 = new scheme.PBCH.RPCH_XNM_2021.PBC.DecryptKey();
+                scheme.DecryptKeyGen(dk_3_2, SP, mpk, sk3, ku2, BT, rl);
+
+                String m1 = "WCjrCK";
+                String m2 = "123";
+
+                scheme.PBCH.RPCH_XNM_2021.PBC.HashValue h1 = new scheme.PBCH.RPCH_XNM_2021.PBC.HashValue();
+                scheme.PBCH.RPCH_XNM_2021.PBC.HashValue h2 = new scheme.PBCH.RPCH_XNM_2021.PBC.HashValue();
+                scheme.PBCH.RPCH_XNM_2021.PBC.Randomness r1 = new scheme.PBCH.RPCH_XNM_2021.PBC.Randomness();
+                scheme.PBCH.RPCH_XNM_2021.PBC.Randomness r2 = new scheme.PBCH.RPCH_XNM_2021.PBC.Randomness();
+                scheme.PBCH.RPCH_XNM_2021.PBC.Randomness r1_p = new scheme.PBCH.RPCH_XNM_2021.PBC.Randomness();
+
+                scheme.Hash(h1, r1, SP, mpk, MSP, m1, 5);
+                assertTrue(scheme.Check(h1, r1, mpk, m1), "H(m1) valid");
+                assertFalse(scheme.Check(h1, r1, mpk, m2), "H(m2) invalid");
+
+                scheme.Hash(h2, r2, SP, mpk, MSP, m2, 50);
+                assertTrue(scheme.Check(h2, r2, mpk, m2), "H(m2) valid");
+                assertFalse(scheme.Check(h2, r2, mpk, m1), "H(m1) invalid");
+
+                scheme.Adapt(r1_p, h1, r1, SP, mpk, dk_1_1, MSP, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, mpk, m2), "Adapt(m2) valid");
+                assertFalse(scheme.Check(h1, r1_p, mpk, m1), "Adapt(m1) invalid");
+
+                try {
+                    scheme.Adapt(r1_p, h1, r1, SP, mpk, dk_2_1, MSP, m1, m2);
+                    assertFalse(scheme.Check(h1, r1_p, mpk, m2), "policy false");
+                    assertFalse(scheme.Check(h1, r1_p, mpk, m1), "policy false");
+                } catch (RuntimeException e) {
+                    // policy false
+                }
+
+                scheme.Adapt(r1_p, h1, r1, SP, mpk, dk_3_1, MSP, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, mpk, m2), "Adapt(m2) valid");
+                assertFalse(scheme.Check(h1, r1_p, mpk, m1), "Adapt(m1) invalid");
+
+                try {
+                    scheme.Adapt(r1_p, h2, r2, SP, mpk, dk_1_1, MSP, m2, m1);
+                    assertFalse(scheme.Check(h2, r1_p, mpk, m1), "different time");
+                    assertFalse(scheme.Check(h2, r1_p, mpk, m2), "different time");
+                } catch (RuntimeException e) {
+                    // different time
+                }
+
+                assertThrows(NullPointerException.class, () -> {
+                    scheme.Adapt(r1_p, h2, r2, SP, mpk, dk_1_2, MSP, m2, m1);
+                    assertFalse(scheme.Check(h2, r1_p, mpk, m1), "different time");
+                    assertFalse(scheme.Check(h2, r1_p, mpk, m2), "different time");
+                }, "id1 expired");
             }
         }
     }

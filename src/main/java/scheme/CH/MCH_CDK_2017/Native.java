@@ -8,7 +8,7 @@ import java.util.Random;
 
 /*
  * Chameleon-Hashes with Ephemeral Trapdoors And Applications to Invisible Sanitizable Signatures
- * P11. Black-Box Construction: Bootstrapping
+ * P42. Construction 5 (Modified Chameleon-Hash)
  */
 
 public class Native {
@@ -23,6 +23,12 @@ public class Native {
 
     public static class SecretKey {
         public BigInteger p, q, d;
+
+        public void CopyFrom(SecretKey sk) {
+            p = sk.p;
+            q = sk.q;
+            d = sk.d;
+        }
 
         public void CopyFrom(AE.RSA.Native.SecretKey sk) {
             p = sk.p;
@@ -42,11 +48,11 @@ public class Native {
     Random rand = new Random();
     public int lambda;
 
-    private static BigInteger H_n(BigInteger n, BigInteger m) {
-        return Hash.H_native_1_1(m).mod(n);
+    private static BigInteger H_n(BigInteger n, String m) {
+        return Hash.H_String_1_native_1(m).mod(n);
     }
 
-    private static BigInteger getHashValue(Randomness r, PublicKey pk, BigInteger m) {
+    private static BigInteger getHashValue(Randomness r, PublicKey pk, String m) {
         return H_n(pk.n, m).multiply(r.r.modPow(pk.e, pk.n)).mod(pk.n);
     }
 
@@ -62,16 +68,16 @@ public class Native {
         sk.CopyFrom(sk_rsa);
     }
 
-    public void Hash(HashValue h, Randomness r, PublicKey pk, BigInteger m) {
+    public void Hash(HashValue h, Randomness r, PublicKey pk, String m) {
         r.r = Func.getZq(rand, pk.n);
         h.h = getHashValue(r, pk, m);
     }
 
-    public boolean Check(HashValue h, Randomness r, PublicKey pk, BigInteger m) {
+    public boolean Check(HashValue h, Randomness r, PublicKey pk, String m) {
         return h.h.compareTo(getHashValue(r, pk, m)) == 0;
     }
 
-    public void Adapt(Randomness r_p, Randomness r, PublicKey pk, SecretKey sk, BigInteger m, BigInteger m_p) {
+    public void Adapt(Randomness r_p, Randomness r, PublicKey pk, SecretKey sk, String m, String m_p) {
         r_p.r = getHashValue(r, pk, m).multiply(H_n(pk.n, m_p).modInverse(pk.n)).modPow(sk.d, pk.n);
     }
 }

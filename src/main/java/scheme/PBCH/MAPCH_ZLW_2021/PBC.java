@@ -111,18 +111,18 @@ public class PBC {
         msk_i.tk = Auth.mtk.tk;
     }
 
-    public void Hash(HashValue H, Randomness R, PublicKeyGroup MHKS, base.LSSS.PBC.Matrix MSP, BigInteger m) {
+    public void Hash(HashValue H, Randomness R, PublicKeyGroup MHKS, base.LSSS.PBC.Matrix MSP, String m) {
         scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
         CHET.Hash(H.CHET_H, R.CHET_R, etd, MHKS.hk, m);
         ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(BigInteger2G(MHKS.GP.GT, etd.sk_ch_2.d).getImmutable());
         MA_ABE.Encrypt(H.MA_ABE_C, MHKS.GP, MHKS.MA_ABE_PKG, MSP, MA_ABE_PT);
     }
 
-    public boolean Check(HashValue H, Randomness R, PublicKeyGroup MHKS, BigInteger m) {
+    public boolean Check(HashValue H, Randomness R, PublicKeyGroup MHKS, String m) {
         return CHET.Check(H.CHET_H, R.CHET_R, MHKS.hk, m);
     }
 
-    public void Adapt(Randomness R_p, HashValue H, Randomness R, PublicKeyGroup MHKS, SecretKeyGroup MSKS, base.LSSS.PBC.Matrix MSP, BigInteger m, BigInteger m_p) {
+    public void Adapt(Randomness R_p, HashValue H, Randomness R, PublicKeyGroup MHKS, SecretKeyGroup MSKS, base.LSSS.PBC.Matrix MSP, String m, String m_p) {
         if(!Check(H, R, MHKS, m)) throw new RuntimeException("Wrong Hash Value");
         ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(MHKS.GP.GetGTElement());
         MA_ABE.Decrypt(MA_ABE_PT, MHKS.GP, MSKS.MA_ABE_SKG, MSP, H.MA_ABE_C);
