@@ -114,7 +114,7 @@ public class PBC {
     public ABE.FAME.PBC FAME = new ABE.FAME.PBC();
 
     public void SetUp(MasterPublicKey mpk, MasterSecretKey msk, PublicParam SP) {
-        FAME.SetUp(SP.pp_FAME, mpk.mpk_FAME, msk.msk_FAME);
+        FAME.SetUp(mpk.mpk_FAME, msk.msk_FAME, SP.pp_FAME);
     }
 
     public void KeyGen(SecretKey sk, base.BinaryTree.PBC st, PublicParam SP, MasterPublicKey mpk, MasterSecretKey msk, BooleanFormulaParser.AttributeList S, Element id) {

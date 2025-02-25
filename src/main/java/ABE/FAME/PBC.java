@@ -94,14 +94,14 @@ public class PBC {
         }
     }
 
-    public void SetUp(PublicParam SP, MasterPublicKey mpk, MasterSecretKey msk) {
+    public void SetUp(MasterPublicKey mpk, MasterSecretKey msk, PublicParam SP) {
         Element d_1 = SP.GP.GetZrElement();
         Element d_2 = SP.GP.GetZrElement();
         Element d_3 = SP.GP.GetZrElement();
-        SetUp(SP, mpk, msk, d_1, d_2, d_3, SP.GP.Zr.newOneElement().getImmutable());
+        SetUp(mpk, msk, SP, d_1, d_2, d_3, SP.GP.Zr.newOneElement().getImmutable());
     }
 
-    public void SetUp(PublicParam SP, MasterPublicKey mpk, MasterSecretKey msk, Element d_1, Element d_2, Element d_3, Element alpha) {
+    public void SetUp(MasterPublicKey mpk, MasterSecretKey msk, PublicParam SP, Element d_1, Element d_2, Element d_3, Element alpha) {
         mpk.h = SP.GP.GetG2Element();
 
         mpk.g = SP.GP.GetG1Element();
@@ -124,11 +124,18 @@ public class PBC {
     }
 
     public void KeyGen(SecretKey sk, PublicParam SP, MasterPublicKey mpk, MasterSecretKey msk, BooleanFormulaParser.AttributeList S) {
-        sk.Init(S);
         Element r_1 = SP.GP.GetZrElement(), r_2 = SP.GP.GetZrElement();
+        KeyGen(sk, SP, mpk, msk, S, r_1, r_2, SP.GP.Zr.newOneElement().getImmutable());
+    }
+
+    public void KeyGen(SecretKey sk, PublicParam SP, MasterPublicKey mpk, MasterSecretKey msk, BooleanFormulaParser.AttributeList S, Element r_1, Element r_2, Element alpha) {
+        sk.Init(S);
         sk.sk_0[0] = mpk.h.powZn(msk.b_1.mul(r_1)).getImmutable();
         sk.sk_0[1] = mpk.h.powZn(msk.b_2.mul(r_2)).getImmutable();
-        sk.sk_0[2] = mpk.h.powZn(r_1.add(r_2)).getImmutable();
+        sk.sk_0[2] = mpk.h.powZn(r_1.add(r_2).div(alpha)).getImmutable();
+
+        Element alpha_a_1 = alpha.mul(msk.a_1).getImmutable();
+        Element alpha_a_2 = alpha.mul(msk.a_2).getImmutable();
 
         int i = 0;
         for(String y : S.attrs) {
@@ -136,11 +143,11 @@ public class PBC {
             Element sigma_y = SP.GP.GetZrElement();
             sk.sk_y[i][0] = SP.H(y + "11").powZn(msk.b_1.mul(r_1).div(msk.a_1))
                     .mul(SP.H(y + "21").powZn(msk.b_2.mul(r_2).div(msk.a_1)))
-                    .mul(SP.H(y + "31").powZn(r_1.add(r_2).div(msk.a_1))).mul(mpk.g.powZn(sigma_y.div(msk.a_1))).getImmutable();
+                    .mul(SP.H(y + "31").powZn(r_1.add(r_2).div(alpha_a_1))).mul(mpk.g.powZn(sigma_y.div(alpha_a_1))).getImmutable();
 
             sk.sk_y[i][1] = SP.H(y + "12").powZn(msk.b_1.mul(r_1).div(msk.a_2))
                     .mul(SP.H(y + "22").powZn(msk.b_2.mul(r_2).div(msk.a_2)))
-                    .mul(SP.H(y + "32").powZn(r_1.add(r_2).div(msk.a_2))).mul(mpk.g.powZn(sigma_y.div(msk.a_2))).getImmutable();
+                    .mul(SP.H(y + "32").powZn(r_1.add(r_2).div(alpha_a_2))).mul(mpk.g.powZn(sigma_y.div(alpha_a_2))).getImmutable();
             sk.sk_y[i][2] = mpk.g.powZn(sigma_y).invert().getImmutable();
             ++i;
         }
@@ -149,11 +156,11 @@ public class PBC {
 
         sk.sk_p[0] = msk.g_d1.mul(SP.H("0111").powZn(msk.b_1.mul(r_1).div(msk.a_1)))
                 .mul(SP.H("0121").powZn(msk.b_2.mul(r_2).div(msk.a_1)))
-                .mul(SP.H("0131").powZn(r_1.add(r_2).div(msk.a_1))).mul(mpk.g.powZn(sigma_p.div(msk.a_1))).getImmutable();
+                .mul(SP.H("0131").powZn(r_1.add(r_2).div(alpha_a_1))).mul(mpk.g.powZn(sigma_p.div(alpha_a_1))).getImmutable();
 
         sk.sk_p[1] = msk.g_d2.mul(SP.H("0112").powZn(msk.b_1.mul(r_1).div(msk.a_2)))
                 .mul(SP.H("0122").powZn(msk.b_2.mul(r_2).div(msk.a_2)))
-                .mul(SP.H("0132").powZn(r_1.add(r_2).div(msk.a_2))).mul(mpk.g.powZn(sigma_p.div(msk.a_2))).getImmutable();
+                .mul(SP.H("0132").powZn(r_1.add(r_2).div(alpha_a_2))).mul(mpk.g.powZn(sigma_p.div(alpha_a_2))).getImmutable();
 
         sk.sk_p[2] = msk.g_d3.div(mpk.g.powZn(sigma_p)).getImmutable();
     }

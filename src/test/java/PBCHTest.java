@@ -36,6 +36,14 @@ public class PBCHTest {
         );
     }
 
+    public static Stream<Arguments> GetPBCInvertkSmall() {
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
+                Stream.of(8, 16, 24).flatMap(b ->
+                        Stream.of(Arguments.of(a, false, b), Arguments.of(a, true, b))
+                )
+        );
+    }
+
     public static Stream<Arguments> GetPBCInvertkn() {
         return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
                 Stream.of(128, 256, 512).flatMap(b ->
@@ -551,6 +559,76 @@ public class PBCHTest {
                 } catch (Exception e) {
                     // id1 expired
                 }
+            }
+        }
+    }
+
+    @DisplayName("test paper 《Policy-based Chameleon Hash for Blockchain Rewriting with Black-box Accountability》")
+    @Nested
+    class PolicyBasedChameleonHashForBlockchainRewritingWithBlackBoxAccountabilityTest {
+        @DisplayName("test PCHBA_TLL_2020")
+        @Nested
+        class PCHBA_TLL_2020_Test {
+            @DisplayName("test PBC impl")
+            @ParameterizedTest(name = "test curve {0} swap_G1G2 {1} k = {2}")
+            @MethodSource("PBCHTest#GetPBCInvertkSmall")
+            void JPBCTest(curve.PBC curve, boolean swap_G1G2, int k) {
+                scheme.PBCH.PCHBA_TLL_2020.PBC scheme = new scheme.PBCH.PCHBA_TLL_2020.PBC();
+                scheme.PBCH.PCHBA_TLL_2020.PBC.PublicParam SP = new scheme.PBCH.PCHBA_TLL_2020.PBC.PublicParam(curve, swap_G1G2);
+                scheme.PBCH.PCHBA_TLL_2020.PBC.MasterPublicKey mpk = new scheme.PBCH.PCHBA_TLL_2020.PBC.MasterPublicKey();
+                scheme.PBCH.PCHBA_TLL_2020.PBC.MasterSecretKey msk = new scheme.PBCH.PCHBA_TLL_2020.PBC.MasterSecretKey();
+                scheme.SetUp(mpk, msk, SP, k);
+
+                base.LSSS.PBC LSSS = new base.LSSS.PBC();
+                base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(SP.GP.Zr);
+                BooleanFormulaParser.PolicyList pl = new BooleanFormulaParser.PolicyList();
+                LSSS.GenLSSSMatrices(MSP, pl, "A&(DDDD|(BB&CCC))");
+
+                BooleanFormulaParser.AttributeList S1 = new BooleanFormulaParser.AttributeList();
+                BooleanFormulaParser.AttributeList S2 = new BooleanFormulaParser.AttributeList();
+
+                S1.attrs.add("A");
+                S1.attrs.add("DDDD");
+
+                S2.attrs.add("BB");
+                S2.attrs.add("CCC");
+
+                scheme.PBCH.PCHBA_TLL_2020.PBC.User u1 = new scheme.PBCH.PCHBA_TLL_2020.PBC.User(SP, k / 3);
+                scheme.AssignUser(u1, mpk, msk);
+                scheme.KeyGen(u1, SP, mpk, msk, S1);
+
+                scheme.PBCH.PCHBA_TLL_2020.PBC.User u2 = new scheme.PBCH.PCHBA_TLL_2020.PBC.User(u1, SP, k / 2);
+                scheme.AssignUser(u2, mpk, msk);
+                scheme.KeyGen(u2, SP, mpk, msk, S2);
+
+                Element m1 = SP.GP.GetZrElement();
+                Element m2 = SP.GP.GetZrElement();
+
+                scheme.PBCH.PCHBA_TLL_2020.PBC.HashValue h1 = new scheme.PBCH.PCHBA_TLL_2020.PBC.HashValue();
+                scheme.PBCH.PCHBA_TLL_2020.PBC.HashValue h2 = new scheme.PBCH.PCHBA_TLL_2020.PBC.HashValue();
+                scheme.PBCH.PCHBA_TLL_2020.PBC.Randomness r1 = new scheme.PBCH.PCHBA_TLL_2020.PBC.Randomness();
+                scheme.PBCH.PCHBA_TLL_2020.PBC.Randomness r2 = new scheme.PBCH.PCHBA_TLL_2020.PBC.Randomness();
+                scheme.PBCH.PCHBA_TLL_2020.PBC.Randomness r1_p = new scheme.PBCH.PCHBA_TLL_2020.PBC.Randomness();
+
+                scheme.Hash(h1, r1, SP, mpk, u1, MSP, m1);
+                assertTrue(scheme.Check(h1, r1, SP, mpk, m1), "H(m1) valid");
+                assertFalse(scheme.Check(h1, r1, SP, mpk, m2), "H(m2) invalid");
+
+                scheme.Hash(h2, r2, SP, mpk, u2, MSP, m2);
+                assertTrue(scheme.Check(h2, r2, SP, mpk, m2), "H(m2) valid");
+                assertFalse(scheme.Check(h2, r2, SP, mpk, m1), "H(m1) invalid");
+
+                scheme.Adapt(r1_p, h1, r1, SP, mpk, msk, u1, MSP, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, SP, mpk, m2), "Adapt(m2) valid");
+                assertFalse(scheme.Check(h1, r1_p, SP, mpk, m1), "Adapt(m1) invalid");
+
+                scheme.Adapt(r1_p, h2, r2, SP, mpk, msk, u1, MSP, m2, m1);
+                assertTrue(scheme.Check(h2, r1_p, SP, mpk, m1), "Adapt(m1) valid");
+                assertFalse(scheme.Check(h2, r1_p, SP, mpk, m2), "Adapt(m2) invalid");
+
+                scheme.Adapt(r1_p, h2, r2, SP, mpk, msk, u2, MSP, m2, m1);
+                assertFalse(scheme.Check(h2, r1_p, SP, mpk, m1), "policy false");
+                assertFalse(scheme.Check(h2, r1_p, SP, mpk, m2), "policy false");
             }
         }
     }

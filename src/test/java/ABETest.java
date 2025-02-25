@@ -22,10 +22,21 @@ public class ABETest {
                 Stream.of(16, 32, 64).flatMap(b -> Stream.of(Arguments.of(a, b))));
     }
 
-    public static Stream<Arguments> GetPBCInvertN() {
+//    public static Stream<Arguments> GetPBCInvertN() {
+//        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
+//                Stream.of(16, 32, 64).flatMap(b ->
+//                        Stream.of(Arguments.of(a, false, b), Arguments.of(a, true, b))
+//                )
+//        );
+//    }
+
+    public static Stream<Arguments> GetPBCInvertNType() {
         return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
                 Stream.of(16, 32, 64).flatMap(b ->
-                        Stream.of(Arguments.of(a, false, b), Arguments.of(a, true, b))
+                        Stream.of(
+                                Arguments.of(a, false, b, ABE.RABE.PBC.TYPE.XNM_2021), Arguments.of(a, true, b, ABE.RABE.PBC.TYPE.XNM_2021),
+                                Arguments.of(a, false, b, ABE.RABE.PBC.TYPE.TMM_2022), Arguments.of(a, true, b, ABE.RABE.PBC.TYPE.TMM_2022)
+                        )
                 )
         );
     }
@@ -49,7 +60,7 @@ public class ABETest {
                 ABE.FAME.PBC.PublicParam SP = new ABE.FAME.PBC.PublicParam(curve, swap_G1G2);
                 ABE.FAME.PBC.MasterPublicKey mpk = new ABE.FAME.PBC.MasterPublicKey();
                 ABE.FAME.PBC.MasterSecretKey msk = new ABE.FAME.PBC.MasterSecretKey();
-                scheme.SetUp(SP, mpk, msk);
+                scheme.SetUp(mpk, msk, SP);
 
                 base.LSSS.PBC LSSS = new base.LSSS.PBC();
                 base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(SP.GP.Zr);
@@ -181,11 +192,11 @@ public class ABETest {
         @Nested
         class RABE_Test {
             @DisplayName("test PBC impl")
-            @ParameterizedTest(name = "test curve {0} swap_G1G2 {1} with leaf node size = {2}")
-            @MethodSource("ABETest#GetPBCInvertN")
-            void JPBCTest(curve.PBC curve, boolean swap_G1G2, int n) {
+            @ParameterizedTest(name = "test curve {0} swap_G1G2 {1} with leaf node size = {2} RABE type = {3}")
+            @MethodSource("ABETest#GetPBCInvertNType")
+            void JPBCTest(curve.PBC curve, boolean swap_G1G2, int n, ABE.RABE.PBC.TYPE t) {
                 ABE.RABE.PBC scheme = new ABE.RABE.PBC();
-                ABE.RABE.PBC.PublicParam SP = new ABE.RABE.PBC.PublicParam(curve, swap_G1G2);
+                ABE.RABE.PBC.PublicParam SP = new ABE.RABE.PBC.PublicParam(t, curve, swap_G1G2);
                 ABE.RABE.PBC.MasterPublicKey mpk = new ABE.RABE.PBC.MasterPublicKey();
                 ABE.RABE.PBC.MasterSecretKey msk = new ABE.RABE.PBC.MasterSecretKey();
                 scheme.SetUp(mpk, msk, SP);
@@ -225,9 +236,19 @@ public class ABETest {
                 scheme.Revoke(rl, id1, 10);
                 scheme.Revoke(rl, id2, 100);
 
-                ABE.RABE.PBC.PlainText m1 = new ABE.RABE.PBC.PlainText(SP.GP.GetGTElement());
-                ABE.RABE.PBC.PlainText m2 = new ABE.RABE.PBC.PlainText(SP.GP.GetGTElement());
-                ABE.RABE.PBC.PlainText m3 = new ABE.RABE.PBC.PlainText(SP.GP.GetGTElement());
+                ABE.RABE.PBC.PlainText m1 = new ABE.RABE.PBC.PlainText();
+                ABE.RABE.PBC.PlainText m2 = new ABE.RABE.PBC.PlainText();
+                ABE.RABE.PBC.PlainText m3 = new ABE.RABE.PBC.PlainText();
+                if(t == ABE.RABE.PBC.TYPE.XNM_2021) {
+//                    m1.m = SP.GP.GetGTElement();
+                    m1.m = SP.GP.GT.newOneElement().getImmutable();
+                    m2.m = SP.GP.GetGTElement();
+                    m3.m = SP.GP.GetGTElement();
+                } else if(t == ABE.RABE.PBC.TYPE.TMM_2022) {
+                    m1.m = SP.GP.GetZrElement();
+                    m2.m = SP.GP.GetZrElement();
+                    m3.m = SP.GP.GetZrElement();
+                }
                 ABE.RABE.PBC.CipherText ct1 = new ABE.RABE.PBC.CipherText();
                 ABE.RABE.PBC.CipherText ct2 = new ABE.RABE.PBC.CipherText();
 

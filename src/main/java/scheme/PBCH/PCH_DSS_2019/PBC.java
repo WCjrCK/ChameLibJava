@@ -65,7 +65,7 @@ public class PBC {
 
     public void SetUp(MasterPublicKey pk_PCH, MasterSecretKey sk_PCH, PublicParam pp_PCH) {
         CHET.KeyGen(pk_PCH.pk_CHET, sk_PCH.sk_CHET);
-        ABE.SetUp(pp_PCH.pp_ABE, pk_PCH.mpk_ABE, sk_PCH.msk_ABE);
+        ABE.SetUp(pk_PCH.mpk_ABE, sk_PCH.msk_ABE, pp_PCH.pp_ABE);
     }
 
     public void KeyGen(SecretKey sk, PublicParam pp_PCH, MasterPublicKey pk_PCH, MasterSecretKey sk_PCH, BooleanFormulaParser.AttributeList S) {
