@@ -36,7 +36,14 @@ public class MCL_G1 {
             LabelGen lg = Dict.get(pk.toString());
             Mcl.mul(L.L, lg.y_1, H2_t);
             Mcl.mul(L.R, lg.omega_1, H2_t);
-            Mcl.add(L.R, L.R, t);
+            Mcl.add(L.R, t, L.R);
+            System.out.println("target:");
+            System.out.println("g ^ x1: " + lg.y_1);
+            System.out.println("H2(t): " + H2_t);
+            System.out.println("(g ^ x1) ^ H2(t) = L: " + L.L);
+            System.out.println("t: " + t);
+            System.out.println("R: " + L.R);
+            System.out.println();
         }
     }
 
@@ -96,8 +103,9 @@ public class MCL_G1 {
         sk.x_2 = PP.GP.GetZrElement();
         LabelGen lg = new LabelGen();
         Mcl.mul(lg.y_1, pk.g, sk.x_1);
-        Mcl.mul(lg.omega_1, lg.y_1, sk.alpha);
         Mcl.mul(pk.y_2, pk.g, sk.x_2);
+
+        Mcl.mul(lg.omega_1, lg.y_1, sk.alpha);
         LM.add(pk, lg);
     }
 
@@ -122,9 +130,22 @@ public class MCL_G1 {
         Fr H2_t = PP.H2(t);
 
         G1 tmp = new G1();
+        Mcl.mul(tmp, pk.g, sk.x_1);
+        System.out.println("UForge");
+        System.out.println("L: " + L.L);
+        System.out.println("R: " + L.R);
+        System.out.println("t: " + t);
+        System.out.println("g: " + pk.g);
+        System.out.println("x1: " + sk.x_1);
+        System.out.println("g ^ x1: " + tmp);
+        System.out.println("H2(t): " + H2_t);
         Fr tmp1 = new Fr();
         Mcl.mul(tmp1, sk.x_1, H2_t);
+        System.out.println("x1 * H2(t): " + tmp1);
+        Mcl.mul(tmp, tmp, H2_t);
+        System.out.println("(g ^ x1) ^ H2(t): " + tmp);
         Mcl.mul(tmp, pk.g, tmp1);
+        System.out.println("g ^ {x1 * H2(t)}: " + tmp);
         if (!tmp.equals(L.L)) throw new RuntimeException("illegal label");
 
         Fr c = PP.H1(L.L, L.R, L.L);

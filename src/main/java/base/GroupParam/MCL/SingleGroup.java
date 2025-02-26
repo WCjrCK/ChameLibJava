@@ -7,7 +7,9 @@ import java.util.Random;
 public class SingleGroup {
     public Fr GetZrElement() {
         Fr res = new Fr();
-        res.setByCSPRNG();
+        do {
+            res.setByCSPRNG();
+        } while(res.isZero());
         return res;
     }
 
@@ -16,8 +18,10 @@ public class SingleGroup {
             G1 res = new G1();
             byte[] m = new byte[128];
             Random random = new Random();
-            random.nextBytes(m);
-            Mcl.hashAndMapToG1(res, m);
+            do {
+                random.nextBytes(m);
+                Mcl.hashAndMapToG1(res, m);
+            } while(res.isZero());
             return res;
         }
     }
@@ -27,8 +31,10 @@ public class SingleGroup {
             G2 res = new G2();
             byte[] m = new byte[128];
             Random random = new Random();
-            random.nextBytes(m);
-            Mcl.hashAndMapToG2(res, m);
+            do {
+                random.nextBytes(m);
+                Mcl.hashAndMapToG2(res, m);
+            } while(res.isZero());
             return res;
         }
     }
