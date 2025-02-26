@@ -235,14 +235,15 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.LabelManager LM = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.LabelManager();
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC scheme = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC(LM, curve, group);
+                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.PublicParam PP = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.PublicParam(curve, group);
+                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.LabelManager LM = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.LabelManager(PP);
+                scheme.CH.CH_KEF_DLP_LLA_2012.PBC scheme = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC();
                 scheme.CH.CH_KEF_DLP_LLA_2012.PBC.PublicKey pk = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.PublicKey();
                 scheme.CH.CH_KEF_DLP_LLA_2012.PBC.SecretKey sk = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.SecretKey();
-                scheme.KeyGen(LM, pk, sk);
-                Element m1 = scheme.GetZrElement();
-                Element m2 = scheme.GetZrElement();
-                Element m3 = scheme.GetZrElement();
+                scheme.KeyGen(pk, sk, PP, LM);
+                Element m1 = PP.GP.GetZrElement();
+                Element m2 = PP.GP.GetZrElement();
+                Element m3 = PP.GP.GetZrElement();
                 assertFalse(m1.isEqual(m2), "m1 != m2");
                 assertFalse(m1.isEqual(m3), "m1 != m3");
                 assertFalse(m2.isEqual(m3), "m2 != m3");
@@ -254,25 +255,25 @@ public class CHTest {
                 scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness r2 = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness();
                 scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness r1_p = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness();
                 scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness r1_pp = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness();
-                scheme.Hash(h1, r1, L1, LM, pk, m1);
-                scheme.Hash(h2, r2, L2, LM, pk, m2);
-                assertTrue(scheme.Check(h1, r1, pk, L1, m1), "H(L1, m1) valid");
-                assertFalse(scheme.Check(h1, r1, pk, L2, m1), "not H(L2, m1)");
+                scheme.Hash(h1, r1, L1, PP, LM, pk, m1);
+                scheme.Hash(h2, r2, L2, PP, LM, pk, m2);
+                assertTrue(scheme.Check(h1, r1, PP, pk, L1, m1), "H(L1, m1) valid");
+                assertFalse(scheme.Check(h1, r1, PP, pk, L2, m1), "not H(L2, m1)");
 
-                assertTrue(scheme.Check(h2, r2, pk, L2, m2), "H(m2) valid");
-                assertFalse(scheme.Check(h2, r2, pk, L1, m2), "not H(L1, m2)");
+                assertTrue(scheme.Check(h2, r2, PP, pk, L2, m2), "H(m2) valid");
+                assertFalse(scheme.Check(h2, r2, PP, pk, L1, m2), "not H(L1, m2)");
 
-                assertFalse(scheme.Check(h1, r1, pk, L2, m2), "not H(m1)");
-                assertFalse(scheme.Check(h2, r2, pk, L1, m1), "not H(m2)");
+                assertFalse(scheme.Check(h1, r1, PP, pk, L2, m2), "not H(m1)");
+                assertFalse(scheme.Check(h2, r2, PP, pk, L1, m1), "not H(m2)");
 
-                scheme.UForge(r1_p, h1, r1, L1, pk, sk, m1, m3);
-                assertTrue(scheme.Check(h1, r1_p, pk, L1, m3), "Adapt(m3) valid");
+                scheme.UForge(r1_p, h1, r1, L1, PP, pk, sk, m1, m3);
+                assertTrue(scheme.Check(h1, r1_p, PP, pk, L1, m3), "Adapt(m3) valid");
 
-                scheme.UForge(r1_p, h1, r1, L1, pk, sk, m1, m2);
-                assertTrue(scheme.Check(h1, r1_p, pk, L1, m2), "Adapt(m2) valid");
+                scheme.UForge(r1_p, h1, r1, L1, PP, pk, sk, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, PP, pk, L1, m2), "Adapt(m2) valid");
 
                 scheme.IForge(r1_pp, r1, r1_p, m1, m2, m3);
-                assertTrue(scheme.Check(h1, r1_pp, pk, L1, m3), "Adapt(m3) valid");
+                assertTrue(scheme.Check(h1, r1_pp, PP, pk, L1, m3), "Adapt(m3) valid");
             }
         }
     }

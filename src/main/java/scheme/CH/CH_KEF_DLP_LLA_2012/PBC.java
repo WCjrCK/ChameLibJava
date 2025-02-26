@@ -2,9 +2,6 @@ package scheme.CH.CH_KEF_DLP_LLA_2012;
 
 import curve.Group;
 import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Field;
-import it.unisa.dia.gas.jpbc.Pairing;
-import utils.Func;
 import utils.Hash;
 
 import java.util.HashMap;
@@ -15,7 +12,6 @@ import java.util.Map;
  * P4. CH_inf: a key exposure free chameleon hash scheme
  */
 
-@SuppressWarnings("rawtypes")
 public class PBC {
     public static class Label {
         public Element L, R;
@@ -26,19 +22,39 @@ public class PBC {
     }
 
     public static class LabelManager {
-        Map<PublicKey, LabelGen> Dict = new HashMap<>();
-        Field G, Zr;
+        public Map<PublicKey, LabelGen> Dict = new HashMap<>();
+        public PublicParam pp;
+
+        public LabelManager(PublicParam pp) {
+            this.pp = pp;
+        }
 
         public void add(PublicKey pk, LabelGen lg) {
             Dict.put(pk, lg);
         }
 
         public void get(Label L, PublicKey pk) {
-            Element t = G.newRandomElement().getImmutable();
-            Element H2_t = H2(Zr, t);
+            Element t = pp.GP.G.newRandomElement().getImmutable();
+            Element H2_t = pp.H2(t);
             LabelGen lg = Dict.get(pk);
             L.L = lg.y_1.powZn(H2_t).getImmutable();
             L.R = t.mul(lg.omega_1.powZn(H2_t)).getImmutable();
+        }
+    }
+
+    public static class PublicParam {
+        public base.GroupParam.PBC.SingleGroup GP;
+
+        public PublicParam(curve.PBC curve, Group group) {
+            GP = new base.GroupParam.PBC.SingleGroup(curve, group);
+        }
+
+        public Element H1(Element m1, Element m2, Element m3) {
+            return Hash.H_PBC_3_1(GP.Zr, m1, m2, m3);
+        }
+
+        public Element H2(Element m1) {
+            return Hash.H_PBC_1_1(GP.Zr, m1);
         }
     }
 
@@ -58,62 +74,36 @@ public class PBC {
         Element r;
     }
 
-    Field G, Zr;
-
-    private static Element H1(Field G, Element m1, Element m2, Element m3) {
-        return Hash.H_PBC_3_1(G, m1, m2, m3);
+    private Element getHashValue(Randomness r, Label L, PublicParam PP, PublicKey pk, Element m) {
+        return pk.g.powZn(m).mul(L.L.mul(pk.y_2.powZn(PP.H1(L.L, L.R, L.L))).powZn(r.r)).getImmutable();
     }
 
-    private static Element H2(Field G, Element m1) {
-        return Hash.H_PBC_1_1(G, m1);
-    }
-
-    private Element getHashValue(Randomness r, Label L, PublicKey pk, Element m) {
-        return pk.g.powZn(m).mul(L.L.mul(pk.y_2.powZn(H1(Zr, L.L, L.R, L.L))).powZn(r.r)).getImmutable();
-    }
-
-    public Element GetGElement() {
-        return G.newRandomElement().getImmutable();
-    }
-
-    public Element GetZrElement() {
-        return Zr.newRandomElement().getImmutable();
-    }
-
-    public PBC(LabelManager lm, curve.PBC curve, Group group) {
-        Pairing pairing = Func.PairingGen(curve);
-        G = Func.GetPBCField(pairing, group);
-        Zr = pairing.getZr();
-        lm.G = G;
-        lm.Zr = Zr;
-    }
-
-    public void KeyGen(LabelManager lm, PublicKey pk, SecretKey sk) {
-        pk.g = GetGElement();
-        sk.alpha = GetZrElement();
-        sk.x_1 = GetZrElement();
-        sk.x_2 = GetZrElement();
+    public void KeyGen(PublicKey pk, SecretKey sk, PublicParam PP, LabelManager LM) {
+        pk.g = PP.GP.GetGElement();
+        sk.alpha = PP.GP.GetZrElement();
+        sk.x_1 = PP.GP.GetZrElement();
+        sk.x_2 = PP.GP.GetZrElement();
         LabelGen lg = new LabelGen();
         lg.y_1 = pk.g.powZn(sk.x_1).getImmutable();
         lg.omega_1 = lg.y_1.powZn(sk.alpha).getImmutable();
         pk.y_2 = pk.g.powZn(sk.x_2).getImmutable();
-        lm.add(pk, lg);
+        LM.add(pk, lg);
     }
 
-    public void Hash(HashValue h, Randomness r, Label L, LabelManager lm, PublicKey pk, Element m) {
-        lm.get(L, pk);
-        r.r = GetZrElement();
-        h.S = getHashValue(r, L, pk, m);
+    public void Hash(HashValue h, Randomness r, Label L, PublicParam PP, LabelManager LM, PublicKey pk, Element m) {
+        LM.get(L, pk);
+        r.r = PP.GP.GetZrElement();
+        h.S = getHashValue(r, L, PP, pk, m);
     }
 
-    public boolean Check(HashValue h, Randomness r, PublicKey pk, Label L, Element m) {
-        return h.S.isEqual(getHashValue(r, L, pk, m));
+    public boolean Check(HashValue h, Randomness r, PublicParam PP, PublicKey pk, Label L, Element m) {
+        return h.S.isEqual(getHashValue(r, L, PP, pk, m));
     }
 
-    public void UForge(Randomness r_p, HashValue h, Randomness r, Label L, PublicKey pk, SecretKey sk, Element m, Element m_p) {
-        if(!Check(h, r, pk, L, m)) throw new RuntimeException("illegal hash");
+    public void UForge(Randomness r_p, HashValue h, Randomness r, Label L, PublicParam PP, PublicKey pk, SecretKey sk, Element m, Element m_p) {
+        if(!Check(h, r, PP, pk, L, m)) throw new RuntimeException("illegal hash");
         Element t = L.R.div(L.L.powZn(sk.alpha)).getImmutable();
-        Element H2_t = H2(Zr, t), c = H1(Zr, L.L, L.R, L.L);
+        Element H2_t = PP.H2(t), c = PP.H1(L.L, L.R, L.L);
         if(!pk.g.powZn(H2_t.mul(sk.x_1)).isEqual(L.L)) throw new RuntimeException("illegal label");
         r_p.r = r.r.add(m.sub(m_p).div(sk.x_1.mul(H2_t).add(sk.x_2.mul(c))));
     }
