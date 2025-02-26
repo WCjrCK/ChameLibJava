@@ -1,6 +1,6 @@
 package utils;
 
-import com.herumi.mcl.Mcl;
+import com.herumi.mcl.*;
 import curve.Group;
 import curve.MCL;
 import curve.PBC;
@@ -87,6 +87,50 @@ public class Func {
         do {
             res = new BigInteger(q.bitLength(), rand).mod(q);
         } while (res.compareTo(BigInteger.ZERO) <= 0 || res.compareTo(q) >= 0);
+        return res;
+    }
+
+    public static G1 GetMCLG1RandomElement() {
+        G1 res = new G1();
+        byte[] m = new byte[128];
+        Random random = new Random();
+        do {
+            random.nextBytes(m);
+            Mcl.hashAndMapToG1(res, m);
+        } while(res.isZero());
+        return res;
+    }
+
+    public static G2 GetMCLG2RandomElement() {
+        G2 res = new G2();
+        byte[] m = new byte[128];
+        Random random = new Random();
+        do {
+            random.nextBytes(m);
+            Mcl.hashAndMapToG2(res, m);
+        } while(res.isZero());
+        return res;
+    }
+
+//    public static GT GetMCLGTRandomElement() {
+//        GT res = new GT();
+//        byte[] m = new byte[128];
+//        Random random = new Random();
+//        G1 g1 = new G1();
+//        random.nextBytes(m);
+//        Mcl.hashAndMapToG1(g1, m);
+//        G2 g2 = new G2();
+//        random.nextBytes(m);
+//        Mcl.hashAndMapToG2(g2, m);
+//        Mcl.pairing(res, g1, g2);
+//        return res;
+//    }
+
+    public static Fr GetMCLZrRandomElement() {
+        Fr res = new Fr();
+        do {
+            res.setByCSPRNG();
+        } while(res.isZero());
         return res;
     }
 }

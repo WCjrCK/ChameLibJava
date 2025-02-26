@@ -32,6 +32,12 @@ public class PBC {
         public boolean Check(Element g, Element y) {
             return g.powZn(gamma).div(alpha).isEqual(y.powZn(G(String.format("%s|%s", y, alpha))));
         }
+
+        public void CopyFrom(DL_Proof p) {
+            this.Zr = p.Zr;
+            this.alpha = p.alpha;
+            this.gamma = p.gamma;
+        }
     }
 
     public static class EQUAL_DL_Proof extends Proof {

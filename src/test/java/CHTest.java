@@ -1,4 +1,7 @@
 import com.herumi.mcl.Fr;
+import com.herumi.mcl.G1;
+import com.herumi.mcl.G2;
+import com.herumi.mcl.Mcl;
 import curve.Group;
 import curve.MCL;
 import curve.PBC;
@@ -31,42 +34,124 @@ public class CHTest {
     }
 
     @DisplayName("test NIZK")
-    @ParameterizedTest(name = "test curve {0} group {1}")
-    @MethodSource("CHTest#GetPBCCartesianProduct")
-    void NIZKTest(curve.PBC curve, Group group) {
-        Pairing pairing = Func.PairingGen(curve);
-        Field G = Func.GetPBCField(pairing, group);
-        Field Zr = pairing.getZr();
+    @Nested
+    class NIZKTest {
+        @DisplayName("test PBC impl")
+        @ParameterizedTest(name = "test curve {0} group {1}")
+        @MethodSource("CHTest#GetPBCCartesianProduct")
+        void JPBCTest(curve.PBC curve, Group group) {
+            Pairing pairing = Func.PairingGen(curve);
+            Field G = Func.GetPBCField(pairing, group);
+            Field Zr = pairing.getZr();
 
-        Element x1 = Zr.newRandomElement().getImmutable();
-        Element g1 = G.newRandomElement().getImmutable();
-        Element y1 = g1.powZn(x1).getImmutable();
-        Element yt = G.newRandomElement().getImmutable();
+            Element x1 = Zr.newRandomElement().getImmutable();
+            Element g1 = G.newRandomElement().getImmutable();
+            Element y1 = g1.powZn(x1).getImmutable();
+            Element yt = G.newRandomElement().getImmutable();
 
-        base.NIZK.PBC.DL_Proof pi1 = new base.NIZK.PBC.DL_Proof(Zr, x1, g1, y1);
+            base.NIZK.PBC.DL_Proof pi1 = new base.NIZK.PBC.DL_Proof(Zr, x1, g1, y1);
 
-        assertTrue(pi1.Check(g1, y1), "proof pass");
-        assertFalse(pi1.Check(g1, yt), "proof fail");
+            assertTrue(pi1.Check(g1, y1), "proof pass");
+            assertFalse(pi1.Check(g1, yt), "proof fail");
 
-        Element g2 = G.newRandomElement().getImmutable();
-        Element y2 = g2.powZn(x1).getImmutable();
+            Element g2 = G.newRandomElement().getImmutable();
+            Element y2 = g2.powZn(x1).getImmutable();
 
-        base.NIZK.PBC.EQUAL_DL_Proof pi2 = new base.NIZK.PBC.EQUAL_DL_Proof(Zr, x1, g1, y1, g2, y2);
+            base.NIZK.PBC.EQUAL_DL_Proof pi2 = new base.NIZK.PBC.EQUAL_DL_Proof(Zr, x1, g1, y1, g2, y2);
 
-        assertTrue(pi2.Check(g1, y1, g2, y2), "proof pass");
-        assertFalse(pi2.Check(g1, yt, g2, y2), "proof fail");
-        assertFalse(pi2.Check(g1, y1, g2, yt), "proof fail");
-        assertFalse(pi2.Check(g1, y2, g2, y1), "proof fail");
+            assertTrue(pi2.Check(g1, y1, g2, y2), "proof pass");
+            assertFalse(pi2.Check(g1, yt, g2, y2), "proof fail");
+            assertFalse(pi2.Check(g1, y1, g2, yt), "proof fail");
+            assertFalse(pi2.Check(g1, y2, g2, y1), "proof fail");
 
-        Element x2 = Zr.newRandomElement().getImmutable();
-        y2 = g2.powZn(x2).getImmutable();
-        Element y3 = y1.mul(y2).getImmutable();
+            Element x2 = Zr.newRandomElement().getImmutable();
+            y2 = g2.powZn(x2).getImmutable();
+            Element y3 = y1.mul(y2).getImmutable();
 
-        base.NIZK.PBC.REPRESENT_Proof pi3 = new base.NIZK.PBC.REPRESENT_Proof(Zr, y3, g1, x1, g2, x2);
+            base.NIZK.PBC.REPRESENT_Proof pi3 = new base.NIZK.PBC.REPRESENT_Proof(Zr, y3, g1, x1, g2, x2);
 
-        assertTrue(pi3.Check(y3, g1, g2), "proof pass");
-        assertFalse(pi3.Check(y3, g1, yt), "proof fail");
-        assertFalse(pi3.Check(y3, g2, g1), "proof fail");
+            assertTrue(pi3.Check(y3, g1, g2), "proof pass");
+            assertFalse(pi3.Check(y3, g1, yt), "proof fail");
+            assertFalse(pi3.Check(y3, g2, g1), "proof fail");
+        }
+
+        @DisplayName("test MCL impl")
+        @ParameterizedTest(name = "test curve {0}")
+        // BadCaseTest#MCL_Bad_Case#Case2
+        @EnumSource(names = {"BN254", "BLS12_381"})
+        @SuppressWarnings("SuspiciousNameCombination")
+        void MCLTest(MCL curve) {
+            Func.MCLInit(curve);
+            {
+                Fr x1 = Func.GetMCLZrRandomElement();
+                G1 g1 = Func.GetMCLG1RandomElement();
+                G1 y1 = new G1();
+                Mcl.mul(y1, g1, x1);
+                G1 yt = Func.GetMCLG1RandomElement();
+
+                base.NIZK.MCL_G1.DL_Proof pi1 = new base.NIZK.MCL_G1.DL_Proof(x1, g1, y1);
+
+                assertTrue(pi1.Check(g1, y1), "proof pass");
+                assertFalse(pi1.Check(g1, yt), "proof fail");
+
+                G1 g2 = Func.GetMCLG1RandomElement();
+                G1 y2 = new G1();
+                Mcl.mul(y2, g2, x1);
+
+                base.NIZK.MCL_G1.EQUAL_DL_Proof pi2 = new base.NIZK.MCL_G1.EQUAL_DL_Proof(x1, g1, y1, g2, y2);
+
+                assertTrue(pi2.Check(g1, y1, g2, y2), "proof pass");
+                assertFalse(pi2.Check(g1, yt, g2, y2), "proof fail");
+                assertFalse(pi2.Check(g1, y1, g2, yt), "proof fail");
+                assertFalse(pi2.Check(g1, y2, g2, y1), "proof fail");
+
+                Fr x2 = Func.GetMCLZrRandomElement();
+                Mcl.mul(y2, g2, x2);
+                G1 y3 = new G1();
+                Mcl.add(y3, y1, y2);
+
+                base.NIZK.MCL_G1.REPRESENT_Proof pi3 = new base.NIZK.MCL_G1.REPRESENT_Proof(y3, g1, x1, g2, x2);
+
+                assertTrue(pi3.Check(y3, g1, g2), "proof pass");
+                assertFalse(pi3.Check(y3, g1, yt), "proof fail");
+                assertFalse(pi3.Check(y3, g2, g1), "proof fail");
+            }
+            if(curve != MCL.SECP256K1) {
+                // BadCaseTest#MCL_Bad_Case#Case1
+                Fr x1 = Func.GetMCLZrRandomElement();
+                G2 g1 = Func.GetMCLG2RandomElement();
+                G2 y1 = new G2();
+                Mcl.mul(y1, g1, x1);
+                G2 yt = Func.GetMCLG2RandomElement();
+
+                base.NIZK.MCL_G2.DL_Proof pi1 = new base.NIZK.MCL_G2.DL_Proof(x1, g1, y1);
+
+                assertTrue(pi1.Check(g1, y1), "proof pass");
+                assertFalse(pi1.Check(g1, yt), "proof fail");
+
+                G2 g2 = Func.GetMCLG2RandomElement();
+                G2 y2 = new G2();
+                Mcl.mul(y2, g2, x1);
+
+                base.NIZK.MCL_G2.EQUAL_DL_Proof pi2 = new base.NIZK.MCL_G2.EQUAL_DL_Proof(x1, g1, y1, g2, y2);
+
+                assertTrue(pi2.Check(g1, y1, g2, y2), "proof pass");
+                assertFalse(pi2.Check(g1, yt, g2, y2), "proof fail");
+                assertFalse(pi2.Check(g1, y1, g2, yt), "proof fail");
+                assertFalse(pi2.Check(g1, y2, g2, y1), "proof fail");
+
+                Fr x2 = Func.GetMCLZrRandomElement();
+                Mcl.mul(y2, g2, x2);
+                G2 y3 = new G2();
+                Mcl.add(y3, y1, y2);
+
+                base.NIZK.MCL_G2.REPRESENT_Proof pi3 = new base.NIZK.MCL_G2.REPRESENT_Proof(y3, g1, x1, g2, x2);
+
+                assertTrue(pi3.Check(y3, g1, g2), "proof pass");
+                assertFalse(pi3.Check(y3, g1, yt), "proof fail");
+                assertFalse(pi3.Check(y3, g2, g1), "proof fail");
+            }
+        }
     }
 
     @DisplayName("test paper 《On the Key Exposure Problem in Chameleon Hashes》")
@@ -281,8 +366,8 @@ public class CHTest {
             @SuppressWarnings({"LoopConditionNotUpdatedInsideLoop", "ConstantValue", "unused"})
             @DisplayName("test MCL impl")
             @ParameterizedTest(name = "test curve {0}")
-            @EnumSource(MCL.class)
-            @Disabled // sth wrong
+            // BadCaseTest#MCL_Bad_Case#Case2
+            @EnumSource(names = {"BN254", "BLS12_381"})
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
                 do {
@@ -421,13 +506,13 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicParam pp = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicParam();
-                scheme.CH.CH_ET_KOG_CDK_2017.PBC scheme = new scheme.CH.CH_ET_KOG_CDK_2017.PBC(pp, curve, group, 1024);
+                scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicParam pp = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicParam(curve, group, 1024);
+                scheme.CH.CH_ET_KOG_CDK_2017.PBC scheme = new scheme.CH.CH_ET_KOG_CDK_2017.PBC();
                 scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicKey pk = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicKey();
                 scheme.CH.CH_ET_KOG_CDK_2017.PBC.SecretKey sk = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.SecretKey();
                 scheme.KeyGen(pk, sk, pp);
-                Element m1 = scheme.getZrElement();
-                Element m2 = scheme.getZrElement();
+                Element m1 = pp.GP.GetZrElement();
+                Element m2 = pp.GP.GetZrElement();
                 scheme.CH.CH_ET_KOG_CDK_2017.PBC.HashValue h1 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.HashValue();
                 scheme.CH.CH_ET_KOG_CDK_2017.PBC.HashValue h2 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.HashValue();
                 scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness r1 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness();

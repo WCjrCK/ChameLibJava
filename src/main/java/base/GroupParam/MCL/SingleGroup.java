@@ -1,41 +1,22 @@
 package base.GroupParam.MCL;
 
 import com.herumi.mcl.*;
-
-import java.util.Random;
+import utils.Func;
 
 public class SingleGroup {
     public Fr GetZrElement() {
-        Fr res = new Fr();
-        do {
-            res.setByCSPRNG();
-        } while(res.isZero());
-        return res;
+        return Func.GetMCLZrRandomElement();
     }
 
     public static class SingleGroupG1 extends SingleGroup {
         public G1 GetGElement() {
-            G1 res = new G1();
-            byte[] m = new byte[128];
-            Random random = new Random();
-            do {
-                random.nextBytes(m);
-                Mcl.hashAndMapToG1(res, m);
-            } while(res.isZero());
-            return res;
+            return Func.GetMCLG1RandomElement();
         }
     }
 
     public static class SingleGroupG2 extends SingleGroup {
         public G2 GetGElement() {
-            G2 res = new G2();
-            byte[] m = new byte[128];
-            Random random = new Random();
-            do {
-                random.nextBytes(m);
-                Mcl.hashAndMapToG2(res, m);
-            } while(res.isZero());
-            return res;
+            return Func.GetMCLG2RandomElement();
         }
     }
 
