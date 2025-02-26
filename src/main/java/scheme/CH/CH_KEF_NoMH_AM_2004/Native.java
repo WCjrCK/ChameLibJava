@@ -1,15 +1,15 @@
 package scheme.CH.CH_KEF_NoMH_AM_2004;
 
-/*
-* On the Key Exposure Problem in Chameleon Hashes
-* P7. Key Exposure Freeness Without Message Hiding
-*/
-
 import utils.Func;
 import utils.Hash;
 
 import java.math.BigInteger;
 import java.util.Random;
+
+/*
+* On the Key Exposure Problem in Chameleon Hashes
+* P7. Key Exposure Freeness Without Message Hiding
+*/
 
 public class Native {
     public static class PublicKey {

@@ -1,15 +1,15 @@
 package scheme.CH.CH_KEF_MH_RSANN_F_AM_2004;
 
-/*
- * On the Key Exposure Problem in Chameleon Hashes
- * P10. Scheme based on RSA[n,n] and Factoring
- */
-
 import utils.Func;
 import utils.Hash;
 
 import java.math.BigInteger;
 import java.util.Random;
+
+/*
+ * On the Key Exposure Problem in Chameleon Hashes
+ * P10. Scheme based on RSA[n,n] and Factoring
+ */
 
 public class Native {
     public static class PublicKey {
