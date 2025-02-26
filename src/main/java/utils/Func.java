@@ -1,6 +1,8 @@
 package utils;
 
+import com.herumi.mcl.Mcl;
 import curve.Group;
+import curve.MCL;
 import curve.PBC;
 import curve.params;
 import it.unisa.dia.gas.jpbc.Field;
@@ -22,6 +24,24 @@ public class Func {
             case G1: return pairing.getG1();
             case G2: return pairing.getG2();
             case GT: return pairing.getGT();
+            default: throw new IllegalArgumentException("Unknown group");
+        }
+    }
+
+    public static void MCLInit(MCL curve) {
+        switch (curve) {
+            case BN254:
+                Mcl.SystemInit(Mcl.BN254);
+                break;
+
+            case BLS12_381:
+                Mcl.SystemInit(Mcl.BLS12_381);
+                break;
+
+            case SECP256K1:
+                Mcl.SystemInit(Mcl.SECP256K1);
+                break;
+
             default: throw new IllegalArgumentException("Unknown group");
         }
     }

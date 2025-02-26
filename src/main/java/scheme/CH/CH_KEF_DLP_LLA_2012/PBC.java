@@ -22,7 +22,7 @@ public class PBC {
     }
 
     public static class LabelManager {
-        public Map<PublicKey, LabelGen> Dict = new HashMap<>();
+        public Map<String, LabelGen> Dict = new HashMap<>();
         public PublicParam pp;
 
         public LabelManager(PublicParam pp) {
@@ -30,13 +30,13 @@ public class PBC {
         }
 
         public void add(PublicKey pk, LabelGen lg) {
-            Dict.put(pk, lg);
+            Dict.put(pk.toString(), lg);
         }
 
         public void get(Label L, PublicKey pk) {
-            Element t = pp.GP.G.newRandomElement().getImmutable();
+            Element t = pp.GP.GetGElement();
             Element H2_t = pp.H2(t);
-            LabelGen lg = Dict.get(pk);
+            LabelGen lg = Dict.get(pk.toString());
             L.L = lg.y_1.powZn(H2_t).getImmutable();
             L.R = t.mul(lg.omega_1.powZn(H2_t)).getImmutable();
         }
@@ -60,6 +60,10 @@ public class PBC {
 
     public static class PublicKey {
         public Element g, y_2;
+
+        public String toString() {
+            return String.format("%s|%s", g, y_2);
+        }
     }
 
     public static class SecretKey {

@@ -1,4 +1,6 @@
+import com.herumi.mcl.Fr;
 import curve.Group;
+import curve.MCL;
 import curve.PBC;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
@@ -275,6 +277,96 @@ public class CHTest {
                 scheme.IForge(r1_pp, r1, r1_p, m1, m2, m3);
                 assertTrue(scheme.Check(h1, r1_pp, PP, pk, L1, m3), "Adapt(m3) valid");
             }
+
+            @DisplayName("test MCL impl")
+            @ParameterizedTest(name = "test curve {0}")
+            @EnumSource(MCL.class)
+            void MCLTest(MCL curve) {
+                Func.MCLInit(curve);
+                {
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.PublicParam PP = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.PublicParam();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.LabelManager LM = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.LabelManager(PP);
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1 scheme = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.PublicKey pk = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.PublicKey();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.SecretKey sk = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.SecretKey();
+                    scheme.KeyGen(pk, sk, PP, LM);
+                    Fr m1 = PP.GP.GetZrElement();
+                    Fr m2 = PP.GP.GetZrElement();
+                    Fr m3 = PP.GP.GetZrElement();
+                    assertFalse(m1.equals(m2), "m1 != m2");
+                    assertFalse(m1.equals(m3), "m1 != m3");
+                    assertFalse(m2.equals(m3), "m2 != m3");
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Label L1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Label();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Label L2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Label();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.HashValue h1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.HashValue();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.HashValue h2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.HashValue();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness r1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness r2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness r1_p = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness r1_pp = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness();
+                    scheme.Hash(h1, r1, L1, PP, LM, pk, m1);
+                    assertTrue(scheme.Check(h1, r1, PP, pk, L1, m1), "H(L1, m1) valid");
+                    assertFalse(scheme.Check(h1, r1, PP, pk, L2, m1), "not H(L2, m1)");
+
+                    scheme.Hash(h2, r2, L2, PP, LM, pk, m2);
+                    assertTrue(scheme.Check(h2, r2, PP, pk, L2, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, r2, PP, pk, L1, m2), "not H(L1, m2)");
+
+                    assertFalse(scheme.Check(h1, r1, PP, pk, L2, m2), "not H(m1)");
+                    assertFalse(scheme.Check(h2, r2, PP, pk, L1, m1), "not H(m2)");
+
+                    scheme.UForge(r1_p, h1, r1, L1, PP, pk, sk, m1, m3);
+                    assertTrue(scheme.Check(h1, r1_p, PP, pk, L1, m3), "Adapt(m3) valid");
+
+                    scheme.UForge(r1_p, h1, r1, L1, PP, pk, sk, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, PP, pk, L1, m2), "Adapt(m2) valid");
+
+                    scheme.IForge(r1_pp, r1, r1_p, m1, m2, m3);
+                    assertTrue(scheme.Check(h1, r1_pp, PP, pk, L1, m3), "Adapt(m3) valid");
+                }
+                if(curve != MCL.SECP256K1) {
+                    // BadCaseTest#MCL_Bad_Case#Case1
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicParam PP = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicParam();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.LabelManager LM = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.LabelManager(PP);
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2 scheme = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicKey pk = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicKey();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.SecretKey sk = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.SecretKey();
+                    scheme.KeyGen(pk, sk, PP, LM);
+                    Fr m1 = PP.GP.GetZrElement();
+                    Fr m2 = PP.GP.GetZrElement();
+                    Fr m3 = PP.GP.GetZrElement();
+                    assertFalse(m1.equals(m2), "m1 != m2");
+                    assertFalse(m1.equals(m3), "m1 != m3");
+                    assertFalse(m2.equals(m3), "m2 != m3");
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Label L1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Label();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Label L2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Label();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.HashValue h1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.HashValue();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.HashValue h2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.HashValue();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r1_p = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r1_pp = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
+                    scheme.Hash(h1, r1, L1, PP, LM, pk, m1);
+                    assertTrue(scheme.Check(h1, r1, PP, pk, L1, m1), "H(L1, m1) valid");
+                    assertFalse(scheme.Check(h1, r1, PP, pk, L2, m1), "not H(L2, m1)");
+
+                    scheme.Hash(h2, r2, L2, PP, LM, pk, m2);
+                    assertTrue(scheme.Check(h2, r2, PP, pk, L2, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, r2, PP, pk, L1, m2), "not H(L1, m2)");
+
+                    assertFalse(scheme.Check(h1, r1, PP, pk, L2, m2), "not H(m1)");
+                    assertFalse(scheme.Check(h2, r2, PP, pk, L1, m1), "not H(m2)");
+
+                    scheme.UForge(r1_p, h1, r1, L1, PP, pk, sk, m1, m3);
+                    assertTrue(scheme.Check(h1, r1_p, PP, pk, L1, m3), "Adapt(m3) valid");
+
+                    scheme.UForge(r1_p, h1, r1, L1, PP, pk, sk, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, PP, pk, L1, m2), "Adapt(m2) valid");
+
+                    scheme.IForge(r1_pp, r1, r1_p, m1, m2, m3);
+                    assertTrue(scheme.Check(h1, r1_pp, PP, pk, L1, m3), "Adapt(m3) valid");
+                }
+            }
         }
     }
 
@@ -524,7 +616,7 @@ public class CHTest {
             void JPBCTest(curve.PBC curve, Group group) {
                 if(group == Group.GT && (curve == PBC.D_159 || curve == PBC.D_201 || curve == PBC.D_224 || curve == PBC.D_105171_196_185
                         || curve == PBC.D_277699_175_167 || curve == PBC.D_278027_190_181 || curve == PBC.F || curve == PBC.SM_9 || curve == PBC.G_149)) {
-                    // BadCaseTest#JPBCBadCase1
+                    // BadCaseTest#JPBC_Bad_Case#Case1
                     return;
                 }
 
@@ -581,13 +673,13 @@ public class CHTest {
                             break;
 
                         default:
-                            // BadCaseTest#JPBCBadCase2
+                            // BadCaseTest#JPBC_Bad_Case#Case2
                             return;
                     }
                 }
 
                 if(group == Group.GT && curve == PBC.G_149) {
-                    // BadCaseTest#JPBCBadCase3
+                    // BadCaseTest#JPBC_Bad_Case#Case3
                     return;
                 }
 
@@ -638,7 +730,7 @@ public class CHTest {
                             break;
 
                         default:
-                            // BadCaseTest#JPBCBadCase2
+                            // BadCaseTest#JPBC_Bad_Case#Case2
                             return;
                     }
                 }
@@ -690,13 +782,13 @@ public class CHTest {
                             break;
 
                         default:
-                            // BadCaseTest#JPBCBadCase2
+                            // BadCaseTest#JPBC_Bad_Case#Case2
                             return;
                     }
                 }
 
                 if(group == Group.GT && curve == PBC.G_149) {
-                    // BadCaseTest#JPBCBadCase3
+                    // BadCaseTest#JPBC_Bad_Case#Case3
                     return;
                 }
 
