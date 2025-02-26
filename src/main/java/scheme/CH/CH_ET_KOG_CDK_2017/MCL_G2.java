@@ -26,9 +26,7 @@ public class MCL_G2 {
         }
 
         public Fr H(Fr m1) {
-            Fr res = new Fr();
-            res.setHashOf(Hash.HASH(String.format("%s", m1)));
-            return res;
+            return Hash.H_MCL_Zr_1(m1.toString());
         }
     }
 

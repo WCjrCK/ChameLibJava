@@ -10,9 +10,7 @@ import utils.Hash;
 public class MCL_G2 {
     private static abstract class Proof {
         public Fr G(String m) {
-            Fr res = new Fr();
-            res.setHashOf(Hash.HASH(m));
-            return res;
+            return Hash.H_MCL_Zr_1(m);
         }
     }
 

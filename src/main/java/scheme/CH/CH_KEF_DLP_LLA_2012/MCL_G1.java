@@ -55,15 +55,11 @@ public class MCL_G1 {
         }
 
         public Fr H1(G1 m1, G1 m2, G1 m3) {
-            Fr res = new Fr();
-            res.setHashOf(Hash.HASH(String.format("%s|%s|%s", m1, m2, m3)));
-            return res;
+            return Hash.H_MCL_Zr_1(String.format("%s|%s|%s", m1, m2, m3));
         }
 
         public Fr H2(G1 m1) {
-            Fr res = new Fr();
-            res.setHashOf(Hash.HASH(String.format("%s", m1)));
-            return res;
+            return Hash.H_MCL_Zr_1(m1.toString());
         }
     }
 

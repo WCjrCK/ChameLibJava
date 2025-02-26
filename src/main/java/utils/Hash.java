@@ -1,5 +1,6 @@
 package utils;
 
+import com.herumi.mcl.*;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 
@@ -53,6 +54,30 @@ public class Hash {
 
     static public BigInteger H_native_2_1(BigInteger m1, BigInteger m2) {
         return new BigInteger(1, HASH(m1.toString() + "|" + m2.toString()));
+    }
+
+    static public G1 H_MCL_G1_1(String m) {
+        G1 res = new G1();
+        Mcl.hashAndMapToG1(res, Hash.HASH(m));
+        return res;
+    }
+
+    static public G2 H_MCL_G2_1(String m) {
+        G2 res = new G2();
+        Mcl.hashAndMapToG2(res, Hash.HASH(m));
+        return res;
+    }
+
+//    static public GT H_MCL_GT_1(String m) {
+//        GT res = new GT();
+//        Mcl.hashAndMapToG2(res, Hash.HASH(m));
+//        return res;
+//    }
+
+    static public Fr H_MCL_Zr_1(String m) {
+        Fr res = new Fr();
+        res.setHashOf(Hash.HASH(m));
+        return res;
     }
 
 //    static public BigInteger H_PBC_1_native_1(Element m1) {
