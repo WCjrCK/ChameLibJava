@@ -532,6 +532,68 @@ public class CHTest {
                 assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "adapt m2 valid");
                 assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not adapt m1");
             }
+
+            @DisplayName("test MCL impl")
+            @ParameterizedTest(name = "test curve {0}")
+            // BadCaseTest#MCL_Bad_Case#Case2
+            @EnumSource(names = {"BN254", "BLS12_381"})
+            void MCLTest(MCL curve) {
+                Func.MCLInit(curve);
+                {
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.PublicParam pp = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.PublicParam(1024);
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1 scheme = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.PublicKey pk = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.PublicKey();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.SecretKey sk = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.SecretKey();
+                    scheme.KeyGen(pk, sk, pp);
+                    Fr m1 = pp.GP.GetZrElement();
+                    Fr m2 = pp.GP.GetZrElement();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.HashValue h1 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.HashValue();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.HashValue h2 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.HashValue();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness r1 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness r1_p = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness r2 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.ETrapdoor etd1 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.ETrapdoor();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.ETrapdoor etd2 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.ETrapdoor();
+                    scheme.Hash(h1, r1, etd1, pp, pk, m1);
+                    assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
+                    scheme.Hash(h2, r2, etd2, pp, pk, m2);
+                    assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
+
+                    assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
+                    assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
+
+                    scheme.Adapt(r1_p, h1, r1, etd1, pp, pk, sk, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "adapt m2 valid");
+                    assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not adapt m1");
+                }
+                {
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.PublicParam pp = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.PublicParam(1024);
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2 scheme = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.PublicKey pk = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.PublicKey();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.SecretKey sk = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.SecretKey();
+                    scheme.KeyGen(pk, sk, pp);
+                    Fr m1 = pp.GP.GetZrElement();
+                    Fr m2 = pp.GP.GetZrElement();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.HashValue h1 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.HashValue();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.HashValue h2 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.HashValue();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness r1 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness r1_p = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness r2 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.ETrapdoor etd1 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.ETrapdoor();
+                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.ETrapdoor etd2 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.ETrapdoor();
+                    scheme.Hash(h1, r1, etd1, pp, pk, m1);
+                    assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
+                    scheme.Hash(h2, r2, etd2, pp, pk, m2);
+                    assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
+
+                    assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
+                    assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
+
+                    scheme.Adapt(r1_p, h1, r1, etd1, pp, pk, sk, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "adapt m2 valid");
+                    assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not adapt m1");
+                }
+            }
         }
 
         @DisplayName("test CH_CDK_2017")
