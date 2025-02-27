@@ -56,16 +56,12 @@ public class Hash {
         return new BigInteger(1, HASH(m1.toString() + "|" + m2.toString()));
     }
 
-    static public G1 H_MCL_G1_1(String m) {
-        G1 res = new G1();
+    static public void H_MCL_G1_1(G1 res, String m) {
         Mcl.hashAndMapToG1(res, Hash.HASH(m));
-        return res;
     }
 
-    static public G2 H_MCL_G2_1(String m) {
-        G2 res = new G2();
+    static public void H_MCL_G2_1(G2 res, String m) {
         Mcl.hashAndMapToG2(res, Hash.HASH(m));
-        return res;
     }
 
 //    static public GT H_MCL_GT_1(String m) {
@@ -74,10 +70,8 @@ public class Hash {
 //        return res;
 //    }
 
-    static public Fr H_MCL_Zr_1(String m) {
-        Fr res = new Fr();
+    static public void H_MCL_Zr_1(Fr res, String m) {
         res.setHashOf(Hash.HASH(m));
-        return res;
     }
 
 //    static public BigInteger H_PBC_1_native_1(Element m1) {

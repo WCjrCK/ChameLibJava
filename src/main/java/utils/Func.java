@@ -90,26 +90,22 @@ public class Func {
         return res;
     }
 
-    public static G1 GetMCLG1RandomElement() {
-        G1 res = new G1();
+    public static void GetMCLG1RandomElement(G1 res) {
         byte[] m = new byte[128];
         Random random = new Random();
         do {
             random.nextBytes(m);
             Mcl.hashAndMapToG1(res, m);
         } while(res.isZero());
-        return res;
     }
 
-    public static G2 GetMCLG2RandomElement() {
-        G2 res = new G2();
+    public static void GetMCLG2RandomElement(G2 res) {
         byte[] m = new byte[128];
         Random random = new Random();
         do {
             random.nextBytes(m);
             Mcl.hashAndMapToG2(res, m);
         } while(res.isZero());
-        return res;
     }
 
 //    public static GT GetMCLGTRandomElement() {
@@ -126,11 +122,9 @@ public class Func {
 //        return res;
 //    }
 
-    public static Fr GetMCLZrRandomElement() {
-        Fr res = new Fr();
+    public static void GetMCLZrRandomElement(Fr res) {
         do {
             res.setByCSPRNG();
         } while(res.isZero());
-        return res;
     }
 }

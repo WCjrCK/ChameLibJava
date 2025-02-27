@@ -58,12 +58,11 @@ public class BadCaseTest {
             Group group = Group.G2;
 
             scheme.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC();
-            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam();
+            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
             scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey pk = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey();
             scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey sk = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey();
-            scheme.SetUp(pp, curve, group);
             scheme.KeyGen(pk, sk, pp);
-            Element m1 = pp.GetZrElement();
+            Element m1 = pp.GP.GetZrElement();
 
             scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue H = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
 
@@ -71,11 +70,11 @@ public class BadCaseTest {
             Element T1, T2;
             { // scheme.Hash
                 Element xi, k_1_1, k_1_2;
-                xi = pp.GetZrElement();
-                k_1_1 = pp.GetZrElement();
-                k_1_2 = pp.GetZrElement();
-                R.e_2 = pp.GetZrElement();
-                R.s_2 = pp.GetZrElement();
+                xi = pp.GP.GetZrElement();
+                k_1_1 = pp.GP.GetZrElement();
+                k_1_2 = pp.GP.GetZrElement();
+                R.e_2 = pp.GP.GetZrElement();
+                R.s_2 = pp.GP.GetZrElement();
 
                 H.O = pp.g_1.powZn(m1).mul(pp.g_2.powZn(xi)).getImmutable();
 
@@ -108,14 +107,14 @@ public class BadCaseTest {
             curve.PBC curve = PBC.G_149;
             Group group = Group.GT;
 
-            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam();
+            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
             {
                 Pairing pairing = Func.PairingGen(curve);
-                pp.G = Func.GetPBCField(pairing, group);
-                pp.g_1 = pp.GetGElement();
+                pp.GP.G = Func.GetPBCField(pairing, group);
+                pp.g_1 = pp.GP.GetGElement();
                 byte[] hash = Hash.HASH(pp.g_1.toString());
                 System.out.println(Arrays.toString(hash));
-                pp.G.newElementFromHash(hash, 0, hash.length).getImmutable();
+                pp.GP.G.newElementFromHash(hash, 0, hash.length).getImmutable();
             }
         }
     }

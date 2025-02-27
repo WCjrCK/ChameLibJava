@@ -1,16 +1,15 @@
 package base.NIZK;
 
-import com.herumi.mcl.Fr;
+import com.herumi.mcl.*;
 import com.herumi.mcl.G2;
-import com.herumi.mcl.Mcl;
 import utils.Func;
 import utils.Hash;
 
 @SuppressWarnings("SuspiciousNameCombination")
 public class MCL_G2 {
     private static abstract class Proof {
-        public Fr G(String m) {
-            return Hash.H_MCL_Zr_1(m);
+        public void G(Fr res, String m) {
+            Hash.H_MCL_Zr_1(res, m);
         }
     }
 
@@ -19,22 +18,29 @@ public class MCL_G2 {
         public Fr gamma = new Fr();
 
         public DL_Proof(Fr x, G2 g, G2 y) {
-            G2 tmp = new G2();
-            Mcl.mul(tmp, g, x);
-            if(!y.equals(tmp)) throw new RuntimeException("wrong param, g^x != y");
-            Fr a = Func.GetMCLZrRandomElement();
-            Mcl.mul(alpha, g, a);
-            Mcl.mul(gamma, G(String.format("%s|%s", y, alpha)), x);
-            Mcl.add(gamma, gamma, a);
+            this(x, g, y, new Fr[]{new Fr()});
+        }
+
+        public DL_Proof(Fr x, G2 g, G2 y, Fr[] Fr_tmp) {
+            Mcl.mul(alpha, g, x);
+            if(!y.equals(alpha)) throw new RuntimeException("wrong param, g^x != y");
+            Func.GetMCLZrRandomElement(Fr_tmp[0]);
+            Mcl.mul(alpha, g, Fr_tmp[0]);
+            G(gamma, String.format("%s|%s", y, alpha));
+            Mcl.mul(gamma, gamma, x);
+            Mcl.add(gamma, gamma, Fr_tmp[0]);
         }
 
         public boolean Check(G2 g, G2 y) {
-            G2 tmp1 = new G2();
-            Mcl.mul(tmp1, g, gamma);
-            Mcl.sub(tmp1, tmp1, alpha);
-            G2 tmp2 = new G2();
-            Mcl.mul(tmp2, y, G(String.format("%s|%s", y, alpha)));
-            return tmp1.equals(tmp2);
+            return Check(g, y, new G2[]{new G2(), new G2()}, new Fr[]{new Fr()});
+        }
+
+        public boolean Check(G2 g, G2 y, G2[] G_tmp, Fr[] Fr_tmp) {
+            Mcl.mul(G_tmp[0], g, gamma);
+            Mcl.sub(G_tmp[0], G_tmp[0], alpha);
+            G(Fr_tmp[0], String.format("%s|%s", y, alpha));
+            Mcl.mul(G_tmp[1], y, Fr_tmp[0]);
+            return G_tmp[0].equals(G_tmp[1]);
         }
 
         public void CopyFrom(DL_Proof p) {
@@ -48,30 +54,36 @@ public class MCL_G2 {
         public Fr gamma = new Fr();
 
         public EQUAL_DL_Proof(Fr x, G2 g_1, G2 y_1, G2 g_2, G2 y_2) {
-            G2 tmp = new G2();
-            Mcl.mul(tmp, g_1, x);
-            if(!tmp.equals(y_1)) throw new RuntimeException("wrong param, g_1^x != y_1");
-            Mcl.mul(tmp, g_2, x);
-            if(!tmp.equals(y_2)) throw new RuntimeException("wrong param, g_2^x != y_2");
-            Fr a = Func.GetMCLZrRandomElement();
-            Mcl.mul(alpha_1, g_1, a);
-            Mcl.mul(alpha_2, g_2, a);
-            Mcl.mul(gamma, G(String.format("%s|%s|%s|%s", y_1, y_2, alpha_1, alpha_2)), x);
-            Mcl.add(gamma, gamma, a);
+            this(x, g_1, y_1, g_2, y_2, new Fr[]{new Fr()});
+        }
+
+        public EQUAL_DL_Proof(Fr x, G2 g_1, G2 y_1, G2 g_2, G2 y_2, Fr[] Fr_tmp) {
+            Mcl.mul(alpha_1, g_1, x);
+            if(!alpha_1.equals(y_1)) throw new RuntimeException("wrong param, g_1^x != y_1");
+            Mcl.mul(alpha_1, g_2, x);
+            if(!alpha_1.equals(y_2)) throw new RuntimeException("wrong param, g_2^x != y_2");
+            Func.GetMCLZrRandomElement(Fr_tmp[0]);
+            Mcl.mul(alpha_1, g_1, Fr_tmp[0]);
+            Mcl.mul(alpha_2, g_2, Fr_tmp[0]);
+            G(gamma, String.format("%s|%s|%s|%s", y_1, y_2, alpha_1, alpha_2));
+            Mcl.mul(gamma, gamma, x);
+            Mcl.add(gamma, gamma, Fr_tmp[0]);
         }
 
         public boolean Check(G2 g_1, G2 y_1, G2 g_2, G2 y_2) {
-            Fr beta = G(String.format("%s|%s|%s|%s", y_1, y_2, alpha_1, alpha_2));
-            G2 tmp1 = new G2();
-            Mcl.mul(tmp1, g_1, gamma);
-            Mcl.sub(tmp1, tmp1, alpha_1);
-            G2 tmp2 = new G2();
-            Mcl.mul(tmp2, y_1, beta);
-            if(!tmp1.equals(tmp2)) return false;
-            Mcl.mul(tmp1, g_2, gamma);
-            Mcl.sub(tmp1, tmp1, alpha_2);
-            Mcl.mul(tmp2, y_2, beta);
-            return tmp1.equals(tmp2);
+            return Check(g_1, y_1, g_2, y_2, new G2[]{new G2(), new G2()}, new Fr[]{new Fr()});
+        }
+
+        public boolean Check(G2 g_1, G2 y_1, G2 g_2, G2 y_2, G2[] G_tmp, Fr[] Fr_tmp) {
+            G(Fr_tmp[0], String.format("%s|%s|%s|%s", y_1, y_2, alpha_1, alpha_2));
+            Mcl.mul(G_tmp[0], g_1, gamma);
+            Mcl.sub(G_tmp[0], G_tmp[0], alpha_1);
+            Mcl.mul(G_tmp[1], y_1, Fr_tmp[0]);
+            if(!G_tmp[0].equals(G_tmp[1])) return false;
+            Mcl.mul(G_tmp[0], g_2, gamma);
+            Mcl.sub(G_tmp[0], G_tmp[0], alpha_2);
+            Mcl.mul(G_tmp[1], y_2, Fr_tmp[0]);
+            return G_tmp[0].equals(G_tmp[1]);
         }
     }
 
@@ -80,35 +92,41 @@ public class MCL_G2 {
         public Fr gamma_1 = new Fr(), gamma_2 = new Fr();
 
         public REPRESENT_Proof(G2 y, G2 g_1, Fr x_1, G2 g_2, Fr x_2) {
-            G2 tmp1 = new G2();
-            Mcl.mul(tmp1, g_1, x_1);
-            G2 tmp2 = new G2();
-            Mcl.mul(tmp2, g_2, x_2);
-            Mcl.add(tmp1, tmp1, tmp2);
-            if(!y.equals(tmp1)) throw new RuntimeException("wrong param, y != g_1^x_1 * g_2^x_2");
+            this(y, g_1, x_1, g_2, x_2, new G2[]{new G2()}, new Fr[]{new Fr(), new Fr()});
+        }
 
-            Fr a_1 = Func.GetMCLZrRandomElement();
-            Fr a_2 = Func.GetMCLZrRandomElement();
-            Mcl.mul(tmp1, g_1, a_1);
-            Mcl.mul(tmp2, g_2, a_2);
-            Mcl.add(alpha, tmp1, tmp2);
-            Fr beta = G(String.format("%s|%s|%s|%s", y, g_1, g_2, alpha));
+        public REPRESENT_Proof(G2 y, G2 g_1, Fr x_1, G2 g_2, Fr x_2, G2[] G_tmp, Fr[] Fr_tmp) {
+            Mcl.mul(G_tmp[0], g_1, x_1);
+            Mcl.mul(alpha, g_2, x_2);
+            Mcl.add(G_tmp[0], G_tmp[0], alpha);
+            if(!y.equals(G_tmp[0])) throw new RuntimeException("wrong param, y != g_1^x_1 * g_2^x_2");
+
+            Func.GetMCLZrRandomElement(Fr_tmp[0]);
+            Func.GetMCLZrRandomElement(Fr_tmp[1]);
+            Mcl.mul(G_tmp[0], g_1, Fr_tmp[0]);
+            Mcl.mul(alpha, g_2, Fr_tmp[1]);
+            Mcl.add(alpha, G_tmp[0], alpha);
+            Fr beta = new Fr();
+            G(beta, String.format("%s|%s|%s|%s", y, g_1, g_2, alpha));
             Mcl.mul(gamma_1, beta, x_1);
-            Mcl.add(gamma_1, gamma_1, a_1);
+            Mcl.add(gamma_1, gamma_1, Fr_tmp[0]);
 
             Mcl.mul(gamma_2, beta, x_2);
-            Mcl.add(gamma_2, gamma_2, a_2);
+            Mcl.add(gamma_2, gamma_2, Fr_tmp[1]);
         }
 
         public boolean Check(G2 y, G2 g_1, G2 g_2) {
-            G2 tmp1 = new G2();
-            Mcl.mul(tmp1, g_1, gamma_1);
-            G2 tmp2 = new G2();
-            Mcl.mul(tmp2, g_2, gamma_2);
-            Mcl.add(tmp1, tmp1, tmp2);
-            Mcl.sub(tmp1, tmp1, alpha);
-            Mcl.mul(tmp2, y, G(String.format("%s|%s|%s|%s", y, g_1, g_2, alpha)));
-            return tmp1.equals(tmp2);
+            return Check(y, g_1, g_2, new G2[]{new G2(), new G2()}, new Fr[]{new Fr()});
+        }
+
+        public boolean Check(G2 y, G2 g_1, G2 g_2, G2[] G_tmp, Fr[] Fr_tmp) {
+            Mcl.mul(G_tmp[0], g_1, gamma_1);
+            Mcl.mul(G_tmp[1], g_2, gamma_2);
+            Mcl.add(G_tmp[0], G_tmp[0], G_tmp[1]);
+            Mcl.sub(G_tmp[0], G_tmp[0], alpha);
+            G(Fr_tmp[0], String.format("%s|%s|%s|%s", y, g_1, g_2, alpha));
+            Mcl.mul(G_tmp[1], y, Fr_tmp[0]);
+            return G_tmp[0].equals(G_tmp[1]);
         }
     }
 }
