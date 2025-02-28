@@ -97,16 +97,16 @@ public class IBCHTest {
             @EnumSource(names = {"A", "A1", "E"})
             void JPBCTest(curve.PBC curve) {
                 scheme.IBCH.IB_CH_MD_LSX_2022.PBC scheme = new scheme.IBCH.IB_CH_MD_LSX_2022.PBC();
-                scheme.IBCH.IB_CH_MD_LSX_2022.PBC.PublicParam pp = new scheme.IBCH.IB_CH_MD_LSX_2022.PBC.PublicParam();
+                scheme.IBCH.IB_CH_MD_LSX_2022.PBC.PublicParam pp = new scheme.IBCH.IB_CH_MD_LSX_2022.PBC.PublicParam(curve);
                 scheme.IBCH.IB_CH_MD_LSX_2022.PBC.MasterSecretKey msk = new scheme.IBCH.IB_CH_MD_LSX_2022.PBC.MasterSecretKey();
-                scheme.SetUp(pp, msk, curve);
+                scheme.SetUp(pp, msk);
                 scheme.IBCH.IB_CH_MD_LSX_2022.PBC.SecretKey sk1 = new scheme.IBCH.IB_CH_MD_LSX_2022.PBC.SecretKey();
                 scheme.IBCH.IB_CH_MD_LSX_2022.PBC.SecretKey sk2 = new scheme.IBCH.IB_CH_MD_LSX_2022.PBC.SecretKey();
-                Element ID1 = pp.GetZrElement();
-                Element ID2 = pp.GetZrElement();
+                Element ID1 = pp.GP.GetZrElement();
+                Element ID2 = pp.GP.GetZrElement();
                 assertFalse(ID1.isEqual(ID2), "ID1 != ID2");
-                Element m1 = pp.GetZrElement();
-                Element m2 = pp.GetZrElement();
+                Element m1 = pp.GP.GetZrElement();
+                Element m2 = pp.GP.GetZrElement();
                 assertFalse(m1.isEqual(m2), "m1 != m2");
                 scheme.KeyGen(sk1, pp, msk, ID1);
                 scheme.KeyGen(sk2, pp, msk, ID2);
