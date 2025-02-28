@@ -42,19 +42,19 @@ public class IBCHTest {
             @MethodSource("IBCHTest#GetPBCInvert")
             void JPBCTest(curve.PBC curve, boolean swap_G1G2) {
                 scheme.IBCH.IB_CH_KEF_CZS_2014.PBC scheme = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC();
-                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.PublicParam SP = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.PublicParam();
+                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.PublicParam SP = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.PublicParam(curve, swap_G1G2);
                 scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.MasterSecretKey msk = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.MasterSecretKey();
-                scheme.SetUp(SP, msk, curve, swap_G1G2);
+                scheme.SetUp(SP, msk);
                 scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.SecretKey sk1 = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.SecretKey();
                 scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.SecretKey sk2 = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.SecretKey();
-                Element ID1 = SP.GetZrElement();
-                Element ID2 = SP.GetZrElement();
+                Element ID1 = SP.GP.GetZrElement();
+                Element ID2 = SP.GP.GetZrElement();
                 assertFalse(ID1.isEqual(ID2), "ID1 != ID2");
-                Element m1 = SP.GetZrElement();
-                Element m2 = SP.GetZrElement();
+                Element m1 = SP.GP.GetZrElement();
+                Element m2 = SP.GP.GetZrElement();
                 assertFalse(m1.isEqual(m2), "m1 != m2");
-                Element L1 = SP.GetZrElement();
-                Element L2 = SP.GetZrElement();
+                Element L1 = SP.GP.GetZrElement();
+                Element L2 = SP.GP.GetZrElement();
                 assertFalse(L1.isEqual(L2), "L1 != L2");
                 scheme.KeyGen(sk1, SP, msk, ID1);
                 scheme.KeyGen(sk2, SP, msk, ID2);
