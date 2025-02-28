@@ -69,13 +69,13 @@ public class MCL_G2 {
     }
 
     public void Adapt(Randomness R_p, Randomness R, PublicParam SP, SecretKey sk, G2 I, Fr m, Fr m_p) {
-        Mcl.add(G_tmp[0], SP.g, I);
+        Mcl.add(R_p.g_a, SP.g, I);
         Mcl.sub(Fr_tmp[0], m, m_p);
-        Mcl.mul(R_p.y_a, G_tmp[0], Fr_tmp[0]);
+        Mcl.mul(R_p.y_a, R_p.g_a, Fr_tmp[0]);
         Mcl.add(R_p.y_a, R_p.y_a, R.y_a);
 
         Mcl.div(Fr_tmp[0], Fr_tmp[0], sk.x);
-        Mcl.mul(R_p.g_a, G_tmp[0], Fr_tmp[0]);
+        Mcl.mul(R_p.g_a, R_p.g_a, Fr_tmp[0]);
         Mcl.add(R_p.g_a, R_p.g_a, R.g_a);
     }
 }

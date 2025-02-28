@@ -133,11 +133,11 @@ public class MCL_G2 {
     }
 
     public void IForge(Randomness r_pp, Randomness r, Randomness r_p, Fr m, Fr m_p, Fr m_pp) {
-        Mcl.sub(Fr_tmp[0], r_p.r, r.r);
-        Mcl.sub(Fr_tmp[1], m_p, m_pp);
-        Mcl.mul(Fr_tmp[0], Fr_tmp[0], Fr_tmp[1]);
-        Mcl.sub(Fr_tmp[1], m, m_p);
-        Mcl.div(Fr_tmp[0], Fr_tmp[0], Fr_tmp[1]);
-        Mcl.add(r_pp.r, r_p.r, Fr_tmp[0]);
+        Mcl.sub(r_pp.r, r_p.r, r.r);
+        Mcl.sub(Fr_tmp[0], m_p, m_pp);
+        Mcl.mul(r_pp.r, r_pp.r, Fr_tmp[0]);
+        Mcl.sub(Fr_tmp[0], m, m_p);
+        Mcl.div(r_pp.r, r_pp.r, Fr_tmp[0]);
+        Mcl.add(r_pp.r, r_p.r, r_pp.r);
     }
 }

@@ -2,9 +2,6 @@ package scheme.CH.CR_CH_DSS_2020;
 
 import curve.Group;
 import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Field;
-import it.unisa.dia.gas.jpbc.Pairing;
-import utils.Func;
 import utils.Hash;
 
 /*
@@ -12,26 +9,22 @@ import utils.Hash;
  * P25. Construction 3. Concrete instantiation of a Fully Collision-Resistant CH
  */
 
-@SuppressWarnings("rawtypes")
 public class PBC {
     public static class PublicParam {
-        Field Zr, G;
-        Element g;
+        public base.GroupParam.PBC.SingleGroup GP;
+        public Element g;
+
+        public PublicParam(curve.PBC curve, Group group) {
+            GP = new base.GroupParam.PBC.SingleGroup(curve, group);
+            g = GP.GetGElement();
+        }
 
         private Element H(String m) {
-            return Hash.H_String_1_PBC_1(Zr, m);
+            return Hash.H_String_1_PBC_1(GP.Zr, m);
         }
 
         public Element H(Element m1, Element m2, Element m3, Element m4, Element m5, Element m6, Element m7) {
             return H(String.format("(%s(%s|%s)%s)(%s|%s|%s)", m1, m2, m3, m4, m5, m6, m7));
-        }
-
-        public Element GetGElement() {
-            return G.newRandomElement().getImmutable();
-        }
-
-        public Element GetZrElement() {
-            return Zr.newRandomElement().getImmutable();
         }
     }
 
@@ -51,24 +44,17 @@ public class PBC {
         public Element e_1, e_2, s_1, s_2;
     }
 
-    public void SetUp(PublicParam pp, curve.PBC curve, Group group) {
-        Pairing pairing = Func.PairingGen(curve);
-        pp.G = Func.GetPBCField(pairing, group);
-        pp.Zr = pairing.getZr();
-        pp.g = pp.GetGElement();
-    }
-
     public void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp) {
-        sk.x = pp.GetZrElement();
+        sk.x = pp.GP.GetZrElement();
         pk.y = pp.g.powZn(sk.x).getImmutable();
     }
 
     public void Hash(HashValue H, Randomness R, PublicParam pp, PublicKey pk, Element m) {
         Element xi, k_1;
-        xi = pp.GetZrElement();
-        k_1 = pp.GetZrElement();
-        R.e_2 = pp.GetZrElement();
-        R.s_2 = pp.GetZrElement();
+        xi = pp.GP.GetZrElement();
+        k_1 = pp.GP.GetZrElement();
+        R.e_2 = pp.GP.GetZrElement();
+        R.s_2 = pp.GP.GetZrElement();
 
         H.c_1 = pp.g.powZn(xi).getImmutable();
         H.c_2 = m.mul(pk.y.powZn(xi)).getImmutable();
@@ -93,9 +79,9 @@ public class PBC {
     public void Adapt(Randomness R_p, HashValue H, Randomness R, PublicParam pp, PublicKey pk, SecretKey sk, Element m, Element m_p) {
         if(!Check(H, R, pp, pk, m)) throw new RuntimeException("wrong hash value");
         Element k_2;
-        k_2 = pp.GetZrElement();
-        R_p.e_1 = pp.GetZrElement();
-        R_p.s_1 = pp.GetZrElement();
+        k_2 = pp.GP.GetZrElement();
+        R_p.e_1 = pp.GP.GetZrElement();
+        R_p.s_1 = pp.GP.GetZrElement();
 
         R_p.e_2 = pp.H(
                 pk.y, H.c_1, H.c_2, m_p,

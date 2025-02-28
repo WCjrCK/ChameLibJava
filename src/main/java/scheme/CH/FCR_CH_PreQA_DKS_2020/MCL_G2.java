@@ -52,7 +52,7 @@ public class MCL_G2 {
     }
 
     private final G2[] G_tmp = new G2[]{new G2(), new G2(), new G2()};
-    private final Fr[] Fr_tmp = new Fr[]{new Fr(), new Fr(), new Fr()};
+    private final Fr[] Fr_tmp = new Fr[]{new Fr(), new Fr()};
 
     public void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp) {
         pp.GP.GetZrElement(sk.x);
@@ -63,18 +63,18 @@ public class MCL_G2 {
         pp.GP.GetZrElement(R.e_2);
         pp.GP.GetZrElement(R.s_2);
 
-        pp.GP.GetZrElement(Fr_tmp[0]);
+        pp.GP.GetZrElement(R.s_1_2);
 
         Mcl.mul(H.O, pp.g_1, m);
-        Mcl.mul(G_tmp[0], pp.g_2, Fr_tmp[0]);
+        Mcl.mul(G_tmp[0], pp.g_2, R.s_1_2);
         Mcl.add(H.O, H.O, G_tmp[0]);
 
         pp.GP.GetZrElement(Fr_tmp[1]);
 
-        pp.GP.GetZrElement(Fr_tmp[2]);
+        pp.GP.GetZrElement(R.s_1_1);
 
-        Mcl.mul(G_tmp[0], pp.g_1, Fr_tmp[1]);
-        Mcl.mul(G_tmp[1], pp.g_2, Fr_tmp[2]);
+        Mcl.mul(G_tmp[0], pp.g_1, Fr_tmp[0]);
+        Mcl.mul(G_tmp[1], pp.g_2, R.s_1_1);
         Mcl.add(G_tmp[0], G_tmp[0], G_tmp[1]);
 
         Mcl.mul(G_tmp[1], pp.g_1, R.s_2);
@@ -84,11 +84,11 @@ public class MCL_G2 {
         pp.H(R.e_1, pk.y, H.O, m, G_tmp[0], G_tmp[1]);
         Mcl.sub(R.e_1, R.e_1, R.e_2);
 
-        Mcl.mul(R.s_1_1, R.e_1, m);
-        Mcl.add(R.s_1_1, Fr_tmp[1], R.s_1_1);
+        Mcl.mul(R.s_1_2, R.e_1, R.s_1_2);
+        Mcl.add(R.s_1_2, R.s_1_1, R.s_1_2);
 
-        Mcl.mul(R.s_1_2, R.e_1, Fr_tmp[0]);
-        Mcl.add(R.s_1_2, Fr_tmp[2], R.s_1_2);
+        Mcl.mul(R.s_1_1, R.e_1, m);
+        Mcl.add(R.s_1_1, Fr_tmp[0], R.s_1_1);
     }
 
     public boolean Check(HashValue H, Randomness R, PublicParam pp, PublicKey pk, Fr m) {

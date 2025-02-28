@@ -1055,13 +1055,12 @@ public class CHTest {
                 }
 
                 scheme.CH.CR_CH_DSS_2020.PBC scheme = new scheme.CH.CR_CH_DSS_2020.PBC();
-                scheme.CH.CR_CH_DSS_2020.PBC.PublicParam pp = new scheme.CH.CR_CH_DSS_2020.PBC.PublicParam();
+                scheme.CH.CR_CH_DSS_2020.PBC.PublicParam pp = new scheme.CH.CR_CH_DSS_2020.PBC.PublicParam(curve, group);
                 scheme.CH.CR_CH_DSS_2020.PBC.PublicKey pk = new scheme.CH.CR_CH_DSS_2020.PBC.PublicKey();
                 scheme.CH.CR_CH_DSS_2020.PBC.SecretKey sk = new scheme.CH.CR_CH_DSS_2020.PBC.SecretKey();
-                scheme.SetUp(pp, curve, group);
                 scheme.KeyGen(pk, sk, pp);
-                Element m1 = pp.GetGElement();
-                Element m2 = pp.GetGElement();
+                Element m1 = pp.GP.GetGElement();
+                Element m2 = pp.GP.GetGElement();
                 assertFalse(m1.isEqual(m2), "m1 != m2");
 
                 scheme.CH.CR_CH_DSS_2020.PBC.HashValue h1 = new scheme.CH.CR_CH_DSS_2020.PBC.HashValue();
@@ -1079,6 +1078,70 @@ public class CHTest {
                 scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
                 assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
                 assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
+            }
+
+            @DisplayName("test MCL impl")
+            @ParameterizedTest(name = "test curve {0}")
+            // BadCaseTest#MCL_Bad_Case#Case2
+            @EnumSource(names = {"BN254", "BLS12_381"})
+            void MCLTest(MCL curve) {
+                Func.MCLInit(curve);
+                {
+                    scheme.CH.CR_CH_DSS_2020.MCL_G1 scheme = new scheme.CH.CR_CH_DSS_2020.MCL_G1();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G1.PublicParam pp = new scheme.CH.CR_CH_DSS_2020.MCL_G1.PublicParam();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G1.PublicKey pk = new scheme.CH.CR_CH_DSS_2020.MCL_G1.PublicKey();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G1.SecretKey sk = new scheme.CH.CR_CH_DSS_2020.MCL_G1.SecretKey();
+                    scheme.KeyGen(pk, sk, pp);
+                    G1 m1 = new G1();
+                    pp.GP.GetGElement(m1);
+                    G1 m2 = new G1();
+                    pp.GP.GetGElement(m2);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+
+                    scheme.CH.CR_CH_DSS_2020.MCL_G1.HashValue h1 = new scheme.CH.CR_CH_DSS_2020.MCL_G1.HashValue();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G1.HashValue h2 = new scheme.CH.CR_CH_DSS_2020.MCL_G1.HashValue();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G1.Randomness r1 = new scheme.CH.CR_CH_DSS_2020.MCL_G1.Randomness();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G1.Randomness r2 = new scheme.CH.CR_CH_DSS_2020.MCL_G1.Randomness();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G1.Randomness r1_p = new scheme.CH.CR_CH_DSS_2020.MCL_G1.Randomness();
+                    scheme.Hash(h1, r1, pp, pk, m1);
+                    assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
+                    assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
+                    scheme.Hash(h2, r2, pp, pk, m2);
+                    assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
+
+                    scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
+                }
+                {
+                    scheme.CH.CR_CH_DSS_2020.MCL_G2 scheme = new scheme.CH.CR_CH_DSS_2020.MCL_G2();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G2.PublicParam pp = new scheme.CH.CR_CH_DSS_2020.MCL_G2.PublicParam();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G2.PublicKey pk = new scheme.CH.CR_CH_DSS_2020.MCL_G2.PublicKey();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G2.SecretKey sk = new scheme.CH.CR_CH_DSS_2020.MCL_G2.SecretKey();
+                    scheme.KeyGen(pk, sk, pp);
+                    G2 m1 = new G2();
+                    pp.GP.GetGElement(m1);
+                    G2 m2 = new G2();
+                    pp.GP.GetGElement(m2);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+
+                    scheme.CH.CR_CH_DSS_2020.MCL_G2.HashValue h1 = new scheme.CH.CR_CH_DSS_2020.MCL_G2.HashValue();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G2.HashValue h2 = new scheme.CH.CR_CH_DSS_2020.MCL_G2.HashValue();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G2.Randomness r1 = new scheme.CH.CR_CH_DSS_2020.MCL_G2.Randomness();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G2.Randomness r2 = new scheme.CH.CR_CH_DSS_2020.MCL_G2.Randomness();
+                    scheme.CH.CR_CH_DSS_2020.MCL_G2.Randomness r1_p = new scheme.CH.CR_CH_DSS_2020.MCL_G2.Randomness();
+                    scheme.Hash(h1, r1, pp, pk, m1);
+                    assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
+                    assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
+                    scheme.Hash(h2, r2, pp, pk, m2);
+                    assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
+
+                    scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
+                }
             }
         }
     }
