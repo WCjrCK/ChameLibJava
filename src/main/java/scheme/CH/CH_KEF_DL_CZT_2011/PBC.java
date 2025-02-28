@@ -2,9 +2,6 @@ package scheme.CH.CH_KEF_DL_CZT_2011;
 
 import curve.Group;
 import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Field;
-import it.unisa.dia.gas.jpbc.Pairing;
-import utils.Func;
 import utils.Hash;
 
 /*
@@ -12,18 +9,18 @@ import utils.Hash;
  * P4. 4.1. The proposed chameleon hash scheme
  */
 
-@SuppressWarnings("rawtypes")
 public class PBC {
     public static class PublicParam {
-        Field G;
+        public base.GroupParam.PBC.SingleGroup GP;
         Element g;
 
-        public Element GetGElement() {
-            return G.newRandomElement().getImmutable();
+        public PublicParam(curve.PBC curve, Group group) {
+            GP = new base.GroupParam.PBC.SingleGroup(curve, group);
+            g = GP.GetGElement();
         }
 
         public Element H(Element m1, Element m2) {
-            return Hash.H_PBC_2_1(G, m1, m2);
+            return Hash.H_PBC_2_1(GP.G, m1, m2);
         }
     }
 
@@ -43,30 +40,17 @@ public class PBC {
         public Element g_a, y_a;
     }
 
-    Field Zr;
-
     private static Element getHashValue(Randomness R, PublicParam SP, PublicKey pk, Element I, Element m) {
         return R.g_a.mul(SP.H(pk.y, I).powZn(m)).getImmutable();
     }
 
-    public Element GetZrElement() {
-        return Zr.newRandomElement().getImmutable();
-    }
-
-    public void SetUp(PublicParam SP, curve.PBC curve, Group group) {
-        Pairing pairing = Func.PairingGen(curve);
-        SP.G = Func.GetPBCField(pairing, group);
-        SP.g = SP.GetGElement();
-        Zr = pairing.getZr();
-    }
-
     public void KeyGen(PublicKey pk, SecretKey sk, PublicParam SP) {
-        sk.x = GetZrElement();
+        sk.x = SP.GP.GetZrElement();
         pk.y = SP.g.powZn(sk.x).getImmutable();
     }
 
     public void Hash(HashValue H, Randomness R, PublicParam SP, PublicKey pk, Element I, Element m) {
-        Element a = GetZrElement();
+        Element a = SP.GP.GetZrElement();
         R.g_a = SP.g.powZn(a).getImmutable();
         R.y_a = pk.y.powZn(a).getImmutable();
         H.h = getHashValue(R, SP, pk, I, m);
