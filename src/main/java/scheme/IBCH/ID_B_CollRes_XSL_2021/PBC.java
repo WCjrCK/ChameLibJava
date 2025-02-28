@@ -1,9 +1,6 @@
 package scheme.IBCH.ID_B_CollRes_XSL_2021;
 
 import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Field;
-import it.unisa.dia.gas.jpbc.Pairing;
-import utils.Func;
 
 import java.util.BitSet;
 import java.util.Random;
@@ -13,31 +10,17 @@ import java.util.Random;
  * P4. V. CONSTRUCTION
  */
 
-@SuppressWarnings("rawtypes")
 public class PBC {
     public static class PublicParam {
-        Pairing pairing;
-        Field Zr, G1, G2, GT;
-        boolean swap_G1G2;
+        public base.GroupParam.PBC.Asymmetry GP;
         Element g, g_1, g_2;
         Element[] u;
         int n;
 
-        public Element pairing(Element g1, Element g2) {
-            if(swap_G1G2) return pairing.pairing(g2, g1).getImmutable();
-            else return pairing.pairing(g1, g2).getImmutable();
-        }
-
-        public Element GetG2Element() {
-            return G2.newRandomElement().getImmutable();
-        }
-
-        public Element GetG1Element() {
-            return G1.newRandomElement().getImmutable();
-        }
-
-        public Element GetZrElement() {
-            return Zr.newRandomElement().getImmutable();
+        public PublicParam(curve.PBC curve, boolean swap_G1G2, int n) {
+            GP = new base.GroupParam.PBC.Asymmetry(curve, swap_G1G2);
+            u = new Element[n + 1];
+            this.n = n;
         }
 
         public Identity GenIdentity() {
@@ -85,33 +68,20 @@ public class PBC {
         for(int i = 1;i <= SP.n;++i) {
             if(ID.At(i)) tmp = tmp.mul(SP.u[i]).getImmutable();
         }
-        return SP.pairing(SP.g_1, SP.g_2).powZn(m).mul(SP.pairing(SP.g, R.r_1).div(SP.pairing(R.r_2, tmp))).getImmutable();
+        return SP.GP.pairing(SP.g_1, SP.g_2).powZn(m).mul(SP.GP.pairing(SP.g, R.r_1).div(SP.GP.pairing(R.r_2, tmp))).getImmutable();
     }
 
-    public void SetUp(PublicParam SP, MasterSecretKey msk, curve.PBC curve, int n, boolean swap_G1G2) {
-        SP.swap_G1G2 = swap_G1G2;
-        SP.pairing = Func.PairingGen(curve);
-        if(swap_G1G2) {
-            SP.G1 = SP.pairing.getG2();
-            SP.G2 = SP.pairing.getG1();
-        } else {
-            SP.G1 = SP.pairing.getG1();
-            SP.G2 = SP.pairing.getG2();
-        }
-        SP.GT = SP.pairing.getGT();
-        SP.Zr = SP.pairing.getZr();
-        SP.u = new Element[n + 1];
-        SP.n = n;
-        Element alpha = SP.GetZrElement();
-        SP.g = SP.GetG1Element();
-        SP.g_2 = SP.GetG2Element();
+    public void SetUp(PublicParam SP, MasterSecretKey msk) {
+        Element alpha = SP.GP.GetZrElement();
+        SP.g = SP.GP.GetG1Element();
+        SP.g_2 = SP.GP.GetG2Element();
         SP.g_1 = SP.g.powZn(alpha).getImmutable();
-        for(int i = 0;i <= n;++i) SP.u[i] = SP.GetG2Element();
+        for(int i = 0;i <= SP.n;++i) SP.u[i] = SP.GP.GetG2Element();
         msk.g_2_alpha = SP.g_2.powZn(alpha).getImmutable();
     }
 
     public void KeyGen(SecretKey sk, PublicParam SP, MasterSecretKey msk, Identity ID) {
-        Element t = SP.GetZrElement();
+        Element t = SP.GP.GetZrElement();
         Element tmp = SP.u[0].getImmutable();
         for(int i = 1;i <= SP.n;++i) {
             if(ID.At(i)) tmp = tmp.mul(SP.u[i]).getImmutable();
@@ -121,8 +91,8 @@ public class PBC {
     }
 
     public void Hash(HashValue H, Randomness R, PublicParam SP, Identity ID, Element m) {
-        R.r_1 = SP.GetG2Element();
-        R.r_2 = SP.GetG1Element();
+        R.r_1 = SP.GP.GetG2Element();
+        R.r_2 = SP.GP.GetG1Element();
         H.h = getHashValue(R, SP, ID, m);
     }
 

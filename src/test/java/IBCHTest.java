@@ -237,15 +237,15 @@ public class IBCHTest {
             @MethodSource("IBCHTest#GetPBCInvertIdentityLen")
             void JPBCTest(curve.PBC curve, int n, boolean swap_G1G2) {
                 scheme.IBCH.ID_B_CollRes_XSL_2021.PBC scheme = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC();
-                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.PublicParam SP = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.PublicParam();
+                scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.PublicParam SP = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.PublicParam(curve, swap_G1G2, n);
                 scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.MasterSecretKey msk = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.MasterSecretKey();
-                scheme.SetUp(SP, msk, curve, n, swap_G1G2);
+                scheme.SetUp(SP, msk);
                 scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.SecretKey sk1 = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.SecretKey();
                 scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.SecretKey sk2 = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.SecretKey();
                 scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.Identity ID1 = SP.GenIdentity();
                 scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.Identity ID2 = SP.GenIdentity();
-                Element m1 = SP.GetZrElement();
-                Element m2 = SP.GetZrElement();
+                Element m1 = SP.GP.GetZrElement();
+                Element m2 = SP.GP.GetZrElement();
                 assertFalse(m1.isEqual(m2), "m1 != m2");
                 scheme.KeyGen(sk1, SP, msk, ID1);
                 scheme.KeyGen(sk2, SP, msk, ID2);
