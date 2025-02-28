@@ -112,6 +112,6 @@ public class MCL_G2 {
         Mcl.add(Fr_tmp[1], Fr_tmp[1], Fr_tmp[0]);
         Mcl.mul(R_p.p, pk.h, Fr_tmp[1]);
         R_p.C = AE.RSA.Native.Encrypt(new BigInteger(Fr_tmp[1].toString()), pk.pk_enc);
-        R_p.pi_p = new base.NIZK.MCL_G2.DL_Proof(Fr_tmp[1], pk.h, R_p.p);
+        R_p.pi_p = new base.NIZK.MCL_G2.DL_Proof(Fr_tmp[1], pk.h, R_p.p, Fr_tmp);
     }
 }

@@ -130,4 +130,44 @@ public class MCL_G1 {
             return G_tmp[0].equals(G_tmp[1]);
         }
     }
+
+    public static class DH_PAIR_Proof extends Proof {
+        public Fr c = new Fr(), s = new Fr();
+
+        public void H(Fr res, G1 m1, G1 m2, G1 m3, G1 m4, G1 m5, G1 m6) {
+            Hash.H_MCL_Zr_1(res, String.format("%s|%s|%s|%s|%s|%s", m1, m2, m3, m4, m5, m6));
+        }
+
+        public DH_PAIR_Proof(Fr x, G1 g, G1 u, G1 h, G1 v) {
+            this(x, g, u, h, v, new G1[]{new G1(), new G1(), new G1()}, new Fr[]{new Fr()});
+        }
+
+        public DH_PAIR_Proof(Fr x, G1 g, G1 u, G1 h, G1 v, G1[] G_tmp, Fr[] Fr_tmp) {
+            Mcl.mul(G_tmp[0], g, x);
+            Mcl.mul(G_tmp[1], h, x);
+            if(!u.equals(G_tmp[0]) || !v.equals(G_tmp[1])) throw new RuntimeException("wrong param, u != g^x || v != h^x");
+            Func.GetMCLZrRandomElement(Fr_tmp[0]);
+            Mcl.mul(G_tmp[0], g, Fr_tmp[0]);
+            Mcl.mul(G_tmp[1], h, Fr_tmp[0]);
+            H(c, g, h, u, v, G_tmp[0], G_tmp[1]);
+            Mcl.mul(s, c, x);
+            Mcl.sub(s, Fr_tmp[0], s);
+        }
+
+        public boolean Check(G1 g, G1 u, G1 h, G1 v) {
+            return Check(g, u, h, v, new G1[]{new G1(), new G1(), new G1()}, new Fr[]{new Fr()});
+        }
+
+        public boolean Check(G1 g, G1 u, G1 h, G1 v, G1[] G_tmp, Fr[] Fr_tmp) {
+            Mcl.mul(G_tmp[0], g, s);
+            Mcl.mul(G_tmp[1], u, c);
+            Mcl.add(G_tmp[0], G_tmp[0], G_tmp[1]);
+
+            Mcl.mul(G_tmp[1], h, s);
+            Mcl.mul(G_tmp[2], v, c);
+            Mcl.add(G_tmp[1], G_tmp[1], G_tmp[2]);
+            H(Fr_tmp[0], g, h, u, v, G_tmp[0], G_tmp[1]);
+            return c.equals(Fr_tmp[0]);
+        }
+    }
 }

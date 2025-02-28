@@ -64,6 +64,26 @@ public class CHTest {
             assertFalse(pi2.Check(g1, y1, g2, yt), "proof fail");
             assertFalse(pi2.Check(g1, y2, g2, y1), "proof fail");
 
+            if(group == Group.G2) {
+                switch (curve) {
+                    case A:
+                    case A1:
+                    case E:
+                    {
+                        base.NIZK.PBC.DH_PAIR_Proof pi4 = new base.NIZK.PBC.DH_PAIR_Proof(Zr, x1, g1, y1, g2, y2);
+
+                        assertTrue(pi4.Check(g1, y1, g2, y2), "proof pass");
+                        assertFalse(pi4.Check(g1, yt, g2, y2), "proof fail");
+                        assertFalse(pi4.Check(g1, y1, g2, yt), "proof fail");
+                        assertFalse(pi4.Check(g1, y2, g2, y1), "proof fail");
+                        break;
+                    }
+
+                    default:
+                        // BadCaseTest#JPBC_Bad_Case#Case2
+                }
+            }
+
             Element x2 = Zr.newRandomElement().getImmutable();
             y2 = g2.powZn(x2).getImmutable();
             Element y3 = y1.mul(y2).getImmutable();
@@ -82,6 +102,9 @@ public class CHTest {
         @SuppressWarnings("SuspiciousNameCombination")
         void MCLTest(MCL curve) {
             Func.MCLInit(curve);
+            G1[] G1_tmp = new G1[]{new G1(), new G1(), new G1()};
+            G2[] G2_tmp = new G2[]{new G2(), new G2(), new G2()};
+            Fr[] Fr_tmp = new Fr[]{new Fr(), new Fr(), new Fr()};
             {
                 Fr x1 = new Fr();
                 Func.GetMCLZrRandomElement(x1);
@@ -92,22 +115,29 @@ public class CHTest {
                 G1 yt = new G1();
                 Func.GetMCLG1RandomElement(yt);
 
-                base.NIZK.MCL_G1.DL_Proof pi1 = new base.NIZK.MCL_G1.DL_Proof(x1, g1, y1);
+                base.NIZK.MCL_G1.DL_Proof pi1 = new base.NIZK.MCL_G1.DL_Proof(x1, g1, y1, Fr_tmp);
 
-                assertTrue(pi1.Check(g1, y1), "proof pass");
-                assertFalse(pi1.Check(g1, yt), "proof fail");
+                assertTrue(pi1.Check(g1, y1, G1_tmp, Fr_tmp), "proof pass");
+                assertFalse(pi1.Check(g1, yt, G1_tmp, Fr_tmp), "proof fail");
 
                 G1 g2 = new G1();
                 Func.GetMCLG1RandomElement(g2);
                 G1 y2 = new G1();
                 Mcl.mul(y2, g2, x1);
 
-                base.NIZK.MCL_G1.EQUAL_DL_Proof pi2 = new base.NIZK.MCL_G1.EQUAL_DL_Proof(x1, g1, y1, g2, y2);
+                base.NIZK.MCL_G1.EQUAL_DL_Proof pi2 = new base.NIZK.MCL_G1.EQUAL_DL_Proof(x1, g1, y1, g2, y2, Fr_tmp);
 
-                assertTrue(pi2.Check(g1, y1, g2, y2), "proof pass");
-                assertFalse(pi2.Check(g1, yt, g2, y2), "proof fail");
-                assertFalse(pi2.Check(g1, y1, g2, yt), "proof fail");
-                assertFalse(pi2.Check(g1, y2, g2, y1), "proof fail");
+                assertTrue(pi2.Check(g1, y1, g2, y2, G1_tmp, Fr_tmp), "proof pass");
+                assertFalse(pi2.Check(g1, yt, g2, y2, G1_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi2.Check(g1, y1, g2, yt, G1_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi2.Check(g1, y2, g2, y1, G1_tmp, Fr_tmp), "proof fail");
+
+                base.NIZK.MCL_G1.DH_PAIR_Proof pi4 = new base.NIZK.MCL_G1.DH_PAIR_Proof(x1, g1, y1, g2, y2, G1_tmp, Fr_tmp);
+
+                assertTrue(pi4.Check(g1, y1, g2, y2, G1_tmp, Fr_tmp), "proof pass");
+                assertFalse(pi4.Check(g1, yt, g2, y2, G1_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi4.Check(g1, y1, g2, yt, G1_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi4.Check(g1, y2, g2, y1, G1_tmp, Fr_tmp), "proof fail");
 
                 Fr x2 = new Fr();
                 Func.GetMCLZrRandomElement(x2);
@@ -115,11 +145,11 @@ public class CHTest {
                 G1 y3 = new G1();
                 Mcl.add(y3, y1, y2);
 
-                base.NIZK.MCL_G1.REPRESENT_Proof pi3 = new base.NIZK.MCL_G1.REPRESENT_Proof(y3, g1, x1, g2, x2);
+                base.NIZK.MCL_G1.REPRESENT_Proof pi3 = new base.NIZK.MCL_G1.REPRESENT_Proof(y3, g1, x1, g2, x2, G1_tmp, Fr_tmp);
 
-                assertTrue(pi3.Check(y3, g1, g2), "proof pass");
-                assertFalse(pi3.Check(y3, g1, yt), "proof fail");
-                assertFalse(pi3.Check(y3, g2, g1), "proof fail");
+                assertTrue(pi3.Check(y3, g1, g2, G1_tmp, Fr_tmp), "proof pass");
+                assertFalse(pi3.Check(y3, g1, yt, G1_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi3.Check(y3, g2, g1, G1_tmp, Fr_tmp), "proof fail");
             }
             if(curve != MCL.SECP256K1) {
                 // BadCaseTest#MCL_Bad_Case#Case1
@@ -132,22 +162,29 @@ public class CHTest {
                 G2 yt = new G2();
                 Func.GetMCLG2RandomElement(yt);
 
-                base.NIZK.MCL_G2.DL_Proof pi1 = new base.NIZK.MCL_G2.DL_Proof(x1, g1, y1);
+                base.NIZK.MCL_G2.DL_Proof pi1 = new base.NIZK.MCL_G2.DL_Proof(x1, g1, y1, Fr_tmp);
 
-                assertTrue(pi1.Check(g1, y1), "proof pass");
-                assertFalse(pi1.Check(g1, yt), "proof fail");
+                assertTrue(pi1.Check(g1, y1, G2_tmp, Fr_tmp), "proof pass");
+                assertFalse(pi1.Check(g1, yt, G2_tmp, Fr_tmp), "proof fail");
 
                 G2 g2 = new G2();
                 Func.GetMCLG2RandomElement(g2);
                 G2 y2 = new G2();
                 Mcl.mul(y2, g2, x1);
 
-                base.NIZK.MCL_G2.EQUAL_DL_Proof pi2 = new base.NIZK.MCL_G2.EQUAL_DL_Proof(x1, g1, y1, g2, y2);
+                base.NIZK.MCL_G2.EQUAL_DL_Proof pi2 = new base.NIZK.MCL_G2.EQUAL_DL_Proof(x1, g1, y1, g2, y2, Fr_tmp);
 
-                assertTrue(pi2.Check(g1, y1, g2, y2), "proof pass");
-                assertFalse(pi2.Check(g1, yt, g2, y2), "proof fail");
-                assertFalse(pi2.Check(g1, y1, g2, yt), "proof fail");
-                assertFalse(pi2.Check(g1, y2, g2, y1), "proof fail");
+                assertTrue(pi2.Check(g1, y1, g2, y2, G2_tmp, Fr_tmp), "proof pass");
+                assertFalse(pi2.Check(g1, yt, g2, y2, G2_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi2.Check(g1, y1, g2, yt, G2_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi2.Check(g1, y2, g2, y1, G2_tmp, Fr_tmp), "proof fail");
+
+                base.NIZK.MCL_G2.DH_PAIR_Proof pi4 = new base.NIZK.MCL_G2.DH_PAIR_Proof(x1, g1, y1, g2, y2, G2_tmp, Fr_tmp);
+
+                assertTrue(pi4.Check(g1, y1, g2, y2, G2_tmp, Fr_tmp), "proof pass");
+                assertFalse(pi4.Check(g1, yt, g2, y2, G2_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi4.Check(g1, y1, g2, yt, G2_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi4.Check(g1, y2, g2, y1, G2_tmp, Fr_tmp), "proof fail");
 
                 Fr x2 = new Fr();
                 Func.GetMCLZrRandomElement(x2);
@@ -155,11 +192,11 @@ public class CHTest {
                 G2 y3 = new G2();
                 Mcl.add(y3, y1, y2);
 
-                base.NIZK.MCL_G2.REPRESENT_Proof pi3 = new base.NIZK.MCL_G2.REPRESENT_Proof(y3, g1, x1, g2, x2);
+                base.NIZK.MCL_G2.REPRESENT_Proof pi3 = new base.NIZK.MCL_G2.REPRESENT_Proof(y3, g1, x1, g2, x2, G2_tmp, Fr_tmp);
 
-                assertTrue(pi3.Check(y3, g1, g2), "proof pass");
-                assertFalse(pi3.Check(y3, g1, yt), "proof fail");
-                assertFalse(pi3.Check(y3, g2, g1), "proof fail");
+                assertTrue(pi3.Check(y3, g1, g2, G2_tmp, Fr_tmp), "proof pass");
+                assertFalse(pi3.Check(y3, g1, yt, G2_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi3.Check(y3, g2, g1, G2_tmp, Fr_tmp), "proof fail");
             }
         }
     }
@@ -283,11 +320,24 @@ public class CHTest {
         @Nested
         class CH_KEF_MH_SDH_DL_AM_2004_Test {
             @DisplayName("test PBC impl")
-            @ParameterizedTest(name = "test curve {0}")
-            @EnumSource(names = {"A", "A1", "E"})
-            void JPBCTest(PBC curve) {
+            @ParameterizedTest(name = "test curve {0} group {1}")
+            @MethodSource("CHTest#GetPBCCartesianProduct")
+            void JPBCTest(curve.PBC curve, Group group) {
+                if(group == Group.G2) {
+                    switch (curve) {
+                        case A:
+                        case A1:
+                        case E:
+                            break;
+
+                        default:
+                            // BadCaseTest#JPBC_Bad_Case#Case2
+                            return;
+                    }
+                }
+
                 scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicParam pp = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicParam(curve);
+                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicParam pp = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicParam(curve, group);
                 scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicKey pk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicKey();
                 scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.SecretKey sk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.SecretKey();
                 scheme.KeyGen(pk, sk, pp);
@@ -312,11 +362,100 @@ public class CHTest {
                 assertFalse(scheme.Check(h1, r1, pp, pk, L2, m2), "not H(m1)");
                 assertFalse(scheme.Check(h2, r2, pp, pk, L1, m1), "not H(m2)");
 
-                scheme.Adapt(r1_p, r1, pp, pk, sk, L1, m1, m2);
+                scheme.Adapt(r1_p, h1, r1, pp, pk, sk, L1, m1, m2);
                 assertTrue(scheme.Check(h1, r1_p, pp, pk, L1, m2), "Adapt(m2) valid");
+                assertFalse(scheme.Check(h1, r1_p, pp, pk, L2, m2), "not L2");
 
-                scheme.Adapt(r1_p, r1, pp, pk, sk, L2, m1, m2);
-                assertFalse(scheme.Check(h1, r1_p, pp, pk, L2, m2), "not Adapt(m2)");
+                scheme.Adapt(r1_p, h2, r2, pp, pk, sk, L2, m2, m1);
+                assertTrue(scheme.Check(h2, r1_p, pp, pk, L2, m1), "Adapt(m1) valid");
+                assertFalse(scheme.Check(h2, r1_p, pp, pk, L1, m1), "not L1");
+            }
+
+            @DisplayName("test MCL impl")
+            @ParameterizedTest(name = "test curve {0}")
+            // BadCaseTest#MCL_Bad_Case#Case2
+            @EnumSource(names = {"BN254", "BLS12_381"})
+//            @EnumSource(MCL.class)
+            void MCLTest(MCL curve) {
+                Func.MCLInit(curve);
+                {
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1 scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.PublicParam pp = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.PublicParam();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.PublicKey pk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.PublicKey();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.SecretKey sk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.SecretKey();
+                    scheme.KeyGen(pk, sk, pp);
+                    Fr m1 = new Fr();
+                    pp.GP.GetZrElement(m1);
+                    Fr m2 = new Fr();
+                    pp.GP.GetZrElement(m2);
+                    Fr L1 = new Fr();
+                    pp.GP.GetZrElement(L1);
+                    Fr L2 = new Fr();
+                    pp.GP.GetZrElement(L2);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.HashValue h1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.HashValue();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.HashValue h2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.HashValue();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness r1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness r2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness r1_p = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness();
+                    scheme.Hash(h1, r1, pp, pk, L1, m1);
+                    assertTrue(scheme.Check(h1, r1, pp, pk, L1, m1), "H(L1, m1) valid");
+                    assertFalse(scheme.Check(h1, r1, pp, pk, L2, m1), "not H(L2, m1)");
+                    scheme.Hash(h2, r2, pp, pk, L2, m2);
+                    assertTrue(scheme.Check(h2, r2, pp, pk, L2, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, r2, pp, pk, L1, m2), "not H(L1, m2)");
+
+                    assertFalse(scheme.Check(h1, r1, pp, pk, L2, m2), "not H(m1)");
+                    assertFalse(scheme.Check(h2, r2, pp, pk, L1, m1), "not H(m2)");
+
+                    scheme.Adapt(r1_p, h1, r1, pp, pk, sk, L1, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, pp, pk, L1, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h1, r1_p, pp, pk, L2, m2), "not L2");
+
+                    scheme.Adapt(r1_p, h2, r2, pp, pk, sk, L2, m2, m1);
+                    assertTrue(scheme.Check(h2, r1_p, pp, pk, L2, m1), "Adapt(m1) valid");
+                    assertFalse(scheme.Check(h2, r1_p, pp, pk, L1, m1), "not L1");
+                }
+                {
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2 scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.PublicParam pp = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.PublicParam();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.PublicKey pk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.PublicKey();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.SecretKey sk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.SecretKey();
+                    scheme.KeyGen(pk, sk, pp);
+                    Fr m1 = new Fr();
+                    pp.GP.GetZrElement(m1);
+                    Fr m2 = new Fr();
+                    pp.GP.GetZrElement(m2);
+                    Fr L1 = new Fr();
+                    pp.GP.GetZrElement(L1);
+                    Fr L2 = new Fr();
+                    pp.GP.GetZrElement(L2);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.HashValue h1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.HashValue();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.HashValue h2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.HashValue();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness r1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness r2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness r1_p = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness();
+                    scheme.Hash(h1, r1, pp, pk, L1, m1);
+                    assertTrue(scheme.Check(h1, r1, pp, pk, L1, m1), "H(L1, m1) valid");
+                    assertFalse(scheme.Check(h1, r1, pp, pk, L2, m1), "not H(L2, m1)");
+                    scheme.Hash(h2, r2, pp, pk, L2, m2);
+                    assertTrue(scheme.Check(h2, r2, pp, pk, L2, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, r2, pp, pk, L1, m2), "not H(L1, m2)");
+
+                    assertFalse(scheme.Check(h1, r1, pp, pk, L2, m2), "not H(m1)");
+                    assertFalse(scheme.Check(h2, r2, pp, pk, L1, m1), "not H(m2)");
+
+                    scheme.Adapt(r1_p, h1, r1, pp, pk, sk, L1, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, pp, pk, L1, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h1, r1_p, pp, pk, L2, m2), "not L2");
+
+                    scheme.Adapt(r1_p, h2, r2, pp, pk, sk, L2, m2, m1);
+                    assertTrue(scheme.Check(h2, r1_p, pp, pk, L2, m1), "Adapt(m1) valid");
+                    assertFalse(scheme.Check(h2, r1_p, pp, pk, L1, m1), "not L1");
+                }
             }
         }
 
