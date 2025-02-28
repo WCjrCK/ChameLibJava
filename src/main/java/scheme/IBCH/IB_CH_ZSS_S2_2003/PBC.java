@@ -1,9 +1,6 @@
 package scheme.IBCH.IB_CH_ZSS_S2_2003;
 
 import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Field;
-import it.unisa.dia.gas.jpbc.Pairing;
-import utils.Func;
 import utils.Hash;
 
 /*
@@ -11,27 +8,17 @@ import utils.Hash;
  * P4. 4.2 Scheme 2
  */
 
-@SuppressWarnings("rawtypes")
 public class PBC {
     public static class PublicParam {
-        Pairing pairing;
-        Field Zr, G, GT;
+        public base.GroupParam.PBC.Symmetry GP;
         Element P, P_pub;
 
-        public Element pairing(Element g1, Element g2) {
-            return pairing.pairing(g1, g2).getImmutable();
+        public PublicParam(curve.PBC curve) {
+            GP = new base.GroupParam.PBC.Symmetry(curve);
         }
 
         public Element H1(Element m) {
-            return Hash.H_PBC_1_1(Zr, m);
-        }
-
-        public Element GetGElement() {
-            return G.newRandomElement().getImmutable();
-        }
-
-        public Element GetZrElement() {
-            return Zr.newRandomElement().getImmutable();
+            return Hash.H_PBC_1_1(GP.Zr, m);
         }
     }
 
@@ -52,16 +39,12 @@ public class PBC {
     }
 
     private static Element getHashValue(Randomness R, PublicParam SP, Element ID, Element m) {
-        return SP.pairing(SP.P, SP.P).mul(SP.pairing(SP.P.powZn(SP.H1(ID)).mul(SP.P_pub), R.R)).powZn(SP.H1(m)).getImmutable();
+        return SP.GP.pairing(SP.P, SP.P).mul(SP.GP.pairing(SP.P.powZn(SP.H1(ID)).mul(SP.P_pub), R.R)).powZn(SP.H1(m)).getImmutable();
     }
 
-    public void SetUp(PublicParam SP, MasterSecretKey msk, curve.PBC curve) {
-        SP.pairing = Func.PairingGen(curve);
-        SP.G = SP.pairing.getG1();
-        SP.GT = SP.pairing.getGT();
-        SP.Zr = SP.pairing.getZr();
-        SP.P = SP.GetGElement();
-        msk.s = SP.GetZrElement();
+    public void SetUp(PublicParam SP, MasterSecretKey msk) {
+        SP.P = SP.GP.GetGElement();
+        msk.s = SP.GP.GetZrElement();
         SP.P_pub = SP.P.powZn(msk.s).getImmutable();
     }
 
@@ -70,7 +53,7 @@ public class PBC {
     }
 
     public void Hash(HashValue H, Randomness R, PublicParam SP, Element ID, Element m) {
-        R.R = SP.GetGElement();
+        R.R = SP.GP.GetGElement();
         H.h = getHashValue(R, SP, ID, m);
     }
 

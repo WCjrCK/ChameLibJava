@@ -1,9 +1,6 @@
 package scheme.IBCH.IB_CH_ZSS_S1_2003;
 
 import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Field;
-import it.unisa.dia.gas.jpbc.Pairing;
-import utils.Func;
 import utils.Hash;
 
 /*
@@ -11,37 +8,21 @@ import utils.Hash;
  * P4. 4.1 Scheme 1
  */
 
-@SuppressWarnings("rawtypes")
 public class PBC {
     public static class PublicParam {
-        Pairing pairing;
-        Field Zr, G1, G2, GT;
-        boolean swap_G1G2;
+        public base.GroupParam.PBC.Asymmetry GP;
         Element P, P_pub;
 
-        public Element pairing(Element g1, Element g2) {
-            if(swap_G1G2) return pairing.pairing(g2, g1).getImmutable();
-            else return pairing.pairing(g1, g2).getImmutable();
+        public PublicParam(curve.PBC curve, boolean swap_G1G2) {
+            GP = new base.GroupParam.PBC.Asymmetry(curve, swap_G1G2);
         }
 
         public Element H0(Element m) {
-            return Hash.H_PBC_1_1(G1, m);
+            return Hash.H_PBC_1_1(GP.G1, m);
         }
 
         public Element H1(Element m) {
-            return Hash.H_PBC_1_1(Zr, m);
-        }
-
-        public Element GetG2Element() {
-            return G2.newRandomElement().getImmutable();
-        }
-
-        public Element GetG1Element() {
-            return G1.newRandomElement().getImmutable();
-        }
-
-        public Element GetZrElement() {
-            return Zr.newRandomElement().getImmutable();
+            return Hash.H_PBC_1_1(GP.Zr, m);
         }
     }
 
@@ -62,23 +43,12 @@ public class PBC {
     }
 
     private static Element getHashValue(Randomness R, PublicParam SP, Element ID, Element m) {
-        return SP.pairing(R.R, SP.P).mul(SP.pairing(SP.H0(ID).powZn(SP.H1(m)), SP.P_pub)).getImmutable();
+        return SP.GP.pairing(R.R, SP.P).mul(SP.GP.pairing(SP.H0(ID).powZn(SP.H1(m)), SP.P_pub)).getImmutable();
     }
 
-    public void SetUp(PublicParam SP, MasterSecretKey msk, curve.PBC curve, boolean swap_G1G2) {
-        SP.swap_G1G2 = swap_G1G2;
-        SP.pairing = Func.PairingGen(curve);
-        if(swap_G1G2) {
-            SP.G1 = SP.pairing.getG2();
-            SP.G2 = SP.pairing.getG1();
-        } else {
-            SP.G1 = SP.pairing.getG1();
-            SP.G2 = SP.pairing.getG2();
-        }
-        SP.GT = SP.pairing.getGT();
-        SP.Zr = SP.pairing.getZr();
-        SP.P = SP.GetG2Element();
-        msk.s = SP.GetZrElement();
+    public void SetUp(PublicParam SP, MasterSecretKey msk) {
+        SP.P = SP.GP.GetG2Element();
+        msk.s = SP.GP.GetZrElement();
         SP.P_pub = SP.P.powZn(msk.s).getImmutable();
     }
 
@@ -87,7 +57,7 @@ public class PBC {
     }
 
     public void Hash(HashValue H, Randomness R, PublicParam SP, Element ID, Element m) {
-        R.R = SP.GetG1Element();
+        R.R = SP.GP.GetG1Element();
         H.h = getHashValue(R, SP, ID, m);
     }
 
