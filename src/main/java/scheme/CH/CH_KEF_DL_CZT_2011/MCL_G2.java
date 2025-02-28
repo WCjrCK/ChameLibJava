@@ -7,7 +7,7 @@ import com.herumi.mcl.Mcl;
 import utils.Hash;
 
 /*
- * Discrete logarithm based chameleon hashing and signatures withoutkey exposure
+ * Discrete logarithm based chameleon hashing and signatures without key exposure
  * P4. 4.1. The proposed chameleon hash scheme
  */
 
