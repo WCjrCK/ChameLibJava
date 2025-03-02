@@ -1,10 +1,8 @@
 package ABE.MA_ABE;
 
+import base.GroupParam.PBC.Symmetry;
 import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Field;
-import it.unisa.dia.gas.jpbc.Pairing;
 import utils.BooleanFormulaParser;
-import utils.Func;
 import utils.Hash;
 
 import java.util.ArrayList;
@@ -16,7 +14,6 @@ import java.util.List;
  * P8. 4.1 Construction
  */
 
-@SuppressWarnings("rawtypes")
 public class PBC {
     public static class Authority {
         public MasterSecretKey msk = new MasterSecretKey();
@@ -30,32 +27,39 @@ public class PBC {
     }
 
     public static class PublicParam {
-        public Field Zr, G, GT;
-        Pairing pairing;
+        public base.GroupParam.PBC.Symmetry GP;
         Element g, egg;
 
+        public PublicParam() {}
+
+        public PublicParam(curve.PBC curve) {
+            GP = new Symmetry(curve);
+            g = GP.GetGElement();
+            egg = GP.pairing(g, g);
+        }
+
         public Element pairing(Element g1, Element g2) {
-            return pairing.pairing(g1, g2).getImmutable();
+            return GP.pairing(g1, g2).getImmutable();
         }
 
         public Element H(String m) {
-            return Hash.H_String_1_PBC_1(G, m);
+            return Hash.H_String_1_PBC_1(GP.G, m);
         }
 
         public Element Ht(String m) {
-            return Hash.H_String_1_PBC_1(Zr, m);
+            return Hash.H_String_1_PBC_1(GP.Zr, m);
         }
 
         public Element F(String m) {
-            return Hash.H_String_1_PBC_1(G, m);
+            return Hash.H_String_1_PBC_1(GP.G, m);
         }
 
         public Element GetGTElement() {
-            return GT.newRandomElement().getImmutable();
+            return GP.GT.newRandomElement().getImmutable();
         }
 
         public Element GetZrElement() {
-            return Zr.newRandomElement().getImmutable();
+            return GP.Zr.newRandomElement().getImmutable();
         }
     }
 
@@ -127,24 +131,21 @@ public class PBC {
     }
 
     public void GlobalSetup(PublicParam GP, curve.PBC curve) {
-        GP.pairing = Func.PairingGen(curve);
-        GP.Zr = GP.pairing.getZr();
-        GP.G = GP.pairing.getG1();
-        GP.GT = GP.pairing.getGT();
-        GP.g = GP.G.newRandomElement().getImmutable();
-        GP.egg = GP.pairing(GP.g, GP.g).getImmutable();
+        GP.GP = new Symmetry(curve);
+        GP.g = GP.GP.GetGElement();
+        GP.egg = GP.GP.pairing(GP.g, GP.g).getImmutable();
     }
 
     public void AuthSetup(Authority Auth, PublicParam GP) {
-        Auth.msk.alpha = GP.GetZrElement();
-        Auth.msk.y = GP.GetZrElement();
+        Auth.msk.alpha = GP.GP.GetZrElement();
+        Auth.msk.y = GP.GP.GetZrElement();
         Auth.pk.egg_alpha = GP.egg.powZn(Auth.msk.alpha).getImmutable();
         Auth.pk.g_y = GP.g.powZn(Auth.msk.y).getImmutable();
     }
 
     public void KeyGen(Authority Auth, SecretKey SK, String u, PublicParam GP, String GID) {
         if(!Auth.control_attr.contains(u)) throw new  RuntimeException("authority not control this attr");
-        Element t = GP.GetZrElement();
+        Element t = GP.GP.GetZrElement();
         SK.K_p = GP.g.powZn(t).getImmutable();
         SK.K = GP.g.powZn(Auth.msk.alpha).mul(GP.H(GID).powZn(Auth.msk.y)).mul(GP.F(u).powZn(t)).getImmutable();
         SK.GID = GID;
@@ -156,14 +157,14 @@ public class PBC {
         int n = MSP.M[0].length;
         base.LSSS.PBC.Matrix.Vector v = new base.LSSS.PBC.Matrix.Vector();
         v.v = new Element[n];
-        for(int i = 0;i < n;++i) v.v[i] = GP.GetZrElement();
+        for(int i = 0;i < n;++i) v.v[i] = GP.GP.GetZrElement();
         base.LSSS.PBC.Matrix.Vector t_x = new base.LSSS.PBC.Matrix.Vector();
         t_x.v = new Element[l];
-        for(int i = 0;i < l;++i) t_x.v[i] = GP.GetZrElement();
+        for(int i = 0;i < l;++i) t_x.v[i] = GP.GP.GetZrElement();
         base.LSSS.PBC.Matrix.Vector w = new base.LSSS.PBC.Matrix.Vector();
         w.v = new Element[n];
-        w.v[0] = GP.Zr.newZeroElement().getImmutable();
-        for(int i = 1;i < n;++i) w.v[i] = GP.GetZrElement();
+        w.v[0] = GP.GP.Zr.newZeroElement().getImmutable();
+        for(int i = 1;i < n;++i) w.v[i] = GP.GP.GetZrElement();
         Encrypt(CT, GP, PKG, MSP, PT, v, w, t_x);
     }
 
@@ -189,14 +190,14 @@ public class PBC {
         S.attrs.addAll(SKG.rho.keySet());
         base.LSSS.PBC.Matrix.Vector c = new base.LSSS.PBC.Matrix.Vector();
         MSP.Solve(c, S);
-        Element tmp = GP.GT.newOneElement().getImmutable();
+        Element tmp = GP.GP.GT.newOneElement().getImmutable();
         for(int i = 0;i < MSP.policy.length;++i) {
             if(!c.v[i].isZero()) {
                 int sk_id = SKG.rho.get(MSP.policy[i]);
                 tmp = tmp.mul(
-                        CT.C[0][i].mul(GP.pairing(SKG.SK.get(sk_id).K, CT.C[1][i]))
-                                .mul(GP.pairing(GP.H(SKG.SK.get(sk_id).GID), CT.C[2][i]))
-                                .mul(GP.pairing(SKG.SK.get(sk_id).K_p, CT.C[3][i]))
+                        CT.C[0][i].mul(GP.GP.pairing(SKG.SK.get(sk_id).K, CT.C[1][i]))
+                                .mul(GP.GP.pairing(GP.H(SKG.SK.get(sk_id).GID), CT.C[2][i]))
+                                .mul(GP.GP.pairing(SKG.SK.get(sk_id).K_p, CT.C[3][i]))
                                 .powZn(c.v[i])
                 ).getImmutable();
             }

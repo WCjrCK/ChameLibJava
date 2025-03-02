@@ -114,7 +114,7 @@ public class PBC {
     public void Hash(HashValue H, Randomness R, PublicKeyGroup MHKS, base.LSSS.PBC.Matrix MSP, String m) {
         scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
         CHET.Hash(H.CHET_H, R.CHET_R, etd, MHKS.hk, m);
-        ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(BigInteger2G(MHKS.GP.GT, etd.sk_ch_2.d).getImmutable());
+        ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(BigInteger2G(MHKS.GP.GP.GT, etd.sk_ch_2.d).getImmutable());
         MA_ABE.Encrypt(H.MA_ABE_C, MHKS.GP, MHKS.MA_ABE_PKG, MSP, MA_ABE_PT);
     }
 

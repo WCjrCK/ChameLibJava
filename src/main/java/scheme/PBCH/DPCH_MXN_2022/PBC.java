@@ -14,8 +14,13 @@ import java.util.Random;
 
 public class PBC {
     public static class PublicParam {
-        public ABE.MA_ABE.PBC.PublicParam GP_MA_ABE = new ABE.MA_ABE.PBC.PublicParam();
-        Signature.BLS.PBC.PublicParam pp_DS = new Signature.BLS.PBC.PublicParam();
+        public ABE.MA_ABE.PBC.PublicParam GP_MA_ABE;
+        public Signature.BLS.PBC.PublicParam pp_DS;
+
+        public PublicParam(curve.PBC curve, boolean swap_G1G2) {
+            GP_MA_ABE = new ABE.MA_ABE.PBC.PublicParam(curve);
+            pp_DS = new Signature.BLS.PBC.PublicParam(curve, swap_G1G2);
+        }
     }
 
     public static class MasterPublicKey {
@@ -97,15 +102,13 @@ public class PBC {
 
         base.LSSS.PBC.Matrix.Vector w = new base.LSSS.PBC.Matrix.Vector();
         w.v = new Element[l2];
-        w.v[0] = pp.GP_MA_ABE.Zr.newZeroElement().getImmutable();
+        w.v[0] = pp.GP_MA_ABE.GP.Zr.newZeroElement().getImmutable();
         for(int i = 2;i <= l2;++i) w.v[i - 1] = pp.GP_MA_ABE.Ht(String.format("%s%s2%d", Arrays.toString(r_t), MSP.formula, i));
 
         MA_ABE.Encrypt(c_MA_ABE, pp.GP_MA_ABE, PKG.MA_ABE_PKG, MSP, pt_MA_ABE, v, w, t_x);
     }
 
-    public void SetUp(PublicParam pp, MasterPublicKey pk, MasterSecretKey sk, curve.PBC curve) {
-        MA_ABE.GlobalSetup(pp.GP_MA_ABE, curve);
-        DS.SetUp(pp.pp_DS, curve, false);
+    public void SetUp(MasterPublicKey pk, MasterSecretKey sk, PublicParam pp) {
         CH_ET.KeyGen(pk.pk_CH, sk.sk_CH);
         DS.KeyGen(pk.pk_DS, sk.sk_DS, pp.pp_DS);
     }
@@ -136,7 +139,7 @@ public class PBC {
         SE.AES.Encrypt(H.c_SE, pt_SE, k);
 
         Hash.EncText enc = new Hash.EncText();
-        Hash.Encode(enc, pp.GP_MA_ABE.GT, new Hash.PlaText(k, r_t));
+        Hash.Encode(enc, pp.GP_MA_ABE.GP.GT, new Hash.PlaText(k, r_t));
         ABE.MA_ABE.PBC.PlainText pt_MA_ABE = new ABE.MA_ABE.PBC.PlainText(enc.K);
         genEncMAABE(H.c_MA_ABE, pt_MA_ABE, PKG, MSP, pp, r_t);
     }
@@ -151,7 +154,7 @@ public class PBC {
             return;
         }
 
-        ABE.MA_ABE.PBC.PlainText pt_MA_ABE = new ABE.MA_ABE.PBC.PlainText(pp.GP_MA_ABE.GetGTElement());
+        ABE.MA_ABE.PBC.PlainText pt_MA_ABE = new ABE.MA_ABE.PBC.PlainText(pp.GP_MA_ABE.GP.GetGTElement());
         ABE.MA_ABE.PBC.CipherText ct_MA_ABE = new ABE.MA_ABE.PBC.CipherText();
         MA_ABE.Decrypt(pt_MA_ABE, pp.GP_MA_ABE, SKG.MA_ABE_SKG, MSP, H.c_MA_ABE);
         Hash.PlaText pla = new Hash.PlaText();

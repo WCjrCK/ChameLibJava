@@ -113,11 +113,10 @@ public class ABETest {
             @MethodSource("ABETest#GetPBCSymmAuth")
             void JPBCTest(curve.PBC curve, int auth_num) {
                 ABE.MA_ABE.PBC scheme = new ABE.MA_ABE.PBC();
-                ABE.MA_ABE.PBC.PublicParam GP = new ABE.MA_ABE.PBC.PublicParam();
-                scheme.GlobalSetup(GP, curve);
+                ABE.MA_ABE.PBC.PublicParam GP = new ABE.MA_ABE.PBC.PublicParam(curve);
 
                 base.LSSS.PBC LSSS = new base.LSSS.PBC();
-                base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(GP.Zr);
+                base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(GP.GP.Zr);
                 BooleanFormulaParser.PolicyList pl = new BooleanFormulaParser.PolicyList();
                 LSSS.GenLSSSMatrices(MSP, pl, "(A|FF)&(DDDD|(BB&CCC))");
 
@@ -159,9 +158,9 @@ public class ABETest {
                 scheme.KeyGen(auths[5], SK2, "FF", GP, GID2);
                 SKG2.AddSK(SK2);
 
-                ABE.MA_ABE.PBC.PlainText m1 = new ABE.MA_ABE.PBC.PlainText(GP.GetGTElement());
-                ABE.MA_ABE.PBC.PlainText m2 = new ABE.MA_ABE.PBC.PlainText(GP.GetGTElement());
-                ABE.MA_ABE.PBC.PlainText m3 = new ABE.MA_ABE.PBC.PlainText(GP.GetGTElement());
+                ABE.MA_ABE.PBC.PlainText m1 = new ABE.MA_ABE.PBC.PlainText(GP.GP.GetGTElement());
+                ABE.MA_ABE.PBC.PlainText m2 = new ABE.MA_ABE.PBC.PlainText(GP.GP.GetGTElement());
+                ABE.MA_ABE.PBC.PlainText m3 = new ABE.MA_ABE.PBC.PlainText(GP.GP.GetGTElement());
 
                 ABE.MA_ABE.PBC.CipherText c1 = new ABE.MA_ABE.PBC.CipherText();
                 ABE.MA_ABE.PBC.CipherText c2 = new ABE.MA_ABE.PBC.CipherText();

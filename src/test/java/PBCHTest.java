@@ -22,10 +22,18 @@ public class PBCHTest {
                         Stream.of(32, 64, 128).flatMap(c -> Stream.of(Arguments.of(a, b, c)))));
     }
 
-    public static Stream<Arguments> GetPBCSymmAuthBigLambda() {
+//    public static Stream<Arguments> GetPBCSymmAuthBigLambda() {
+//        return Stream.of(curve.PBC.A, curve.PBC.A1, curve.PBC.E).flatMap(a ->
+//                Stream.of(16, 32, 64).flatMap(b ->
+//                        Stream.of(256, 512, 1024).flatMap(c -> Stream.of(Arguments.of(a, b, c)))));
+//    }
+
+    public static Stream<Arguments> GetPBCSymmAuthBigLambdaSwap() {
         return Stream.of(curve.PBC.A, curve.PBC.A1, curve.PBC.E).flatMap(a ->
                 Stream.of(16, 32, 64).flatMap(b ->
-                        Stream.of(256, 512, 1024).flatMap(c -> Stream.of(Arguments.of(a, b, c)))));
+                        Stream.of(256, 512, 1024).flatMap(c -> Stream.of(
+                                Arguments.of(a, b, c, false), Arguments.of(a, b, c, true)
+                        ))));
     }
 
     public static Stream<Arguments> GetPBCInvertk() {
@@ -144,7 +152,7 @@ public class PBCHTest {
                 scheme.SetUp(SP, curve);
 
                 base.LSSS.PBC LSSS = new base.LSSS.PBC();
-                base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(SP.GP.Zr);
+                base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(SP.GP.GP.Zr);
                 BooleanFormulaParser.PolicyList pl = new BooleanFormulaParser.PolicyList();
                 LSSS.GenLSSSMatrices(MSP, pl, "(A|FF)&(DDDD|(BB&CCC))");
 
@@ -219,17 +227,17 @@ public class PBCHTest {
         @Nested
         class DPCH_MXN_2022_Test {
             @DisplayName("test PBC impl")
-            @ParameterizedTest(name = "test curve {0} author number {1} lambda = {2}")
-            @MethodSource("PBCHTest#GetPBCSymmAuthBigLambda")
-            void JPBCTest(curve.PBC curve, int auth_num, int lambda) {
+            @ParameterizedTest(name = "test curve {0} author number {1} lambda = {2} swap_G1G2 = {3}")
+            @MethodSource("PBCHTest#GetPBCSymmAuthBigLambdaSwap")
+            void JPBCTest(curve.PBC curve, int auth_num, int lambda, boolean swap_G1G2) {
                 scheme.PBCH.DPCH_MXN_2022.PBC scheme = new scheme.PBCH.DPCH_MXN_2022.PBC(lambda);
-                scheme.PBCH.DPCH_MXN_2022.PBC.PublicParam SP = new scheme.PBCH.DPCH_MXN_2022.PBC.PublicParam();
+                scheme.PBCH.DPCH_MXN_2022.PBC.PublicParam SP = new scheme.PBCH.DPCH_MXN_2022.PBC.PublicParam(curve, swap_G1G2);
                 scheme.PBCH.DPCH_MXN_2022.PBC.MasterPublicKey MPK = new scheme.PBCH.DPCH_MXN_2022.PBC.MasterPublicKey();
                 scheme.PBCH.DPCH_MXN_2022.PBC.MasterSecretKey MSK = new scheme.PBCH.DPCH_MXN_2022.PBC.MasterSecretKey();
-                scheme.SetUp(SP, MPK, MSK, curve);
+                scheme.SetUp(MPK, MSK, SP);
 
                 base.LSSS.PBC LSSS = new base.LSSS.PBC();
-                base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(SP.GP_MA_ABE.Zr);
+                base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(SP.GP_MA_ABE.GP.Zr);
                 BooleanFormulaParser.PolicyList pl = new BooleanFormulaParser.PolicyList();
                 LSSS.GenLSSSMatrices(MSP, pl, "(A|FF)&(DDDD|(BB&CCC))");
 

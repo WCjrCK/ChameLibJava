@@ -23,8 +23,7 @@ public class SignatureTest {
         @MethodSource("ABETest#GetPBCInvert")
         void JPBCTest(curve.PBC curve, boolean swap_G1G2) {
             Signature.BLS.PBC scheme = new Signature.BLS.PBC();
-            PBC.PublicParam SP = new PBC.PublicParam();
-            scheme.SetUp(SP, curve, swap_G1G2);
+            PBC.PublicParam SP = new PBC.PublicParam(curve, swap_G1G2);
             PBC.PublicKey pk1 = new PBC.PublicKey();
             PBC.PublicKey pk2 = new PBC.PublicKey();
             PBC.SecretKey sk1 = new PBC.SecretKey();
