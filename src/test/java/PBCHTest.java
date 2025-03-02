@@ -148,11 +148,11 @@ public class PBCHTest {
             @MethodSource("PBCHTest#GetPBCSymmAuth")
             void JPBCTest(curve.PBC curve, int auth_num, int lambda) {
                 scheme.PBCH.MAPCH_ZLW_2021.PBC scheme = new scheme.PBCH.MAPCH_ZLW_2021.PBC(lambda);
-                scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicParam SP = new scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicParam();
-                scheme.SetUp(SP, curve);
+                scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicParam SP = new scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicParam(curve);
+                scheme.SetUp(SP);
 
                 base.LSSS.PBC LSSS = new base.LSSS.PBC();
-                base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(SP.GP.GP.Zr);
+                base.LSSS.PBC.Matrix MSP = new base.LSSS.PBC.Matrix(SP.pp_ABE.GP.Zr);
                 BooleanFormulaParser.PolicyList pl = new BooleanFormulaParser.PolicyList();
                 LSSS.GenLSSSMatrices(MSP, pl, "(A|FF)&(DDDD|(BB&CCC))");
 
@@ -172,7 +172,7 @@ public class PBCHTest {
                 auths[4].MA_ABE_Auth.control_attr.add("E");
                 auths[5].MA_ABE_Auth.control_attr.add("FF");
 
-                scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicKeyGroup PKG = new scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicKeyGroup();
+                scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicKeyGroup PKG = new scheme.PBCH.MAPCH_ZLW_2021.PBC.PublicKeyGroup(SP);
                 for (int i = 0; i < auth_num; ++i) scheme.AuthSetup(auths[i]);
                 for (int i = 0; i < auth_num; ++i) PKG.AddPK(auths[i]);
 
@@ -207,9 +207,9 @@ public class PBCHTest {
                 scheme.PBCH.MAPCH_ZLW_2021.PBC.Randomness r1_p = new scheme.PBCH.MAPCH_ZLW_2021.PBC.Randomness();
 
                 scheme.Hash(h1, r1, PKG, MSP, m1);
-                scheme.Hash(h2, r2, PKG, MSP, m2);
                 assertTrue(scheme.Check(h1, r1, PKG, m1), "H(m1) valid");
                 assertFalse(scheme.Check(h1, r1, PKG, m2), "H(m2) invalid");
+                scheme.Hash(h2, r2, PKG, MSP, m2);
                 assertTrue(scheme.Check(h2, r2, PKG, m2), "H(m2) valid");
                 assertFalse(scheme.Check(h2, r2, PKG, m1), "H(m1) invalid");
 

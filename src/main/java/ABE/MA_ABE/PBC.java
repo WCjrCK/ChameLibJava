@@ -30,16 +30,16 @@ public class PBC {
         public base.GroupParam.PBC.Symmetry GP;
         Element g, egg;
 
-        public PublicParam() {}
+        public PublicParam(base.GroupParam.PBC.Symmetry GP) {
+            this.GP = GP;
+            g = GP.GetGElement();
+            egg = GP.pairing(g, g);
+        }
 
         public PublicParam(curve.PBC curve) {
             GP = new Symmetry(curve);
             g = GP.GetGElement();
             egg = GP.pairing(g, g);
-        }
-
-        public Element pairing(Element g1, Element g2) {
-            return GP.pairing(g1, g2).getImmutable();
         }
 
         public Element H(String m) {
@@ -52,14 +52,6 @@ public class PBC {
 
         public Element F(String m) {
             return Hash.H_String_1_PBC_1(GP.G, m);
-        }
-
-        public Element GetGTElement() {
-            return GP.GT.newRandomElement().getImmutable();
-        }
-
-        public Element GetZrElement() {
-            return GP.Zr.newRandomElement().getImmutable();
         }
     }
 
@@ -130,12 +122,6 @@ public class PBC {
         }
     }
 
-    public void GlobalSetup(PublicParam GP, curve.PBC curve) {
-        GP.GP = new Symmetry(curve);
-        GP.g = GP.GP.GetGElement();
-        GP.egg = GP.GP.pairing(GP.g, GP.g).getImmutable();
-    }
-
     public void AuthSetup(Authority Auth, PublicParam GP) {
         Auth.msk.alpha = GP.GP.GetZrElement();
         Auth.msk.y = GP.GP.GetZrElement();
@@ -177,11 +163,11 @@ public class PBC {
         int rho_x;
         for(int i = 0;i < l;++i) {
             if(!PKG.rho.containsKey(MSP.policy[i])) throw new RuntimeException("invalid arrtibute");
+            CT.C[3][i] = GP.F(MSP.policy[i]).powZn(t_x.v[i]).getImmutable();
             rho_x = PKG.rho.get(MSP.policy[i]);
             CT.C[0][i] = PKG.PK.get(rho_x).egg_alpha.powZn(t_x.v[i]).mul(GP.egg.powZn(MSP.Prodith(v, i))).getImmutable();
             CT.C[1][i] = GP.g.powZn(t_x.v[i]).invert().getImmutable();
             CT.C[2][i] = PKG.PK.get(rho_x).g_y.powZn(t_x.v[i]).mul(GP.g.powZn(MSP.Prodith(w, i))).getImmutable();
-            CT.C[3][i] = GP.F(MSP.policy[i]).powZn(t_x.v[i]).getImmutable();
         }
     }
 

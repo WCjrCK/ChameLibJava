@@ -13,27 +13,37 @@ import java.math.BigInteger;
 @SuppressWarnings("rawtypes")
 public class PBC {
     public static class PublicParam {
-        public ABE.MA_ABE.PBC.PublicParam GP = new ABE.MA_ABE.PBC.PublicParam();
+        public base.GroupParam.PBC.Symmetry GP;
+        public ABE.MA_ABE.PBC.PublicParam pp_ABE;
         scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey hk = new scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
         scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey tk = new scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+
+        public PublicParam(curve.PBC curve) {
+            GP = new base.GroupParam.PBC.Symmetry(curve);
+            pp_ABE = new ABE.MA_ABE.PBC.PublicParam(GP);
+        }
     }
 
     public static class Authority {
         private final MasterSecretKey mtk = new MasterSecretKey();
-        public PublicKey mhk = new PublicKey();
+        public PublicKey mhk;
         public ABE.MA_ABE.PBC.Authority MA_ABE_Auth;
 
         public Authority(String theta, PublicParam SP) {
+            mhk = new PublicKey(SP);
             mtk.tk = SP.tk;
-            mhk.GP = SP.GP;
-            mhk.hk = SP.hk;
             MA_ABE_Auth = new ABE.MA_ABE.PBC.Authority(theta);
         }
     }
 
     public static class PublicKey {
-        ABE.MA_ABE.PBC.PublicParam GP = new ABE.MA_ABE.PBC.PublicParam();
-        scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey hk = new scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
+        ABE.MA_ABE.PBC.PublicParam pp_ABE;
+        scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey hk;
+
+        public PublicKey(PublicParam SP) {
+            pp_ABE = SP.pp_ABE;
+            hk = SP.hk;
+        }
     }
 
     public static class MasterSecretKey {
@@ -47,12 +57,15 @@ public class PBC {
 
     public static class PublicKeyGroup {
         ABE.MA_ABE.PBC.PublicKeyGroup MA_ABE_PKG = new ABE.MA_ABE.PBC.PublicKeyGroup();
-        scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey hk = new scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
-        ABE.MA_ABE.PBC.PublicParam GP = new ABE.MA_ABE.PBC.PublicParam();
+        scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey hk;
+        ABE.MA_ABE.PBC.PublicParam pp_ABE;
+
+        public PublicKeyGroup(PublicParam SP) {
+            pp_ABE = SP.pp_ABE;
+            hk = SP.hk;
+        }
 
         public void AddPK(Authority Auth) {
-            hk = Auth.mhk.hk;
-            GP = Auth.mhk.GP;
             MA_ABE_PKG.AddPK(Auth.MA_ABE_Auth);
         }
     }
@@ -97,25 +110,24 @@ public class PBC {
         CHET = new scheme.CH.CH_ET_BC_CDK_2017.Native(lambda);
     }
 
-    public void SetUp(PublicParam SP, curve.PBC curve) {
-        MA_ABE.GlobalSetup(SP.GP, curve);
+    public void SetUp(PublicParam SP) {
         CHET.KeyGen(SP.hk, SP.tk);
     }
 
     public void AuthSetup(Authority Auth) {
-        MA_ABE.AuthSetup(Auth.MA_ABE_Auth, Auth.mhk.GP);
+        MA_ABE.AuthSetup(Auth.MA_ABE_Auth, Auth.mhk.pp_ABE);
     }
 
     public void KeyGen(Authority Auth, SecretKey msk_i, String GID, String i) {
-        MA_ABE.KeyGen(Auth.MA_ABE_Auth, msk_i.MA_ABE_SK, i, Auth.mhk.GP, GID);
+        MA_ABE.KeyGen(Auth.MA_ABE_Auth, msk_i.MA_ABE_SK, i, Auth.mhk.pp_ABE, GID);
         msk_i.tk = Auth.mtk.tk;
     }
 
     public void Hash(HashValue H, Randomness R, PublicKeyGroup MHKS, base.LSSS.PBC.Matrix MSP, String m) {
         scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
         CHET.Hash(H.CHET_H, R.CHET_R, etd, MHKS.hk, m);
-        ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(BigInteger2G(MHKS.GP.GP.GT, etd.sk_ch_2.d).getImmutable());
-        MA_ABE.Encrypt(H.MA_ABE_C, MHKS.GP, MHKS.MA_ABE_PKG, MSP, MA_ABE_PT);
+        ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(BigInteger2G(MHKS.pp_ABE.GP.GT, etd.sk_ch_2.d).getImmutable());
+        MA_ABE.Encrypt(H.MA_ABE_C, MHKS.pp_ABE, MHKS.MA_ABE_PKG, MSP, MA_ABE_PT);
     }
 
     public boolean Check(HashValue H, Randomness R, PublicKeyGroup MHKS, String m) {
@@ -124,8 +136,8 @@ public class PBC {
 
     public void Adapt(Randomness R_p, HashValue H, Randomness R, PublicKeyGroup MHKS, SecretKeyGroup MSKS, base.LSSS.PBC.Matrix MSP, String m, String m_p) {
         if(!Check(H, R, MHKS, m)) throw new RuntimeException("Wrong Hash Value");
-        ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(MHKS.GP.GetGTElement());
-        MA_ABE.Decrypt(MA_ABE_PT, MHKS.GP, MSKS.MA_ABE_SKG, MSP, H.MA_ABE_C);
+        ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(MHKS.pp_ABE.GP.GetGTElement());
+        MA_ABE.Decrypt(MA_ABE_PT, MHKS.pp_ABE, MSKS.MA_ABE_SKG, MSP, H.MA_ABE_C);
         scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
         etd.sk_ch_2.d = G2BigInteger(MA_ABE_PT.m);
         CHET.Adapt(R_p.CHET_R, H.CHET_H, R.CHET_R, etd, MHKS.hk, MSKS.tk, m, m_p);
