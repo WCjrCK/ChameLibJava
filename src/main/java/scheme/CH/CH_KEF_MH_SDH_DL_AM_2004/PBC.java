@@ -51,7 +51,7 @@ public class PBC {
         Element geh = pk.g.powZn(PP.H(L)).mul(pk.h);
         Element gehr = geh.powZn(r_);
         h.h = pk.g.powZn(PP.H(m)).mul(gehr).getImmutable();
-        r.pi = new base.NIZK.PBC.DH_PAIR_Proof(PP.GP.Zr, r_, pk.g, r.g_r, geh, gehr);
+        r.pi = new base.NIZK.PBC.DH_PAIR_Proof(PP.GP.Zr, r_, pk.g, r.g_r, geh, gehr, PP.GP.ndonr);
     }
 
     public boolean Check(HashValue h, Randomness r, PublicParam PP, PublicKey pk, Element L, Element m) {
@@ -65,6 +65,6 @@ public class PBC {
         Element x_e = sk.x.add(e);
         Element H_m_p = PP.H(m_p);
         r_p.g_r = r.g_r.mul(pk.g.powZn(PP.H(m).sub(H_m_p).div(x_e))).getImmutable();
-        r_p.pi = new base.NIZK.PBC.DH_PAIR_Proof(PP.GP.Zr, x_e, pk.g, pk.g.powZn(e).mul(pk.h), r_p.g_r, h.h.div(pk.g.powZn(H_m_p)));
+        r_p.pi = new base.NIZK.PBC.DH_PAIR_Proof(PP.GP.Zr, x_e, pk.g, pk.g.powZn(e).mul(pk.h), r_p.g_r, h.h.div(pk.g.powZn(H_m_p)), PP.GP.ndonr);
     }
 }

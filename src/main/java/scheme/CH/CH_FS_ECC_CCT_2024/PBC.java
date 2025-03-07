@@ -28,7 +28,7 @@ public class PBC {
         }
 
         public Element H_p(Element m1, Element m2, Element m3, Element m4) {
-            return H_p(String.format("%s|%s|%s|%s", m1, m2, m3, m4));
+            return H_p(String.format("%s|%s|%s|%s", m1.pow(GP.ndonr), m2, m3, m4));
         }
     }
 

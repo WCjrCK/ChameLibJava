@@ -63,25 +63,12 @@ public class CHTest {
             assertFalse(pi2.Check(g1, y1, g2, yt), "proof fail");
             assertFalse(pi2.Check(g1, y2, g2, y1), "proof fail");
 
-            if(group == Group.G2) {
-                switch (curve) {
-                    case A:
-                    case A1:
-                    case E:
-                    {
-                        base.NIZK.PBC.DH_PAIR_Proof pi4 = new base.NIZK.PBC.DH_PAIR_Proof(Zr, x1, g1, y1, g2, y2);
+            base.NIZK.PBC.DH_PAIR_Proof pi4 = new base.NIZK.PBC.DH_PAIR_Proof(Zr, x1, g1, y1, g2, y2, Func.GetNdonr(group, Func.PairingParam(curve)));
 
-                        assertTrue(pi4.Check(g1, y1, g2, y2), "proof pass");
-                        assertFalse(pi4.Check(g1, yt, g2, y2), "proof fail");
-                        assertFalse(pi4.Check(g1, y1, g2, yt), "proof fail");
-                        assertFalse(pi4.Check(g1, y2, g2, y1), "proof fail");
-                        break;
-                    }
-
-                    default:
-                        // BadCaseTest#JPBC_Bad_Case#Case2
-                }
-            }
+            assertTrue(pi4.Check(g1, y1, g2, y2), "proof pass");
+            assertFalse(pi4.Check(g1, yt, g2, y2), "proof fail");
+            assertFalse(pi4.Check(g1, y1, g2, yt), "proof fail");
+            assertFalse(pi4.Check(g1, y2, g2, y1), "proof fail");
 
             Element x2 = Zr.newRandomElement().getImmutable();
             y2 = g2.powZn(x2).getImmutable();
@@ -322,19 +309,6 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                if(group == Group.G2) {
-                    switch (curve) {
-                        case A:
-                        case A1:
-                        case E:
-                            break;
-
-                        default:
-                            // BadCaseTest#JPBC_Bad_Case#Case2
-                            return;
-                    }
-                }
-
                 scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC();
                 scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicParam pp = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicParam(curve, group);
                 scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicKey pk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicKey();
@@ -1125,19 +1099,6 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                if(group == Group.G2) {
-                    switch (curve) {
-                        case A:
-                        case A1:
-                        case E:
-                            break;
-
-                        default:
-                            // BadCaseTest#JPBC_Bad_Case#Case2
-                            return;
-                    }
-                }
-
                 scheme.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC();
                 scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
                 scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey pk = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey();
@@ -1240,19 +1201,6 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                if(group == Group.G2) {
-                    switch (curve) {
-                        case A:
-                        case A1:
-                        case E:
-                            break;
-
-                        default:
-                            // BadCaseTest#JPBC_Bad_Case#Case2
-                            return;
-                    }
-                }
-
                 scheme.CH.CR_CH_DSS_2020.PBC scheme = new scheme.CH.CR_CH_DSS_2020.PBC();
                 scheme.CH.CR_CH_DSS_2020.PBC.PublicParam pp = new scheme.CH.CR_CH_DSS_2020.PBC.PublicParam(curve, group);
                 scheme.CH.CR_CH_DSS_2020.PBC.PublicKey pk = new scheme.CH.CR_CH_DSS_2020.PBC.PublicKey();
@@ -1355,19 +1303,6 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                if(group == Group.G2) {
-                    switch (curve) {
-                        case A:
-                        case A1:
-                        case E:
-                            break;
-
-                        default:
-                            // BadCaseTest#JPBC_Bad_Case#Case2
-                            return;
-                    }
-                }
-
                 scheme.CH.CH_FS_ECC_CCT_2024.PBC scheme = new scheme.CH.CH_FS_ECC_CCT_2024.PBC();
                 scheme.CH.CH_FS_ECC_CCT_2024.PBC.PublicParam pp = new scheme.CH.CH_FS_ECC_CCT_2024.PBC.PublicParam(curve, group);
                 scheme.CH.CH_FS_ECC_CCT_2024.PBC.PublicKey pk = new scheme.CH.CH_FS_ECC_CCT_2024.PBC.PublicKey();

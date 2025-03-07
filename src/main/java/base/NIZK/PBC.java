@@ -4,6 +4,8 @@ import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 import utils.Hash;
 
+import java.math.BigInteger;
+
 @SuppressWarnings("rawtypes")
 public class PBC {
     private static abstract class Proof {
@@ -80,13 +82,24 @@ public class PBC {
 
     public static class DH_PAIR_Proof extends Proof {
         public Element c, s;
+        public BigInteger ndonr;
 
         public Element H(Element m1, Element m2, Element m3, Element m4, Element m5, Element m6) {
-            return Hash.H_String_1_PBC_1(Zr, String.format("%s|%s|%s|%s|%s|%s", m1, m2, m3, m4, m5, m6));
+            return Hash.H_String_1_PBC_1(Zr, String.format("%s|%s|%s|%s|%s|%s", m1, m2, m3, m4, m5.pow(ndonr), m6.pow(ndonr)));
         }
 
         public DH_PAIR_Proof(Field Zr, Element x, Element g, Element u, Element h, Element v) {
             super(Zr);
+            this.ndonr = BigInteger.ONE;
+            if(!u.isEqual(g.powZn(x)) || !v.isEqual(h.powZn(x))) throw new RuntimeException("wrong param, u != g^x || v != h^x");
+            s = Zr.newRandomElement().getImmutable();
+            c = H(g, h, u, v, g.powZn(s), h.powZn(s));
+            s = s.sub(c.mul(x)).getImmutable();
+        }
+
+        public DH_PAIR_Proof(Field Zr, Element x, Element g, Element u, Element h, Element v, BigInteger ndonr) {
+            super(Zr);
+            this.ndonr = ndonr;
             if(!u.isEqual(g.powZn(x)) || !v.isEqual(h.powZn(x))) throw new RuntimeException("wrong param, u != g^x || v != h^x");
             s = Zr.newRandomElement().getImmutable();
             c = H(g, h, u, v, g.powZn(s), h.powZn(s));

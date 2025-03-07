@@ -54,7 +54,7 @@ public class BadCaseTest {
         @Test
         void Case2() {
             InitialLib();
-            curve.PBC curve = PBC.D_159;
+            curve.PBC curve = PBC.G_149;
             Group group = Group.G2;
 
             scheme.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC();
@@ -92,7 +92,16 @@ public class BadCaseTest {
             System.out.printf("str(T1) == str(T2) ? %s\n\n", T1.toString().equals(T2.toString()));
             System.out.printf("T1 == T2 ? %s\n\n", T1.isEqual(T2));
 
-            assertFalse(T1.isEqual(T2));
+//            assertFalse((T1.isEqual(T2) ^ T1.toString().equals(T2.toString())));
+
+            Element m2 = pp.GP.GetZrElement();
+            assertFalse(m1.isEqual(m2), "m1 != m2");
+
+            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue h1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
+            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
+            scheme.Hash(h1, r1, pp, pk, m1);
+            assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
+            assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
         }
 
         @DisplayName("case 3")
