@@ -4,7 +4,6 @@ import com.herumi.mcl.G2;
 import com.herumi.mcl.Mcl;
 import curve.Group;
 import curve.MCL;
-import curve.PBC;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
@@ -884,15 +883,8 @@ public class CHTest {
                 assertFalse(m1.isEqual(m2), "m1 != m2");
                 Element L1;
                 Element L2;
-                // BadCaseTest#JPBC_Bad_Case#Case1
-                if(group == Group.GT && (curve == PBC.D_159 || curve == PBC.D_201 || curve == PBC.D_224 || curve == PBC.D_105171_196_185
-                        || curve == PBC.D_277699_175_167 || curve == PBC.D_278027_190_181 || curve == PBC.F || curve == PBC.SM_9 || curve == PBC.G_149)) {
-                    L1 = SP.GP.GetGElement();
-                    L2 = SP.GP.GetGElement();
-                } else {
-                    L1 = SP.H("S11|R11|T11");
-                    L2 = SP.H("S22|R22|T22");
-                }
+                L1 = SP.H("S11|R11|T11");
+                L2 = SP.H("S22|R22|T22");
                 assertFalse(L1.isEqual(L2), "L1 != L2");
                 scheme.CH.CH_KEF_CZK_2004.PBC.HashValue h1 = new scheme.CH.CH_KEF_CZK_2004.PBC.HashValue();
                 scheme.CH.CH_KEF_CZK_2004.PBC.HashValue h2 = new scheme.CH.CH_KEF_CZK_2004.PBC.HashValue();
@@ -1009,12 +1001,6 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                if(group == Group.GT && (curve == PBC.D_159 || curve == PBC.D_201 || curve == PBC.D_224 || curve == PBC.D_105171_196_185
-                        || curve == PBC.D_277699_175_167 || curve == PBC.D_278027_190_181 || curve == PBC.F || curve == PBC.SM_9 || curve == PBC.G_149)) {
-                    // BadCaseTest#JPBC_Bad_Case#Case1
-                    return;
-                }
-
                 scheme.CH.CH_KEF_DL_CZT_2011.PBC scheme = new scheme.CH.CH_KEF_DL_CZT_2011.PBC();
                 scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicParam SP = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicParam(curve, group);
                 scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicKey pk = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicKey();
@@ -1150,11 +1136,6 @@ public class CHTest {
                             // BadCaseTest#JPBC_Bad_Case#Case2
                             return;
                     }
-                }
-
-                if(group == Group.GT && curve == PBC.G_149) {
-                    // BadCaseTest#JPBC_Bad_Case#Case3
-                    return;
                 }
 
                 scheme.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC();
@@ -1385,11 +1366,6 @@ public class CHTest {
                             // BadCaseTest#JPBC_Bad_Case#Case2
                             return;
                     }
-                }
-
-                if(group == Group.GT && curve == PBC.G_149) {
-                    // BadCaseTest#JPBC_Bad_Case#Case3
-                    return;
                 }
 
                 scheme.CH.CH_FS_ECC_CCT_2024.PBC scheme = new scheme.CH.CH_FS_ECC_CCT_2024.PBC();

@@ -99,10 +99,10 @@ public class BadCaseTest {
         @Test
         void Case3() {
             // only pbc make fatal error
-            // PairingFactory.getInstance().setUsePBCWhenPossible(true);
+             PairingFactory.getInstance().setUsePBCWhenPossible(true);
 
             // jpbc is ok
-            PairingFactory.getInstance().setUsePBCWhenPossible(false);
+//            PairingFactory.getInstance().setUsePBCWhenPossible(false);
 
             curve.PBC curve = PBC.G_149;
             Group group = Group.GT;
