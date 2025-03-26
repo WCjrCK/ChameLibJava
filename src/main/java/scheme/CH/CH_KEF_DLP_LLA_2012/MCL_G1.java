@@ -42,13 +42,6 @@ public class MCL_G1 {
             Mcl.mul(L.L, lg.y_1, Fr_tmp[0]);
             Mcl.mul(L.R, lg.omega_1, Fr_tmp[0]);
             Mcl.add(L.R, G_tmp[0], L.R);
-            System.out.println("target:");
-            System.out.println("g ^ x1: " + lg.y_1);
-            System.out.println("H2(t): " + Fr_tmp[0]);
-            System.out.println("(g ^ x1) ^ H2(t) = L: " + L.L);
-            System.out.println("t: " + G_tmp[0]);
-            System.out.println("R: " + L.R);
-            System.out.println();
         }
     }
 
@@ -125,24 +118,12 @@ public class MCL_G1 {
         Mcl.mul(G_tmp[0], L.L, sk.alpha);
         Mcl.sub(G_tmp[0], L.R, G_tmp[0]);
 
-        System.out.println("UForge");
-        System.out.println("L: " + L.L);
-        System.out.println("R: " + L.R);
-        System.out.println("t: " + G_tmp[0]);
-
         PP.H2(Fr_tmp[0], G_tmp[0]);
 
         Mcl.mul(G_tmp[0], pk.g, sk.x_1);
-        System.out.println("g: " + pk.g);
-        System.out.println("x1: " + sk.x_1);
-        System.out.println("g ^ x1: " + G_tmp[0]);
-        System.out.println("H2(t): " + Fr_tmp[0]);
         Mcl.mul(G_tmp[0], G_tmp[0], Fr_tmp[0]);
         Mcl.mul(Fr_tmp[0], sk.x_1, Fr_tmp[0]);
-        System.out.println("x1 * H2(t): " + Fr_tmp[0]);
-        System.out.println("(g ^ x1) ^ H2(t): " + G_tmp[0]);
         Mcl.mul(G_tmp[0], pk.g, Fr_tmp[0]);
-        System.out.println("g ^ {x1 * H2(t)}: " + G_tmp[0]);
         if (!G_tmp[0].equals(L.L)) throw new RuntimeException("illegal label");
 
         PP.H1(Fr_tmp[1], L.L, L.R, L.L);

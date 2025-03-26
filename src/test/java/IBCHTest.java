@@ -67,21 +67,21 @@ public class IBCHTest {
                 scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.Randomness r1_p = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.Randomness();
 
                 scheme.Hash(h1, r1, SP, ID1, L1, m1);
-                assertTrue(scheme.Check(h1, r1, SP, L1, m1), "H(L1, m1) valid");
-                assertFalse(scheme.Check(h1, r1, SP, L2, m1), "H(L2, m1) invalid");
-                assertFalse(scheme.Check(h1, r1, SP, L1, m2), "H(L1, m2) invalid");
+                assertTrue(scheme.Check(h1, r1, SP, sk1, L1, m1), "H(L1, m1) valid");
+                assertFalse(scheme.Check(h1, r1, SP, sk1, L2, m1), "H(L2, m1) invalid");
+                assertFalse(scheme.Check(h1, r1, SP, sk1, L1, m2), "H(L1, m2) invalid");
 
                 scheme.Hash(h2, r2, SP, ID2, L2, m2);
-                assertTrue(scheme.Check(h2, r2, SP, L2, m2), "H(L2, m2) valid");
-                assertFalse(scheme.Check(h2, r2, SP, L1, m2), "H(L1, m2) invalid");
-                assertFalse(scheme.Check(h2, r2, SP, L2, m1), "H(L2, m1) invalid");
+                assertTrue(scheme.Check(h2, r2, SP, sk2, L2, m2), "H(L2, m2) valid");
+                assertFalse(scheme.Check(h2, r2, SP, sk2, L1, m2), "H(L1, m2) invalid");
+                assertFalse(scheme.Check(h2, r2, SP, sk2, L2, m1), "H(L2, m1) invalid");
 
                 scheme.Adapt(r1_p, r1, SP, sk1, L1, m1, m2);
-                assertTrue(scheme.Check(h1, r1_p, SP, L1, m2), "Adapt(L1, m2) valid");
-                assertFalse(scheme.Check(h1, r1_p, SP, L1, m1), "Adapt(L1, m1) invalid");
+                assertTrue(scheme.Check(h1, r1_p, SP, sk1, L1, m2), "Adapt(L1, m2) valid");
+                assertFalse(scheme.Check(h1, r1_p, SP, sk1, L1, m1), "Adapt(L1, m1) invalid");
 
                 scheme.Adapt(r1_p, r1, SP, sk1, L2, m1, m2);
-                assertFalse(scheme.Check(h1, r1_p, SP, L2, m2), "Adapt(L2, m2) invalid");
+                assertFalse(scheme.Check(h1, r1_p, SP, sk1, L2, m2), "Adapt(L2, m2) invalid");
             }
         }
     }

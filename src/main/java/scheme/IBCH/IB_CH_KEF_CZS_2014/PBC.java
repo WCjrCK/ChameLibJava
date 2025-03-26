@@ -63,8 +63,8 @@ public class PBC {
         H.h = getHashValue(R, SP, L, m);
     }
 
-    public boolean Check(HashValue H, Randomness R, PublicParam SP, Element L, Element m) {
-        return H.h.isEqual(getHashValue(R, SP, L, m));
+    public boolean Check(HashValue H, Randomness R, PublicParam SP, SecretKey sk, Element L, Element m) {
+        return R.r_2.isEqual(SP.GP.pairing(R.r_1, sk.S_ID)) && H.h.isEqual(getHashValue(R, SP, L, m));
     }
 
     public void Adapt(Randomness R_p, Randomness R, PublicParam SP, SecretKey sk, Element L, Element m, Element m_p) {

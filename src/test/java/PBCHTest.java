@@ -626,6 +626,14 @@ public class PBCHTest {
                 assertTrue(scheme.Check(h2, r1_p, SP, mpk, m1), "Adapt(m1) valid");
                 assertFalse(scheme.Check(h2, r1_p, SP, mpk, m2), "Adapt(m2) invalid");
 
+                scheme.Adapt(r1_p, h1, r1, SP, mpk, msk, u1, MSP, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, SP, mpk, m2), "Adapt(m2) valid");
+                assertFalse(scheme.Check(h1, r1_p, SP, mpk, m1), "Adapt(m1) invalid");
+
+                scheme.Adapt(r1_p, h2, r2, SP, mpk, msk, u1, MSP, m2, m1);
+                assertTrue(scheme.Check(h2, r1_p, SP, mpk, m1), "Adapt(m1) valid");
+                assertFalse(scheme.Check(h2, r1_p, SP, mpk, m2), "Adapt(m2) invalid");
+
                 scheme.Adapt(r1_p, h2, r2, SP, mpk, msk, u2, MSP, m2, m1);
                 assertFalse(scheme.Check(h2, r1_p, SP, mpk, m1), "policy false");
                 assertFalse(scheme.Check(h2, r1_p, SP, mpk, m2), "policy false");
