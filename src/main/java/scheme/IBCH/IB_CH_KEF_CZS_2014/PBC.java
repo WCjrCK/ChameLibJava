@@ -71,5 +71,6 @@ public class PBC {
         Element delta_m = m.sub(m_p);
         R_p.r_1 = R.r_1.mul(SP.H_G1(L).powZn(delta_m)).getImmutable();
         R_p.r_2 = R.r_2.mul(SP.GP.pairing(SP.H_G1(L), sk.S_ID).powZn(delta_m)).getImmutable();
+        if(!R_p.r_2.isEqual(SP.GP.pairing(R_p.r_1, sk.S_ID))) throw new RuntimeException("adapt failed");
     }
 }
