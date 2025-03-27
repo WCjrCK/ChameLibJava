@@ -54,6 +54,7 @@ public class PBC {
         public Element[] sk_0_g = new Element[3];
         public Element sk_1, sk_ch;
         public Element[] sk_2;
+        private Element delegate_z;
 
         public void CopyFrom(SecretKey sk) {
             sk_FAME.CopyFrom(sk.sk_FAME);
@@ -69,6 +70,7 @@ public class PBC {
             Element z_1 = SP.GP.GetZrElement();
             Element z_2 = SP.GP.GetZrElement();
             Element z = z_1.add(z_2).getImmutable();
+            delegate_z = delegate_z.add(z).getImmutable();
 
             Element b1z1a1 = msk.msk_FAME.b_1.mul(z_1).getImmutable();
             Element b2z2a1 = msk.msk_FAME.b_2.mul(z_2).getImmutable();
@@ -106,7 +108,7 @@ public class PBC {
 
             sk_1 = sk_1.mul(sk_2[0].powZn(I_i_1)).mul(ID_i_1.powZn(z)).getImmutable();
             sk_2 = Arrays.copyOfRange(sk_2, 1, sk_2.length);
-            for(int i = 0;i < sk_2.length;++i) sk_2[i] = sk_2[i].mul(mpk.g_alpha_i[sk_2.length - i - 1].powZn(z)).getImmutable();
+            sk_2[0] = sk_2[0].mul(mpk.g_alpha_i[sk_2.length - 1].powZn(delegate_z)).getImmutable();
 
             return true;
         }
@@ -146,6 +148,7 @@ public class PBC {
             ID_hat = u.ID_hat;
             ID_hat_h = u.ID_hat_h;
             ID = Arrays.copyOf(u.ID, u.ID.length);
+            ssk.delegate_z = ID[0].getField().newZeroElement();
         }
 
         public boolean delegate(PublicParam SP, MasterPublicKey mpk, MasterSecretKey msk, Element I_i_1) {

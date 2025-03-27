@@ -130,8 +130,14 @@ public class PBC {
 
     public void KeyGen(SecretKey sk, PublicParam SP, MasterPublicKey mpk, MasterSecretKey msk, BooleanFormulaParser.AttributeList S, Element r_1, Element r_2, Element alpha) {
         sk.Init(S);
-        sk.sk_0[0] = mpk.h.powZn(msk.b_1.mul(r_1)).getImmutable();
+        Element b1r1a1 = msk.b_1.mul(r_1).getImmutable();
+        sk.sk_0[0] = mpk.h.powZn(b1r1a1).getImmutable();
+        Element b1r1a2 = b1r1a1.div(msk.a_2).getImmutable();
+        b1r1a1 = b1r1a1.div(msk.a_1).getImmutable();
+        Element b2r2a1 = msk.b_2.mul(r_2).getImmutable();
         sk.sk_0[1] = mpk.h.powZn(msk.b_2.mul(r_2)).getImmutable();
+        Element b2r2a2 = b2r2a1.div(msk.a_2).getImmutable();
+        b2r2a1 = b2r2a1.div(msk.a_1).getImmutable();
         sk.sk_0[2] = mpk.h.powZn(r_1.add(r_2).div(alpha)).getImmutable();
 
         Element alpha_a_1 = alpha.mul(msk.a_1).getImmutable();
@@ -141,12 +147,12 @@ public class PBC {
         for(String y : S.attrs) {
             sk.Attr2id.put(y, i);
             Element sigma_y = SP.GP.GetZrElement();
-            sk.sk_y[i][0] = SP.H(y + "11").powZn(msk.b_1.mul(r_1).div(msk.a_1))
-                    .mul(SP.H(y + "21").powZn(msk.b_2.mul(r_2).div(msk.a_1)))
+            sk.sk_y[i][0] = SP.H(y + "11").powZn(b1r1a1)
+                    .mul(SP.H(y + "21").powZn(b2r2a1))
                     .mul(SP.H(y + "31").powZn(r_1.add(r_2).div(alpha_a_1))).mul(mpk.g.powZn(sigma_y.div(alpha_a_1))).getImmutable();
 
-            sk.sk_y[i][1] = SP.H(y + "12").powZn(msk.b_1.mul(r_1).div(msk.a_2))
-                    .mul(SP.H(y + "22").powZn(msk.b_2.mul(r_2).div(msk.a_2)))
+            sk.sk_y[i][1] = SP.H(y + "12").powZn(b1r1a2)
+                    .mul(SP.H(y + "22").powZn(b2r2a2))
                     .mul(SP.H(y + "32").powZn(r_1.add(r_2).div(alpha_a_2))).mul(mpk.g.powZn(sigma_y.div(alpha_a_2))).getImmutable();
             sk.sk_y[i][2] = mpk.g.powZn(sigma_y).invert().getImmutable();
             ++i;
@@ -154,12 +160,12 @@ public class PBC {
 
         Element sigma_p = SP.GP.GetZrElement();
 
-        sk.sk_p[0] = msk.g_d1.mul(SP.H("0111").powZn(msk.b_1.mul(r_1).div(msk.a_1)))
-                .mul(SP.H("0121").powZn(msk.b_2.mul(r_2).div(msk.a_1)))
+        sk.sk_p[0] = msk.g_d1.mul(SP.H("0111").powZn(b1r1a1))
+                .mul(SP.H("0121").powZn(b2r2a1))
                 .mul(SP.H("0131").powZn(r_1.add(r_2).div(alpha_a_1))).mul(mpk.g.powZn(sigma_p.div(alpha_a_1))).getImmutable();
 
-        sk.sk_p[1] = msk.g_d2.mul(SP.H("0112").powZn(msk.b_1.mul(r_1).div(msk.a_2)))
-                .mul(SP.H("0122").powZn(msk.b_2.mul(r_2).div(msk.a_2)))
+        sk.sk_p[1] = msk.g_d2.mul(SP.H("0112").powZn(b1r1a2))
+                .mul(SP.H("0122").powZn(b2r2a2))
                 .mul(SP.H("0132").powZn(r_1.add(r_2).div(alpha_a_2))).mul(mpk.g.powZn(sigma_p.div(alpha_a_2))).getImmutable();
 
         sk.sk_p[2] = msk.g_d3.div(mpk.g.powZn(sigma_p)).getImmutable();
@@ -180,13 +186,17 @@ public class PBC {
 
         int n1 = MSP.M.length, n2 = MSP.M[0].length;
         CT.ct = new Element[n1][3];
-        Element tmp;
+
+        Element[][] Hjl = new Element[n2][3];
+        for(int l = 1;l <= 3;++l) {
+            for (int j = 1; j <= n2; ++j) Hjl[j - 1][l - 1] = SP.H(String.format("0%d%d1", j, l)).powZn(s_1)
+                    .mul(SP.H(String.format("0%d%d2", j, l)).powZn(s_2));
+        }
+
         for(int i = 0; i < n1; ++i) {
             for(int l = 1;l <= 3;++l) {
-                tmp = SP.H(String.format("%s%d1", MSP.policy[i], l)).powZn(s_1).mul(SP.H(String.format("%s%d2", MSP.policy[i], l)).powZn(s_2)).getImmutable();
-                for(int j = 1; j <= n2; ++j) tmp = tmp.mul(SP.H(String.format("0%d%d1", j, l)).powZn(s_1)
-                        .mul(SP.H(String.format("0%d%d2", j, l)).powZn(s_2)).powZn(MSP.M[i][j - 1])).getImmutable();
-                CT.ct[i][l - 1] = tmp;
+                CT.ct[i][l - 1] = SP.H(String.format("%s%d1", MSP.policy[i], l)).powZn(s_1).mul(SP.H(String.format("%s%d2", MSP.policy[i], l)).powZn(s_2)).getImmutable();
+                for(int j = 1; j <= n2; ++j) CT.ct[i][l - 1] = CT.ct[i][l - 1].mul(Hjl[j - 1][l - 1].powZn(MSP.M[i][j - 1])).getImmutable();
             }
         }
     }
