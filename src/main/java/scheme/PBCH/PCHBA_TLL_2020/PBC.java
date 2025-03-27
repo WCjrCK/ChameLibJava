@@ -70,30 +70,39 @@ public class PBC {
             Element z_2 = SP.GP.GetZrElement();
             Element z = z_1.add(z_2).getImmutable();
 
-            sk_FAME.sk_0[0] = sk_FAME.sk_0[0].mul(mpk.mpk_FAME.h.powZn(msk.msk_FAME.b_1.mul(z_1))).getImmutable();
-            sk_FAME.sk_0[1] = sk_FAME.sk_0[1].mul(mpk.mpk_FAME.h.powZn(msk.msk_FAME.b_2.mul(z_2))).getImmutable();
+            Element b1z1a1 = msk.msk_FAME.b_1.mul(z_1).getImmutable();
+            Element b2z2a1 = msk.msk_FAME.b_2.mul(z_2).getImmutable();
+
+            sk_FAME.sk_0[0] = sk_FAME.sk_0[0].mul(mpk.mpk_FAME.h.powZn(b1z1a1)).getImmutable();
+            Element b1z1a2 = b1z1a1.div(msk.msk_FAME.a_2).getImmutable();
+            b1z1a1 = b1z1a1.div(msk.msk_FAME.a_1).getImmutable();
+            sk_FAME.sk_0[1] = sk_FAME.sk_0[1].mul(mpk.mpk_FAME.h.powZn(b2z2a1)).getImmutable();
+            Element b2z2a2 = b2z2a1.div(msk.msk_FAME.a_2).getImmutable();
+            b2z2a1 = b2z2a1.div(msk.msk_FAME.a_1).getImmutable();
             sk_FAME.sk_0[2] = sk_FAME.sk_0[2].mul(mpk.h_1_alpha.powZn(z)).getImmutable();
             sk_0_g[1] = sk_0_g[1].mul(sk_0_g[0].powZn(z)).getImmutable();
 
             Element alpha_a_1 = msk.alpha.mul(msk.msk_FAME.a_1).getImmutable();
             Element alpha_a_2 = msk.alpha.mul(msk.msk_FAME.a_2).getImmutable();
+            Element zaa1 = z.div(alpha_a_1).getImmutable();
+            Element zaa2 = z.div(alpha_a_2).getImmutable();
 
             for(Map.Entry<String, Integer> entry : sk_FAME.Attr2id.entrySet()) {
-                sk_FAME.sk_y[entry.getValue()][0] = sk_FAME.sk_y[entry.getValue()][0].mul(SP.pp_FAME.H(entry.getKey() + "11").powZn(msk.msk_FAME.b_1.mul(z_1).div(msk.msk_FAME.a_1))
-                        .mul(SP.pp_FAME.H(entry.getKey() + "21").powZn(msk.msk_FAME.b_2.mul(z_2).div(msk.msk_FAME.a_1)))
-                        .mul(SP.pp_FAME.H(entry.getKey() + "31").powZn(z.div(alpha_a_1))));
+                sk_FAME.sk_y[entry.getValue()][0] = sk_FAME.sk_y[entry.getValue()][0].mul(SP.pp_FAME.H(entry.getKey() + "11").powZn(b1z1a1)
+                        .mul(SP.pp_FAME.H(entry.getKey() + "21").powZn(b2z2a1))
+                        .mul(SP.pp_FAME.H(entry.getKey() + "31").powZn(zaa1)));
 
-                sk_FAME.sk_y[entry.getValue()][1] = sk_FAME.sk_y[entry.getValue()][1].mul(SP.pp_FAME.H(entry.getKey() + "12").powZn(msk.msk_FAME.b_1.mul(z_1).div(msk.msk_FAME.a_2))
-                        .mul(SP.pp_FAME.H(entry.getKey() + "22").powZn(msk.msk_FAME.b_2.mul(z_2).div(msk.msk_FAME.a_2)))
-                        .mul(SP.pp_FAME.H(entry.getKey() + "32").powZn(z.div(alpha_a_2))));
+                sk_FAME.sk_y[entry.getValue()][1] = sk_FAME.sk_y[entry.getValue()][1].mul(SP.pp_FAME.H(entry.getKey() + "12").powZn(b1z1a2)
+                        .mul(SP.pp_FAME.H(entry.getKey() + "22").powZn(b2z2a2))
+                        .mul(SP.pp_FAME.H(entry.getKey() + "32").powZn(zaa2)));
             }
-            sk_FAME.sk_p[0] = sk_FAME.sk_p[0].mul(SP.pp_FAME.H("0111").powZn(msk.msk_FAME.b_1.mul(z_1).div(msk.msk_FAME.a_1))
-                    .mul(SP.pp_FAME.H("0121").powZn(msk.msk_FAME.b_2.mul(z_2).div(msk.msk_FAME.a_1)))
-                    .mul(SP.pp_FAME.H("0131").powZn(z.div(alpha_a_1))));
+            sk_FAME.sk_p[0] = sk_FAME.sk_p[0].mul(SP.pp_FAME.H("0111").powZn(b1z1a1)
+                    .mul(SP.pp_FAME.H("0121").powZn(b2z2a1))
+                    .mul(SP.pp_FAME.H("0131").powZn(zaa1)));
 
-            sk_FAME.sk_p[1] = sk_FAME.sk_p[1].mul(SP.pp_FAME.H("0112").powZn(msk.msk_FAME.b_1.mul(z_1).div(msk.msk_FAME.a_2))
-                    .mul(SP.pp_FAME.H("0122").powZn(msk.msk_FAME.b_2.mul(z_2).div(msk.msk_FAME.a_2)))
-                    .mul(SP.pp_FAME.H("0132").powZn(z.div(alpha_a_2))));
+            sk_FAME.sk_p[1] = sk_FAME.sk_p[1].mul(SP.pp_FAME.H("0112").powZn(b1z1a2)
+                    .mul(SP.pp_FAME.H("0122").powZn(b2z2a2))
+                    .mul(SP.pp_FAME.H("0132").powZn(zaa2)));
 
             sk_1 = sk_1.mul(sk_2[0].powZn(I_i_1)).mul(ID_i_1.powZn(z)).getImmutable();
             sk_2 = Arrays.copyOfRange(sk_2, 1, sk_2.length);
@@ -257,6 +266,8 @@ public class PBC {
     }
 
     public void Adapt(Randomness R_p, HashValue H, Randomness R, PublicParam SP, MasterPublicKey mpk, MasterSecretKey msk, User moder, base.LSSS.PBC.Matrix MSP, Element m, Element m_p) {
+        if(!Check(H, R, SP, mpk, m)) throw new RuntimeException("wrong hash");
+
         User moder_p = new User(moder);
 
         for(int i = moder_p.ID.length;i < H.owner_ID.length;++i)
