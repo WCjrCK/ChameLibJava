@@ -4,8 +4,10 @@ import curve.Group;
 import curve.PBC;
 import org.junit.jupiter.params.provider.Arguments;
 
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
@@ -42,6 +44,19 @@ public class BasicParam {
 
     public static Stream<Arguments> GetPBCCartesianProduct() {
         return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> EnumSet.allOf(Group.class).stream().flatMap(b -> Stream.of(Arguments.of(a, b))));
+    }
+
+    public static Stream<Arguments> GetPBCInvert() {
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> Stream.of(Arguments.of(a, false), Arguments.of(a, true)));
+    }
+
+    public static Stream<Arguments> GetPBCSymmetry() {
+        return Stream.of(Arguments.of(PBC.A), Arguments.of(PBC.A1), Arguments.of(PBC.E));
+    }
+
+    public static Stream<Arguments> GetPBCInvertIdentityLen() {
+        List<Integer> IdentityLen = Arrays.asList(64, 128, 256);
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> IdentityLen.stream().flatMap(b -> Stream.of(Arguments.of(a, b, false), Arguments.of(a, b, true))));
     }
 
     public boolean CalDiff(int index, int[] ops, double real_time) {

@@ -1,70 +1,66 @@
-package PBCTest.CHTest;
+package PBCTest.IBCHTest;
 
 import PBCTest.BasicParam;
-import curve.Group;
 import it.unisa.dia.gas.jpbc.Element;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import scheme.CH.CH_AMV_2017.PBC;
+import scheme.IBCH.IB_CH_MD_LSX_2022.PBC;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Func.InitialLib;
 
 @SuppressWarnings("NewClassNamingConvention")
-public class CH_AMV_2017 extends BasicParam {
+public class IB_CH_ZSS_S2_2003 extends BasicParam {
     double[] time_cost = new double[5];
 
     @BeforeAll
     static void initTest() {
         InitialLib();
-        System.out.println("CH_AMV_2017");
+        System.out.println("IB_CH_MD_LSX_2022");
         System.out.println("\t\t\tSetUp, KeyGen, Hash, Check, Adapt");
     }
 
-    @DisplayName("test CH_AMV_2017")
-    @ParameterizedTest(name = "test curve {0} group {1}")
-    @MethodSource("PBCTest.BasicParam#GetPBCCartesianProduct")
-    void PBCTest(curve.PBC curve, Group group) {
-        System.out.printf("%s.%s: ", curve, group);
+    @DisplayName("test IB_CH_MD_LSX_2022")
+    @ParameterizedTest(name = "test curve {0}")
+    @MethodSource("PBCTest.BasicParam#GetPBCSymmetry")
+    void PBCTest(curve.PBC curve) {
+        System.out.printf("%s: ", curve);
         PBC scheme = new PBC();
-        PBC.PublicParam pp = new PBC.PublicParam();
+        PBC.PublicParam pp = new PBC.PublicParam(curve);
+        PBC.MasterSecretKey msk = new PBC.MasterSecretKey();
 
         int stage_id = -1;
         {
             long start = System.nanoTime();
-            for(int i = 0;i < repeat_cnt;++i) scheme.SetUp(pp, curve, group);
+            for(int i = 0;i < repeat_cnt;++i) scheme.SetUp(pp, msk);
             long end = System.nanoTime();
             double duration = (end - start) / 1.0e6;
             time_cost[++stage_id] = duration / repeat_cnt;
         }
 
-        PBC.PublicKey[] pk = new PBC.PublicKey[repeat_cnt];
         PBC.SecretKey[] sk = new PBC.SecretKey[repeat_cnt];
         PBC.HashValue[] h = new PBC.HashValue[repeat_cnt];
         PBC.Randomness[] r = new PBC.Randomness[repeat_cnt];
         PBC.Randomness[] rp = new PBC.Randomness[repeat_cnt];
-        PBC.EncRandomness[] er = new PBC.EncRandomness[repeat_cnt];
-        PBC.EncRandomness[] erp = new PBC.EncRandomness[repeat_cnt];
+        Element[] ID = new Element[repeat_cnt];
         Element[] m = new Element[repeat_cnt];
         Element[] m2 = new Element[repeat_cnt];
         for (int i = 0; i < repeat_cnt; i++) {
-            pk[i] = new PBC.PublicKey();
             sk[i] = new PBC.SecretKey();
-            m[i] = pp.GetZrElement();
-            m2[i] = pp.GetZrElement();
+            ID[i] = pp.GP.GetZrElement();
+            m[i] = pp.GP.GetZrElement();
+            m2[i] = pp.GP.GetZrElement();
             h[i] = new PBC.HashValue();
             r[i] = new PBC.Randomness();
             rp[i] = new PBC.Randomness();
-            er[i] = new PBC.EncRandomness();
-            erp[i] = new PBC.EncRandomness();
         }
 
         {
             long start = System.nanoTime();
-            for(int i = 0;i < repeat_cnt;++i) scheme.KeyGen(pk[i], sk[i], pp);
+            for(int i = 0;i < repeat_cnt;++i) scheme.KeyGen(sk[i], pp, msk, ID[i]);
             long end = System.nanoTime();
             double duration = (end - start) / 1.0e6;
             time_cost[++stage_id] = duration / repeat_cnt;
@@ -72,7 +68,7 @@ public class CH_AMV_2017 extends BasicParam {
 
         {
             long start = System.nanoTime();
-            for(int i = 0;i < repeat_cnt;++i) scheme.Hash(h[i], er[i], r[i], pp, pk[i], m[i]);
+            for(int i = 0;i < repeat_cnt;++i) scheme.Hash(h[i], r[i], pp, ID[i], m[i]);
             long end = System.nanoTime();
             double duration = (end - start) / 1.0e6;
             time_cost[++stage_id] = duration / repeat_cnt;
@@ -81,7 +77,7 @@ public class CH_AMV_2017 extends BasicParam {
         {
             boolean res = true;
             long start = System.nanoTime();
-            for(int i = 0;i < repeat_cnt;++i) res &= scheme.Check(h[i], er[i], pp, pk[i], m[i]);
+            for(int i = 0;i < repeat_cnt;++i) res &= scheme.Check(h[i], r[i], pp, ID[i], m[i]);
             long end = System.nanoTime();
             double duration = (end - start) / 1.0e6;
             time_cost[++stage_id] = duration / repeat_cnt;
@@ -90,7 +86,7 @@ public class CH_AMV_2017 extends BasicParam {
 
         {
             long start = System.nanoTime();
-            for(int i = 0;i < repeat_cnt;++i) scheme.Adapt(erp[i], rp[i], h[i], er[i], pp, pk[i], sk[i], m[i], m2[i]);
+            for(int i = 0;i < repeat_cnt;++i) scheme.Adapt(rp[i], r[i], sk[i], m[i], m2[i]);
             long end = System.nanoTime();
             double duration = (end - start) / 1.0e6;
             time_cost[++stage_id] = duration / repeat_cnt;
@@ -98,7 +94,7 @@ public class CH_AMV_2017 extends BasicParam {
 
         {
             boolean res = true;
-            for(int i = 0;i < repeat_cnt;++i) res &= scheme.Check(h[i], erp[i], pp, pk[i], m2[i]);
+            for(int i = 0;i < repeat_cnt;++i) res &= scheme.Check(h[i], rp[i], pp, ID[i], m2[i]);
             assertTrue(res, "Adapt Check Failed");
         }
     }

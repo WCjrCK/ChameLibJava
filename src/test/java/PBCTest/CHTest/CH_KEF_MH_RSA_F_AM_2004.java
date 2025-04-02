@@ -16,13 +16,13 @@ import static utils.Func.InitialLib;
 
 @SuppressWarnings("NewClassNamingConvention")
 public class CH_KEF_MH_RSA_F_AM_2004 extends BasicParam {
-    double[] time_cost = new double[4];
+    double[] time_cost = new double[5];
 
     @BeforeAll
     static void initTest() {
         InitialLib();
         System.out.println("CH_KEF_MH_RSA_F_AM_2004");
-        System.out.println("\t\t\tKeyGen, Hash, Check, Adapt");
+        System.out.println("\t\t\tSetUp, KeyGen, Hash, Check, Adapt");
     }
 
     @DisplayName("test CH_KEF_MH_RSA_F_AM_2004")
@@ -33,7 +33,16 @@ public class CH_KEF_MH_RSA_F_AM_2004 extends BasicParam {
         Random rand = new Random();
         Native scheme = new Native();
         Native.PublicParam pp = new Native.PublicParam();
-        scheme.SetUp(pp, k / 2, k);
+
+        int stage_id = -1;
+        {
+            long start = System.nanoTime();
+            for(int i = 0;i < repeat_cnt;++i) scheme.SetUp(pp, k / 2, k);
+            long end = System.nanoTime();
+            double duration = (end - start) / 1.0e6;
+            time_cost[++stage_id] = duration / repeat_cnt;
+        }
+
         k = k / 4;
 
         Native.PublicKey[] pk = new Native.PublicKey[repeat_cnt];
@@ -55,7 +64,6 @@ public class CH_KEF_MH_RSA_F_AM_2004 extends BasicParam {
             rp[i] = new Native.Randomness();
         }
 
-        int stage_id = -1;
         {
             long start = System.nanoTime();
             for(int i = 0;i < repeat_cnt;++i) scheme.KeyGen(pk[i], sk[i], pp);
