@@ -1405,7 +1405,6 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-
                 scheme.CH.CH_AMV_2017.PBC scheme = new scheme.CH.CH_AMV_2017.PBC();
                 scheme.CH.CH_AMV_2017.PBC.PublicParam pp = new scheme.CH.CH_AMV_2017.PBC.PublicParam();
                 scheme.CH.CH_AMV_2017.PBC.PublicKey pk = new scheme.CH.CH_AMV_2017.PBC.PublicKey();

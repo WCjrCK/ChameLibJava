@@ -23,18 +23,6 @@ public class PBC {
         public HashMap<String, Element> Omega = new HashMap<>();
         public HashMap<String, Element> Omega_inv = new HashMap<>();
 
-//        public Element H(Element m) {
-//            return Hash.H_PBC_1_1(G, m);
-//        }
-//
-//        private Element H_p(String m) {
-//            return Hash.H_String_1_PBC_1(Zr, m);
-//        }
-//
-//        public Element H_p(Element m1, Element m2, Element m3, Element m4) {
-//            return H_p(String.format("%s|%s|%s|%s", m1, m2, m3, m4));
-//        }
-
         public Element GetGElement() {
             return G.newRandomElement().getImmutable();
         }
