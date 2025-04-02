@@ -1,8 +1,12 @@
 package PBCTest;
 
+import curve.Group;
 import curve.PBC;
+import org.junit.jupiter.params.provider.Arguments;
 
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 public class BasicParam {
@@ -35,6 +39,10 @@ public class BasicParam {
         put(PBC.SM_9, 10);
         put(PBC.G_149, 11);
     }};
+
+    public static Stream<Arguments> GetPBCCartesianProduct() {
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> EnumSet.allOf(Group.class).stream().flatMap(b -> Stream.of(Arguments.of(a, b))));
+    }
 
     public boolean CalDiff(int index, int[] ops, double real_time) {
         double expect_time = 0;
