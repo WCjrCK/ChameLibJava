@@ -1,58 +1,69 @@
-package PBCTest.IBCHTest;
+package PBCTest.PBCHTest;
 
 import PBCTest.BasicParam;
-import it.unisa.dia.gas.jpbc.Element;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import scheme.IBCH.IB_CH_ZSS_S2_2003.PBC;
+import scheme.PBCH.PCH_DSS_2019.PBC;
+import utils.BooleanFormulaParser;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Func.InitialLib;
 
 @SuppressWarnings("NewClassNamingConvention")
-public class IB_CH_ZSS_S2_2003 extends BasicParam {
+public class PCH_DSS_2019 extends BasicParam {
     double[] time_cost = new double[5];
 
     @BeforeAll
     static void initTest() {
         InitialLib();
-        System.out.println("IB_CH_ZSS_S2_2003");
+        System.out.println("PCH_DSS_2019");
         System.out.println("\t\t\tSetUp, KeyGen, Hash, Check, Adapt");
     }
 
-    @DisplayName("test IB_CH_ZSS_S2_2003")
-    @ParameterizedTest(name = "test curve {0}")
-    @MethodSource("PBCTest.BasicParam#GetPBCSymmetry")
-    void PBCTest(curve.PBC curve) {
-        System.out.printf("%s: ", curve);
-        PBC scheme = new PBC();
-        PBC.PublicParam pp = new PBC.PublicParam(curve);
+    @DisplayName("test PCH_DSS_2019")
+    @ParameterizedTest(name = "test curve {0} swap_G1G2 {1} k = {2}")
+    @MethodSource("PBCTest.BasicParam#GetPBCInvertk")
+    void PBCTest(curve.PBC curve, boolean swap_G1G2, int k) {
+        System.out.printf("%s (k: %d, swap: %b): ", curve, k, swap_G1G2);
+        PBC scheme = new PBC(k);
+        PBC.PublicParam pp = new PBC.PublicParam(curve, swap_G1G2);
+        PBC.MasterPublicKey mpk = new PBC.MasterPublicKey();
         PBC.MasterSecretKey msk = new PBC.MasterSecretKey();
 
         int stage_id = -1;
         {
             long start = System.nanoTime();
-            for(int i = 0;i < repeat_cnt;++i) scheme.SetUp(pp, msk);
+            for(int i = 0;i < repeat_cnt;++i) scheme.SetUp(mpk, msk, pp);
             long end = System.nanoTime();
             double duration = (end - start) / 1.0e6;
             time_cost[++stage_id] = duration / repeat_cnt;
         }
 
+        base.LSSS.PBC LSSS = new base.LSSS.PBC();
+        base.LSSS.PBC.Matrix[] MSP = new base.LSSS.PBC.Matrix[repeat_cnt];
+        BooleanFormulaParser.PolicyList[] pl = new BooleanFormulaParser.PolicyList[repeat_cnt];
+
+        BooleanFormulaParser.AttributeList[] S = new BooleanFormulaParser.AttributeList[repeat_cnt];
+
+
         PBC.SecretKey[] sk = new PBC.SecretKey[repeat_cnt];
         PBC.HashValue[] h = new PBC.HashValue[repeat_cnt];
         PBC.Randomness[] r = new PBC.Randomness[repeat_cnt];
         PBC.Randomness[] rp = new PBC.Randomness[repeat_cnt];
-        Element[] ID = new Element[repeat_cnt];
-        Element[] m = new Element[repeat_cnt];
-        Element[] m2 = new Element[repeat_cnt];
+        String[] m = new String[repeat_cnt];
+        String[] m2 = new String[repeat_cnt];
         for (int i = 0; i < repeat_cnt; i++) {
+            MSP[i] = new base.LSSS.PBC.Matrix(pp.GP.Zr);
+            pl[i] = new BooleanFormulaParser.PolicyList();
+            S[i] = new BooleanFormulaParser.AttributeList();
+            LSSS.GenLSSSMatrices(MSP[i], pl[i], RandomPolicyGenerator(S[i], true, 5));
+
             sk[i] = new PBC.SecretKey();
-            ID[i] = pp.GP.GetZrElement();
-            m[i] = pp.GP.GetZrElement();
-            m2[i] = pp.GP.GetZrElement();
+            m[i] = pp.GP.GetZrElement().toString();
+            m2[i] = pp.GP.GetZrElement().toString();
             h[i] = new PBC.HashValue();
             r[i] = new PBC.Randomness();
             rp[i] = new PBC.Randomness();
@@ -60,7 +71,7 @@ public class IB_CH_ZSS_S2_2003 extends BasicParam {
 
         {
             long start = System.nanoTime();
-            for(int i = 0;i < repeat_cnt;++i) scheme.KeyGen(sk[i], pp, msk, ID[i]);
+            for(int i = 0;i < repeat_cnt;++i) scheme.KeyGen(sk[i], pp, mpk, msk, S[i]);
             long end = System.nanoTime();
             double duration = (end - start) / 1.0e6;
             time_cost[++stage_id] = duration / repeat_cnt;
@@ -68,7 +79,7 @@ public class IB_CH_ZSS_S2_2003 extends BasicParam {
 
         {
             long start = System.nanoTime();
-            for(int i = 0;i < repeat_cnt;++i) scheme.Hash(h[i], r[i], pp, ID[i], m[i]);
+            for(int i = 0;i < repeat_cnt;++i) scheme.Hash(h[i], r[i], pp, mpk, MSP[i], m[i]);
             long end = System.nanoTime();
             double duration = (end - start) / 1.0e6;
             time_cost[++stage_id] = duration / repeat_cnt;
@@ -77,7 +88,7 @@ public class IB_CH_ZSS_S2_2003 extends BasicParam {
         {
             boolean res = true;
             long start = System.nanoTime();
-            for(int i = 0;i < repeat_cnt;++i) res &= scheme.Check(h[i], r[i], pp, ID[i], m[i]);
+            for(int i = 0;i < repeat_cnt;++i) res &= scheme.Check(h[i], r[i], mpk, m[i]);
             long end = System.nanoTime();
             double duration = (end - start) / 1.0e6;
             time_cost[++stage_id] = duration / repeat_cnt;
@@ -86,7 +97,7 @@ public class IB_CH_ZSS_S2_2003 extends BasicParam {
 
         {
             long start = System.nanoTime();
-            for(int i = 0;i < repeat_cnt;++i) scheme.Adapt(rp[i], r[i], pp, sk[i], m[i], m2[i]);
+            for(int i = 0;i < repeat_cnt;++i) scheme.Adapt(rp[i], h[i], r[i], pp, mpk, MSP[i], sk[i], m[i], m2[i]);
             long end = System.nanoTime();
             double duration = (end - start) / 1.0e6;
             time_cost[++stage_id] = duration / repeat_cnt;
@@ -94,7 +105,7 @@ public class IB_CH_ZSS_S2_2003 extends BasicParam {
 
         {
             boolean res = true;
-            for(int i = 0;i < repeat_cnt;++i) res &= scheme.Check(h[i], rp[i], pp, ID[i], m2[i]);
+            for(int i = 0;i < repeat_cnt;++i) res &= scheme.Check(h[i], rp[i], mpk, m2[i]);
             assertTrue(res, "Adapt Check Failed");
         }
     }

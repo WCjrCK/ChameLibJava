@@ -66,7 +66,7 @@ public class PBC {
             }
             for(int k = 0;k < M[0].length;++k) mat[k][j] = b.v[k];
             int main_col = 0, i = 0;
-            while(main_col < row_cnt) {
+            while(main_col < row_cnt && i < mat.length) {
                 if(mat[i][main_col].isZero()) {
                     for(j = i + 1;j < mat.length;++j) {
                         if(!mat[j][main_col].isZero()) {

@@ -21,7 +21,6 @@ public class CH_KEF_NoMH_AM_2004 extends BasicParam {
     @BeforeAll
     static void initTest() {
         InitialLib();
-        repeat_cnt = 1;
         System.out.println("CH_KEF_NoMH_AM_2004");
         System.out.println("\t\t\tKeyGen, Hash, Check, Adapt");
     }

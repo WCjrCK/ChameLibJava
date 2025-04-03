@@ -243,10 +243,7 @@ public class PBCHTest {
                 scheme.ModSetup(mod2, SP, MSK);
 
                 scheme.PBCH.DPCH_MXN_2022.PBC.Authority[] auths = new scheme.PBCH.DPCH_MXN_2022.PBC.Authority[auth_num];
-                for (int i = 0; i < auth_num; ++i) {
-                    auths[i] = new scheme.PBCH.DPCH_MXN_2022.PBC.Authority("auth_" + i);
-                    scheme.AuthSetup(auths[i], SP);
-                }
+                for (int i = 0; i < auth_num; ++i) auths[i] = new scheme.PBCH.DPCH_MXN_2022.PBC.Authority("auth_" + i);
 
                 auths[0].MA_ABE_Auth.control_attr.add("A");
                 auths[1].MA_ABE_Auth.control_attr.add("BB");

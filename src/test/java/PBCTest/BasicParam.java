@@ -3,16 +3,16 @@ package PBCTest;
 import curve.Group;
 import curve.PBC;
 import org.junit.jupiter.params.provider.Arguments;
+import utils.BooleanFormulaParser;
 
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 public class BasicParam {
+    static Random RAND = new Random();
     static public int diff_max_len = 17, repeat_cnt = 1024;
+
     static public double[][] op_time = {
             {0.576208, 0.573114, 0.069271, 0.007884, 1.324570, 1.331779, 0.068649, 0.006407, 0.007179, 0.007193, 0.004813, 0.003680, 0.603068, 0.594750, 0.051539, 0.006585, 0.348226},
             {0.393965, 0.308085, 0.034659, 0.008537, 0.294812, 0.297922, 0.028663, 0.007405, 0.010259, 0.010636, 0.005035, 0.004464, 7.434316, 7.330835, 0.600688, 0.158567, 7.268347},
@@ -27,6 +27,7 @@ public class BasicParam {
             {0.523323, 0.857824, 8.509257, 0.007867, 0.020677, 0.039397, 8.399914, 0.004787, 0.005934, 0.007368, 0.014929, 0.003685, 0.486429, 0.842521, 2.870223, 0.009228, 12.840274},
             {0.198158, 3.808206, 1.761870, 0.007632, 0.012184, 25.240315, 1.759762, 0.005045, 0.005292, 0.024315, 0.013361, 0.004054, 0.199912, 3.819947, 1.282438, 0.005926, 4.593954}
     };
+
     static public HashMap<PBC, Integer> index_map = new HashMap<>() {{
         put(PBC.A, 0);
         put(PBC.A1, 1);
@@ -42,12 +43,23 @@ public class BasicParam {
         put(PBC.G_149, 11);
     }};
 
+    static public List<Integer> BT_leaf_num = List.of(2048, 4096, 8192);
+    static public List<Integer> IdentityLen = List.of(64, 128, 256);
+    static public List<Integer> RSA_bit_len = List.of(256, 512, 1024);
+    static public List<Integer> Auth_num = List.of(256, 512, 1024);
+
     public static Stream<Arguments> GetPBCCartesianProduct() {
-        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> EnumSet.allOf(Group.class).stream().flatMap(b -> Stream.of(Arguments.of(a, b))));
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
+                EnumSet.allOf(Group.class).stream().flatMap(b ->
+                        Stream.of(Arguments.of(a, b))
+                )
+        );
     }
 
     public static Stream<Arguments> GetPBCInvert() {
-        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> Stream.of(Arguments.of(a, false), Arguments.of(a, true)));
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
+                Stream.of(Arguments.of(a, false), Arguments.of(a, true))
+        );
     }
 
     public static Stream<Arguments> GetPBCSymmetry() {
@@ -55,8 +67,70 @@ public class BasicParam {
     }
 
     public static Stream<Arguments> GetPBCInvertIdentityLen() {
-        List<Integer> IdentityLen = Arrays.asList(64, 128, 256);
-        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> IdentityLen.stream().flatMap(b -> Stream.of(Arguments.of(a, b, false), Arguments.of(a, b, true))));
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
+                IdentityLen.stream().flatMap(b ->
+                        Stream.of(Arguments.of(a, b, false), Arguments.of(a, b, true))
+                )
+        );
+    }
+
+    public static Stream<Arguments> GetPBCInvertk() {
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
+                RSA_bit_len.stream().flatMap(b ->
+                        Stream.of(Arguments.of(a, false, b), Arguments.of(a, true, b))
+                )
+        );
+    }
+
+    public static Stream<Arguments> GetPBCSymmAuth() {
+        return Stream.of(curve.PBC.A, curve.PBC.A1, curve.PBC.E).flatMap(a ->
+                Auth_num.stream().flatMap(b ->
+                        RSA_bit_len.stream().flatMap(c -> Stream.of(Arguments.of(a, b, c)))));
+    }
+
+    public static Stream<Arguments> GetPBCSymmAuthBigLambda() {
+        return Stream.of(curve.PBC.A, curve.PBC.A1, curve.PBC.E).flatMap(a ->
+                Auth_num.stream().flatMap(b ->
+                        RSA_bit_len.stream().flatMap(c -> Stream.of(Arguments.of(a, b, c)))));
+    }
+
+    public static Stream<Arguments> GetPBCInvertkn() {
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
+                RSA_bit_len.stream().flatMap(b ->
+                        BT_leaf_num.stream().flatMap(c ->
+                                Stream.of(Arguments.of(a, false, b, c), Arguments.of(a, true, b, c))
+                        )
+                )
+        );
+    }
+
+    public static Stream<Arguments> GetPBCInvertGroupn() {
+        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a ->
+                EnumSet.allOf(Group.class).stream().flatMap(b ->
+                        BT_leaf_num.stream().flatMap(c ->
+                                Stream.of(Arguments.of(a, false, b, c), Arguments.of(a, true, b, c))
+                        )
+                )
+        );
+    }
+
+    public static String RandomPolicyGenerator(BooleanFormulaParser.AttributeList access, boolean addit, int dep) {
+        boolean endit = (RAND.nextInt(1 << dep) <= 1);
+        boolean isAND = RAND.nextBoolean();
+        String L, R;
+        if (endit) {
+            L = String.valueOf(RAND.nextLong());
+            R = String.valueOf(RAND.nextLong());
+            if (addit) {
+                access.attrs.add(L);
+                if (isAND) access.attrs.add(R);
+            }
+        } else {
+            L = RandomPolicyGenerator(access, addit, dep - 1);
+            R = RandomPolicyGenerator(access, addit && isAND, dep - 1);
+        }
+        if (isAND) return String.format("(%s&%s)", L, R);
+        else return String.format("(%s|%s)", L, R);
     }
 
     public boolean CalDiff(int index, int[] ops, double real_time) {
