@@ -45,7 +45,7 @@ public class BasicParam {
         put(PBC.G_149, 11);
     }};
 
-    static public List<Integer> BT_leaf_num = List.of(2048, 4096, 8192);
+    static public List<Integer> BT_leaf_num = List.of(1024, 2048, 4096);
     static public List<Integer> IdentityLen = List.of(64, 128, 256);
     static public List<Integer> RSA_bit_len = List.of(256, 512, 1024);
     static public List<Integer> RSA_bit_len_small = List.of(64, 128, 256);

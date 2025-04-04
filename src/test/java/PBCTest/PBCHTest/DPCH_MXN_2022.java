@@ -25,6 +25,7 @@ public class DPCH_MXN_2022 extends BasicParam {
     @BeforeAll
     static void initTest() {
         InitialLib();
+        repeat_cnt = Math.max(1, repeat_cnt / 2); // long time to run
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/PBCH/DPCH_MXN_2022.txt"));
             File_Writer.write("DPCH_MXN_2022\t\t\tSetUp, ModSetUp, AuthSetUp, ModKeyGen, Hash, Check, Adapt\n");

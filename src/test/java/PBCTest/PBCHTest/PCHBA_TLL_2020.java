@@ -25,6 +25,7 @@ public class PCHBA_TLL_2020 extends BasicParam {
     @BeforeAll
     static void initTest() {
         InitialLib();
+        repeat_cnt = Math.max(1, repeat_cnt / 10); // long time to run
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/PBCH/PCHBA_TLL_2020.txt"));
             File_Writer.write("PCHBA_TLL_2020\t\t\tSetUp, AssignUser, KeyGen, Hash, Check, Adapt\n");

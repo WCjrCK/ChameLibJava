@@ -25,6 +25,7 @@ public class MAPCH_ZLW_2021 extends BasicParam {
     @BeforeAll
     static void initTest() {
         InitialLib();
+        repeat_cnt = Math.max(1, repeat_cnt / 2); // long time to run
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/PBCH/MAPCH_ZLW_2021.txt"));
             File_Writer.write("MAPCH_ZLW_2021\t\t\tSetUp, AuthSetUp, KeyGen, Hash, Check, Adapt\n");
