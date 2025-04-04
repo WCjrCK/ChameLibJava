@@ -40,8 +40,8 @@ public class RPCH_XNM_2021 extends BasicParam {
     @MethodSource("PBCTest.BasicParam#GetPBCInvertkn")
     void PBCTest(curve.PBC curve, boolean swap_G1G2, int k, int n) {
         try {
-            File_Writer.write(String.format("curve:%s.k:%d.n:%d.swap:%b: ", curve, k, n, swap_G1G2));
-            System.out.printf("curve:%s.k:%d.n:%d.swap:%b: ", curve, k, n, swap_G1G2);
+            File_Writer.write(String.format("curve:%s|k:%d|n:%d|swap:%b: ", curve, k, n, swap_G1G2));
+            System.out.printf("curve:%s|k:%d|n:%d|swap:%b: ", curve, k, n, swap_G1G2);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

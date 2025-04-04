@@ -39,8 +39,8 @@ public class IB_CH_ZSS_S1_2003 extends BasicParam {
     @MethodSource("PBCTest.BasicParam#GetPBCInvert")
     void PBCTest(curve.PBC curve, boolean swap_G1G2) {
         try {
-            File_Writer.write(String.format("curve:%s.swap:%b: ", curve, swap_G1G2));
-            System.out.printf("curve:%s.swap:%b: ", curve, swap_G1G2);
+            File_Writer.write(String.format("curve:%s|swap:%b: ", curve, swap_G1G2));
+            System.out.printf("curve:%s|swap:%b: ", curve, swap_G1G2);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

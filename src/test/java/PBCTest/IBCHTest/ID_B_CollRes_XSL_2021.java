@@ -39,7 +39,7 @@ public class ID_B_CollRes_XSL_2021 extends BasicParam {
     @MethodSource("PBCTest.BasicParam#GetPBCInvertIdentityLen")
     void PBCTest(curve.PBC curve, int n, boolean swap_G1G2) {
         try {
-            File_Writer.write(String.format("curve:%s.ID len:%d.swap:%b: ", curve, n, swap_G1G2));
+            File_Writer.write(String.format("curve:%s|ID len:%d|swap:%b: ", curve, n, swap_G1G2));
             System.out.printf("curve:%s (ID len: %d, swap: %b): ", curve, n, swap_G1G2);
         } catch (IOException e) {
             throw new RuntimeException(e);

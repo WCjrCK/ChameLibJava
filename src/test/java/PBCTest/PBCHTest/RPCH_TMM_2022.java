@@ -41,8 +41,8 @@ public class RPCH_TMM_2022 extends BasicParam {
     @MethodSource("PBCTest.BasicParam#GetPBCInvertGroupn")
     void PBCTest(curve.PBC curve, boolean swap_G1G2, Group group, int n) {
         try {
-            File_Writer.write(String.format("curve:%s.group:%s.n:%d.swap:%b: ", curve, group, n, swap_G1G2));
-            System.out.printf("curve:%s.group:%s.n:%d.swap:%b: ", curve, group, n, swap_G1G2);
+            File_Writer.write(String.format("curve:%s|group:%s|n:%d|swap:%b: ", curve, group, n, swap_G1G2));
+            System.out.printf("curve:%s|group:%s|n:%d|swap:%b: ", curve, group, n, swap_G1G2);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

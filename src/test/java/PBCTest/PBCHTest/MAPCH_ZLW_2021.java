@@ -40,8 +40,8 @@ public class MAPCH_ZLW_2021 extends BasicParam {
     @MethodSource("PBCTest.BasicParam#GetPBCSymmAuthSmall")
     void PBCTest(curve.PBC curve, int auth_num, int lambda) {
         try {
-            File_Writer.write(String.format("curve:%s.auth_num:%d.lambda:%d: ", curve, auth_num, lambda));
-            System.out.printf("curve:%s.auth_num:%d.lambda:%d: ", curve, auth_num, lambda);
+            File_Writer.write(String.format("curve:%s|auth_num:%d|lambda:%d: ", curve, auth_num, lambda));
+            System.out.printf("curve:%s|auth_num:%d|lambda:%d: ", curve, auth_num, lambda);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

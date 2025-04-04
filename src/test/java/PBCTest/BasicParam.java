@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public class BasicParam {
     static public BufferedWriter File_Writer;
     static Random RAND = new Random();
-    static public int diff_max_len = 17, repeat_cnt = 1;
+    static public int diff_max_len = 17, repeat_cnt = 1000;
 
     static public double[][] op_time = {
             {0.576208, 0.573114, 0.069271, 0.007884, 1.324570, 1.331779, 0.068649, 0.006407, 0.007179, 0.007193, 0.004813, 0.003680, 0.603068, 0.594750, 0.051539, 0.006585, 0.348226},
