@@ -28,6 +28,7 @@ public class RPCH_XNM_2021 extends BasicParam {
         repeat_cnt = Math.max(1, repeat_cnt / 4); // long time to run
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/PBCH/RPCH_XNM_2021.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
             File_Writer.write("RPCH_XNM_2021\t\t\tSetUp, KeyGen, Revoke, UpdateKeyGen, DecryptKeyGen, Hash, Check, Adapt\n");
             System.out.println("RPCH_XNM_2021");
             System.out.println("\t\t\tSetUp, KeyGen, Revoke, UpdateKeyGen, DecryptKeyGen, Hash, Check, Adapt");

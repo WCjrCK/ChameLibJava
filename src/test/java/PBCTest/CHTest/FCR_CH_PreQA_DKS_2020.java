@@ -27,6 +27,7 @@ public class FCR_CH_PreQA_DKS_2020 extends BasicParam {
         InitialLib();
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/CH/FCR_CH_PreQA_DKS_2020.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
             File_Writer.write("FCR_CH_PreQA_DKS_2020\t\t\tKeyGen, Hash, Check, Adapt\n");
             System.out.println("FCR_CH_PreQA_DKS_2020");
             System.out.println("\t\t\tKeyGen, Hash, Check, Adapt");

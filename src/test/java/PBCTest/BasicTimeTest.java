@@ -25,6 +25,7 @@ public class BasicTimeTest extends BasicParam {
         InitialLib();
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/Basic_Time.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -27,6 +27,7 @@ public class MCH_CDK_2017 extends BasicParam {
         InitialLib();
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/CH/MCH_CDK_2017.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
             File_Writer.write("MCH_CDK_2017\t\t\tKeyGen, Hash, Check, Adapt\n");
             System.out.println("MCH_CDK_2017");
             System.out.println("\t\t\tKeyGen, Hash, Check, Adapt");

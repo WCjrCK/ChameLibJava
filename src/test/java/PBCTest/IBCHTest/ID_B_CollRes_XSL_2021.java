@@ -26,6 +26,7 @@ public class ID_B_CollRes_XSL_2021 extends BasicParam {
         InitialLib();
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/IBCH/ID_B_CollRes_XSL_2021.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
             File_Writer.write("ID_B_CollRes_XSL_2021\t\t\tSetUp, KeyGen, Hash, Check, Adapt\n");
             System.out.println("ID_B_CollRes_XSL_2021");
             System.out.println("\t\t\tSetUp, KeyGen, Hash, Check, Adapt");

@@ -27,6 +27,7 @@ public class CR_CH_DSS_2020 extends BasicParam {
         InitialLib();
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/CH/CR_CH_DSS_2020.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
             File_Writer.write("CR_CH_DSS_2020\t\t\tKeyGen, Hash, Check, Adapt\n");
             System.out.println("CR_CH_DSS_2020");
             System.out.println("\t\t\tKeyGen, Hash, Check, Adapt");

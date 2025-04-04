@@ -26,6 +26,7 @@ public class IB_CH_KEF_CZS_2014 extends BasicParam {
         InitialLib();
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/IBCH/IB_CH_KEF_CZS_2014.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
             File_Writer.write("IB_CH_KEF_CZS_2014\t\t\tSetUp, KeyGen, Hash, Check, Adapt\n");
             System.out.println("IB_CH_KEF_CZS_2014");
             System.out.println("\t\t\tSetUp, KeyGen, Hash, Check, Adapt");

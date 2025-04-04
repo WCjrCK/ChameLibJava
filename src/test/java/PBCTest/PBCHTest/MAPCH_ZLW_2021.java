@@ -28,6 +28,7 @@ public class MAPCH_ZLW_2021 extends BasicParam {
         repeat_cnt = Math.max(1, repeat_cnt / 2); // long time to run
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/PBCH/MAPCH_ZLW_2021.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
             File_Writer.write("MAPCH_ZLW_2021\t\t\tSetUp, AuthSetUp, KeyGen, Hash, Check, Adapt\n");
             System.out.println("MAPCH_ZLW_2021");
             System.out.println("\t\t\tSetUp, AuthSetUp, KeyGen, Hash, Check, Adapt");

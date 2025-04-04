@@ -27,6 +27,7 @@ public class PCH_DSS_2019 extends BasicParam {
         repeat_cnt = Math.max(1, repeat_cnt / 3); // long time to run
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/PBCH/PCH_DSS_2019.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
             File_Writer.write("PCH_DSS_2019\t\t\tSetUp, KeyGen, Hash, Check, Adapt\n");
             System.out.println("PCH_DSS_2019");
             System.out.println("\t\t\tSetUp, KeyGen, Hash, Check, Adapt");

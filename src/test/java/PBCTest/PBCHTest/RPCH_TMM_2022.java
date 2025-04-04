@@ -29,6 +29,7 @@ public class RPCH_TMM_2022 extends BasicParam {
         repeat_cnt = Math.max(1, repeat_cnt / 4); // long time to run
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/PBCH/RPCH_TMM_2022.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
             File_Writer.write("RPCH_TMM_2022\t\t\tSetUp, KeyGen, Revoke, UpdateKeyGen, DecryptKeyGen, Hash, Check, Adapt\n");
             System.out.println("RPCH_TMM_2022");
             System.out.println("\t\t\tSetUp, KeyGen, Revoke, UpdateKeyGen, DecryptKeyGen, Hash, Check, Adapt");

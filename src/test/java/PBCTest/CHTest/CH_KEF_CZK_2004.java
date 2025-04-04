@@ -27,6 +27,7 @@ public class CH_KEF_CZK_2004 extends BasicParam {
         InitialLib();
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/CH/CH_KEF_CZK_2004.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
             File_Writer.write("CH_KEF_CZK_2004\t\t\tKeyGen, Hash, Check, Adapt\n");
             System.out.println("CH_KEF_CZK_2004");
             System.out.println("\t\t\tKeyGen, Hash, Check, Adapt");

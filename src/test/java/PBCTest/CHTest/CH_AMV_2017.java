@@ -27,6 +27,7 @@ public class CH_AMV_2017 extends BasicParam {
         InitialLib();
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/CH/CH_AMV_2017.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
             File_Writer.write("CH_AMV_2017\t\t\tSetUp, KeyGen, Hash, Check, Adapt\n");
             System.out.println("CH_AMV_2017");
             System.out.println("\t\t\tSetUp, KeyGen, Hash, Check, Adapt");

@@ -28,6 +28,7 @@ public class CH_KEF_NoMH_AM_2004 extends BasicParam {
         repeat_cnt = Math.max(1, repeat_cnt / 10); // long time to run
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/CH/CH_KEF_NoMH_AM_2004.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
             File_Writer.write("CH_KEF_NoMH_AM_2004\t\t\tKeyGen, Hash, Check, Adapt\n");
             System.out.println("CH_KEF_NoMH_AM_2004");
             System.out.println("\t\t\tKeyGen, Hash, Check, Adapt");
