@@ -3,6 +3,7 @@ package PBCTest.PBCHTest;
 import PBCTest.BasicParam;
 import curve.Group;
 import it.unisa.dia.gas.jpbc.Element;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +11,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import scheme.PBCH.RPCH_TMM_2022.PBC;
 import utils.BooleanFormulaParser;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Func.InitialLib;
@@ -21,15 +26,26 @@ public class RPCH_TMM_2022 extends BasicParam {
     @BeforeAll
     static void initTest() {
         InitialLib();
-        System.out.println("RPCH_TMM_2022");
-        System.out.println("\t\t\tSetUp, KeyGen, Revoke, UpdateKeyGen, DecryptKeyGen, Hash, Check, Adapt");
+        try {
+            File_Writer = new BufferedWriter(new FileWriter("./data/PBC/PBCH/RPCH_TMM_2022.txt"));
+            File_Writer.write("RPCH_TMM_2022\t\t\tSetUp, KeyGen, Revoke, UpdateKeyGen, DecryptKeyGen, Hash, Check, Adapt\n");
+            System.out.println("RPCH_TMM_2022");
+            System.out.println("\t\t\tSetUp, KeyGen, Revoke, UpdateKeyGen, DecryptKeyGen, Hash, Check, Adapt");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @DisplayName("test RPCH_TMM_2022")
     @ParameterizedTest(name = "test curve {0} swap_G1G2 {1} CH group = {2} leaf node = {3}")
     @MethodSource("PBCTest.BasicParam#GetPBCInvertGroupn")
     void PBCTest(curve.PBC curve, boolean swap_G1G2, Group group, int n) {
-        System.out.printf("%s.%s (n: %d, swap: %b): ", curve, group, n, swap_G1G2);
+        try {
+            File_Writer.write(String.format("curve:%s.group:%s.n:%d.swap:%b: ", curve, group, n, swap_G1G2));
+            System.out.printf("curve:%s.group:%s.n:%d.swap:%b: ", curve, group, n, swap_G1G2);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         PBC scheme = new PBC();
         PBC.PublicParam pp = new PBC.PublicParam(curve, swap_G1G2, group);
         PBC.MasterPublicKey MPK = new PBC.MasterPublicKey();
@@ -153,7 +169,22 @@ public class RPCH_TMM_2022 extends BasicParam {
 
     @AfterEach
     void afterEach() {
-        for (double x : time_cost) System.out.printf("%.6f, ", x);
-        System.out.println();
+        try {
+            for (double x : time_cost) File_Writer.write(String.format("%.6f, ", x));
+            File_Writer.write("\n");
+            for (double x : time_cost) System.out.printf("%.6f, ", x);
+            System.out.println();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @AfterAll
+    static void afterAll() {
+        try {
+            File_Writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

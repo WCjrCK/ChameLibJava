@@ -92,18 +92,43 @@ public class PBC {
     scheme.CH.CH_ET_BC_CDK_2017.Native CHET;
     ABE.MA_ABE.PBC MA_ABE = new ABE.MA_ABE.PBC();
 
+//    private Element BigInteger2G(Field G, BigInteger m) {
+//        byte[] tmp = new byte[m.toByteArray().length + 2];
+//        tmp[1] = (byte) m.toByteArray().length;
+//        System.arraycopy(m.toByteArray(), 0, tmp, 2, m.toByteArray().length);
+//        return G.newElementFromBytes(tmp);
+//    }
+//
+//    private BigInteger G2BigInteger(Element t) {
+//        byte[] tmp = t.toBytes();
+//        int l = tmp[1];
+//        if(l <= 0 || l + 2 >= tmp.length) throw new RuntimeException("decode error");
+//        return new BigInteger(tmp, 2, l);
+//    }
+
     private Element BigInteger2G(Field G, BigInteger m) {
-        byte[] tmp = new byte[m.toByteArray().length + 2];
-        tmp[1] = (byte) m.toByteArray().length;
-        System.arraycopy(m.toByteArray(), 0, tmp, 2, m.toByteArray().length);
-        return G.newElementFromBytes(tmp);
+        byte[] tmp = new byte[m.toByteArray().length];
+        System.arraycopy(m.toByteArray(), 0, tmp, 0, m.toByteArray().length);
+        byte[] tmp2 = new byte[G.getLengthInBytes()];
+        int l1 = m.toByteArray().length / 2;
+        int l2 = m.toByteArray().length - l1;
+        tmp2[1] = (byte) l1;
+        tmp2[G.getLengthInBytes() / 2 + 1] = (byte) l2;
+        System.arraycopy(tmp, 0, tmp2, 2, l1);
+        System.arraycopy(tmp, l1, tmp2, G.getLengthInBytes() / 2 + 2, l2);
+        return G.newElementFromBytes(tmp2);
     }
 
     private BigInteger G2BigInteger(Element t) {
         byte[] tmp = t.toBytes();
-        int l = tmp[1];
-        if(l <= 0 || l + 2 >= tmp.length) throw new RuntimeException("decode error");
-        return new BigInteger(tmp, 2, l);
+        int l1 = tmp[1];
+        int l2 = tmp[t.getLengthInBytes() / 2 + 1];
+        int l = l1 + l2;
+        if(l <= 0 || l + 4 >= tmp.length) throw new RuntimeException("decode error");
+        byte[] tmp2 = new byte[l];
+        System.arraycopy(tmp, 2, tmp2, 0, l1);
+        System.arraycopy(tmp, t.getLengthInBytes() / 2 + 2, tmp2, l1, l2);
+        return new BigInteger(tmp2, 0, l);
     }
 
     public PBC(int lambda) {

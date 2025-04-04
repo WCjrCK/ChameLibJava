@@ -5,22 +5,29 @@ import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import utils.Hash;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import static utils.Func.InitialLib;
 import static utils.Func.PairingGen;
 
 @SuppressWarnings("rawtypes")
-@Disabled
 public class BasicTimeTest extends BasicParam {
 
     @BeforeAll
     static void initTest() {
         InitialLib();
+        try {
+            File_Writer = new BufferedWriter(new FileWriter("./data/PBC/Basic_Time.txt"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @DisplayName("test PBC operation time cost")
@@ -77,16 +84,27 @@ public class BasicTimeTest extends BasicParam {
 
     @AfterAll
     static void finishTest() {
-        System.out.println("{");
-        for (int i = 0; i < op_time.length; i++) {
-            if(i != 0) System.out.print(",\n");
-            System.out.print("    {");
-            for (int j = 0; j < op_time[i].length; j++) {
-                if(j != 0) System.out.print(", ");
-                System.out.printf("%.6f", op_time[i][j]);
+        try {
+            for (PBC curve : index_map.keySet()) {
+                File_Writer.write(String.format("curve:%s: ", curve));
+                int i = index_map.get(curve);
+                for (int j = 0; j < op_time[i].length; j++) File_Writer.write(String.format("%.6f, ", op_time[i][j]));
+                File_Writer.write("\n");
             }
-            System.out.print("}");
+            System.out.println("{");
+            for (int i = 0; i < op_time.length; i++) {
+                if(i != 0) System.out.print(",\n");
+                System.out.print("    {");
+                for (int j = 0; j < op_time[i].length; j++) {
+                    if(j != 0) System.out.print(", ");
+                    System.out.printf("%.6f", op_time[i][j]);
+                }
+                System.out.print("}");
+            }
+            System.out.println("\n}");
+            File_Writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        System.out.println("\n}");
     }
 }

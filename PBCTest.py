@@ -7,5 +7,5 @@ for scheme_type in ['CH', 'IBCH', 'PBCH']:
             open(f'./data/PBC/{scheme_type}/{filename[:-5]}.txt', 'w')
 
 
-os.system(f'mvn -Dtest=PBCTest.CHTest.CH_KEF_MH_RSA_F_AM_2004 test')
+os.system(f'mvn -Dtest=PBCTest.*Test.*20* test')
 

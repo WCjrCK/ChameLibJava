@@ -48,6 +48,7 @@ public class BasicParam {
     static public List<Integer> BT_leaf_num = List.of(2048, 4096, 8192);
     static public List<Integer> IdentityLen = List.of(64, 128, 256);
     static public List<Integer> RSA_bit_len = List.of(256, 512, 1024);
+    static public List<Integer> RSA_bit_len_small = List.of(64, 128, 256);
     static public List<Integer> Auth_num = List.of(256, 512, 1024);
 
     public static Stream<Arguments> GetPBCCartesianProduct() {
@@ -88,6 +89,12 @@ public class BasicParam {
         return Stream.of(curve.PBC.A, curve.PBC.A1, curve.PBC.E).flatMap(a ->
                 Auth_num.stream().flatMap(b ->
                         RSA_bit_len.stream().flatMap(c -> Stream.of(Arguments.of(a, b, c)))));
+    }
+
+    public static Stream<Arguments> GetPBCSymmAuthSmall() {
+        return Stream.of(curve.PBC.A, curve.PBC.A1, curve.PBC.E).flatMap(a ->
+                Auth_num.stream().flatMap(b ->
+                        RSA_bit_len_small.stream().flatMap(c -> Stream.of(Arguments.of(a, b, c)))));
     }
 
     public static Stream<Arguments> GetPBCSymmAuthBigLambda() {
