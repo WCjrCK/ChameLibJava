@@ -41,8 +41,8 @@ public class CH_KEF_MH_SDH_DL_AM_2004 extends BasicParam {
     @MethodSource("PBCTest.BasicParam#GetPBCCartesianProduct")
     void PBCTest(curve.PBC curve, Group group) {
         try {
-            File_Writer.write(String.format("%s.%s: ", curve, group));
-            System.out.printf("%s.%s: ", curve, group);
+            File_Writer.write(String.format("curve:%s|group:%s: ", curve, group));
+            System.out.printf("curve:%s|group:%s: ", curve, group);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

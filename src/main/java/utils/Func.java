@@ -203,19 +203,17 @@ public class Func {
         } while(res.isZero());
     }
 
-//    public static GT GetMCLGTRandomElement() {
-//        GT res = new GT();
-//        byte[] m = new byte[128];
-//        Random random = new Random();
-//        G1 g1 = new G1();
-//        random.nextBytes(m);
-//        Mcl.hashAndMapToG1(g1, m);
-//        G2 g2 = new G2();
-//        random.nextBytes(m);
-//        Mcl.hashAndMapToG2(g2, m);
-//        Mcl.pairing(res, g1, g2);
-//        return res;
-//    }
+    public static void GetMCLGTRandomElement(GT res) {
+        byte[] m = new byte[128];
+        Random random = new Random();
+        G1 g1 = new G1();
+        random.nextBytes(m);
+        Mcl.hashAndMapToG1(g1, m);
+        G2 g2 = new G2();
+        random.nextBytes(m);
+        Mcl.hashAndMapToG2(g2, m);
+        Mcl.pairing(res, g1, g2);
+    }
 
     public static void GetMCLZrRandomElement(Fr res) {
         do {

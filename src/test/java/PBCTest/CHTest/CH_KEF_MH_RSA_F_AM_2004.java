@@ -40,8 +40,8 @@ public class CH_KEF_MH_RSA_F_AM_2004 extends BasicParam {
     @ValueSource(ints = {256, 512, 1024})
     void NativeTest(int k) {
         try {
-            File_Writer.write(String.format("k = %d: ", k));
-            System.out.printf("k = %d: ", k);
+            File_Writer.write(String.format("k:%d: ", k));
+            System.out.printf("k:%d: ", k);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

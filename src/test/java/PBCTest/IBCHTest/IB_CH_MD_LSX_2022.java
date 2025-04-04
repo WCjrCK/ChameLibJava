@@ -2,12 +2,17 @@ package PBCTest.IBCHTest;
 
 import PBCTest.BasicParam;
 import it.unisa.dia.gas.jpbc.Element;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import scheme.IBCH.IB_CH_MD_LSX_2022.PBC;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Func.InitialLib;
@@ -19,15 +24,26 @@ public class IB_CH_MD_LSX_2022 extends BasicParam {
     @BeforeAll
     static void initTest() {
         InitialLib();
-        System.out.println("IB_CH_MD_LSX_2022");
-        System.out.println("\t\t\tSetUp, KeyGen, Hash, Check, Adapt");
+        try {
+            File_Writer = new BufferedWriter(new FileWriter("./data/PBC/IBCH/IB_CH_MD_LSX_2022.txt"));
+            File_Writer.write("IB_CH_MD_LSX_2022\t\t\tSetUp, KeyGen, Hash, Check, Adapt\n");
+            System.out.println("IB_CH_MD_LSX_2022");
+            System.out.println("\t\t\tSetUp, KeyGen, Hash, Check, Adapt");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @DisplayName("test IB_CH_MD_LSX_2022")
     @ParameterizedTest(name = "test curve {0}")
     @MethodSource("PBCTest.BasicParam#GetPBCSymmetry")
     void PBCTest(curve.PBC curve) {
-        System.out.printf("%s: ", curve);
+        try {
+            File_Writer.write(String.format("curve:%s: ", curve));
+            System.out.printf("curve:%s: ", curve);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         PBC scheme = new PBC();
         PBC.PublicParam pp = new PBC.PublicParam(curve);
         PBC.MasterSecretKey msk = new PBC.MasterSecretKey();
@@ -101,7 +117,22 @@ public class IB_CH_MD_LSX_2022 extends BasicParam {
 
     @AfterEach
     void afterEach() {
-        for (double x : time_cost) System.out.printf("%.6f, ", x);
-        System.out.println();
+        try {
+            for (double x : time_cost) File_Writer.write(String.format("%.6f, ", x));
+            File_Writer.write("\n");
+            for (double x : time_cost) System.out.printf("%.6f, ", x);
+            System.out.println();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @AfterAll
+    static void afterAll() {
+        try {
+            File_Writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -64,11 +64,14 @@ public class Hash {
         Mcl.hashAndMapToG2(res, Hash.HASH(m));
     }
 
-//    static public GT H_MCL_GT_1(String m) {
-//        GT res = new GT();
-//        Mcl.hashAndMapToG2(res, Hash.HASH(m));
-//        return res;
-//    }
+    static public void H_MCL_GT_1(GT res, String m) {
+        G1 tmp1 = new G1();
+        G2 tmp2 = new G2();
+        var HM = Hash.HASH(m);
+        Mcl.hashAndMapToG1(tmp1, HM);
+        Mcl.hashAndMapToG2(tmp2, HM);
+        Mcl.pairing(res, tmp1, tmp2);
+    }
 
     static public void H_MCL_Zr_1(Fr res, String m) {
         res.setHashOf(Hash.HASH(m));

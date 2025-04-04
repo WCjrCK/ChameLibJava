@@ -40,8 +40,8 @@ public class CH_ET_BC_CDK_2017 extends BasicParam {
     @ValueSource(ints = {256, 512, 1024})
     void NativeTest(int k) {
         try {
-            File_Writer.write(String.format("k = %d: ", k));
-            System.out.printf("k = %d: ", k);
+            File_Writer.write(String.format("k:%d: ", k));
+            System.out.printf("k:%d: ", k);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
