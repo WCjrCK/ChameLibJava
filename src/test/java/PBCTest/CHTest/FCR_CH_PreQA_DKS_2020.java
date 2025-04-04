@@ -3,12 +3,17 @@ package PBCTest.CHTest;
 import PBCTest.BasicParam;
 import curve.Group;
 import it.unisa.dia.gas.jpbc.Element;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import scheme.CH.FCR_CH_PreQA_DKS_2020.PBC;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Func.InitialLib;
@@ -20,15 +25,26 @@ public class FCR_CH_PreQA_DKS_2020 extends BasicParam {
     @BeforeAll
     static void initTest() {
         InitialLib();
-        System.out.println("FCR_CH_PreQA_DKS_2020");
-        System.out.println("\t\t\tKeyGen, Hash, Check, Adapt");
+        try {
+            File_Writer = new BufferedWriter(new FileWriter("./data/PBC/CH/FCR_CH_PreQA_DKS_2020.txt"));
+            File_Writer.write("FCR_CH_PreQA_DKS_2020\t\t\tKeyGen, Hash, Check, Adapt\n");
+            System.out.println("FCR_CH_PreQA_DKS_2020");
+            System.out.println("\t\t\tKeyGen, Hash, Check, Adapt");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @DisplayName("test FCR_CH_PreQA_DKS_2020")
     @ParameterizedTest(name = "test curve {0} group {1}")
     @MethodSource("PBCTest.BasicParam#GetPBCCartesianProduct")
     void PBCTest(curve.PBC curve, Group group) {
-        System.out.printf("%s.%s: ", curve, group);
+        try {
+            File_Writer.write(String.format("%s.%s: ", curve, group));
+            System.out.printf("%s.%s: ", curve, group);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         PBC scheme = new PBC();
         PBC.PublicParam pp = new PBC.PublicParam(curve, group);
 
@@ -93,7 +109,22 @@ public class FCR_CH_PreQA_DKS_2020 extends BasicParam {
 
     @AfterEach
     void afterEach() {
-        for (double x : time_cost) System.out.printf("%.6f, ", x);
-        System.out.println();
+        try {
+            for (double x : time_cost) File_Writer.write(String.format("%.6f, ", x));
+            File_Writer.write("\n");
+            for (double x : time_cost) System.out.printf("%.6f, ", x);
+            System.out.println();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @AfterAll
+    static void afterAll() {
+        try {
+            File_Writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
