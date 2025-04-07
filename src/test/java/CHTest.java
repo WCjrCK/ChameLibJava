@@ -475,6 +475,45 @@ public class CHTest {
                     assertTrue(scheme.Check(h2, r1_p, pp, pk, L2, m1), "Adapt(m1) valid");
                     assertFalse(scheme.Check(h2, r1_p, pp, pk, L1, m1), "not L1");
                 }
+                {
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.PublicParam pp = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.PublicParam();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.PublicKey pk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.PublicKey();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.SecretKey sk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.SecretKey();
+                    scheme.KeyGen(pk, sk, pp);
+                    Fr m1 = new Fr();
+                    pp.GP.GetZrElement(m1);
+                    Fr m2 = new Fr();
+                    pp.GP.GetZrElement(m2);
+                    Fr L1 = new Fr();
+                    pp.GP.GetZrElement(L1);
+                    Fr L2 = new Fr();
+                    pp.GP.GetZrElement(L2);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.HashValue h1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.HashValue();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.HashValue h2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.HashValue();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness r1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness r2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness();
+                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness r1_p = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness();
+                    scheme.Hash(h1, r1, pp, pk, L1, m1);
+                    assertTrue(scheme.Check(h1, r1, pp, pk, L1, m1), "H(L1, m1) valid");
+                    assertFalse(scheme.Check(h1, r1, pp, pk, L2, m1), "not H(L2, m1)");
+                    scheme.Hash(h2, r2, pp, pk, L2, m2);
+                    assertTrue(scheme.Check(h2, r2, pp, pk, L2, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, r2, pp, pk, L1, m2), "not H(L1, m2)");
+
+                    assertFalse(scheme.Check(h1, r1, pp, pk, L2, m2), "not H(m1)");
+                    assertFalse(scheme.Check(h2, r2, pp, pk, L1, m1), "not H(m2)");
+
+                    scheme.Adapt(r1_p, h1, r1, pp, pk, sk, L1, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, pp, pk, L1, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h1, r1_p, pp, pk, L2, m2), "not L2");
+
+                    scheme.Adapt(r1_p, h2, r2, pp, pk, sk, L2, m2, m1);
+                    assertTrue(scheme.Check(h2, r1_p, pp, pk, L2, m1), "Adapt(m1) valid");
+                    assertFalse(scheme.Check(h2, r1_p, pp, pk, L1, m1), "not L1");
+                }
             }
         }
 
@@ -613,6 +652,50 @@ public class CHTest {
                     scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
                     scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r1_p = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
                     scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r1_pp = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
+                    scheme.Hash(h1, r1, L1, PP, LM, pk, m1);
+                    assertTrue(scheme.Check(h1, r1, PP, pk, L1, m1), "H(L1, m1) valid");
+                    assertFalse(scheme.Check(h1, r1, PP, pk, L2, m1), "not H(L2, m1)");
+
+                    scheme.Hash(h2, r2, L2, PP, LM, pk, m2);
+                    assertTrue(scheme.Check(h2, r2, PP, pk, L2, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, r2, PP, pk, L1, m2), "not H(L1, m2)");
+
+                    assertFalse(scheme.Check(h1, r1, PP, pk, L2, m2), "not H(m1)");
+                    assertFalse(scheme.Check(h2, r2, PP, pk, L1, m1), "not H(m2)");
+
+                    scheme.UForge(r1_p, h1, r1, L1, PP, pk, sk, m1, m3);
+                    assertTrue(scheme.Check(h1, r1_p, PP, pk, L1, m3), "Adapt(m3) valid");
+
+                    scheme.UForge(r1_p, h1, r1, L1, PP, pk, sk, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, PP, pk, L1, m2), "Adapt(m2) valid");
+
+                    scheme.IForge(r1_pp, r1, r1_p, m1, m2, m3);
+                    assertTrue(scheme.Check(h1, r1_pp, PP, pk, L1, m3), "Adapt(m3) valid");
+                }{
+                    // BadCaseTest#MCL_Bad_Case#Case1
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicParam PP = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicParam();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.LabelManager LM = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.LabelManager(PP);
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT scheme = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicKey pk = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicKey();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.SecretKey sk = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.SecretKey();
+                    scheme.KeyGen(pk, sk, PP, LM);
+                    Fr m1 = new Fr();
+                    PP.GP.GetZrElement(m1);
+                    Fr m2 = new Fr();
+                    PP.GP.GetZrElement(m2);
+                    Fr m3 = new Fr();
+                    PP.GP.GetZrElement(m3);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+                    assertFalse(m1.equals(m3), "m1 != m3");
+                    assertFalse(m2.equals(m3), "m2 != m3");
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Label L1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Label();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Label L2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Label();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.HashValue h1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.HashValue();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.HashValue h2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.HashValue();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness r1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness r2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness r1_p = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness();
+                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness r1_pp = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness();
                     scheme.Hash(h1, r1, L1, PP, LM, pk, m1);
                     assertTrue(scheme.Check(h1, r1, PP, pk, L1, m1), "H(L1, m1) valid");
                     assertFalse(scheme.Check(h1, r1, PP, pk, L2, m1), "not H(L2, m1)");
@@ -1007,6 +1090,43 @@ public class CHTest {
                     assertTrue(scheme.Check(h1, r1_p, SP, L1, m2), "Adapt(m2) valid");
                     assertFalse(scheme.Check(h2, r1_p, SP, L1, m1), "not Adapt(m1)");
                 }
+                {
+                    scheme.CH.CH_KEF_CZK_2004.MCL_GT scheme = new scheme.CH.CH_KEF_CZK_2004.MCL_GT();
+                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.PublicParam SP = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.PublicParam();
+                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.PublicKey pk = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.PublicKey();
+                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.SecretKey sk = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.SecretKey();
+                    scheme.KeyGen(pk, sk, SP);
+                    Fr m1 = new Fr();
+                    SP.GP.GetZrElement(m1);
+                    Fr m2 = new Fr();
+                    SP.GP.GetZrElement(m2);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+                    GT L1 = new GT();
+                    SP.GP.GetGElement(L1);
+                    GT L2 = new GT();
+                    SP.GP.GetGElement(L2);
+
+                    assertFalse(L1.equals(L2), "L1 != L2");
+                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.HashValue h1 = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.HashValue();
+                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.HashValue h2 = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.HashValue();
+                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.Randomness r1 = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.Randomness();
+                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.Randomness r2 = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.Randomness();
+                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.Randomness r1_p = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.Randomness();
+                    scheme.Hash(h1, r1, SP, pk, L1, m1);
+                    assertTrue(scheme.Check(h1, r1, SP, L1, m1), "H(L1, m1) valid");
+                    assertFalse(scheme.Check(h1, r1, SP, L2, m1), "not H(L2, m1)");
+
+                    scheme.Hash(h2, r2, SP, pk, L2, m2);
+                    assertTrue(scheme.Check(h2, r2, SP, L2, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, r2, SP, L1, m2), "not H(L1, m2)");
+
+                    assertFalse(scheme.Check(h1, r1, SP, L2, m2), "not H(m1)");
+                    assertFalse(scheme.Check(h2, r2, SP, L1, m1), "not H(m2)");
+
+                    scheme.Adapt(r1_p, r1, SP, sk, L1, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, SP, L1, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h2, r1_p, SP, L1, m1), "not Adapt(m1)");
+                }
             }
         }
     }
@@ -1131,6 +1251,42 @@ public class CHTest {
                     assertTrue(scheme.Check(h1, r1_p, SP, pk, L1, m2), "Adapt(m2) valid");
                     assertFalse(scheme.Check(h2, r1_p, SP, pk, L1, m1), "not Adapt(m1)");
                 }
+                {
+                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT scheme = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT();
+                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.PublicParam SP = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.PublicParam();
+                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.PublicKey pk = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.PublicKey();
+                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.SecretKey sk = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.SecretKey();
+                    scheme.KeyGen(pk, sk, SP);
+                    Fr m1 = new Fr();
+                    SP.GP.GetZrElement(m1);
+                    Fr m2 = new Fr();
+                    SP.GP.GetZrElement(m2);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+                    Fr L1 = new Fr();
+                    SP.GP.GetZrElement(L1);
+                    Fr L2 = new Fr();
+                    SP.GP.GetZrElement(L2);
+                    assertFalse(L1.equals(L2), "L1 != L2");
+                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.HashValue h1 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.HashValue();
+                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.HashValue h2 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.HashValue();
+                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness r1 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness();
+                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness r2 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness();
+                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness r1_p = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness();
+                    scheme.Hash(h1, r1, SP, pk, L1, m1);
+                    assertTrue(scheme.Check(h1, r1, SP, pk, L1, m1), "H(L1, m1) valid");
+                    assertFalse(scheme.Check(h1, r1, SP, pk, L2, m1), "not H(L2, m1)");
+
+                    scheme.Hash(h2, r2, SP, pk, L2, m2);
+                    assertTrue(scheme.Check(h2, r2, SP, pk, L2, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, r2, SP, pk, L1, m2), "not H(L1, m2)");
+
+                    assertFalse(scheme.Check(h1, r1, SP, pk, L2, m2), "not H(m1)");
+                    assertFalse(scheme.Check(h2, r2, SP, pk, L1, m1), "not H(m2)");
+
+                    scheme.Adapt(r1_p, r1, SP, pk, sk, L1, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, SP, pk, L1, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h2, r1_p, SP, pk, L1, m1), "not Adapt(m1)");
+                }
             }
         }
     }
@@ -1222,6 +1378,34 @@ public class CHTest {
                     scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness r1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness();
                     scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness r2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness();
                     scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness r1_p = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness();
+                    scheme.Hash(h1, r1, pp, pk, m1);
+                    assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
+                    assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
+                    scheme.Hash(h2, r2, pp, pk, m2);
+                    assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
+
+                    scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
+                }
+                {
+                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT scheme = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT();
+                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicParam();
+                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicKey pk = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicKey();
+                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.SecretKey sk = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.SecretKey();
+                    scheme.KeyGen(pk, sk, pp);
+                    Fr m1 = new Fr();
+                    pp.GP.GetZrElement(m1);
+                    Fr m2 = new Fr();
+                    pp.GP.GetZrElement(m2);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+
+                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue h1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue();
+                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue h2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue();
+                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness r1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness();
+                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness r2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness();
+                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness r1_p = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness();
                     scheme.Hash(h1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -1335,6 +1519,34 @@ public class CHTest {
                     assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
                     assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
                 }
+                {
+                    scheme.CH.CR_CH_DSS_2020.MCL_GT scheme = new scheme.CH.CR_CH_DSS_2020.MCL_GT();
+                    scheme.CH.CR_CH_DSS_2020.MCL_GT.PublicParam pp = new scheme.CH.CR_CH_DSS_2020.MCL_GT.PublicParam();
+                    scheme.CH.CR_CH_DSS_2020.MCL_GT.PublicKey pk = new scheme.CH.CR_CH_DSS_2020.MCL_GT.PublicKey();
+                    scheme.CH.CR_CH_DSS_2020.MCL_GT.SecretKey sk = new scheme.CH.CR_CH_DSS_2020.MCL_GT.SecretKey();
+                    scheme.KeyGen(pk, sk, pp);
+                    GT m1 = new GT();
+                    pp.GP.GetGElement(m1);
+                    GT m2 = new GT();
+                    pp.GP.GetGElement(m2);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+
+                    scheme.CH.CR_CH_DSS_2020.MCL_GT.HashValue h1 = new scheme.CH.CR_CH_DSS_2020.MCL_GT.HashValue();
+                    scheme.CH.CR_CH_DSS_2020.MCL_GT.HashValue h2 = new scheme.CH.CR_CH_DSS_2020.MCL_GT.HashValue();
+                    scheme.CH.CR_CH_DSS_2020.MCL_GT.Randomness r1 = new scheme.CH.CR_CH_DSS_2020.MCL_GT.Randomness();
+                    scheme.CH.CR_CH_DSS_2020.MCL_GT.Randomness r2 = new scheme.CH.CR_CH_DSS_2020.MCL_GT.Randomness();
+                    scheme.CH.CR_CH_DSS_2020.MCL_GT.Randomness r1_p = new scheme.CH.CR_CH_DSS_2020.MCL_GT.Randomness();
+                    scheme.Hash(h1, r1, pp, pk, m1);
+                    assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
+                    assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
+                    scheme.Hash(h2, r2, pp, pk, m2);
+                    assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
+
+                    scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
+                }
             }
         }
     }
@@ -1426,6 +1638,34 @@ public class CHTest {
                     scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness r1 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness();
                     scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness r2 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness();
                     scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness r1_p = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness();
+                    scheme.Hash(h1, r1, pp, pk, m1);
+                    assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
+                    assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
+                    scheme.Hash(h2, r2, pp, pk, m2);
+                    assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
+
+                    scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
+                    assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
+                }
+                {
+                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT scheme = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT();
+                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.PublicParam pp = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.PublicParam();
+                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.PublicKey pk = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.PublicKey();
+                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.SecretKey sk = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.SecretKey();
+                    scheme.KeyGen(pk, sk, pp);
+                    Fr m1 = new Fr();
+                    pp.GP.GetZrElement(m1);
+                    Fr m2 = new Fr();
+                    pp.GP.GetZrElement(m2);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+
+                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.HashValue h1 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.HashValue();
+                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.HashValue h2 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.HashValue();
+                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness r1 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness();
+                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness r2 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness();
+                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness r1_p = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness();
                     scheme.Hash(h1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");

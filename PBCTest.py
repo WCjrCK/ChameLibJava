@@ -13,7 +13,8 @@ done = [
     'CH_KEF_DLP_LLA_2012',
     'CH_KEF_MH_RSA_F_AM_2004',
     'CH_KEF_MH_RSANN_F_AM_2004',
-    'CH_KEF_MH_SDH_DL_AM_2004'
+    'CH_KEF_MH_SDH_DL_AM_2004',
+    'CHET_RSA_CDK_2017'
 ] + late
 
 os.system(f'mvn -Dtest=PBCTest.BasicTimeTest test')
