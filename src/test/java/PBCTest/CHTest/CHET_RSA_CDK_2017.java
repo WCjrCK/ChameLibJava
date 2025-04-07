@@ -38,7 +38,7 @@ public class CHET_RSA_CDK_2017 extends BasicParam {
 
     @DisplayName("test CHET_RSA_CDK_2017")
     @ParameterizedTest(name = "test k = {0}")
-    @ValueSource(ints = {256, 512, 1024})
+    @ValueSource(ints = {128, 256, 512})
     void NativeTest(int k) {
         try {
             File_Writer.write(String.format("k:%d: ", k));

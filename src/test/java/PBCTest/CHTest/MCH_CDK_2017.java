@@ -38,7 +38,7 @@ public class MCH_CDK_2017 extends BasicParam {
 
     @DisplayName("test MCH_CDK_2017")
     @ParameterizedTest(name = "test k = {0}")
-    @ValueSource(ints = {256, 512, 1024})
+    @ValueSource(ints = {256, 512, 1024, 2048})
     void NativeTest(int k) {
         try {
             File_Writer.write(String.format("k:%d: ", k));

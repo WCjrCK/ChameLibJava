@@ -39,7 +39,7 @@ public class CH_KEF_NoMH_AM_2004 extends BasicParam {
 
     @DisplayName("test CH_KEF_NoMH_AM_2004")
     @ParameterizedTest(name = "test k = {0}")
-    @ValueSource(ints = {256, 512, 1024})
+    @ValueSource(ints = {128, 256, 512})
     void NativeTest(int k) {
         try {
             File_Writer.write(String.format("k:%d: ", k));
