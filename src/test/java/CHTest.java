@@ -1720,6 +1720,110 @@ public class CHTest {
                 assertTrue(scheme.Check(h1, er1_p, pp, pk, m2), "Adapt(m2) valid");
                 assertFalse(scheme.Check(h1, er1_p, pp, pk, m1), "not Adapt(m1)");
             }
+
+            @DisplayName("test MCL impl")
+            @ParameterizedTest(name = "test curve {0}")
+            // BadCaseTest#MCL_Bad_Case#Case2
+            @EnumSource(names = {"BN254", "BLS12_381"})
+            void MCLTest(MCL curve) {
+                Func.MCLInit(curve);
+                {
+                    scheme.CH.CH_AMV_2017.MCL_G1 scheme = new scheme.CH.CH_AMV_2017.MCL_G1();
+                    scheme.CH.CH_AMV_2017.MCL_G1.PublicParam pp = new scheme.CH.CH_AMV_2017.MCL_G1.PublicParam();
+                    scheme.CH.CH_AMV_2017.MCL_G1.PublicKey pk = new scheme.CH.CH_AMV_2017.MCL_G1.PublicKey();
+                    scheme.CH.CH_AMV_2017.MCL_G1.SecretKey sk = new scheme.CH.CH_AMV_2017.MCL_G1.SecretKey();
+                    scheme.SetUp(pp);
+                    scheme.KeyGen(pk, sk, pp);
+                    Fr m1 = new Fr();
+                    pp.GP.GetZrElement(m1);
+                    Fr m2 = new Fr();
+                    pp.GP.GetZrElement(m2);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+
+                    scheme.CH.CH_AMV_2017.MCL_G1.HashValue h1 = new scheme.CH.CH_AMV_2017.MCL_G1.HashValue();
+                    scheme.CH.CH_AMV_2017.MCL_G1.HashValue h2 = new scheme.CH.CH_AMV_2017.MCL_G1.HashValue();
+                    scheme.CH.CH_AMV_2017.MCL_G1.Randomness r1 = new scheme.CH.CH_AMV_2017.MCL_G1.Randomness();
+                    scheme.CH.CH_AMV_2017.MCL_G1.Randomness r2 = new scheme.CH.CH_AMV_2017.MCL_G1.Randomness();
+                    scheme.CH.CH_AMV_2017.MCL_G1.Randomness r1_p = new scheme.CH.CH_AMV_2017.MCL_G1.Randomness();
+                    scheme.CH.CH_AMV_2017.MCL_G1.EncRandomness er1 = new scheme.CH.CH_AMV_2017.MCL_G1.EncRandomness();
+                    scheme.CH.CH_AMV_2017.MCL_G1.EncRandomness er2 = new scheme.CH.CH_AMV_2017.MCL_G1.EncRandomness();
+                    scheme.CH.CH_AMV_2017.MCL_G1.EncRandomness er1_p = new scheme.CH.CH_AMV_2017.MCL_G1.EncRandomness();
+                    scheme.Hash(h1, er1, r1, pp, pk, m1);
+                    assertTrue(scheme.Check(h1, er1, pp, pk, m1), "H(m1) valid");
+                    assertFalse(scheme.Check(h1, er1, pp, pk, m2), "not H(m1)");
+                    scheme.Hash(h2, er2, r2, pp, pk, m2);
+                    assertTrue(scheme.Check(h2, er2, pp, pk, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, er2, pp, pk, m1), "not H(m2)");
+
+                    scheme.Adapt(er1_p, r1_p, h1, er1, pp, pk, sk, m1, m2);
+                    assertTrue(scheme.Check(h1, er1_p, pp, pk, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h1, er1_p, pp, pk, m1), "not Adapt(m1)");
+                }
+                {
+                    scheme.CH.CH_AMV_2017.MCL_G2 scheme = new scheme.CH.CH_AMV_2017.MCL_G2();
+                    scheme.CH.CH_AMV_2017.MCL_G2.PublicParam pp = new scheme.CH.CH_AMV_2017.MCL_G2.PublicParam();
+                    scheme.CH.CH_AMV_2017.MCL_G2.PublicKey pk = new scheme.CH.CH_AMV_2017.MCL_G2.PublicKey();
+                    scheme.CH.CH_AMV_2017.MCL_G2.SecretKey sk = new scheme.CH.CH_AMV_2017.MCL_G2.SecretKey();
+                    scheme.SetUp(pp);
+                    scheme.KeyGen(pk, sk, pp);
+                    Fr m1 = new Fr();
+                    pp.GP.GetZrElement(m1);
+                    Fr m2 = new Fr();
+                    pp.GP.GetZrElement(m2);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+
+                    scheme.CH.CH_AMV_2017.MCL_G2.HashValue h1 = new scheme.CH.CH_AMV_2017.MCL_G2.HashValue();
+                    scheme.CH.CH_AMV_2017.MCL_G2.HashValue h2 = new scheme.CH.CH_AMV_2017.MCL_G2.HashValue();
+                    scheme.CH.CH_AMV_2017.MCL_G2.Randomness r1 = new scheme.CH.CH_AMV_2017.MCL_G2.Randomness();
+                    scheme.CH.CH_AMV_2017.MCL_G2.Randomness r2 = new scheme.CH.CH_AMV_2017.MCL_G2.Randomness();
+                    scheme.CH.CH_AMV_2017.MCL_G2.Randomness r1_p = new scheme.CH.CH_AMV_2017.MCL_G2.Randomness();
+                    scheme.CH.CH_AMV_2017.MCL_G2.EncRandomness er1 = new scheme.CH.CH_AMV_2017.MCL_G2.EncRandomness();
+                    scheme.CH.CH_AMV_2017.MCL_G2.EncRandomness er2 = new scheme.CH.CH_AMV_2017.MCL_G2.EncRandomness();
+                    scheme.CH.CH_AMV_2017.MCL_G2.EncRandomness er1_p = new scheme.CH.CH_AMV_2017.MCL_G2.EncRandomness();
+                    scheme.Hash(h1, er1, r1, pp, pk, m1);
+                    assertTrue(scheme.Check(h1, er1, pp, pk, m1), "H(m1) valid");
+                    assertFalse(scheme.Check(h1, er1, pp, pk, m2), "not H(m1)");
+                    scheme.Hash(h2, er2, r2, pp, pk, m2);
+                    assertTrue(scheme.Check(h2, er2, pp, pk, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, er2, pp, pk, m1), "not H(m2)");
+
+                    scheme.Adapt(er1_p, r1_p, h1, er1, pp, pk, sk, m1, m2);
+                    assertTrue(scheme.Check(h1, er1_p, pp, pk, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h1, er1_p, pp, pk, m1), "not Adapt(m1)");
+                }
+                {
+                    scheme.CH.CH_AMV_2017.MCL_GT scheme = new scheme.CH.CH_AMV_2017.MCL_GT();
+                    scheme.CH.CH_AMV_2017.MCL_GT.PublicParam pp = new scheme.CH.CH_AMV_2017.MCL_GT.PublicParam();
+                    scheme.CH.CH_AMV_2017.MCL_GT.PublicKey pk = new scheme.CH.CH_AMV_2017.MCL_GT.PublicKey();
+                    scheme.CH.CH_AMV_2017.MCL_GT.SecretKey sk = new scheme.CH.CH_AMV_2017.MCL_GT.SecretKey();
+                    scheme.SetUp(pp);
+                    scheme.KeyGen(pk, sk, pp);
+                    Fr m1 = new Fr();
+                    pp.GP.GetZrElement(m1);
+                    Fr m2 = new Fr();
+                    pp.GP.GetZrElement(m2);
+                    assertFalse(m1.equals(m2), "m1 != m2");
+
+                    scheme.CH.CH_AMV_2017.MCL_GT.HashValue h1 = new scheme.CH.CH_AMV_2017.MCL_GT.HashValue();
+                    scheme.CH.CH_AMV_2017.MCL_GT.HashValue h2 = new scheme.CH.CH_AMV_2017.MCL_GT.HashValue();
+                    scheme.CH.CH_AMV_2017.MCL_GT.Randomness r1 = new scheme.CH.CH_AMV_2017.MCL_GT.Randomness();
+                    scheme.CH.CH_AMV_2017.MCL_GT.Randomness r2 = new scheme.CH.CH_AMV_2017.MCL_GT.Randomness();
+                    scheme.CH.CH_AMV_2017.MCL_GT.Randomness r1_p = new scheme.CH.CH_AMV_2017.MCL_GT.Randomness();
+                    scheme.CH.CH_AMV_2017.MCL_GT.EncRandomness er1 = new scheme.CH.CH_AMV_2017.MCL_GT.EncRandomness();
+                    scheme.CH.CH_AMV_2017.MCL_GT.EncRandomness er2 = new scheme.CH.CH_AMV_2017.MCL_GT.EncRandomness();
+                    scheme.CH.CH_AMV_2017.MCL_GT.EncRandomness er1_p = new scheme.CH.CH_AMV_2017.MCL_GT.EncRandomness();
+                    scheme.Hash(h1, er1, r1, pp, pk, m1);
+                    assertTrue(scheme.Check(h1, er1, pp, pk, m1), "H(m1) valid");
+                    assertFalse(scheme.Check(h1, er1, pp, pk, m2), "not H(m1)");
+                    scheme.Hash(h2, er2, r2, pp, pk, m2);
+                    assertTrue(scheme.Check(h2, er2, pp, pk, m2), "H(m2) valid");
+                    assertFalse(scheme.Check(h2, er2, pp, pk, m1), "not H(m2)");
+
+                    scheme.Adapt(er1_p, r1_p, h1, er1, pp, pk, sk, m1, m2);
+                    assertTrue(scheme.Check(h1, er1_p, pp, pk, m2), "Adapt(m2) valid");
+                    assertFalse(scheme.Check(h1, er1_p, pp, pk, m1), "not Adapt(m1)");
+                }
+            }
         }
     }
 }

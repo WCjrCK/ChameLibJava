@@ -1,9 +1,12 @@
 import AE.RSA.Native;
 import curve.Group;
+import curve.MCL;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import utils.Func;
 
 import java.math.BigInteger;
 import java.util.EnumSet;
@@ -81,6 +84,104 @@ public class AETest {
                 scheme.Decrypt(pt_p, pp, sk2, ct2);
                 assertTrue(pt_p.isEqual(pt2), "decrypt(c2) = m2");
             }
+
+            @DisplayName("test MCL impl")
+            @ParameterizedTest(name = "test curve {0}")
+            // BadCaseTest#MCL_Bad_Case#Case2
+            @EnumSource(names = {"BN254", "BLS12_381"})
+            void MCLTest(MCL curve) {
+                Func.MCLInit(curve);
+                {
+                    AE.PKE_CCA_AMV_2017.MCL_G1 scheme = new AE.PKE_CCA_AMV_2017.MCL_G1();
+                    AE.PKE_CCA_AMV_2017.MCL_G1.PublicParam pp = new AE.PKE_CCA_AMV_2017.MCL_G1.PublicParam();
+                    scheme.SetUp(pp);
+                    AE.PKE_CCA_AMV_2017.MCL_G1.PublicKey pk1 = new AE.PKE_CCA_AMV_2017.MCL_G1.PublicKey();
+                    AE.PKE_CCA_AMV_2017.MCL_G1.SecretKey sk1 = new AE.PKE_CCA_AMV_2017.MCL_G1.SecretKey();
+                    scheme.KeyGen(pk1, sk1, pp);
+                    AE.PKE_CCA_AMV_2017.MCL_G1.PublicKey pk2 = new AE.PKE_CCA_AMV_2017.MCL_G1.PublicKey();
+                    AE.PKE_CCA_AMV_2017.MCL_G1.SecretKey sk2 = new AE.PKE_CCA_AMV_2017.MCL_G1.SecretKey();
+                    scheme.KeyGen(pk2, sk2, pp);
+
+                    AE.PKE_CCA_AMV_2017.MCL_G1.PlainText pt1 = new AE.PKE_CCA_AMV_2017.MCL_G1.PlainText();
+                    pp.GP.GetZrElement(pt1.m);
+                    AE.PKE_CCA_AMV_2017.MCL_G1.PlainText pt2 = new AE.PKE_CCA_AMV_2017.MCL_G1.PlainText();
+                    pp.GP.GetZrElement(pt2.m);
+                    AE.PKE_CCA_AMV_2017.MCL_G1.PlainText pt_p = new AE.PKE_CCA_AMV_2017.MCL_G1.PlainText();
+
+                    AE.PKE_CCA_AMV_2017.MCL_G1.CipherText ct1 = new AE.PKE_CCA_AMV_2017.MCL_G1.CipherText();
+                    AE.PKE_CCA_AMV_2017.MCL_G1.CipherText ct2 = new AE.PKE_CCA_AMV_2017.MCL_G1.CipherText();
+
+                    scheme.Encrypt(ct1, pp, pk1, pt1);
+                    scheme.Encrypt(ct2, pp, pk2, pt2);
+
+                    scheme.Decrypt(pt_p, pp, sk1, ct1);
+                    assertTrue(pt_p.isEqual(pt1), "decrypt(c1) = m1");
+                    assertFalse(pt_p.isEqual(pt2), "decrypt(c1) != m2");
+
+                    scheme.Decrypt(pt_p, pp, sk2, ct2);
+                    assertTrue(pt_p.isEqual(pt2), "decrypt(c2) = m2");
+                }
+                {
+                    AE.PKE_CCA_AMV_2017.MCL_G2 scheme = new AE.PKE_CCA_AMV_2017.MCL_G2();
+                    AE.PKE_CCA_AMV_2017.MCL_G2.PublicParam pp = new AE.PKE_CCA_AMV_2017.MCL_G2.PublicParam();
+                    scheme.SetUp(pp);
+                    AE.PKE_CCA_AMV_2017.MCL_G2.PublicKey pk1 = new AE.PKE_CCA_AMV_2017.MCL_G2.PublicKey();
+                    AE.PKE_CCA_AMV_2017.MCL_G2.SecretKey sk1 = new AE.PKE_CCA_AMV_2017.MCL_G2.SecretKey();
+                    scheme.KeyGen(pk1, sk1, pp);
+                    AE.PKE_CCA_AMV_2017.MCL_G2.PublicKey pk2 = new AE.PKE_CCA_AMV_2017.MCL_G2.PublicKey();
+                    AE.PKE_CCA_AMV_2017.MCL_G2.SecretKey sk2 = new AE.PKE_CCA_AMV_2017.MCL_G2.SecretKey();
+                    scheme.KeyGen(pk2, sk2, pp);
+
+                    AE.PKE_CCA_AMV_2017.MCL_G2.PlainText pt1 = new AE.PKE_CCA_AMV_2017.MCL_G2.PlainText();
+                    pp.GP.GetZrElement(pt1.m);
+                    AE.PKE_CCA_AMV_2017.MCL_G2.PlainText pt2 = new AE.PKE_CCA_AMV_2017.MCL_G2.PlainText();
+                    pp.GP.GetZrElement(pt2.m);
+                    AE.PKE_CCA_AMV_2017.MCL_G2.PlainText pt_p = new AE.PKE_CCA_AMV_2017.MCL_G2.PlainText();
+
+                    AE.PKE_CCA_AMV_2017.MCL_G2.CipherText ct1 = new AE.PKE_CCA_AMV_2017.MCL_G2.CipherText();
+                    AE.PKE_CCA_AMV_2017.MCL_G2.CipherText ct2 = new AE.PKE_CCA_AMV_2017.MCL_G2.CipherText();
+
+                    scheme.Encrypt(ct1, pp, pk1, pt1);
+                    scheme.Encrypt(ct2, pp, pk2, pt2);
+
+                    scheme.Decrypt(pt_p, pp, sk1, ct1);
+                    assertTrue(pt_p.isEqual(pt1), "decrypt(c1) = m1");
+                    assertFalse(pt_p.isEqual(pt2), "decrypt(c1) != m2");
+
+                    scheme.Decrypt(pt_p, pp, sk2, ct2);
+                    assertTrue(pt_p.isEqual(pt2), "decrypt(c2) = m2");
+                }
+                {
+                    AE.PKE_CCA_AMV_2017.MCL_GT scheme = new AE.PKE_CCA_AMV_2017.MCL_GT();
+                    AE.PKE_CCA_AMV_2017.MCL_GT.PublicParam pp = new AE.PKE_CCA_AMV_2017.MCL_GT.PublicParam();
+                    scheme.SetUp(pp);
+                    AE.PKE_CCA_AMV_2017.MCL_GT.PublicKey pk1 = new AE.PKE_CCA_AMV_2017.MCL_GT.PublicKey();
+                    AE.PKE_CCA_AMV_2017.MCL_GT.SecretKey sk1 = new AE.PKE_CCA_AMV_2017.MCL_GT.SecretKey();
+                    scheme.KeyGen(pk1, sk1, pp);
+                    AE.PKE_CCA_AMV_2017.MCL_GT.PublicKey pk2 = new AE.PKE_CCA_AMV_2017.MCL_GT.PublicKey();
+                    AE.PKE_CCA_AMV_2017.MCL_GT.SecretKey sk2 = new AE.PKE_CCA_AMV_2017.MCL_GT.SecretKey();
+                    scheme.KeyGen(pk2, sk2, pp);
+
+                    AE.PKE_CCA_AMV_2017.MCL_GT.PlainText pt1 = new AE.PKE_CCA_AMV_2017.MCL_GT.PlainText();
+                    pp.GP.GetZrElement(pt1.m);
+                    AE.PKE_CCA_AMV_2017.MCL_GT.PlainText pt2 = new AE.PKE_CCA_AMV_2017.MCL_GT.PlainText();
+                    pp.GP.GetZrElement(pt2.m);
+                    AE.PKE_CCA_AMV_2017.MCL_GT.PlainText pt_p = new AE.PKE_CCA_AMV_2017.MCL_GT.PlainText();
+
+                    AE.PKE_CCA_AMV_2017.MCL_GT.CipherText ct1 = new AE.PKE_CCA_AMV_2017.MCL_GT.CipherText();
+                    AE.PKE_CCA_AMV_2017.MCL_GT.CipherText ct2 = new AE.PKE_CCA_AMV_2017.MCL_GT.CipherText();
+
+                    scheme.Encrypt(ct1, pp, pk1, pt1);
+                    scheme.Encrypt(ct2, pp, pk2, pt2);
+
+                    scheme.Decrypt(pt_p, pp, sk1, ct1);
+                    assertTrue(pt_p.isEqual(pt1), "decrypt(c1) = m1");
+                    assertFalse(pt_p.isEqual(pt2), "decrypt(c1) != m2");
+
+                    scheme.Decrypt(pt_p, pp, sk2, ct2);
+                    assertTrue(pt_p.isEqual(pt2), "decrypt(c2) = m2");
+                }
+            }
         }
 
         @DisplayName("test PKE_CPA_AMV_2017")
@@ -118,6 +219,104 @@ public class AETest {
 
                 scheme.Decrypt(pt_p, pp, sk2, ct2);
                 assertTrue(pt_p.isEqual(pt2), "decrypt(c2) = m2");
+            }
+
+            @DisplayName("test MCL impl")
+            @ParameterizedTest(name = "test curve {0}")
+            // BadCaseTest#MCL_Bad_Case#Case2
+            @EnumSource(names = {"BN254", "BLS12_381"})
+            void MCLTest(MCL curve) {
+                Func.MCLInit(curve);
+                {
+                    AE.PKE_CPA_AMV_2017.MCL_G1 scheme = new AE.PKE_CPA_AMV_2017.MCL_G1();
+                    AE.PKE_CPA_AMV_2017.MCL_G1.PublicParam pp = new AE.PKE_CPA_AMV_2017.MCL_G1.PublicParam();
+                    scheme.SetUp(pp);
+                    AE.PKE_CPA_AMV_2017.MCL_G1.PublicKey pk1 = new AE.PKE_CPA_AMV_2017.MCL_G1.PublicKey();
+                    AE.PKE_CPA_AMV_2017.MCL_G1.SecretKey sk1 = new AE.PKE_CPA_AMV_2017.MCL_G1.SecretKey();
+                    scheme.KeyGen(pk1, sk1, pp);
+                    AE.PKE_CPA_AMV_2017.MCL_G1.PublicKey pk2 = new AE.PKE_CPA_AMV_2017.MCL_G1.PublicKey();
+                    AE.PKE_CPA_AMV_2017.MCL_G1.SecretKey sk2 = new AE.PKE_CPA_AMV_2017.MCL_G1.SecretKey();
+                    scheme.KeyGen(pk2, sk2, pp);
+
+                    AE.PKE_CPA_AMV_2017.MCL_G1.PlainText pt1 = new AE.PKE_CPA_AMV_2017.MCL_G1.PlainText();
+                    pp.GP.GetZrElement(pt1.m);
+                    AE.PKE_CPA_AMV_2017.MCL_G1.PlainText pt2 = new AE.PKE_CPA_AMV_2017.MCL_G1.PlainText();
+                    pp.GP.GetZrElement(pt2.m);
+                    AE.PKE_CPA_AMV_2017.MCL_G1.PlainText pt_p = new AE.PKE_CPA_AMV_2017.MCL_G1.PlainText();
+
+                    AE.PKE_CPA_AMV_2017.MCL_G1.CipherText ct1 = new AE.PKE_CPA_AMV_2017.MCL_G1.CipherText();
+                    AE.PKE_CPA_AMV_2017.MCL_G1.CipherText ct2 = new AE.PKE_CPA_AMV_2017.MCL_G1.CipherText();
+
+                    scheme.Encrypt(ct1, pp, pk1, pt1);
+                    scheme.Encrypt(ct2, pp, pk2, pt2);
+
+                    scheme.Decrypt(pt_p, pp, sk1, ct1);
+                    assertTrue(pt_p.isEqual(pt1), "decrypt(c1) = m1");
+                    assertFalse(pt_p.isEqual(pt2), "decrypt(c1) != m2");
+
+                    scheme.Decrypt(pt_p, pp, sk2, ct2);
+                    assertTrue(pt_p.isEqual(pt2), "decrypt(c2) = m2");
+                }
+                {
+                    AE.PKE_CPA_AMV_2017.MCL_G1 scheme = new AE.PKE_CPA_AMV_2017.MCL_G1();
+                    AE.PKE_CPA_AMV_2017.MCL_G1.PublicParam pp = new AE.PKE_CPA_AMV_2017.MCL_G1.PublicParam();
+                    scheme.SetUp(pp);
+                    AE.PKE_CPA_AMV_2017.MCL_G1.PublicKey pk1 = new AE.PKE_CPA_AMV_2017.MCL_G1.PublicKey();
+                    AE.PKE_CPA_AMV_2017.MCL_G1.SecretKey sk1 = new AE.PKE_CPA_AMV_2017.MCL_G1.SecretKey();
+                    scheme.KeyGen(pk1, sk1, pp);
+                    AE.PKE_CPA_AMV_2017.MCL_G1.PublicKey pk2 = new AE.PKE_CPA_AMV_2017.MCL_G1.PublicKey();
+                    AE.PKE_CPA_AMV_2017.MCL_G1.SecretKey sk2 = new AE.PKE_CPA_AMV_2017.MCL_G1.SecretKey();
+                    scheme.KeyGen(pk2, sk2, pp);
+
+                    AE.PKE_CPA_AMV_2017.MCL_G1.PlainText pt1 = new AE.PKE_CPA_AMV_2017.MCL_G1.PlainText();
+                    pp.GP.GetZrElement(pt1.m);
+                    AE.PKE_CPA_AMV_2017.MCL_G1.PlainText pt2 = new AE.PKE_CPA_AMV_2017.MCL_G1.PlainText();
+                    pp.GP.GetZrElement(pt2.m);
+                    AE.PKE_CPA_AMV_2017.MCL_G1.PlainText pt_p = new AE.PKE_CPA_AMV_2017.MCL_G1.PlainText();
+
+                    AE.PKE_CPA_AMV_2017.MCL_G1.CipherText ct1 = new AE.PKE_CPA_AMV_2017.MCL_G1.CipherText();
+                    AE.PKE_CPA_AMV_2017.MCL_G1.CipherText ct2 = new AE.PKE_CPA_AMV_2017.MCL_G1.CipherText();
+
+                    scheme.Encrypt(ct1, pp, pk1, pt1);
+                    scheme.Encrypt(ct2, pp, pk2, pt2);
+
+                    scheme.Decrypt(pt_p, pp, sk1, ct1);
+                    assertTrue(pt_p.isEqual(pt1), "decrypt(c1) = m1");
+                    assertFalse(pt_p.isEqual(pt2), "decrypt(c1) != m2");
+
+                    scheme.Decrypt(pt_p, pp, sk2, ct2);
+                    assertTrue(pt_p.isEqual(pt2), "decrypt(c2) = m2");
+                }
+                {
+                    AE.PKE_CPA_AMV_2017.MCL_GT scheme = new AE.PKE_CPA_AMV_2017.MCL_GT();
+                    AE.PKE_CPA_AMV_2017.MCL_GT.PublicParam pp = new AE.PKE_CPA_AMV_2017.MCL_GT.PublicParam();
+                    scheme.SetUp(pp);
+                    AE.PKE_CPA_AMV_2017.MCL_GT.PublicKey pk1 = new AE.PKE_CPA_AMV_2017.MCL_GT.PublicKey();
+                    AE.PKE_CPA_AMV_2017.MCL_GT.SecretKey sk1 = new AE.PKE_CPA_AMV_2017.MCL_GT.SecretKey();
+                    scheme.KeyGen(pk1, sk1, pp);
+                    AE.PKE_CPA_AMV_2017.MCL_GT.PublicKey pk2 = new AE.PKE_CPA_AMV_2017.MCL_GT.PublicKey();
+                    AE.PKE_CPA_AMV_2017.MCL_GT.SecretKey sk2 = new AE.PKE_CPA_AMV_2017.MCL_GT.SecretKey();
+                    scheme.KeyGen(pk2, sk2, pp);
+
+                    AE.PKE_CPA_AMV_2017.MCL_GT.PlainText pt1 = new AE.PKE_CPA_AMV_2017.MCL_GT.PlainText();
+                    pp.GP.GetZrElement(pt1.m);
+                    AE.PKE_CPA_AMV_2017.MCL_GT.PlainText pt2 = new AE.PKE_CPA_AMV_2017.MCL_GT.PlainText();
+                    pp.GP.GetZrElement(pt2.m);
+                    AE.PKE_CPA_AMV_2017.MCL_GT.PlainText pt_p = new AE.PKE_CPA_AMV_2017.MCL_GT.PlainText();
+
+                    AE.PKE_CPA_AMV_2017.MCL_GT.CipherText ct1 = new AE.PKE_CPA_AMV_2017.MCL_GT.CipherText();
+                    AE.PKE_CPA_AMV_2017.MCL_GT.CipherText ct2 = new AE.PKE_CPA_AMV_2017.MCL_GT.CipherText();
+
+                    scheme.Encrypt(ct1, pp, pk1, pt1);
+                    scheme.Encrypt(ct2, pp, pk2, pt2);
+
+                    scheme.Decrypt(pt_p, pp, sk1, ct1);
+                    assertTrue(pt_p.isEqual(pt1), "decrypt(c1) = m1");
+                    assertFalse(pt_p.isEqual(pt2), "decrypt(c1) != m2");
+
+                    scheme.Decrypt(pt_p, pp, sk2, ct2);
+                    assertTrue(pt_p.isEqual(pt2), "decrypt(c2) = m2");
+                }
             }
         }
     }
