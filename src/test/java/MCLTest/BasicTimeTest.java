@@ -10,12 +10,22 @@ import org.junit.jupiter.params.provider.EnumSource;
 import utils.Func;
 import utils.Hash;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import static utils.Func.InitialLib;
 
 public class BasicTimeTest extends BasicParam {
     @BeforeAll
     static void initTest() {
         InitialLib();
+        try {
+            File_Writer = new BufferedWriter(new FileWriter("./data/MCL/Basic_Time.txt"));
+            File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @DisplayName("test MCL operation time cost")
@@ -164,16 +174,27 @@ public class BasicTimeTest extends BasicParam {
 
     @AfterAll
     static void finishTest() {
-        System.out.println("{");
-        for (int i = 0; i < op_time.length; i++) {
-            if(i != 0) System.out.print(",\n");
-            System.out.print("    {");
-            for (int j = 0; j < op_time[i].length; j++) {
-                if(j != 0) System.out.print(", ");
-                System.out.printf("%.6f", op_time[i][j]);
+        try {
+            for (MCL curve : index_map.keySet()) {
+                File_Writer.write(String.format("curve:%s: ", curve));
+                int i = index_map.get(curve);
+                for (int j = 0; j < op_time[i].length; j++) File_Writer.write(String.format("%.6f, ", op_time[i][j]));
+                File_Writer.write("\n");
             }
-            System.out.print("}");
+            System.out.println("{");
+            for (int i = 0; i < op_time.length; i++) {
+                if(i != 0) System.out.print(",\n");
+                System.out.print("    {");
+                for (int j = 0; j < op_time[i].length; j++) {
+                    if(j != 0) System.out.print(", ");
+                    System.out.printf("%.6f", op_time[i][j]);
+                }
+                System.out.print("}");
+            }
+            System.out.println("\n}");
+            File_Writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        System.out.println("\n}");
     }
 }

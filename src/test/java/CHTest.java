@@ -1,7 +1,4 @@
-import com.herumi.mcl.Fr;
-import com.herumi.mcl.G1;
-import com.herumi.mcl.G2;
-import com.herumi.mcl.Mcl;
+import com.herumi.mcl.*;
 import curve.Group;
 import curve.MCL;
 import it.unisa.dia.gas.jpbc.Element;
@@ -90,6 +87,7 @@ public class CHTest {
             Func.MCLInit(curve);
             G1[] G1_tmp = new G1[]{new G1(), new G1(), new G1()};
             G2[] G2_tmp = new G2[]{new G2(), new G2(), new G2()};
+            GT[] GT_tmp = new GT[]{new GT(), new GT(), new GT()};
             Fr[] Fr_tmp = new Fr[]{new Fr(), new Fr(), new Fr()};
             {
                 Fr x1 = new Fr();
@@ -183,6 +181,54 @@ public class CHTest {
                 assertTrue(pi3.Check(y3, g1, g2, G2_tmp, Fr_tmp), "proof pass");
                 assertFalse(pi3.Check(y3, g1, yt, G2_tmp, Fr_tmp), "proof fail");
                 assertFalse(pi3.Check(y3, g2, g1, G2_tmp, Fr_tmp), "proof fail");
+            }
+
+            {
+                // BadCaseTest#MCL_Bad_Case#Case1
+                Fr x1 = new Fr();
+                Func.GetMCLZrRandomElement(x1);
+                GT g1 = new GT();
+                Func.GetMCLGTRandomElement(g1);
+                GT y1 = new GT();
+                Mcl.pow(y1, g1, x1);
+                GT yt = new GT();
+                Func.GetMCLGTRandomElement(yt);
+
+                base.NIZK.MCL_GT.DL_Proof pi1 = new base.NIZK.MCL_GT.DL_Proof(x1, g1, y1, Fr_tmp);
+
+                assertTrue(pi1.Check(g1, y1, GT_tmp, Fr_tmp), "proof pass");
+                assertFalse(pi1.Check(g1, yt, GT_tmp, Fr_tmp), "proof fail");
+
+                GT g2 = new GT();
+                Func.GetMCLGTRandomElement(g2);
+                GT y2 = new GT();
+                Mcl.pow(y2, g2, x1);
+
+                base.NIZK.MCL_GT.EQUAL_DL_Proof pi2 = new base.NIZK.MCL_GT.EQUAL_DL_Proof(x1, g1, y1, g2, y2, Fr_tmp);
+
+                assertTrue(pi2.Check(g1, y1, g2, y2, GT_tmp, Fr_tmp), "proof pass");
+                assertFalse(pi2.Check(g1, yt, g2, y2, GT_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi2.Check(g1, y1, g2, yt, GT_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi2.Check(g1, y2, g2, y1, GT_tmp, Fr_tmp), "proof fail");
+
+                base.NIZK.MCL_GT.DH_PAIR_Proof pi4 = new base.NIZK.MCL_GT.DH_PAIR_Proof(x1, g1, y1, g2, y2, GT_tmp, Fr_tmp);
+
+                assertTrue(pi4.Check(g1, y1, g2, y2, GT_tmp, Fr_tmp), "proof pass");
+                assertFalse(pi4.Check(g1, yt, g2, y2, GT_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi4.Check(g1, y1, g2, yt, GT_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi4.Check(g1, y2, g2, y1, GT_tmp, Fr_tmp), "proof fail");
+
+                Fr x2 = new Fr();
+                Func.GetMCLZrRandomElement(x2);
+                Mcl.pow(y2, g2, x2);
+                GT y3 = new GT();
+                Mcl.mul(y3, y1, y2);
+
+                base.NIZK.MCL_GT.REPRESENT_Proof pi3 = new base.NIZK.MCL_GT.REPRESENT_Proof(y3, g1, x1, g2, x2, GT_tmp, Fr_tmp);
+
+                assertTrue(pi3.Check(y3, g1, g2, GT_tmp, Fr_tmp), "proof pass");
+                assertFalse(pi3.Check(y3, g1, yt, GT_tmp, Fr_tmp), "proof fail");
+                assertFalse(pi3.Check(y3, g2, g1, GT_tmp, Fr_tmp), "proof fail");
             }
         }
     }

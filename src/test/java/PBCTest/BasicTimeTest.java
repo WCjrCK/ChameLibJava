@@ -19,7 +19,6 @@ import static utils.Func.PairingGen;
 
 @SuppressWarnings("rawtypes")
 public class BasicTimeTest extends BasicParam {
-
     @BeforeAll
     static void initTest() {
         InitialLib();
