@@ -1,12 +1,12 @@
 package MCLTest;
 
 import curve.MCL;
+import org.junit.jupiter.params.provider.Arguments;
 import utils.BooleanFormulaParser;
 
 import java.io.BufferedWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 public class BasicParam {
@@ -24,12 +24,21 @@ public class BasicParam {
     static public List<Integer> RSA_bit_len = List.of(256, 512, 1024);
     static public List<Integer> RSA_bit_len_small = List.of(64, 128, 256);
     static public List<Integer> Auth_num = List.of(256, 512, 1024);
+    static public List<MCL> curves = List.of(MCL.BN254, MCL.BLS12_381);
 
     static public HashMap<MCL, Integer> index_map = new HashMap<>() {{
         put(MCL.BN254, 0);
         put(MCL.BLS12_381, 1);
         put(MCL.SECP256K1, 2);
     }};
+
+    public static Stream<Arguments> GetMCLInvertIdentityLen() {
+        return curves.stream().flatMap(a ->
+                IdentityLen.stream().flatMap(b ->
+                        Stream.of(Arguments.of(a, b))
+                )
+        );
+    }
 
     public static String RandomPolicyGenerator(BooleanFormulaParser.AttributeList access, boolean addit, int dep) {
         boolean endit = (RAND.nextInt(1 << dep) <= 1);
