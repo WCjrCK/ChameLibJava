@@ -127,8 +127,8 @@ public class ID_B_CollRes_XSL_2021 extends BasicParam {
     void MCLSwapTest(curve.MCL curve, int n) {
         Func.MCLInit(curve);
         try {
-            File_Writer.write(String.format("curve:%s|ID len:%d|swap:false: ", curve, n));
-            System.out.printf("curve:%s (ID len: %d, swap: false): ", curve, n);
+            File_Writer.write(String.format("curve:%s|ID len:%d|swap:true: ", curve, n));
+            System.out.printf("curve:%s (ID len: %d, swap: true): ", curve, n);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

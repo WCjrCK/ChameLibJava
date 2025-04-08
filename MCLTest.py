@@ -10,7 +10,10 @@ done = [
     'CH_KEF_MH_SDH_DL_AM_2004',
     'CR_CH_DSS_2020',
     'FCR_CH_PreQA_DKS_2020',
-    
+
+    'IB_CH_KEF_CZS_2014',
+    'IB_CH_ZSS_S1_2003',
+    '',
 ]
 
 # os.system(f'mvn -Dtest=MCLTest.BasicTimeTest test')

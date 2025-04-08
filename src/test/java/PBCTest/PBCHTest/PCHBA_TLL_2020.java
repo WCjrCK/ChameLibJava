@@ -39,8 +39,8 @@ public class PCHBA_TLL_2020 extends BasicParam {
 
     @DisplayName("test PCHBA_TLL_2020")
     @ParameterizedTest(name = "test curve {0} swap_G1G2 {1} k = {2}")
-    @MethodSource("PBCTest.BasicParam#GetPBCInvertk")
-    void PBCTest(curve.PBC curve, boolean swap_G1G2, int k) {
+    @MethodSource("PBCTest.BasicParam#GetPBCInvertIdentityLen")
+    void PBCTest(curve.PBC curve, int k, boolean swap_G1G2) {
         try {
             File_Writer.write(String.format("curve:%s|k:%d|swap:%b: ", curve, k, swap_G1G2));
             System.out.printf("curve:%s|k:%d|swap:%b: ", curve, k, swap_G1G2);
@@ -80,10 +80,10 @@ public class PCHBA_TLL_2020 extends BasicParam {
             pl[i] = new BooleanFormulaParser.PolicyList();
             S[i] = new BooleanFormulaParser.AttributeList();
             LSSS.GenLSSSMatrices(MSP[i], pl[i], RandomPolicyGenerator(S[i], true, 5));
-            u1[i] = new PBC.User(pp, k / 2);
-            u2[i] = new PBC.User(u1[i], pp, k);
+            u1[i] = new PBC.User(pp, k / 3);
             scheme.AssignUser(u1[i], MPK, MSK);
             scheme.KeyGen(u1[i], pp, MPK, MSK, S[i]);
+            u2[i] = new PBC.User(u1[i], pp, k / 2);
         }
 
         {
@@ -130,7 +130,7 @@ public class PCHBA_TLL_2020 extends BasicParam {
 
         {
             long start = System.nanoTime();
-            for(int i = 0;i < repeat_cnt;++i) scheme.Adapt(rp[i], h[i], r[i], pp, MPK, MSK, u2[i], MSP[i], m[i], m2[i]);
+            for(int i = 0;i < repeat_cnt;++i) scheme.Adapt(rp[i], h[i], r[i], pp, MPK, MSK, u1[i], MSP[i], m[i], m2[i]);
             long end = System.nanoTime();
             double duration = (end - start) / 1.0e6;
             time_cost[++stage_id] = duration / repeat_cnt;
