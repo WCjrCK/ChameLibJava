@@ -28,7 +28,6 @@ public class RPCH_TMM_2022 extends BasicParam {
     @BeforeAll
     static void initTest() {
         InitialLib();
-        repeat_cnt = Math.max(1, repeat_cnt / 4); // long time to run
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/MCL/PBCH/RPCH_TMM_2022.txt"));
             File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));

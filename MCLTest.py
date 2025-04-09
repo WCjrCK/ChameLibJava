@@ -1,19 +1,24 @@
 import os
 
 done = [
-    'CH_AMV_2017',
-    'CH_ET_KOG_CDK_2017',
-    'CH_FS_ECC_CCT_2024',
-    'CH_KEF_CZK_2004',
-    'CH_KEF_DL_CZT_2011',
-    'CH_KEF_DLP_LLA_2012',
-    'CH_KEF_MH_SDH_DL_AM_2004',
-    'CR_CH_DSS_2020',
-    'FCR_CH_PreQA_DKS_2020',
+#     'CH_AMV_2017',
+#     'CH_ET_KOG_CDK_2017',
+#     'CH_FS_ECC_CCT_2024',
+#     'CH_KEF_CZK_2004',
+#     'CH_KEF_DL_CZT_2011',
+#     'CH_KEF_DLP_LLA_2012',
+#     'CH_KEF_MH_SDH_DL_AM_2004',
+#     'CR_CH_DSS_2020',
+#     'FCR_CH_PreQA_DKS_2020',
+#
+#     'IB_CH_KEF_CZS_2014',
+#     'IB_CH_ZSS_S1_2003',
+#     'ID_B_CollRes_XSL_2021',
+#     'PCH_DSS_2019',
 
-    'IB_CH_KEF_CZS_2014',
-    'IB_CH_ZSS_S1_2003',
-    '',
+#     'PCHBA_TLL_2020',
+#     'RPCH_TMM_2022',
+#     'RPCH_XNM_2021'
 ]
 
 # os.system(f'mvn -Dtest=MCLTest.BasicTimeTest test')
