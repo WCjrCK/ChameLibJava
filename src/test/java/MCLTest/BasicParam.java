@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class BasicParam {
     static public BufferedWriter File_Writer;
     static Random RAND = new Random();
-    static public int diff_max_len = 17, repeat_cnt = 1000;
+    static public int diff_max_len = 17, repeat_cnt = 500;
     static public double[][] op_time = {
             {0.017611, 0.040673, 0.198593, 0.000364, 0.024948, 0.042032, 0.200090, 0.001204, 0.000217, 0.000493, 0.000646, 0.000167, 0.020964, 0.035852, 0.064566, 0.000037, 0.141005},
             {0.076516, 0.120330, 0.570225, 0.000142, 0.070493, 0.124304, 0.577646, 0.000417, 0.000432, 0.001020, 0.001145, 0.000031, 0.041352, 0.070940, 0.118363, 0.000034, 0.373586},
@@ -35,6 +35,32 @@ public class BasicParam {
     public static Stream<Arguments> GetMCLInvertIdentityLen() {
         return curves.stream().flatMap(a ->
                 IdentityLen.stream().flatMap(b ->
+                        Stream.of(Arguments.of(a, b))
+                )
+        );
+    }
+
+    public static Stream<Arguments> GetMCLInvertk() {
+        return curves.stream().flatMap(a ->
+                RSA_bit_len.stream().flatMap(b ->
+                        Stream.of(Arguments.of(a, b))
+                )
+        );
+    }
+
+    public static Stream<Arguments> GetMCLInvertkn() {
+        return curves.stream().flatMap(a ->
+                RSA_bit_len.stream().flatMap(b ->
+                        BT_leaf_num.stream().flatMap(c ->
+                                Stream.of(Arguments.of(a, b, c))
+                        )
+                )
+        );
+    }
+
+    public static Stream<Arguments> GetMCLInvertGroupn() {
+        return curves.stream().flatMap(a ->
+                BT_leaf_num.stream().flatMap(b ->
                         Stream.of(Arguments.of(a, b))
                 )
         );

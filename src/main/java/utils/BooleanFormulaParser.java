@@ -2,6 +2,8 @@ package utils;
 
 import base.LSSS.Native;
 import base.LSSS.PBC;
+import base.LSSS.MCL;
+import com.herumi.mcl.Fr;
 import it.unisa.dia.gas.jpbc.Element;
 
 import java.util.*;
@@ -19,6 +21,23 @@ public class BooleanFormulaParser {
     private static class NodePBC {
         public int x;
         public Element[] tag;
+    }
+
+    private static class NodeMCL {
+        public int x;
+        public Fr[] tag;
+
+        public NodeMCL(int x, int m) {
+            this.x = x;
+            this.tag = new Fr[m];
+            for (int i = 0;i < m;i++) tag[i] = new Fr(0);
+        }
+
+        public NodeMCL(int x, Fr[] tag) {
+            this.x = x;
+            this.tag = new Fr[tag.length];
+            for (int i = 0;i < tag.length;i++) this.tag[i] = new Fr(tag[i]);
+        }
     }
 
     public static class AttributeList {
@@ -241,6 +260,54 @@ public class BooleanFormulaParser {
                         NodePBC tmp_R = new NodePBC();
                         tmp_R.x = range[tmp.x][1];
                         tmp_R.tag = tmp.tag;
+                        rt.add(tmp_R);
+                    }
+                }
+            }
+        }
+    }
+
+    public void SetToMCLMatrix(MCL.Matrix M) {
+        M.formula = formula;
+        M.Resize(n, m);
+        if(x == -1) {
+            M.M[0][0].setInt(1);
+        } else {
+            Queue<NodeMCL> rt = new ArrayDeque<>();
+            NodeMCL tmp = new NodeMCL(x, m);
+            tmp.tag[0].setInt(1);
+            rt.add(tmp);
+            int col_cnt = 1;
+            while(!rt.isEmpty()) {
+                tmp = rt.poll();
+                if(tokens[tmp.x] == TokenType.AND) {
+                    if(range[tmp.x][0] < 1) {
+                        System.arraycopy(tmp.tag, 0, M.M[-range[tmp.x][0]], 0, m);
+                        M.M[-range[tmp.x][0]][col_cnt].setInt(1);
+                    } else {
+                        NodeMCL tmp_L = new NodeMCL(range[tmp.x][0], tmp.tag);
+                        tmp_L.tag[col_cnt].setInt(1);
+                        rt.add(tmp_L);
+                    }
+                    if(range[tmp.x][1] < 1) {
+                        M.M[-range[tmp.x][1]][col_cnt].setInt(-1);
+                    } else {
+                        NodeMCL tmp_R = new NodeMCL(range[tmp.x][1], m);
+                        tmp_R.tag[col_cnt].setInt(-1);
+                        rt.add(tmp_R);
+                    }
+                    ++col_cnt;
+                } else if (tokens[tmp.x] == TokenType.OR) {
+                    if(range[tmp.x][0] < 1) {
+                        System.arraycopy(tmp.tag, 0, M.M[-range[tmp.x][0]], 0, m);
+                    } else {
+                        NodeMCL tmp_L = new NodeMCL(range[tmp.x][0], tmp.tag);
+                        rt.add(tmp_L);
+                    }
+                    if(range[tmp.x][1] < 1) {
+                        System.arraycopy(tmp.tag, 0, M.M[-range[tmp.x][1]], 0, m);
+                    } else {
+                        NodeMCL tmp_R = new NodeMCL(range[tmp.x][1], tmp.tag);
                         rt.add(tmp_R);
                     }
                 }

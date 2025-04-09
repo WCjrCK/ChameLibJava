@@ -135,7 +135,7 @@ public class PBC {
         Element b1r1a2 = b1r1a1.div(msk.a_2).getImmutable();
         b1r1a1 = b1r1a1.div(msk.a_1).getImmutable();
         Element b2r2a1 = msk.b_2.mul(r_2).getImmutable();
-        sk.sk_0[1] = mpk.h.powZn(msk.b_2.mul(r_2)).getImmutable();
+        sk.sk_0[1] = mpk.h.powZn(b2r2a1).getImmutable();
         Element b2r2a2 = b2r2a1.div(msk.a_2).getImmutable();
         b2r2a1 = b2r2a1.div(msk.a_1).getImmutable();
         sk.sk_0[2] = mpk.h.powZn(r_1.add(r_2).div(alpha)).getImmutable();

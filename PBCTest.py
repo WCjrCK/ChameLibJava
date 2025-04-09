@@ -1,8 +1,6 @@
 import os
 
 late = [
-    # "CH_KEF_NoMH_AM_2004",
-    "PCHBA_TLL_2020",
 ]
 
 done = [
@@ -31,6 +29,10 @@ done = [
 
     'DPCH_MXN_2022',
     'MAPCH_ZLW_2021',
+    'PCH_DSS_2019',
+    'PCHBA_TLL_2020',
+    'RPCH_TMM_2022',
+    'RPCH_XNM_2021'
     
 ] + late
 

@@ -25,7 +25,6 @@ public class RPCH_XNM_2021 extends BasicParam {
     @BeforeAll
     static void initTest() {
         InitialLib();
-        repeat_cnt = Math.max(1, repeat_cnt / 4); // long time to run
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/PBCH/RPCH_XNM_2021.txt"));
             File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));

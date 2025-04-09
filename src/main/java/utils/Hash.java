@@ -95,6 +95,18 @@ public class Hash {
         }
     }
 
+    public static class EncText_MCL_GT {
+        public GT K = new GT();
+
+        public EncText_MCL_GT() {
+            Func.GetMCLGTRandomElement(K);
+        }
+
+        public EncText_MCL_GT(GT K) {
+            this.K = K;
+        }
+    }
+
     public static class PlaText {
         public byte[] k, r;
 
@@ -115,6 +127,15 @@ public class Hash {
         K.K = G.newElementFromBytes(tmp).getImmutable();
     }
 
+    public static void Encode_MCL_GT(EncText_MCL_GT K, PlaText P) {
+        byte[] tmp = K.K.serialize();
+        tmp[1] = (byte) P.k.length;
+        System.arraycopy(P.k, 0, tmp, 2, P.k.length);
+        tmp[tmp.length / 2 + 1] = (byte) P.r.length;
+        System.arraycopy(P.r, 0, tmp, tmp.length / 2 + 2, P.r.length);
+        K.K.deserialize(tmp);
+    }
+
     public static void Decode(PlaText P, EncText K) {
         byte[] tmp = K.K.toBytes();
         int l1 = tmp[1];
@@ -127,13 +148,57 @@ public class Hash {
         System.arraycopy(tmp, K.K.getLengthInBytes() / 2 + 2, P.r, 0, l2);
     }
 
+    public static void Decode_MCL_GT(PlaText P, EncText_MCL_GT K) {
+        byte[] tmp = K.K.serialize();
+        int l1 = tmp[1];
+        if(l1 < 0 || l1 + 2 >= tmp.length) throw new RuntimeException("Decode Failed");
+        P.k = new byte[l1];
+        System.arraycopy(tmp, 2, P.k, 0, l1);
+        int l2 = tmp[tmp.length / 2 + 1];
+        if(l2 < 0 || l2 + tmp.length / 2 + 2 >= tmp.length) throw new RuntimeException("Decode Failed");
+        P.r = new byte[l2];
+        System.arraycopy(tmp, tmp.length / 2 + 2, P.r, 0, l2);
+    }
+
     public static class H_2_element {
         public Element u_1, u_2;
+    }
+
+    public static class H_2_G1 {
+        public G1 u_1 = new G1(), u_2 = new G1();
+    }
+
+    public static class H_2_G2 {
+        public G2 u_1 = new G2(), u_2 = new G2();
+    }
+
+    public static class H_2_Zr {
+        public Fr u_1 = new Fr(), u_2 = new Fr();
     }
 
     public static void H_2_element_String_2(H_2_element u, Field G, String m1, String m2) {
         u.u_1 = Hash.H_String_1_PBC_1(G, m1 + "|" + m2);
         u.u_2 = Hash.H_String_1_PBC_1(G, m2 + "|" + m1);
+    }
+
+    public static void H_2_G1_String_2(H_2_G1 u, String m1, String m2) {
+        Hash.H_MCL_G1_1(u.u_1, m1 + "|" + m2);
+        Hash.H_MCL_G1_1(u.u_2, m2 + "|" + m1);
+    }
+
+    public static void H_2_G2_String_2(H_2_G2 u, String m1, String m2) {
+        Hash.H_MCL_G2_1(u.u_1, m1 + "|" + m2);
+        Hash.H_MCL_G2_1(u.u_2, m2 + "|" + m1);
+    }
+
+    public static void H_2_Zr_String_2(H_2_Zr u, String m1, String m2) {
+        Hash.H_MCL_Zr_1(u.u_1, m1 + "|" + m2);
+        Hash.H_MCL_Zr_1(u.u_2, m2 + "|" + m1);
+    }
+
+    public static void H_2_Zr_String_3(H_2_Zr u, String m1, String m2, String m3) {
+        Hash.H_MCL_Zr_1(u.u_1, m1 + "|" + m2 + "|" + m3);
+        Hash.H_MCL_Zr_1(u.u_2, m3 + "|" + m2 + "|" + m1);
     }
 
     public static void H_2_element_String_3(H_2_element u, Field G, String m1, String m2, String m3) {
