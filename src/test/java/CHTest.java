@@ -390,6 +390,45 @@ public class CHTest {
                 assertFalse(scheme.Check(h2, r1_p, pp, pk, L1, m1), "not L1");
             }
 
+            @DisplayName("test PBC Pairing impl")
+            @ParameterizedTest(name = "test curve {0}")
+            @EnumSource(names = {"A", "A1", "E"})
+            void JPBCPairingTest(curve.PBC curve) {
+                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing();
+                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.PublicParam pp = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.PublicParam(curve);
+                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.PublicKey pk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.PublicKey();
+                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.SecretKey sk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.SecretKey();
+                scheme.KeyGen(pk, sk, pp);
+                Element m1 = pp.GP.GetZrElement();
+                Element m2 = pp.GP.GetZrElement();
+                Element L1 = pp.GP.GetZrElement();
+                Element L2 = pp.GP.GetZrElement();
+                assertFalse(m1.isEqual(m2), "m1 != m2");
+
+                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.HashValue h1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.HashValue();
+                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.HashValue h2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.HashValue();
+                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness r1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness();
+                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness r2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness();
+                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness r1_p = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness();
+                scheme.Hash(h1, r1, pp, pk, L1, m1);
+                assertTrue(scheme.Check(h1, r1, pp, pk, L1, m1), "H(L1, m1) valid");
+                assertFalse(scheme.Check(h1, r1, pp, pk, L2, m1), "not H(L2, m1)");
+                scheme.Hash(h2, r2, pp, pk, L2, m2);
+                assertTrue(scheme.Check(h2, r2, pp, pk, L2, m2), "H(m2) valid");
+                assertFalse(scheme.Check(h2, r2, pp, pk, L1, m2), "not H(L1, m2)");
+
+                assertFalse(scheme.Check(h1, r1, pp, pk, L2, m2), "not H(m1)");
+                assertFalse(scheme.Check(h2, r2, pp, pk, L1, m1), "not H(m2)");
+
+                scheme.Adapt(r1_p, r1, pp, pk, sk, L1, m1, m2);
+                assertTrue(scheme.Check(h1, r1_p, pp, pk, L1, m2), "Adapt(m2) valid");
+                assertFalse(scheme.Check(h1, r1_p, pp, pk, L2, m2), "not L2");
+
+                scheme.Adapt(r1_p, r2, pp, pk, sk, L2, m2, m1);
+                assertTrue(scheme.Check(h2, r1_p, pp, pk, L2, m1), "Adapt(m1) valid");
+                assertFalse(scheme.Check(h2, r1_p, pp, pk, L1, m1), "not L1");
+            }
+
             @DisplayName("test MCL impl")
             @ParameterizedTest(name = "test curve {0}")
             // BadCaseTest#MCL_Bad_Case#Case2
