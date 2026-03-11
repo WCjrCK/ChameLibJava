@@ -4,7 +4,6 @@ import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Objects;
 
 public abstract class Point implements AdditivePoint, MultivePoint {
@@ -24,7 +23,7 @@ public abstract class Point implements AdditivePoint, MultivePoint {
 
     protected abstract Point subCore(Point other);
 
-    protected abstract Point mulCore(BigInteger scalar);
+    protected abstract Point mulCore(AdditivePoint scalar);
 
     protected abstract Point negCore();
 
@@ -63,7 +62,7 @@ public abstract class Point implements AdditivePoint, MultivePoint {
     }
 
     @Override
-    public final AdditivePoint mul(BigInteger scalar) {
+    public final AdditivePoint mulZn(AdditivePoint scalar) {
         return mulCore(requireScalar(scalar, "标量"));
     }
 
@@ -85,7 +84,7 @@ public abstract class Point implements AdditivePoint, MultivePoint {
     }
 
     @Override
-    public final MultivePoint pow(BigInteger exponent) {
+    public final MultivePoint pow(AdditivePoint exponent) {
         return mulCore(requireScalar(exponent, "标量"));
     }
 
@@ -113,8 +112,8 @@ public abstract class Point implements AdditivePoint, MultivePoint {
         }
     }
 
-    protected final BigInteger requireScalar(BigInteger scalar, String name) {
-        if (scalar == null) throw new IllegalArgumentException(name + " 不能为空");
+    protected final AdditivePoint requireScalar(AdditivePoint scalar, String name) {
+        if (scalar == null || scalar.group() != CurveGroup.Zp) throw new IllegalArgumentException(name + " 不能为空");
         return scalar;
     }
 }

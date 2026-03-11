@@ -1,7 +1,5 @@
 package EllipticCurve.Point;
 
-import java.math.BigInteger;
-
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 
@@ -10,7 +8,7 @@ public interface AdditivePoint {
 
     AdditivePoint sub(AdditivePoint other);
 
-    AdditivePoint mul(BigInteger scalar);
+    AdditivePoint mulZn(AdditivePoint scalar);
 
     AdditivePoint neg();
 

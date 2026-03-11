@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
+import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.Point;
 import it.unisa.dia.gas.jpbc.Element;
 
@@ -28,8 +29,8 @@ public class PBCPoint extends Point {
     }
     
     @Override
-    protected final PBCPoint mulCore(BigInteger scalar) {
-        return new PBCPoint(p.mul(scalar.mod(p.getField().getOrder())), curve(), group());
+    protected final PBCPoint mulCore(AdditivePoint scalar) {
+        return new PBCPoint(p.mulZn(((PBCPoint) scalar).p), curve(), group());
     }
     
     @Override

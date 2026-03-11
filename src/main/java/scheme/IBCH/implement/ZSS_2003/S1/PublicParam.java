@@ -3,11 +3,9 @@ package scheme.IBCH.implement.ZSS_2003.S1;
 import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.AdditivePoint;
 
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.BitSet;
 import java.util.Map;
 
 public class PublicParam extends scheme.Components.PublicParam {
@@ -36,7 +34,7 @@ public class PublicParam extends scheme.Components.PublicParam {
         return curve.HashToG1(hash);
     }
 
-    public final BigInteger H1(String x) {
+    public final AdditivePoint H1(String x) {
         MessageDigest messageDigest;
         byte[] hash;
         try {
@@ -46,6 +44,6 @@ public class PublicParam extends scheme.Components.PublicParam {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        return curve.HashToZp(hash).toBigInteger();
+        return curve.HashToZp(hash);
     }
 }

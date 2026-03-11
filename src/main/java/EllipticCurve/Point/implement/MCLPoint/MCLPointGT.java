@@ -2,6 +2,7 @@ package EllipticCurve.Point.implement.MCLPoint;
 
 import java.math.BigInteger;
 
+import EllipticCurve.Point.AdditivePoint;
 import com.herumi.mcl.Fr;
 import com.herumi.mcl.Mcl;
 import com.herumi.mcl.GT;
@@ -36,7 +37,7 @@ public class MCLPointGT extends Point {
     }
 
     @Override
-    protected final MCLPointGT mulCore(BigInteger scalar) {
+    protected final MCLPointGT mulCore(AdditivePoint scalar) {
         GT result = new GT();
         Mcl.pow(result, p, new Fr(scalar.toString()));
         return new MCLPointGT(result, curve(), group());

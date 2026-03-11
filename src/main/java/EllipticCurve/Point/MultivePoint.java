@@ -1,7 +1,5 @@
 package EllipticCurve.Point;
 
-import java.math.BigInteger;
-
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 
@@ -10,7 +8,7 @@ public interface MultivePoint {
 
     MultivePoint div(MultivePoint other);
 
-    MultivePoint pow(BigInteger exponent);
+    MultivePoint pow(AdditivePoint exponent);
 
     MultivePoint inv();
 
