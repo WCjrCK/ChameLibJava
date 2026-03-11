@@ -2,12 +2,23 @@ package EllipticCurve.Point;
 
 import java.math.BigInteger;
 
+import EllipticCurve.Curve.CurveGroup;
+import EllipticCurve.Curve.CurveName;
+
 public interface MultivePoint {
-    Point mul(Point other);
+    MultivePoint mul(MultivePoint other);
 
-    Point div(Point other);
+    MultivePoint div(MultivePoint other);
 
-    Point pow(BigInteger exponent);
+    MultivePoint pow(BigInteger exponent);
 
-    Point inv();
+    MultivePoint inv();
+
+    CurveGroup group();
+
+    CurveName curve();
+
+    String toString();
+
+    boolean isEqual(MultivePoint other);
 }

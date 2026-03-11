@@ -20,14 +20,6 @@ public abstract class Point implements AdditivePoint, MultivePoint {
         this(curve, CurveGroup.G1);
     }
 
-    public final CurveName curve() {
-        return curve;
-    }
-
-    public final CurveGroup group() {
-        return group;
-    }
-
     protected abstract Point addCore(Point other);
 
     protected abstract Point subCore(Point other);
@@ -36,6 +28,12 @@ public abstract class Point implements AdditivePoint, MultivePoint {
 
     protected abstract Point negCore();
 
+    public abstract BigInteger toBigInteger();
+
+    public abstract String toString();
+
+    public abstract boolean isEqual(Point other);
+
     // public abstract Point copy();
 
     // public abstract boolean isInfinity();
@@ -43,50 +41,67 @@ public abstract class Point implements AdditivePoint, MultivePoint {
     public abstract byte[] toBytes();
 
     @Override
-    public final Point add(Point other) {
-        requireSameCurve(other);
-        return addCore(other);
+    public final CurveName curve() {
+        return curve;
     }
 
     @Override
-    public final Point sub(Point other) {
-        requireSameCurve(other);
-        return subCore(other);
+    public final CurveGroup group() {
+        return group;
     }
 
     @Override
-    public final Point mul(BigInteger scalar) {
+    public final AdditivePoint add(AdditivePoint other) {
+        requireSameCurve((Point) other);
+        return addCore((Point) other);
+    }
+
+    @Override
+    public final AdditivePoint sub(AdditivePoint other) {
+        requireSameCurve((Point) other);
+        return subCore((Point) other);
+    }
+
+    @Override
+    public final AdditivePoint mul(BigInteger scalar) {
         return mulCore(requireScalar(scalar, "标量"));
     }
 
     @Override
-    public final Point neg() {
+    public final AdditivePoint neg() {
         return negCore();
     }
 
     @Override
-    public final Point mul(Point other) {
-        return add(other);
+    public final MultivePoint mul(MultivePoint other) {
+        requireSameCurve((Point) other);
+        return addCore((Point) other);
     }
 
     @Override
-    public final Point div(Point other) {
-        return sub(other);
+    public final MultivePoint div(MultivePoint other) {
+        requireSameCurve((Point) other);
+        return subCore((Point) other);
     }
 
     @Override
-    public final Point pow(BigInteger exponent) {
-        return mul(exponent);
+    public final MultivePoint pow(BigInteger exponent) {
+        return mulCore(requireScalar(exponent, "标量"));
     }
 
     @Override
-    public final Point inv() {
-        return neg();
+    public final MultivePoint inv() {
+        return negCore();
     }
 
-    public final boolean sameValue(Point other) {
-        Objects.requireNonNull(other, "点不能为空");
-        return Arrays.equals(toBytes(), other.toBytes());
+    @Override
+    public final boolean isEqual(AdditivePoint other) {
+        return isEqual((Point) other);
+    }
+
+    @Override
+    public final boolean isEqual(MultivePoint other) {
+        return isEqual((Point) other);
     }
 
     protected final void requireSameCurve(Point other) {

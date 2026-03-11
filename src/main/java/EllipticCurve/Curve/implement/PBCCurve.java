@@ -54,7 +54,7 @@ public class PBCCurve extends Curve {
     public PBCPoint Pairing(Point p1, Point p2) {
         if (p1.curve() != curveName()) throw new IllegalArgumentException("点 " + p1.curve() + " 不属于当前曲线: " + curveName());
         if (p2.curve() != curveName()) throw new IllegalArgumentException("点 " + p2.curve() + " 不属于当前曲线: " + curveName());
-        if (p1.group() == CurveGroup.G1 && p2.group() == CurveGroup.G2) {
+        if (pairing.isSymmetric() || p1.group() == CurveGroup.G1 && p2.group() == CurveGroup.G2) {
             PBCPoint pp1, pp2;
             if(this.swap_G1G2) {
                 pp1 = (PBCPoint) p2;
@@ -65,5 +65,25 @@ public class PBCCurve extends Curve {
             }
             return new PBCPoint(pairing.pairing(pp1.p, pp2.p).getImmutable(), curveName(), CurveGroup.GT);
         } else throw new IllegalArgumentException("不支持的群类型: " + p1.group() + " , " + p2.group());
+    }
+
+    @Override
+    public final PBCPoint HashToG1(byte[] hash) {
+        return new PBCPoint(G1.newElementFromHash(hash, 0, hash.length).getImmutable(), curveName(), CurveGroup.G1);
+    }
+
+    @Override
+    public final PBCPoint HashToG2(byte[] hash) {
+        return new PBCPoint(G2.newElementFromHash(hash, 0, hash.length).getImmutable(), curveName(), CurveGroup.G2);
+    }
+
+    @Override
+    public final PBCPoint HashToGT(byte[] hash) {
+        return new PBCPoint(GT.newElementFromHash(hash, 0, hash.length).getImmutable(), curveName(), CurveGroup.GT);
+    }
+
+    @Override
+    public final PBCPoint HashToZp(byte[] hash) {
+        return new PBCPoint(Zp.newElementFromHash(hash, 0, hash.length).getImmutable(), curveName(), CurveGroup.Zp);
     }
 }

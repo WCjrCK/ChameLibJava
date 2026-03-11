@@ -56,4 +56,20 @@ public class MCLPointZp extends Point {
     public final byte[] toBytes() {
         throw new UnsupportedOperationException("MCLPoint 不支持序列化");
     }
+
+    @Override
+    public final BigInteger toBigInteger() {
+        return new BigInteger(p.toString());
+    }
+
+    @Override
+    public final String toString() {
+        return p.toString();
+    }
+
+    @Override
+    public final boolean isEqual(Point other) {
+        if(!(other instanceof MCLPointZp)) return false;
+        return p.equals(((MCLPointZp) other).p);
+    }
 }

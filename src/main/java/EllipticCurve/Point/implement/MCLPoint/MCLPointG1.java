@@ -2,6 +2,7 @@ package EllipticCurve.Point.implement.MCLPoint;
 
 import java.math.BigInteger;
 
+import EllipticCurve.Point.implement.PBCPoint;
 import com.herumi.mcl.Mcl;
 import com.herumi.mcl.G1;
 import com.herumi.mcl.Fr;
@@ -56,5 +57,21 @@ public class MCLPointG1 extends Point {
     @Override
     public final byte[] toBytes() {
         throw new UnsupportedOperationException("MCLPoint 不支持序列化");
+    }
+
+    @Override
+    public final BigInteger toBigInteger() {
+        throw new UnsupportedOperationException("MCLPoint 不支持序列化");
+    }
+
+    @Override
+    public final String toString() {
+        return p.toString();
+    }
+
+    @Override
+    public final boolean isEqual(Point other) {
+        if(!(other instanceof MCLPointG1)) return false;
+        return p.equals(((MCLPointG1) other).p);
     }
 }

@@ -29,7 +29,7 @@ public class PBCPoint extends Point {
     
     @Override
     protected final PBCPoint mulCore(BigInteger scalar) {
-        return new PBCPoint(p.mul(scalar), curve(), group());
+        return new PBCPoint(p.mul(scalar.mod(p.getField().getOrder())), curve(), group());
     }
     
     @Override
@@ -45,5 +45,21 @@ public class PBCPoint extends Point {
     @Override
     public final byte[] toBytes() {
         return p.toBytes();
+    }
+
+    @Override
+    public final BigInteger toBigInteger() {
+        return p.toBigInteger();
+    }
+
+    @Override
+    public final String toString() {
+        return p.toString();
+    }
+
+    @Override
+    public final boolean isEqual(Point other) {
+        if(!(other instanceof PBCPoint)) return false;
+        return p.isEqual(((PBCPoint) other).p);
     }
 }

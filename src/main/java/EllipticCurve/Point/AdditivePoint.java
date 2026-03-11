@@ -2,12 +2,23 @@ package EllipticCurve.Point;
 
 import java.math.BigInteger;
 
+import EllipticCurve.Curve.CurveGroup;
+import EllipticCurve.Curve.CurveName;
+
 public interface AdditivePoint {
-    Point add(Point other);
+    AdditivePoint add(AdditivePoint other);
 
-    Point sub(Point other);
+    AdditivePoint sub(AdditivePoint other);
 
-    Point mul(BigInteger scalar);
+    AdditivePoint mul(BigInteger scalar);
 
-    Point neg();
+    AdditivePoint neg();
+
+    CurveGroup group();
+
+    CurveName curve();
+
+    String toString();
+
+    boolean isEqual(AdditivePoint other);
 }

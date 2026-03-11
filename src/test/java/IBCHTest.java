@@ -1,5 +1,9 @@
+import EllipticCurve.Curve.CurveName;
+import EllipticCurve.Point.AdditivePoint;
+import EllipticCurve.Point.MultivePoint;
 import com.herumi.mcl.Fr;
 import curve.MCL;
+import curve.PBC;
 import it.unisa.dia.gas.jpbc.Element;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -8,22 +12,28 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import scheme.IBCH.IBCH;
+import scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap;
+import scheme.IBCH.implement.ZSS_2003.S1.*;
+import scheme.SchemeFactory;
 import utils.Func;
 
+import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static scheme.SchemeName.*;
 import static utils.Func.InitialLib;
 
 public class IBCHTest {
     public static Stream<Arguments> GetPBCInvert() {
-        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> Stream.of(Arguments.of(a, false), Arguments.of(a, true)));
+        return EnumSet.allOf(PBC.class).stream().flatMap(a -> Stream.of(Arguments.of(a, false), Arguments.of(a, true)));
     }
 
     public static Stream<Arguments> GetPBCInvertIdentityLen() {
         List<Integer> IdentityLen = Arrays.asList(64, 128, 256);
-        return EnumSet.allOf(curve.PBC.class).stream().flatMap(a -> IdentityLen.stream().flatMap(b -> Stream.of(Arguments.of(a, b, false), Arguments.of(a, b, true))));
+        return EnumSet.allOf(PBC.class).stream().flatMap(a -> IdentityLen.stream().flatMap(b -> Stream.of(Arguments.of(a, b, false), Arguments.of(a, b, true))));
     }
 
     public static Stream<Arguments> GetMCLInvertIdentityLen() {
@@ -46,7 +56,7 @@ public class IBCHTest {
             @DisplayName("test PBC impl")
             @ParameterizedTest(name = "test curve {0} swap_G1G2 {1}")
             @MethodSource("IBCHTest#GetPBCInvert")
-            void JPBCTest(curve.PBC curve, boolean swap_G1G2) {
+            void JPBCTest(PBC curve, boolean swap_G1G2) {
                 scheme.IBCH.IB_CH_KEF_CZS_2014.PBC scheme = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC();
                 scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.PublicParam SP = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.PublicParam(curve, swap_G1G2);
                 scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.MasterSecretKey msk = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.MasterSecretKey();
@@ -142,12 +152,12 @@ public class IBCHTest {
                     assertFalse(scheme.Check(h1, r1_p, SP, sk1, L2, m2), "Adapt(L2, m2) invalid");
                 }
                 {
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap scheme = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.PublicParam SP = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.PublicParam();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.MasterSecretKey msk = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.MasterSecretKey();
+                    MCL_swap scheme = new MCL_swap();
+                    MCL_swap.PublicParam SP = new MCL_swap.PublicParam();
+                    MCL_swap.MasterSecretKey msk = new MCL_swap.MasterSecretKey();
                     scheme.SetUp(SP, msk);
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.SecretKey sk1 = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.SecretKey();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.SecretKey sk2 = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.SecretKey();
+                    MCL_swap.SecretKey sk1 = new MCL_swap.SecretKey();
+                    MCL_swap.SecretKey sk2 = new MCL_swap.SecretKey();
                     String ID1 = UUID.randomUUID().toString();
                     String ID2 = UUID.randomUUID().toString();
                     assertNotEquals(ID1, ID2, "ID1 != ID2");
@@ -163,11 +173,11 @@ public class IBCHTest {
                     scheme.KeyGen(sk2, SP, msk, ID2);
                     assertFalse(sk1.S_ID.equals(sk2.S_ID), "sk1 != sk2");
 
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.HashValue h1 = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.HashValue();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.HashValue h2 = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.HashValue();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.Randomness r1 = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.Randomness();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.Randomness r2 = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.Randomness();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.Randomness r1_p = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap.Randomness();
+                    MCL_swap.HashValue h1 = new MCL_swap.HashValue();
+                    MCL_swap.HashValue h2 = new MCL_swap.HashValue();
+                    MCL_swap.Randomness r1 = new MCL_swap.Randomness();
+                    MCL_swap.Randomness r2 = new MCL_swap.Randomness();
+                    MCL_swap.Randomness r1_p = new MCL_swap.Randomness();
 
                     scheme.Hash(h1, r1, SP, ID1, L1, m1);
                     assertTrue(scheme.Check(h1, r1, SP, sk1, L1, m1), "H(L1, m1) valid");
@@ -199,7 +209,7 @@ public class IBCHTest {
             @DisplayName("test PBC impl")
             @ParameterizedTest(name = "test curve {0}")
             @EnumSource(names = {"A", "A1", "E"})
-            void JPBCTest(curve.PBC curve) {
+            void JPBCTest(PBC curve) {
                 scheme.IBCH.IB_CH_MD_LSX_2022.PBC scheme = new scheme.IBCH.IB_CH_MD_LSX_2022.PBC();
                 scheme.IBCH.IB_CH_MD_LSX_2022.PBC.PublicParam pp = new scheme.IBCH.IB_CH_MD_LSX_2022.PBC.PublicParam(curve);
                 scheme.IBCH.IB_CH_MD_LSX_2022.PBC.MasterSecretKey msk = new scheme.IBCH.IB_CH_MD_LSX_2022.PBC.MasterSecretKey();
@@ -247,7 +257,7 @@ public class IBCHTest {
             @DisplayName("test PBC impl")
             @ParameterizedTest(name = "test curve {0} swap_G1G2 {1}")
             @MethodSource("IBCHTest#GetPBCInvert")
-            void JPBCTest(curve.PBC curve, boolean swap_G1G2) {
+            void JPBCTest(PBC curve, boolean swap_G1G2) {
                 scheme.IBCH.IB_CH_ZSS_S1_2003.PBC scheme = new scheme.IBCH.IB_CH_ZSS_S1_2003.PBC();
                 scheme.IBCH.IB_CH_ZSS_S1_2003.PBC.PublicParam SP = new scheme.IBCH.IB_CH_ZSS_S1_2003.PBC.PublicParam(curve, swap_G1G2);
                 scheme.IBCH.IB_CH_ZSS_S1_2003.PBC.MasterSecretKey msk = new scheme.IBCH.IB_CH_ZSS_S1_2003.PBC.MasterSecretKey();
@@ -363,6 +373,62 @@ public class IBCHTest {
                     assertFalse(scheme.Check(h1, r1_p, SP, ID1, m1), "Adapt(L1, m1) invalid");
                 }
             }
+
+            @DisplayName("test abstract impl")
+            @ParameterizedTest(name = "test curve {0}")
+            @EnumSource
+            void ABSTest(CurveName curveName) {
+                try {
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("curve_param", new HashMap<>());
+                    IBCH scheme = (IBCH) SchemeFactory.createScheme(IBCH_ZSS_2003_S1, curveName, params);
+
+                    PublicParam pp = (PublicParam) SchemeFactory.createPublicParam(IBCH_ZSS_2003_S1, curveName, params);
+                    MasterSecretKey msk = new MasterSecretKey();
+                    scheme.Setup(pp, msk);
+                    SecretKey sk1 = new SecretKey();
+                    Identity ID1 = new Identity("ID1");
+                    scheme.KeyGen(sk1, pp, msk, ID1);
+
+                    SecretKey sk2 = new SecretKey();
+                    Identity ID2 = new Identity("ID2");
+                    scheme.KeyGen(sk2, pp, msk, ID2);
+
+                    Message m1 = new Message("msg1");
+                    Message m2 = new Message("msg2");
+
+                    HashValue h1 = new HashValue();
+                    Randomness r1 = new Randomness();
+                    scheme.Hash(h1, r1, pp, ID1, m1);
+
+                    assertTrue(scheme.Ver(pp, ID1, m1, h1, r1));
+                    assertFalse(scheme.Ver(pp, ID2, m1, h1, r1));
+                    assertFalse(scheme.Ver(pp, ID1, m2, h1, r1));
+
+                    HashValue h2 = new HashValue();
+                    Randomness r2 = new Randomness();
+                    scheme.Hash(h2, r2, pp, ID2, m2);
+
+                    assertTrue(scheme.Ver(pp, ID2, m2, h2, r2));
+                    assertFalse(scheme.Ver(pp, ID1, m2, h2, r2));
+                    assertFalse(scheme.Ver(pp, ID2, m1, h2, r2));
+                    assertFalse(scheme.Ver(pp, ID2, m2, h1, r2));
+                    assertFalse(scheme.Ver(pp, ID2, m2, h2, r1));
+
+                    Randomness r1_p = new Randomness();
+
+                    AdditivePoint diff_r = sk1.S_ID.mul(pp.H1(m1.m).subtract(pp.H1(m2.m)));
+                    MultivePoint test1 = pp.curve.Pairing(diff_r, pp.P);
+
+                    scheme.Col(r1_p, pp, ID1, sk1, m1, h1, r1, m2);
+                    assertTrue(scheme.Ver(pp, ID1, m1, h1, r1), "Adapt(L1, m2) valid");
+                    assertTrue(scheme.Ver(pp, ID1, m2, h1, r1_p), "Adapt(L1, m2) valid");
+                    assertFalse(scheme.Ver(pp, ID1, m1, h1, r1_p), "Adapt(L1, m1) invalid");
+                } catch (Exception e) {
+                    if (!(e.getMessage().contains("只支持对称群") && !curveName.isSymmetic())) throw new RuntimeException(e.getMessage());
+                }
+            }
+
         }
 
         @DisplayName("test IB_CH_ZSS_S2_2003")
@@ -371,7 +437,7 @@ public class IBCHTest {
             @DisplayName("test PBC impl")
             @ParameterizedTest(name = "test curve {0}")
             @EnumSource(names = {"A", "A1", "E"})
-            void JPBCTest(curve.PBC curve) {
+            void JPBCTest(PBC curve) {
                 scheme.IBCH.IB_CH_ZSS_S2_2003.PBC scheme = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC();
                 scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.PublicParam pp = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.PublicParam(curve);
                 scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.MasterSecretKey msk = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.MasterSecretKey();
@@ -419,7 +485,7 @@ public class IBCHTest {
             @DisplayName("test PBC impl")
             @ParameterizedTest(name = "test curve {0}, Identity len = {1}, swap_G1G2 {2}")
             @MethodSource("IBCHTest#GetPBCInvertIdentityLen")
-            void JPBCTest(curve.PBC curve, int n, boolean swap_G1G2) {
+            void JPBCTest(PBC curve, int n, boolean swap_G1G2) {
                 scheme.IBCH.ID_B_CollRes_XSL_2021.PBC scheme = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC();
                 scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.PublicParam SP = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.PublicParam(curve, swap_G1G2, n);
                 scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.MasterSecretKey msk = new scheme.IBCH.ID_B_CollRes_XSL_2021.PBC.MasterSecretKey();

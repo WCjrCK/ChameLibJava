@@ -49,6 +49,7 @@ public abstract class Curve {
 
     public final Point createPoint(CurveGroup group) {
         Objects.requireNonNull(group, "群类型不能为空");
+        if (group == CurveGroup.Zp) return newPoint(group);
         if (representation(group) == PointRepresentation.ADDITIVE) return (Point) createAdditivePoint(group);
         return (Point) createMultivePoint(group);
     }
@@ -76,4 +77,28 @@ public abstract class Curve {
     protected abstract Point newPoint(CurveGroup group);
 
     public abstract Point Pairing(Point p1, Point p2);
+
+    public abstract Point HashToG1(byte[] hash);
+
+    public abstract Point HashToG2(byte[] hash);
+
+    public abstract Point HashToGT(byte[] hash);
+
+    public abstract Point HashToZp(byte[] hash);
+
+    public final Point Pairing(AdditivePoint p1, AdditivePoint p2) {
+        return Pairing((Point) p1, (Point) p2);
+    }
+
+    public final Point Pairing(AdditivePoint p1, MultivePoint p2) {
+        return Pairing((Point) p1, (Point) p2);
+    }
+
+    public final Point Pairing(MultivePoint p1, AdditivePoint p2) {
+        return Pairing((Point) p1, (Point) p2);
+    }
+
+    public final Point Pairing(MultivePoint p1, MultivePoint p2) {
+        return Pairing((Point) p1, (Point) p2);
+    }
 }

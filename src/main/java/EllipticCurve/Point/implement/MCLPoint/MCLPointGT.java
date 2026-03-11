@@ -58,4 +58,20 @@ public class MCLPointGT extends Point {
     public final byte[] toBytes() {
         throw new UnsupportedOperationException("MCLPoint 不支持序列化");
     }
+
+    @Override
+    public final BigInteger toBigInteger() {
+        throw new UnsupportedOperationException("MCLPoint 不支持序列化");
+    }
+
+    @Override
+    public final String toString() {
+        return p.toString();
+    }
+
+    @Override
+    public final boolean isEqual(Point other) {
+        if(!(other instanceof MCLPointGT)) return false;
+        return p.equals(((MCLPointGT) other).p);
+    }
 }

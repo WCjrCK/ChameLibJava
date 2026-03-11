@@ -5,25 +5,32 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import EllipticCurve.Curve.implement.CurveImplementLib;
-public enum CurveName {
-    A(CurveImplementLib.PBC),
-    A1(CurveImplementLib.PBC),
-    D_159(CurveImplementLib.PBC), D_201(CurveImplementLib.PBC), D_224(CurveImplementLib.PBC), D_105171_196_185(CurveImplementLib.PBC), D_277699_175_167(CurveImplementLib.PBC), D_278027_190_181(CurveImplementLib.PBC),
-    E(CurveImplementLib.PBC),
-    F(CurveImplementLib.PBC), SM_9(CurveImplementLib.PBC),
-    G_149(CurveImplementLib.PBC),
-    PBC_CUSTOM(CurveImplementLib.PBC),
+import static EllipticCurve.Curve.implement.CurveImplementLib.*;
 
-    BN254(CurveImplementLib.MCL),
-    BLS12_381(CurveImplementLib.MCL),
-    SECP256K1(CurveImplementLib.MCL);
+public enum CurveName {
+    A(PBC, true),
+    A1(PBC, true),
+    E(PBC, true),
+
+    D_159(PBC, false), D_201(PBC, false), D_224(PBC, false),
+    D_105171_196_185(PBC, false), D_277699_175_167(PBC, false), D_278027_190_181(PBC, false),
+
+    F(PBC, false), SM_9(PBC, false),
+    G_149(PBC, false),
+    PBC_CUSTOM(PBC, false),
+
+    BN254(CurveImplementLib.MCL, false),
+    BLS12_381(CurveImplementLib.MCL, false),
+    SECP256K1(CurveImplementLib.MCL, false);
 
     private final CurveImplementLib implementLib;
+    private final boolean symmetric;
 
     private static final Map<String, CurveName> LOOKUP = new ConcurrentHashMap<>();
     
-    CurveName(CurveImplementLib implementLib) {
+    CurveName(CurveImplementLib implementLib, boolean symmetric) {
         this.implementLib = implementLib;
+        this.symmetric = symmetric;
     }
 
     static {
@@ -53,5 +60,9 @@ public enum CurveName {
 
     private static String normalize(String value) {
         return value.trim().replace('-', '_').toUpperCase(Locale.ROOT);
+    }
+
+    public boolean isSymmetic() {
+        return symmetric;
     }
 }
