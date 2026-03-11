@@ -9,7 +9,7 @@ public class Impl extends IBCH {
             MasterSecretKey msk
     ) {
         msk.s = pp.curve.createPoint(CurveGroup.Zp);
-        pp.P = pp.curve.createPoint(CurveGroup.G1);
+        pp.P = pp.curve.createPoint(CurveGroup.G2);
         pp.P_pub = pp.P.mulZn(msk.s);
     }
 

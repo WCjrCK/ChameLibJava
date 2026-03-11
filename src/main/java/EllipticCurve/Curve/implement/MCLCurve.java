@@ -83,7 +83,7 @@ public class MCLCurve extends Curve {
     public final MCLPointG2 HashToG2(byte[] hash) {
         G2 res = new G2();
         Mcl.hashAndMapToG2(res, hash);
-        return new MCLPointG2(res, curveName(), CurveGroup.G1);
+        return new MCLPointG2(res, curveName(), CurveGroup.G2);
     }
 
     @Override

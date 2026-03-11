@@ -20,9 +20,7 @@ public class IBCHFactory {
 
     public static scheme.Components.PublicParam createPublicParam(SchemeName schemeName, CurveName curveName, Map<String, Object> params) {
         switch (schemeName) {
-            case IBCH_ZSS_2003_S1:
-                if(!curveName.isSymmetic()) throw new IllegalArgumentException(schemeName + "方案只支持对称群");
-                return new PublicParam(curveName, params);
+            case IBCH_ZSS_2003_S1: return new PublicParam(curveName, params);
         }
         throw new IllegalArgumentException("尚未支持当前方案：" + schemeName.name());
     }

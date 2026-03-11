@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class PublicParam extends scheme.Components.PublicParam {
     public AdditivePoint P;
-    public AdditivePoint P_pub; // G_1
+    public AdditivePoint P_pub; // G_2
 
     public PublicParam(CurveName curveName, Map<String, Object> params) {
         super(curveName, params);
