@@ -1,0 +1,49 @@
+package EllipticCurve.Point.implement;
+
+import java.math.BigInteger;
+
+import EllipticCurve.Curve.CurveGroup;
+import EllipticCurve.Curve.CurveName;
+import EllipticCurve.Point.Point;
+import it.unisa.dia.gas.jpbc.Element;
+
+public class PBCPoint extends Point {
+    public Element p;
+
+    public PBCPoint(Element p, CurveName curve, CurveGroup group) {
+        super(curve, group);
+        this.p = p;
+    }
+    
+    @Override
+    protected final PBCPoint addCore(Point other) {
+        if (other instanceof PBCPoint) return new PBCPoint(p.add(((PBCPoint) other).p), curve(), group());
+        else throw new IllegalArgumentException("不支持的点类型");
+    }
+    
+    @Override
+    protected final PBCPoint subCore(Point other) {
+        if (other instanceof PBCPoint) return new PBCPoint(p.sub(((PBCPoint) other).p), curve(), group());
+        else throw new IllegalArgumentException("不支持的点类型");
+    }
+    
+    @Override
+    protected final PBCPoint mulCore(BigInteger scalar) {
+        return new PBCPoint(p.mul(scalar), curve(), group());
+    }
+    
+    @Override
+    protected final PBCPoint negCore() {
+        return new PBCPoint(p.negate(), curve(), group());
+    }
+
+    // @Override
+    // public final PBCPoint copy() {
+    //     return new PBCPoint(p.duplicate(), curve(), group());
+    // }
+
+    @Override
+    public final byte[] toBytes() {
+        return p.toBytes();
+    }
+}
