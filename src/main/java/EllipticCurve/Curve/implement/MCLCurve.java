@@ -15,11 +15,14 @@ import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Curve.GroupRepresentationProfile;
 import EllipticCurve.Point.Point;
 import EllipticCurve.Point.implement.MCLPoint.*;
+import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
 public class MCLCurve extends Curve {
     boolean swap_G1G2;
     public MCLCurve(CurveName curveName, GroupRepresentationProfile profile, Map<String, Object> params) {
         super(curveName, profile, params);
+        System.loadLibrary("mcljava");
+        PairingFactory.getInstance().setUsePBCWhenPossible(true);
         if (!curveName.checkLib(CurveImplementLib.MCL)) throw new IllegalArgumentException("曲线 " + curveName + " 不属于 MCL 库");
         if (!params.containsKey("swap_G1G2")) this.swap_G1G2 = false;
         else this.swap_G1G2 = (Boolean) params.get("swap_G1G2");

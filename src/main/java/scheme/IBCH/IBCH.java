@@ -13,8 +13,6 @@ public abstract class IBCH extends Scheme {
 
     public abstract SecretKey createSecretKey();
 
-    public abstract Identity createIdentity(String ID);
-
     public abstract HashValue createHashValue();
 
     public abstract Randomness createRandomness();

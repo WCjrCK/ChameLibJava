@@ -3,6 +3,7 @@ package scheme.IBCH.implement.ZSS_2003;
 import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.Point;
+import scheme.Components.Identity;
 import utils.ElementCounter;
 
 import java.nio.charset.StandardCharsets;
@@ -62,4 +63,8 @@ public class PublicParam extends scheme.Components.PublicParam {
         return new Message(msg);
     }
 
+    @Override
+    public final scheme.Components.Identity createIdentity(String ID) {
+        return new scheme.IBCH.implement.ZSS_2003.Identity(ID);
+    }
 }

@@ -27,7 +27,6 @@ import static EllipticCurve.Curve.CurveName.PBC_CUSTOM;
 import static EllipticCurve.Curve.CurveName.SECP256K1;
 import static PerformTest.BasicParam.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static utils.Func.InitialLib;
 import static scheme.SchemeName.*;
 
 public class RealTimeTest {
@@ -36,8 +35,8 @@ public class RealTimeTest {
     static HashMap<SchemeName, Integer> SNToIdx = new HashMap<>();
 
     static List<SchemeName> skipList = List.of(new SchemeName[]{
-            IBCH_ZSS_2003_S1,
-            IBCH_ZSS_2003_S2,
+//            IBCH_ZSS_2003_S1,
+//            IBCH_ZSS_2003_S2,
     });
 
     @BeforeAll
@@ -102,7 +101,7 @@ public class RealTimeTest {
                 r[i] = scheme.createRandomness();
                 r_p[i] = scheme.createRandomness();
 
-                ID[i] = scheme.createIdentity("ID_" + i);
+                ID[i] = pp.createIdentity("ID_" + i);
                 m[i] = pp.createMessage("msg_" + i);
                 m_p[i] = pp.createMessage("msg_" + i + "_p");
             }

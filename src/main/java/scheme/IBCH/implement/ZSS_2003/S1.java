@@ -28,11 +28,6 @@ public class S1 extends IBCH {
     }
 
     @Override
-    public final scheme.Components.Identity createIdentity(String ID) {
-        return new Identity(ID);
-    }
-
-    @Override
     public final scheme.Components.HashValue createHashValue() {
         return new HashValue();
     }

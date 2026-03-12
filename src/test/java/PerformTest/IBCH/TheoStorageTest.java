@@ -29,6 +29,7 @@ public class TheoStorageTest {
             IBCH_ZSS_2003_S1,
             IBCH_ZSS_2003_S2,
             IBCH_CZS_2014,
+            IBCH_LSX_2022,
     });
 
     @BeforeAll
@@ -45,7 +46,7 @@ public class TheoStorageTest {
             MasterSecretKey msk = scheme.createMasterSecretKey();
             scheme.Setup(pp, msk);
             SecretKey sk = scheme.createSecretKey();
-            Identity ID = scheme.createIdentity("ID1");
+            Identity ID = pp.createIdentity("ID1");
             scheme.KeyGen(sk, pp, msk, ID);
             Message m = pp.createMessage("msg");
             HashValue h = scheme.createHashValue();

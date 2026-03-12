@@ -73,4 +73,8 @@ public class PublicParam extends scheme.Components.PublicParam {
         return res;
     }
 
+    @Override
+    public final scheme.Components.Identity createIdentity(String ID) {
+        return new Identity(ID);
+    }
 }

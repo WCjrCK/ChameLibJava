@@ -12,7 +12,9 @@ import static scheme.SchemeCurveRequire.*;
 public enum SchemeName {
     IBCH_ZSS_2003_S1(IBCH, ALL),
     IBCH_ZSS_2003_S2(IBCH, SYMMETRIC),
-    IBCH_CZS_2014(IBCH, ALL);
+    IBCH_CZS_2014(IBCH, ALL),
+    IBCH_LSX_2022(IBCH, SYMMETRIC),
+    ;
 
     public final SchemeType schemeType;
     public final SchemeCurveRequire schemeCurveRequire;

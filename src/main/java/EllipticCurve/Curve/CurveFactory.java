@@ -31,4 +31,8 @@ public final class CurveFactory {
     public static Curve create(CurveName curveName, PointRepresentation r) {
         return create(curveName, r, r, r, Collections.emptyMap());
     }
+
+    public static Curve create(CurveName curveName, PointRepresentation r, Map<String, Object> params) {
+        return create(curveName, r, r, r, Collections.emptyMap());
+    }
 }

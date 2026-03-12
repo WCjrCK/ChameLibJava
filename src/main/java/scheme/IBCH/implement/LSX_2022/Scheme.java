@@ -1,17 +1,18 @@
-package scheme.IBCH.implement.ZSS_2003;
+package scheme.IBCH.implement.LSX_2022;
 
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
+import EllipticCurve.Point.AdditivePoint;
 import scheme.IBCH.IBCH;
 
 import java.util.Map;
 
 /*
- * ID-Based Chameleon Hashes from Bilinear Pairings
- * P4. 4.2 Scheme 2
+ * Identity-based chameleon hashing and signatures without key exposure
+ * P6. 4.1. The proposed identity-based chameleon hash scheme
  */
 
-public class S2 extends IBCH {
+public class Scheme extends IBCH {
     @Override
     public final scheme.Components.PublicParam createPublicParam(CurveName curveName, Map<String, Object> params) {
         return new PublicParam(curveName, params);
@@ -41,9 +42,13 @@ public class S2 extends IBCH {
             PublicParam pp,
             MasterSecretKey msk
     ) {
-        msk.s = pp.curve.createPoint(CurveGroup.Zp);
-        pp.P = pp.curve.createPoint(CurveGroup.G1);
-        pp.P_pub = pp.P.mulZn(msk.s);
+        msk.alpha = pp.curve.createPoint(CurveGroup.Zp);
+        msk.beta = pp.curve.createPoint(CurveGroup.Zp);
+        pp.g = pp.curve.createPoint(CurveGroup.G1);
+        pp.g_1 = pp.g.pow(msk.alpha);
+        pp.g_2 = pp.g.pow(msk.beta);
+        pp.egg = pp.curve.Pairing(pp.g, pp.g);
+        pp.eg_2g = pp.curve.Pairing(pp.g_2, pp.g);
     }
 
     @Override
@@ -62,8 +67,8 @@ public class S2 extends IBCH {
             MasterSecretKey msk,
             Identity ID
     ) {
-        sk.S_ID = pp.H0(ID.ID).mulZn(msk.s);
-        sk.S_ID = pp.P.mulZn(msk.s.add(pp.H1(ID.ID)).invZn());
+        sk.td_1 = pp.curve.createPoint(CurveGroup.Zp);
+        sk.td_2 = pp.g.pow(msk.beta.sub(sk.td_1).mulZn(msk.alpha.sub(ID.ID).invZn()));
     }
 
     @Override
@@ -81,11 +86,12 @@ public class S2 extends IBCH {
     }
 
     public void CalHash(HashValue h, PublicParam pp, Identity ID, Message m, Randomness r) {
-        h.h = pp.curve.Pairing(pp.P, pp.P).mul(pp.curve.Pairing(pp.P_pub.add(pp.P.mulZn(pp.H1(ID.ID))), r.R)).pow(pp.H1(m.m));
+        h.h = pp.eg_2g.pow(m.m).mul(pp.egg.pow(r.r_1)).mul(pp.curve.Pairing(r.r_2, pp.g_1.mul(pp.g.pow(ID.ID.neg()))));
     }
 
     public void Hash(HashValue h, Randomness r, PublicParam pp, Identity ID, Message m) {
-        r.R = pp.curve.createPoint(CurveGroup.G1);
+        r.r_1 = pp.curve.createPoint(CurveGroup.Zp);
+        r.r_2 = pp.curve.createPoint(CurveGroup.G1);
         CalHash(h, pp, ID, m, r);
     }
 
@@ -127,8 +133,10 @@ public class S2 extends IBCH {
         return Ver((PublicParam) pp, (Identity) ID, (Message) m, (HashValue) h, (Randomness) r);
     }
 
-    public void Col(Randomness r_p, PublicParam pp, SecretKey sk, Message m, Randomness r, Message m_p) {
-        r_p.R = sk.S_ID.mulZn(pp.H1(m.m).sub(pp.H1(m_p.m))).add(r.R.mulZn(pp.H1(m.m))).mulZn(pp.H1(m_p.m).invZn());
+    public void Col(Randomness r_p, SecretKey sk, Message m, Randomness r, Message m_p) {
+        AdditivePoint delta_m = m.m.sub(m_p.m);
+        r_p.r_1 = r.r_1.add(sk.td_1.mulZn(delta_m));
+        r_p.r_2 = r.r_2.mul(sk.td_2.pow(delta_m));
     }
 
     @Override
@@ -151,6 +159,6 @@ public class S2 extends IBCH {
         if(!(r instanceof Randomness)) throw new IllegalArgumentException("随机值不适配当前方案");
         if(!(m_p instanceof Message)) throw new IllegalArgumentException("新消息不适配当前方案");
         if(!Ver((PublicParam) pp, (Identity) ID, (Message) m, (HashValue) h, (Randomness) r)) throw new IllegalArgumentException("参数有误，哈希值与原消息不对应");
-        Col((Randomness) r_p, (PublicParam) pp, (SecretKey) sk, (Message) m, (Randomness) r, (Message) m_p);
+        Col((Randomness) r_p, (SecretKey) sk, (Message) m, (Randomness) r, (Message) m_p);
     }
 }
