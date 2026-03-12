@@ -1,6 +1,6 @@
 package scheme.PBCH.PCH_DSS_2019;
 
-import SE.AES_RAW;
+import Encryption.AES_RAW;
 import base.GroupParam.PBC.Asymmetry;
 import utils.BooleanFormulaParser;
 import utils.Hash;

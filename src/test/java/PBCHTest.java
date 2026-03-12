@@ -168,7 +168,7 @@ public class PBCHTest {
 
             @DisplayName("test MCL impl")
             @ParameterizedTest(name = "test curve {0} k = {1}")
-            // BadCaseTest#MCL_Bad_Case#Case2
+            // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case2
             @MethodSource("PBCHTest#GetMCLInvertk")
             void MCLTest(MCL curve, int k) {
                 Func.MCLInit(curve);

@@ -131,7 +131,7 @@ public class ABETest {
 
             @DisplayName("test MCL impl")
             @ParameterizedTest(name = "test curve {0}")
-            // BadCaseTest#MCL_Bad_Case#Case2
+            // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case2
             @EnumSource(names = {"BN254", "BLS12_381"})
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);

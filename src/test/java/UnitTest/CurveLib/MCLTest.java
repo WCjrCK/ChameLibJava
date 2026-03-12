@@ -1,3 +1,5 @@
+package UnitTest.CurveLib;
+
 import com.herumi.mcl.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

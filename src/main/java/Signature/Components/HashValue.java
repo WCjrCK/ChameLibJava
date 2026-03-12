@@ -1,0 +1,9 @@
+package Signature.Components;
+
+import utils.ElementCounter;
+
+public abstract class HashValue {
+    public abstract boolean isEqual(HashValue other);
+
+    public abstract ElementCounter TheoSize();
+}

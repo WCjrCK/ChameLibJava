@@ -1,3 +1,5 @@
+package UnitTest.CurveLib;
+
 import com.herumi.mcl.*;
 import curve.Group;
 import curve.MCL;

@@ -1,4 +1,6 @@
-import Signature.BLS.PBC;
+package UnitTest.ToolsScheme;
+
+import Signature.BLS_RAW.PBC;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,7 +24,7 @@ public class SignatureTest {
         @ParameterizedTest(name = "test curve {0} swap_G1G2 {1}")
         @MethodSource("ABETest#GetPBCInvert")
         void JPBCTest(curve.PBC curve, boolean swap_G1G2) {
-            Signature.BLS.PBC scheme = new Signature.BLS.PBC();
+            Signature.BLS_RAW.PBC scheme = new Signature.BLS_RAW.PBC();
             PBC.PublicParam SP = new PBC.PublicParam(curve, swap_G1G2);
             PBC.PublicKey pk1 = new PBC.PublicKey();
             PBC.PublicKey pk2 = new PBC.PublicKey();

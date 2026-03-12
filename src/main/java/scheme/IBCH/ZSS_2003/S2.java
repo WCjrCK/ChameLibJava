@@ -105,14 +105,14 @@ public class S2 extends IBCH {
         Hash((HashValue) h, (Randomness) r, (PublicParam) pp, (Identity) ID, (Message) m);
     }
 
-    public boolean Ver(PublicParam pp, Identity ID, Message m, HashValue h, Randomness r) {
+    public boolean Verify(PublicParam pp, Identity ID, Message m, HashValue h, Randomness r) {
         HashValue tmp = new HashValue();
         CalHash(tmp, pp, ID, m, r);
         return tmp.isEqual(h);
     }
 
     @Override
-    public boolean Ver(
+    public boolean Verify(
             scheme.Components.PublicParam pp,
             scheme.Components.Identity ID,
             scheme.Components.Message m,
@@ -124,15 +124,15 @@ public class S2 extends IBCH {
         if(!(m instanceof Message)) throw new IllegalArgumentException("消息不适配当前方案");
         if(!(h instanceof HashValue)) throw new IllegalArgumentException("哈希值不适配当前方案");
         if(!(r instanceof Randomness)) throw new IllegalArgumentException("随机值不适配当前方案");
-        return Ver((PublicParam) pp, (Identity) ID, (Message) m, (HashValue) h, (Randomness) r);
+        return Verify((PublicParam) pp, (Identity) ID, (Message) m, (HashValue) h, (Randomness) r);
     }
 
-    public void Col(Randomness r_p, PublicParam pp, SecretKey sk, Message m, Randomness r, Message m_p) {
+    public void Collision(Randomness r_p, PublicParam pp, SecretKey sk, Message m, Randomness r, Message m_p) {
         r_p.R = sk.S_ID.mulZn(pp.H1(m.m).sub(pp.H1(m_p.m))).add(r.R.mulZn(pp.H1(m.m))).mulZn(pp.H1(m_p.m).invZn());
     }
 
     @Override
-    public void Col(
+    public void Collision(
             scheme.Components.Randomness r_p,
             scheme.Components.PublicParam pp,
             scheme.Components.Identity ID,
@@ -150,7 +150,7 @@ public class S2 extends IBCH {
         if(!(h instanceof HashValue)) throw new IllegalArgumentException("哈希值不适配当前方案");
         if(!(r instanceof Randomness)) throw new IllegalArgumentException("随机值不适配当前方案");
         if(!(m_p instanceof Message)) throw new IllegalArgumentException("新消息不适配当前方案");
-        if(!Ver((PublicParam) pp, (Identity) ID, (Message) m, (HashValue) h, (Randomness) r)) throw new IllegalArgumentException("参数有误，哈希值与原消息不对应");
-        Col((Randomness) r_p, (PublicParam) pp, (SecretKey) sk, (Message) m, (Randomness) r, (Message) m_p);
+        if(!Verify((PublicParam) pp, (Identity) ID, (Message) m, (HashValue) h, (Randomness) r)) throw new IllegalArgumentException("参数有误，哈希值与原消息不对应");
+        Collision((Randomness) r_p, (PublicParam) pp, (SecretKey) sk, (Message) m, (Randomness) r, (Message) m_p);
     }
 }

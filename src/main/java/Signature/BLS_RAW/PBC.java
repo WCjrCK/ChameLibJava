@@ -1,4 +1,4 @@
-package Signature.BLS;
+package Signature.BLS_RAW;
 
 import it.unisa.dia.gas.jpbc.Element;
 import utils.Hash;

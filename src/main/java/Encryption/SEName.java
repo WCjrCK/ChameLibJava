@@ -1,4 +1,4 @@
-package SE;
+package Encryption;
 
 public enum SEName {
     AES

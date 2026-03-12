@@ -1,6 +1,6 @@
 package scheme.PBCH.RPCH_XNM_2021;
 
-import SE.AES_RAW;
+import Encryption.AES_RAW;
 import base.GroupParam.PBC.Asymmetry;
 import it.unisa.dia.gas.jpbc.Element;
 import utils.BooleanFormulaParser;

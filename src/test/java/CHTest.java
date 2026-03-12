@@ -86,7 +86,7 @@ public class CHTest {
 
         @DisplayName("test MCL impl")
         @ParameterizedTest(name = "test curve {0}")
-        // BadCaseTest#MCL_Bad_Case#Case2
+        // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case2
         @EnumSource(names = {"BN254", "BLS12_381"})
         @SuppressWarnings("SuspiciousNameCombination")
         void MCLTest(MCL curve) {
@@ -142,7 +142,7 @@ public class CHTest {
                 assertFalse(pi3.Check(y3, g2, g1, G1_tmp, Fr_tmp), "proof fail");
             }
             if(curve != MCL.SECP256K1) {
-                // BadCaseTest#MCL_Bad_Case#Case1
+                // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case1
                 Fr x1 = new Fr();
                 Func.GetMCLZrRandomElement(x1);
                 G2 g1 = new G2();
@@ -190,7 +190,7 @@ public class CHTest {
             }
 
             {
-                // BadCaseTest#MCL_Bad_Case#Case1
+                // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case1
                 Fr x1 = new Fr();
                 Func.GetMCLZrRandomElement(x1);
                 GT g1 = new GT();
@@ -437,7 +437,7 @@ public class CHTest {
 
             @DisplayName("test MCL impl")
             @ParameterizedTest(name = "test curve {0}")
-            // BadCaseTest#MCL_Bad_Case#Case2
+            // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case2
             @EnumSource(names = {"BN254", "BLS12_381"})
 //            @EnumSource(MCL.class)
             void MCLTest(MCL curve) {
@@ -618,7 +618,7 @@ public class CHTest {
             @SuppressWarnings({"LoopConditionNotUpdatedInsideLoop", "ConstantValue", "unused"})
             @DisplayName("test MCL impl")
             @ParameterizedTest(name = "test curve {0}")
-            // BadCaseTest#MCL_Bad_Case#Case2
+            // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case2
             @EnumSource(names = {"BN254", "BLS12_381"})
 //            @EnumSource(MCL.class)
             void MCLTest(MCL curve) {
@@ -673,7 +673,7 @@ public class CHTest {
                 } while(curve == MCL.SECP256K1);
 
                 if(curve != MCL.SECP256K1) {
-                    // BadCaseTest#MCL_Bad_Case#Case1
+                    // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case1
                     scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicParam PP = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicParam();
                     scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.LabelManager LM = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.LabelManager(PP);
                     scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2 scheme = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2();
@@ -717,7 +717,7 @@ public class CHTest {
                     scheme.IForge(r1_pp, r1, r1_p, m1, m2, m3);
                     assertTrue(scheme.Check(h1, r1_pp, PP, pk, L1, m3), "Adapt(m3) valid");
                 }{
-                    // BadCaseTest#MCL_Bad_Case#Case1
+                    // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case1
                     scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicParam PP = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicParam();
                     scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.LabelManager LM = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.LabelManager(PP);
                     scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT scheme = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT();
@@ -838,7 +838,7 @@ public class CHTest {
 
             @DisplayName("test MCL impl")
             @ParameterizedTest(name = "test curve {0}")
-            // BadCaseTest#MCL_Bad_Case#Case2
+            // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case2
             @EnumSource(names = {"BN254", "BLS12_381"})
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
@@ -1057,7 +1057,7 @@ public class CHTest {
 
             @DisplayName("test MCL impl")
             @ParameterizedTest(name = "test curve {0}")
-            // BadCaseTest#MCL_Bad_Case#Case2
+            // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case2
             @EnumSource(names = {"BN254", "BLS12_381"})
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
@@ -1220,7 +1220,7 @@ public class CHTest {
 
             @DisplayName("test MCL impl")
             @ParameterizedTest(name = "test curve {0}")
-            // BadCaseTest#MCL_Bad_Case#Case2
+            // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case2
             @EnumSource(names = {"BN254", "BLS12_381"})
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
@@ -1374,7 +1374,7 @@ public class CHTest {
 
             @DisplayName("test MCL impl")
             @ParameterizedTest(name = "test curve {0}")
-            // BadCaseTest#MCL_Bad_Case#Case2
+            // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case2
             @EnumSource(names = {"BN254", "BLS12_381"})
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
@@ -1504,7 +1504,7 @@ public class CHTest {
 
             @DisplayName("test MCL impl")
             @ParameterizedTest(name = "test curve {0}")
-            // BadCaseTest#MCL_Bad_Case#Case2
+            // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case2
             @EnumSource(names = {"BN254", "BLS12_381"})
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
@@ -1634,7 +1634,7 @@ public class CHTest {
 
             @DisplayName("test MCL impl")
             @ParameterizedTest(name = "test curve {0}")
-            // BadCaseTest#MCL_Bad_Case#Case2
+            // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case2
             @EnumSource(names = {"BN254", "BLS12_381"})
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
@@ -1768,7 +1768,7 @@ public class CHTest {
 
             @DisplayName("test MCL impl")
             @ParameterizedTest(name = "test curve {0}")
-            // BadCaseTest#MCL_Bad_Case#Case2
+            // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case2
             @EnumSource(names = {"BN254", "BLS12_381"})
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);

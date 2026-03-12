@@ -1,6 +1,6 @@
 package scheme.PBCH.RPCH_XNM_2021;
 
-import SE.AES_RAW;
+import Encryption.AES_RAW;
 import com.herumi.mcl.G1;
 import utils.BooleanFormulaParser;
 import utils.Hash;

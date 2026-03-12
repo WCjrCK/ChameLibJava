@@ -124,18 +124,18 @@ public class RealTimeTest {
             {
                 boolean res = true;
                 long start = System.nanoTime();
-                for(int i = 0;i < repeat_cnt;++i) res &= scheme.Ver(pp, ID[i], m[i], h[i], r[i]);
+                for(int i = 0;i < repeat_cnt;++i) res &= scheme.Verify(pp, ID[i], m[i], h[i], r[i]);
                 long end = System.nanoTime();
                 double duration = (end - start) / 1.0e6;
                 time_cost[++stage_id] = duration / repeat_cnt;
                 assertTrue(res, "Hash Check Failed");
             }
 
-            for(int i = 0;i < repeat_cnt;++i) scheme.Ver(pp, ID[i], m[i], h[i], r[i]);
+            for(int i = 0;i < repeat_cnt;++i) scheme.Verify(pp, ID[i], m[i], h[i], r[i]);
 
             {
                 long start = System.nanoTime();
-                for(int i = 0;i < repeat_cnt;++i) scheme.Col(r_p[i], pp, ID[i], sk[i], m[i], h[i], r[i], m_p[i]);
+                for(int i = 0;i < repeat_cnt;++i) scheme.Collision(r_p[i], pp, ID[i], sk[i], m[i], h[i], r[i], m_p[i]);
                 long end = System.nanoTime();
                 double duration = (end - start) / 1.0e6;
                 time_cost[++stage_id] = duration / repeat_cnt;
@@ -143,7 +143,7 @@ public class RealTimeTest {
 
             {
                 boolean res = true;
-                for(int i = 0;i < repeat_cnt;++i) res &= scheme.Ver(pp, ID[i], m_p[i], h[i], r_p[i]);
+                for(int i = 0;i < repeat_cnt;++i) res &= scheme.Verify(pp, ID[i], m_p[i], h[i], r_p[i]);
                 assertTrue(res, "Adapt Check Failed");
             }
             try {

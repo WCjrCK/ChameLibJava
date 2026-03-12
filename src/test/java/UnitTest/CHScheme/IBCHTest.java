@@ -1,5 +1,6 @@
+package UnitTest.CHScheme;
+
 import EllipticCurve.Curve.CurveName;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -19,16 +20,14 @@ import static EllipticCurve.Curve.CurveName.PBC_CUSTOM;
 import static EllipticCurve.Curve.CurveName.SECP256K1;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static scheme.SchemeName.*;
-import static utils.Func.InitialLib;
 
 public class IBCHTest {
     static List<SchemeName> skipList = List.of(new SchemeName[]{
-            IBCH_ZSS_2003_S1,
-            IBCH_ZSS_2003_S2,
-            IBCH_CZS_2014,
-            IBCH_LSX_2022,
-            IBCH_XSL_2021,
+//            IBCH_ZSS_2003_S1,
+//            IBCH_ZSS_2003_S2,
+//            IBCH_CZS_2014,
+//            IBCH_LSX_2022,
+//            IBCH_XSL_2021,
     });
 
     public static Stream<Arguments> GetABSCP() {
@@ -37,14 +36,9 @@ public class IBCHTest {
         );
     }
 
-    @BeforeEach
-    void initTest() {
-        InitialLib();
-    }
-
     @DisplayName("test abstract impl")
     @ParameterizedTest(name = "test scheme {0} curve {1}")
-    @MethodSource("IBCHTest#GetABSCP")
+    @MethodSource("UnitTest.CHScheme.IBCHTest#GetABSCP")
     void AllTest(SchemeName schemeName, CurveName curveName) {
         if (skipList.contains(schemeName)) return;
         if (curveName == SECP256K1) {
@@ -79,26 +73,26 @@ public class IBCHTest {
             Randomness r1 = scheme.createRandomness();
             scheme.Hash(h1, r1, pp, ID1, m1);
 
-            assertTrue(scheme.Ver(pp, ID1, m1, h1, r1));
-            assertFalse(scheme.Ver(pp, ID2, m1, h1, r1));
-            assertFalse(scheme.Ver(pp, ID1, m2, h1, r1));
+            assertTrue(scheme.Verify(pp, ID1, m1, h1, r1));
+            assertFalse(scheme.Verify(pp, ID2, m1, h1, r1));
+            assertFalse(scheme.Verify(pp, ID1, m2, h1, r1));
 
             HashValue h2 = scheme.createHashValue();
             Randomness r2 = scheme.createRandomness();
             scheme.Hash(h2, r2, pp, ID2, m2);
 
-            assertTrue(scheme.Ver(pp, ID2, m2, h2, r2));
-            assertFalse(scheme.Ver(pp, ID1, m2, h2, r2));
-            assertFalse(scheme.Ver(pp, ID2, m1, h2, r2));
-            assertFalse(scheme.Ver(pp, ID2, m2, h1, r2));
-            assertFalse(scheme.Ver(pp, ID2, m2, h2, r1));
+            assertTrue(scheme.Verify(pp, ID2, m2, h2, r2));
+            assertFalse(scheme.Verify(pp, ID1, m2, h2, r2));
+            assertFalse(scheme.Verify(pp, ID2, m1, h2, r2));
+            assertFalse(scheme.Verify(pp, ID2, m2, h1, r2));
+            assertFalse(scheme.Verify(pp, ID2, m2, h2, r1));
 
             Randomness r1_p = scheme.createRandomness();
 
-            scheme.Col(r1_p, pp, ID1, sk1, m1, h1, r1, m2);
-            assertTrue(scheme.Ver(pp, ID1, m1, h1, r1), "Adapt(L1, m2) valid");
-            assertTrue(scheme.Ver(pp, ID1, m2, h1, r1_p), "Adapt(L1, m2) valid");
-            assertFalse(scheme.Ver(pp, ID1, m1, h1, r1_p), "Adapt(L1, m1) invalid");
+            scheme.Collision(r1_p, pp, ID1, sk1, m1, h1, r1, m2);
+            assertTrue(scheme.Verify(pp, ID1, m1, h1, r1), "Adapt(L1, m2) valid");
+            assertTrue(scheme.Verify(pp, ID1, m2, h1, r1_p), "Adapt(L1, m2) valid");
+            assertFalse(scheme.Verify(pp, ID1, m1, h1, r1_p), "Adapt(L1, m1) invalid");
         } catch (IllegalArgumentException e) {
             if(e.getMessage().contains("不支持")) {
                 System.out.println(e.getMessage());

@@ -1,4 +1,4 @@
-package UnitTest;
+package UnitTest.CurveLib;
 
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveFactory;

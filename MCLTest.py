@@ -21,13 +21,13 @@ done = [
 #     'RPCH_XNM_2021'
 ]
 
-# os.system(f'mvn -Dtest=MCLTest.BasicTimeTest test')
+# os.system(f'mvn -Dtest=UnitTest.CurveLib.MCLTest.BasicTimeTest test')
 
 for scheme_type in ['CH', 'IBCH', 'PBCH']:
     os.makedirs(f'./data/MCL/{scheme_type}', exist_ok=True)
-    for dirpath, dirnames, filenames in os.walk(f'./src/test/java/MCLTest/{scheme_type}Test'):
+    for dirpath, dirnames, filenames in os.walk(f'./src/test/java/UnitTest.CurveLib.MCLTest/{scheme_type}Test'):
         for filename in filenames: 
             if filename[:-5] in done: continue
             open(f'./data/MCL/{scheme_type}/{filename[:-5]}.txt', 'w')
-            os.system(f'mvn -Dtest=MCLTest.{scheme_type}Test.{filename[:-5]} test')
+            os.system(f'mvn -Dtest=UnitTest.CurveLib.MCLTest.{scheme_type}Test.{filename[:-5]} test')
 

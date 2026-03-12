@@ -23,7 +23,7 @@ public class PBCCurve extends Curve {
         final String base_path = "./jpbc/params/";
         String param_path;
         if(curveName == CurveName.PBC_CUSTOM) {
-            if(!params.containsKey("param_file_path")) throw new IllegalArgumentException("自定义 PBC 曲线必须提供参数文件路径: param_file_path");
+            if(!params.containsKey("param_file_path")) throw new IllegalArgumentException("自定义 PBC 曲线必须提供参数文件路径（param_file_path）");
             param_path = params.get("param_file_path").toString();
         }else param_path = base_path + curveName.name().toLowerCase() + ".properties";
         try {

@@ -1,6 +1,6 @@
 package scheme.PBCH.DPCH_MXN_2022;
 
-import SE.AES_RAW;
+import Encryption.AES_RAW;
 import it.unisa.dia.gas.jpbc.Element;
 import utils.Hash;
 
@@ -16,22 +16,22 @@ import java.util.Random;
 public class PBC {
     public static class PublicParam {
         public ABE.MA_ABE.PBC.PublicParam GP_MA_ABE;
-        public Signature.BLS.PBC.PublicParam pp_DS;
+        public Signature.BLS_RAW.PBC.PublicParam pp_DS;
 
         public PublicParam(curve.PBC curve, boolean swap_G1G2) {
             GP_MA_ABE = new ABE.MA_ABE.PBC.PublicParam(curve);
-            pp_DS = new Signature.BLS.PBC.PublicParam(curve, swap_G1G2);
+            pp_DS = new Signature.BLS_RAW.PBC.PublicParam(curve, swap_G1G2);
         }
     }
 
     public static class MasterPublicKey {
         scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey pk_CH = new scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
-        Signature.BLS.PBC.PublicKey pk_DS = new Signature.BLS.PBC.PublicKey();
+        Signature.BLS_RAW.PBC.PublicKey pk_DS = new Signature.BLS_RAW.PBC.PublicKey();
     }
 
     public static class MasterSecretKey {
         scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey sk_CH = new scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
-        Signature.BLS.PBC.SecretKey sk_DS = new Signature.BLS.PBC.SecretKey();
+        Signature.BLS_RAW.PBC.SecretKey sk_DS = new Signature.BLS_RAW.PBC.SecretKey();
     }
 
     public static class Authority {
@@ -45,7 +45,7 @@ public class PBC {
     public static class Modifier {
         String gid;
         scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey sk_gid = new scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
-        Signature.BLS.PBC.Signature sigma_gid = new Signature.BLS.PBC.Signature();
+        Signature.BLS_RAW.PBC.Signature sigma_gid = new Signature.BLS_RAW.PBC.Signature();
         ABE.MA_ABE.PBC.SecretKey sk_gid_A = new ABE.MA_ABE.PBC.SecretKey();
 
         public Modifier(String gid) {
@@ -82,7 +82,7 @@ public class PBC {
     Random rand = new Random();
     ABE.MA_ABE.PBC MA_ABE = new ABE.MA_ABE.PBC();
     scheme.CH.CH_ET_BC_CDK_2017.Native CH_ET;
-    Signature.BLS.PBC DS = new Signature.BLS.PBC();
+    Signature.BLS_RAW.PBC DS = new Signature.BLS_RAW.PBC();
 
     public PBC(int lambda) {
         CH_ET = new scheme.CH.CH_ET_BC_CDK_2017.Native(lambda);
