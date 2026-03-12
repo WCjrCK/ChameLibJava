@@ -10,7 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
-public class PublicParam extends scheme.Components.PublicParam {
+public class PublicParam extends scheme.Components.PublicParam implements scheme.IBCH.Components.PublicParam {
     protected MultivePoint g, g_1, g_2, h_2, u_2, egg, eg_2g;
 
     public PublicParam(CurveName curveName, Map<String, Object> params) {
@@ -60,4 +60,25 @@ public class PublicParam extends scheme.Components.PublicParam {
         res.ID = curve.HashToZp(hash);
         return res;
     }
+
+    @Override
+    public final scheme.Components.MasterSecretKey createMasterSecretKey() {
+        return new MasterSecretKey();
+    }
+
+    @Override
+    public final scheme.Components.SecretKey createSecretKey() {
+        return new SecretKey();
+    }
+
+    @Override
+    public final scheme.Components.HashValue createHashValue() {
+        return new HashValue();
+    }
+
+    @Override
+    public final scheme.Components.Randomness createRandomness() {
+        return new Randomness();
+    }
+
 }

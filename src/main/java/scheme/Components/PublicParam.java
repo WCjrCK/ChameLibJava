@@ -15,6 +15,14 @@ public abstract class PublicParam {
 
     public abstract Identity createIdentity(String ID);
 
+    public abstract MasterSecretKey createMasterSecretKey();
+
+    public abstract SecretKey createSecretKey();
+
+    public abstract HashValue createHashValue();
+
+    public abstract Randomness createRandomness();
+
     protected PublicParam(CurveName curveName, Map<String, Object> params) {
         curve = CurveFactory.create(curveName, (Map<String, Object>) params.get("curve_param"));
     }

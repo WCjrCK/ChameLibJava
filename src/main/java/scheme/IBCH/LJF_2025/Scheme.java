@@ -12,30 +12,10 @@ import java.util.Map;
  * P6. V. PROPOSED IB-CH SCHEME WITHOUT KEY EXPOSURE
  */
 
-public class Scheme extends IBCH {
+public class Scheme extends scheme.Scheme implements IBCH {
     @Override
-    public final scheme.Components.PublicParam createPublicParam(CurveName curveName, Map<String, Object> params) {
+    public final scheme.IBCH.Components.PublicParam createPublicParam(CurveName curveName, Map<String, Object> params) {
         return new PublicParam(curveName, params);
-    }
-
-    @Override
-    public final scheme.Components.MasterSecretKey createMasterSecretKey() {
-        return new MasterSecretKey();
-    }
-
-    @Override
-    public final scheme.Components.SecretKey createSecretKey() {
-        return new SecretKey();
-    }
-
-    @Override
-    public final scheme.Components.HashValue createHashValue() {
-        return new HashValue();
-    }
-
-    @Override
-    public final scheme.Components.Randomness createRandomness() {
-        return new Randomness();
     }
 
     private void Setup(
@@ -55,8 +35,8 @@ public class Scheme extends IBCH {
 
     @Override
     public void Setup(
-            scheme.Components.PublicParam pp,
-            scheme.Components.MasterSecretKey msk
+            scheme.IBCH.Components.PublicParam pp,
+            scheme.IBCH.Components.MasterSecretKey msk
     ) {
         if(!(pp instanceof PublicParam)) throw new IllegalArgumentException("公共参数不适配当前方案");
         if(!(msk instanceof MasterSecretKey)) throw new IllegalArgumentException("主密钥不适配当前方案");
@@ -75,10 +55,10 @@ public class Scheme extends IBCH {
 
     @Override
     public void KeyGen(
-            scheme.Components.SecretKey sk,
-            scheme.Components.PublicParam pp,
-            scheme.Components.MasterSecretKey msk,
-            scheme.Components.Identity ID
+            scheme.IBCH.Components.SecretKey sk,
+            scheme.IBCH.Components.PublicParam pp,
+            scheme.IBCH.Components.MasterSecretKey msk,
+            scheme.IBCH.Components.Identity ID
     ) {
         if(!(sk instanceof SecretKey)) throw new IllegalArgumentException("密钥不适配当前方案");
         if(!(pp instanceof PublicParam)) throw new IllegalArgumentException("公共参数不适配当前方案");
@@ -100,11 +80,11 @@ public class Scheme extends IBCH {
 
     @Override
     public void Hash(
-            scheme.Components.HashValue h,
-            scheme.Components.Randomness r,
-            scheme.Components.PublicParam pp,
-            scheme.Components.Identity ID,
-            scheme.Components.Message m
+            scheme.IBCH.Components.HashValue h,
+            scheme.IBCH.Components.Randomness r,
+            scheme.IBCH.Components.PublicParam pp,
+            scheme.IBCH.Components.Identity ID,
+            scheme.IBCH.Components.Message m
     ) {
         if(!(h instanceof HashValue)) throw new IllegalArgumentException("哈希值不适配当前方案");
         if(!(r instanceof Randomness)) throw new IllegalArgumentException("随机值不适配当前方案");
@@ -122,11 +102,11 @@ public class Scheme extends IBCH {
 
     @Override
     public boolean Verify(
-            scheme.Components.PublicParam pp,
-            scheme.Components.Identity ID,
-            scheme.Components.Message m,
-            scheme.Components.HashValue h,
-            scheme.Components.Randomness r
+            scheme.IBCH.Components.PublicParam pp,
+            scheme.IBCH.Components.Identity ID,
+            scheme.IBCH.Components.Message m,
+            scheme.IBCH.Components.HashValue h,
+            scheme.IBCH.Components.Randomness r
     ) {
         if(!(pp instanceof PublicParam)) throw new IllegalArgumentException("公共参数不适配当前方案");
         if(!(ID instanceof Identity)) throw new IllegalArgumentException("身份标识不适配当前方案");
@@ -144,14 +124,14 @@ public class Scheme extends IBCH {
 
     @Override
     public void Collision(
-            scheme.Components.Randomness r_p,
-            scheme.Components.PublicParam pp,
-            scheme.Components.Identity ID,
-            scheme.Components.SecretKey sk,
-            scheme.Components.Message m,
-            scheme.Components.HashValue h,
-            scheme.Components.Randomness r,
-            scheme.Components.Message m_p
+            scheme.IBCH.Components.Randomness r_p,
+            scheme.IBCH.Components.PublicParam pp,
+            scheme.IBCH.Components.Identity ID,
+            scheme.IBCH.Components.SecretKey sk,
+            scheme.IBCH.Components.Message m,
+            scheme.IBCH.Components.HashValue h,
+            scheme.IBCH.Components.Randomness r,
+            scheme.IBCH.Components.Message m_p
     ) {
         if(!(r_p instanceof Randomness)) throw new IllegalArgumentException("新随机值不适配当前方案");
         if(!(pp instanceof PublicParam)) throw new IllegalArgumentException("公共参数不适配当前方案");

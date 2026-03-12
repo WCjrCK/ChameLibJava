@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import scheme.Components.*;
+import scheme.IBCH.Components.*;
 import scheme.IBCH.IBCH;
 import scheme.SchemeCurveRequire;
 import scheme.SchemeFactory;
@@ -75,7 +75,7 @@ public class RealTimeTest {
 
             IBCH scheme = (IBCH) SchemeFactory.createScheme(schemeName, curveName, params);
             PublicParam pp = scheme.createPublicParam(curveName, params);
-            MasterSecretKey msk = scheme.createMasterSecretKey();
+            MasterSecretKey msk = pp.createMasterSecretKey();
 
             int stage_id = -1;
             {
@@ -94,11 +94,11 @@ public class RealTimeTest {
             Message[] m = new Message[repeat_cnt];
             Message[] m_p = new Message[repeat_cnt];
             for (int i = 0; i < repeat_cnt; i++) {
-                sk[i] = scheme.createSecretKey();
-                h[i] = scheme.createHashValue();
+                sk[i] = pp.createSecretKey();
+                h[i] = pp.createHashValue();
 
-                r[i] = scheme.createRandomness();
-                r_p[i] = scheme.createRandomness();
+                r[i] = pp.createRandomness();
+                r_p[i] = pp.createRandomness();
 
                 ID[i] = pp.createIdentity("ID_" + i);
                 m[i] = pp.createMessage("msg_" + i);

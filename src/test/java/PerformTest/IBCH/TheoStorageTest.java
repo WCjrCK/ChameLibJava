@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import scheme.Components.*;
+import scheme.IBCH.Components.*;
 import scheme.IBCH.IBCH;
 import scheme.SchemeCurveRequire;
 import scheme.SchemeFactory;
@@ -20,16 +20,18 @@ import java.util.List;
 import java.util.Map;
 
 import static EllipticCurve.Curve.CurveName.E;
+import static scheme.SchemeName.*;
 
 public class TheoStorageTest {
     static public final String file_base_name = "theo_storage_cost";
 
     static List<SchemeName> skipList = List.of(new SchemeName[]{
-//            IBCH_ZSS_2003_S1,
-//            IBCH_ZSS_2003_S2,
-//            IBCH_CZS_2014,
-//            IBCH_LSX_2022,
-//            IBCH_XSL_2021,
+            IBCH_ZSS_2003_S1,
+            IBCH_ZSS_2003_S2,
+            IBCH_CZS_2014,
+            IBCH_LSX_2022,
+            IBCH_XSL_2021,
+//            IBCH_LJF_2025,
     });
 
     @BeforeAll
@@ -43,14 +45,14 @@ public class TheoStorageTest {
         private void testFunc(BufferedWriter theo_storage_cost, SchemeName schemeName, Map<String, Object> params) throws IOException {
             IBCH scheme = (IBCH) SchemeFactory.createScheme(schemeName, E, params);
             PublicParam pp = scheme.createPublicParam(E, params);
-            MasterSecretKey msk = scheme.createMasterSecretKey();
+            MasterSecretKey msk = pp.createMasterSecretKey();
             scheme.Setup(pp, msk);
-            SecretKey sk = scheme.createSecretKey();
+            SecretKey sk = pp.createSecretKey();
             Identity ID = pp.createIdentity("ID1");
             scheme.KeyGen(sk, pp, msk, ID);
             Message m = pp.createMessage("msg");
-            HashValue h = scheme.createHashValue();
-            Randomness r = scheme.createRandomness();
+            HashValue h = pp.createHashValue();
+            Randomness r = pp.createRandomness();
             scheme.Hash(h, r, pp, ID, m);
             theo_storage_cost.write("PublicParam, MasterSecretKey, SecretKey, Identity, Message, HashValue, Randomness\n");
             theo_storage_cost.write(

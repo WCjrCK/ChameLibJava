@@ -1,4 +1,6 @@
 package scheme;
 
-public abstract class Scheme {
+import scheme.IBCH.IBCH;
+
+public abstract class Scheme implements IBCH {
 }

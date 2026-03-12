@@ -9,7 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
-public class PublicParam extends scheme.Components.PublicParam {
+public class PublicParam extends scheme.Components.PublicParam implements scheme.IBCH.Components.PublicParam {
     protected AdditivePoint P;
     protected AdditivePoint P_pub;
 
@@ -64,4 +64,25 @@ public class PublicParam extends scheme.Components.PublicParam {
     public final scheme.Components.Identity createIdentity(String ID) {
         return new scheme.IBCH.ZSS_2003.Identity(ID);
     }
+
+    @Override
+    public final scheme.Components.MasterSecretKey createMasterSecretKey() {
+        return new MasterSecretKey();
+    }
+
+    @Override
+    public final scheme.Components.SecretKey createSecretKey() {
+        return new SecretKey();
+    }
+
+    @Override
+    public final scheme.Components.HashValue createHashValue() {
+        return new HashValue();
+    }
+
+    @Override
+    public final scheme.Components.Randomness createRandomness() {
+        return new Randomness();
+    }
+
 }

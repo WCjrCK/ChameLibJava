@@ -16,6 +16,7 @@ public enum SchemeName {
     IBCH_CZS_2014(IBCH, ALL),
     IBCH_LSX_2022(IBCH, SYMMETRIC),
     IBCH_XSL_2021(IBCH, ALL),
+    IBCH_LJF_2025(IBCH, SYMMETRIC),
     ;
 
     public final SchemeType schemeType;

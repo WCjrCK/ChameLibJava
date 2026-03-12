@@ -15,7 +15,7 @@ public class SchemeFactory {
 
     public static Scheme createScheme(SchemeName schemeName, CurveName curveName, Map<String, Object> params) {
         checkParams(schemeName, curveName, params);
-        if (schemeName.checkType(IBCH)) return IBCHFactory.createScheme(schemeName, params);
+        if (schemeName.checkType(IBCH)) return (scheme.Scheme) IBCHFactory.createScheme(schemeName, params);
         throw new IllegalArgumentException("尚未支持当前方案：" + schemeName.name());
     }
 

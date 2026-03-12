@@ -1,10 +1,10 @@
-package scheme.IBCH.CZS_2014;
+package Signature.BLS;
 
-import EllipticCurve.Point.Point;
+import EllipticCurve.Point.AdditivePoint;
 import utils.ElementCounter;
 
-public class MasterSecretKey extends scheme.Components.MasterSecretKey {
-    protected Point x;
+public class SecretKey extends Signature.Components.SecretKey {
+    AdditivePoint alpha;
 
     @Override
     public final ElementCounter TheoSize() {

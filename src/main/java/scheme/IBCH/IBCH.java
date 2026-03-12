@@ -1,29 +1,20 @@
 package scheme.IBCH;
 
 import EllipticCurve.Curve.CurveName;
-import scheme.Components.*;
-import scheme.Scheme;
+import scheme.IBCH.Components.*;
 
 import java.util.Map;
 
-public abstract class IBCH extends Scheme {
-    public abstract PublicParam createPublicParam(CurveName curveName, Map<String, Object> params);
+public interface IBCH {
+    PublicParam createPublicParam(CurveName curveName, Map<String, Object> params);
 
-    public abstract MasterSecretKey createMasterSecretKey();
+    void Setup(PublicParam pp, MasterSecretKey msk);
 
-    public abstract SecretKey createSecretKey();
+    void KeyGen(SecretKey sk, PublicParam pp, MasterSecretKey msk, Identity ID);
 
-    public abstract HashValue createHashValue();
+    void Hash(HashValue h, Randomness r, PublicParam pp, Identity ID, Message m);
 
-    public abstract Randomness createRandomness();
+    boolean Verify(PublicParam pp, Identity ID, Message m, HashValue h, Randomness r);
 
-    public abstract void Setup(PublicParam pp, MasterSecretKey msk);
-
-    public abstract void KeyGen(SecretKey sk, PublicParam pp, MasterSecretKey msk, Identity ID);
-
-    public abstract void Hash(HashValue h, Randomness r, PublicParam pp, Identity ID, Message m);
-
-    public abstract boolean Verify(PublicParam pp, Identity ID, Message m, HashValue h, Randomness r);
-
-    public abstract void Collision(Randomness r_p, PublicParam pp, Identity ID, SecretKey sk, Message m, HashValue h, Randomness r, Message m_p);
+    void Collision(Randomness r_p, PublicParam pp, Identity ID, SecretKey sk, Message m, HashValue h, Randomness r, Message m_p);
 }

@@ -14,7 +14,7 @@ import java.util.BitSet;
 import java.util.Map;
 import java.util.Random;
 
-public class PublicParam extends scheme.Components.PublicParam {
+public class PublicParam extends scheme.Components.PublicParam implements scheme.IBCH.Components.PublicParam {
     protected MultivePoint g, g_1, g_2;
     protected MultivePoint[] u;
     int n;
@@ -74,4 +74,25 @@ public class PublicParam extends scheme.Components.PublicParam {
         for(int i = 0;i < n;++i) res.I.set(i, rand.nextBoolean());
         return res;
     }
+
+    @Override
+    public final scheme.Components.MasterSecretKey createMasterSecretKey() {
+        return new MasterSecretKey();
+    }
+
+    @Override
+    public final scheme.Components.SecretKey createSecretKey() {
+        return new SecretKey();
+    }
+
+    @Override
+    public final scheme.Components.HashValue createHashValue() {
+        return new HashValue();
+    }
+
+    @Override
+    public final scheme.Components.Randomness createRandomness() {
+        return new Randomness();
+    }
+
 }

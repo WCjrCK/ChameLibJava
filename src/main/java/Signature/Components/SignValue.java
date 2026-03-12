@@ -2,6 +2,6 @@ package Signature.Components;
 
 import utils.ElementCounter;
 
-public abstract class Identity {
+public abstract class SignValue {
     public abstract ElementCounter TheoSize();
 }
