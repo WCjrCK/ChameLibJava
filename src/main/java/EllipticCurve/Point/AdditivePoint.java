@@ -21,4 +21,6 @@ public interface AdditivePoint {
     String toString();
 
     boolean isEqual(AdditivePoint other);
+
+    AdditivePoint copy();
 }

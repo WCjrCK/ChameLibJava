@@ -1,0 +1,19 @@
+package scheme.IBCH.CZS_2014;
+
+import utils.ElementCounter;
+
+public class Identity extends scheme.Components.Identity {
+    protected String L;
+
+    public Identity() {}
+
+    public Identity(String ID) {
+        this.L = ID;
+    }
+
+    @Override
+    public final String TheoSize() {
+        ElementCounter res = new ElementCounter();
+        return res.toString();
+    }
+}

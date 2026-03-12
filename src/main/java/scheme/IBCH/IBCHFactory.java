@@ -1,7 +1,7 @@
 package scheme.IBCH;
 
-import scheme.IBCH.implement.ZSS_2003.S1;
-import scheme.IBCH.implement.ZSS_2003.S2;
+import scheme.IBCH.ZSS_2003.S1;
+import scheme.IBCH.ZSS_2003.S2;
 import scheme.Scheme;
 import scheme.SchemeName;
 
@@ -14,8 +14,9 @@ public class IBCHFactory {
         switch (schemeName) {
             case IBCH_ZSS_2003_S1: return new S1();
             case IBCH_ZSS_2003_S2: return new S2();
-            case IBCH_CZS_2014: return new scheme.IBCH.implement.CZS_2014.Scheme();
-            case IBCH_LSX_2022: return new scheme.IBCH.implement.LSX_2022.Scheme();
+            case IBCH_CZS_2014: return new scheme.IBCH.CZS_2014.Scheme();
+            case IBCH_LSX_2022: return new scheme.IBCH.LSX_2022.Scheme();
+            case IBCH_XSL_2021: return new scheme.IBCH.XSL_2021.Scheme();
         }
         throw new IllegalArgumentException("尚未支持当前方案：" + schemeName.name());
     }

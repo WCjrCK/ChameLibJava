@@ -35,7 +35,7 @@ public abstract class Point implements AdditivePoint, MultivePoint {
 
     public abstract AdditivePoint invZn();
 
-    // public abstract Point copy();
+    public abstract Point copy();
 
     // public abstract boolean isInfinity();
 

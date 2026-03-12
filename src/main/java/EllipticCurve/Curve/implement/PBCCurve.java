@@ -8,7 +8,6 @@ import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Curve.GroupRepresentationProfile;
 import EllipticCurve.Point.Point;
 import EllipticCurve.Point.implement.PBCPoint;
-import curve.PBC;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 import it.unisa.dia.gas.jpbc.Field;

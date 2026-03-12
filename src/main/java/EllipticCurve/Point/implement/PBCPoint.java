@@ -43,10 +43,10 @@ public class PBCPoint extends Point {
         return new PBCPoint(p.invert(), curve(), group());
     }
 
-    // @Override
-    // public final PBCPoint copy() {
-    //     return new PBCPoint(p.duplicate(), curve(), group());
-    // }
+     @Override
+     public final PBCPoint copy() {
+         return new PBCPoint(p.duplicate(), curve(), group());
+     }
 
     @Override
     public final byte[] toBytes() {

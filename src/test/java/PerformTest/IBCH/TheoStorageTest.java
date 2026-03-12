@@ -30,6 +30,7 @@ public class TheoStorageTest {
             IBCH_ZSS_2003_S2,
             IBCH_CZS_2014,
             IBCH_LSX_2022,
+            IBCH_XSL_2021,
     });
 
     @BeforeAll
@@ -69,6 +70,7 @@ public class TheoStorageTest {
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", false);
             params.put("curve_param", curve_param);
+            params.put("ID_Binary_Len", 100);
             BufferedWriter theo_storage_cost = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/%s.csv", schemeName.name(), file_base_name)));
             testFunc(theo_storage_cost, schemeName, params);
         }
@@ -86,6 +88,7 @@ public class TheoStorageTest {
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", true);
             params.put("curve_param", curve_param);
+            params.put("ID_Binary_Len", 100);
             BufferedWriter theo_storage_cost = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/%s_swapG1G2.csv", schemeName.name(), file_base_name)));
             testFunc(theo_storage_cost, schemeName, params);
         }

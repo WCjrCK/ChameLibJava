@@ -56,10 +56,10 @@ public class MCLPointZp extends Point {
         return new MCLPointZp(result, curve(), group());
     }
 
-    // @Override
-    // public final MCLPointZp copy() {
-    //     return new MCLPointZp(p.(), curve(), group());
-    // }
+     @Override
+     public final MCLPointZp copy() {
+         return new MCLPointZp(new Fr(p), curve(), group());
+     }
 
     @Override
     public final byte[] toBytes() {

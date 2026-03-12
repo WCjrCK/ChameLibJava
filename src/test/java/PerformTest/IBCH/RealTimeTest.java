@@ -27,7 +27,6 @@ import static EllipticCurve.Curve.CurveName.PBC_CUSTOM;
 import static EllipticCurve.Curve.CurveName.SECP256K1;
 import static PerformTest.BasicParam.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static scheme.SchemeName.*;
 
 public class RealTimeTest {
     static List<BufferedWriter> tsc = new ArrayList<>();

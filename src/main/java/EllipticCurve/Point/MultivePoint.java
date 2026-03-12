@@ -19,4 +19,6 @@ public interface MultivePoint {
     String toString();
 
     boolean isEqual(MultivePoint other);
+
+    MultivePoint copy();
 }

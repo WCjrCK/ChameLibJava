@@ -55,10 +55,10 @@ public class MCLPointG1 extends Point {
         return new MCLPointG1(result, curve(), group());
     }
 
-    // @Override
-    // public final MCLPointG1 copy() {
-    //     return new MCLPointG1(p.(), curve(), group());
-    // }
+    @Override
+    public final MCLPointG1 copy() {
+        return new MCLPointG1(new G1(p), curve(), group());
+    }
 
     @Override
     public final byte[] toBytes() {

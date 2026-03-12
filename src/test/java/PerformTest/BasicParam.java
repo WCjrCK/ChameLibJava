@@ -3,20 +3,12 @@ package PerformTest;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 import org.junit.jupiter.params.provider.Arguments;
-import scheme.IBCH.IBCH;
-import scheme.IBCH.implement.ZSS_2003.PublicParam;
-import scheme.IBCH.implement.ZSS_2003.S1.*;
-import scheme.SchemeFactory;
 import scheme.SchemeName;
 import utils.BooleanFormulaParser;
 
 import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
-
-import static EllipticCurve.Curve.CurveName.E;
 
 @SuppressWarnings("unused")
 public class BasicParam {
