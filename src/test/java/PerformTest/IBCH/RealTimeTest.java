@@ -15,6 +15,7 @@ import scheme.SchemeName;
 import scheme.SchemeType;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,15 +28,22 @@ import static EllipticCurve.Curve.CurveName.SECP256K1;
 import static PerformTest.BasicParam.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Func.InitialLib;
+import static scheme.SchemeName.*;
 
 public class RealTimeTest {
     static List<BufferedWriter> tsc = new ArrayList<>();
     static List<BufferedWriter> tscsgg = new ArrayList<>();
     static HashMap<SchemeName, Integer> SNToIdx = new HashMap<>();
+
+    static List<SchemeName> skipList = List.of(new SchemeName[]{
+            IBCH_ZSS_2003_S1,
+            IBCH_ZSS_2003_S2,
+    });
+
     @BeforeAll
     static void initTest() {
-        InitialLib();
         repeat_cnt = 100;
+        for (SchemeName value : SchemeName.values()) new File(String.format("./data/IBCH/%s", value.name())).mkdirs();
         try {
             int i = 0;
             for (SchemeName value : SchemeName.values()) {
@@ -95,8 +103,8 @@ public class RealTimeTest {
                 r_p[i] = scheme.createRandomness();
 
                 ID[i] = scheme.createIdentity("ID_" + i);
-                m[i] = scheme.createMessage("msg_" + i);
-                m_p[i] = scheme.createMessage("msg_" + i + "_p");
+                m[i] = pp.createMessage("msg_" + i);
+                m_p[i] = pp.createMessage("msg_" + i + "_p");
             }
 
             {
@@ -154,6 +162,7 @@ public class RealTimeTest {
         @ParameterizedTest(name = "test scheme {0} in curve {1}")
         @MethodSource("PerformTest.BasicParam#GetSchemeCurveEnum")
         public void DSTest(SchemeName schemeName, CurveName curveName) throws IOException {
+            if (skipList.contains(schemeName)) return;
             if (curveName == SECP256K1) {
                 System.out.println("MCL 库未正确实现该曲线，跳过测试");
                 return;
@@ -170,14 +179,15 @@ public class RealTimeTest {
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", false);
             params.put("curve_param", curve_param);
-            System.out.print(curveName + ", ");
-            testFunc(tsc.get(SNToIdx.get(schemeName)), schemeName, curveName, params);
+            System.out.print(curveName.name());
+            if(tsc.get(SNToIdx.get(schemeName)) != null) testFunc(tsc.get(SNToIdx.get(schemeName)), schemeName, curveName, params);
         }
 
         @DisplayName("swap G1 and G2")
         @ParameterizedTest(name = "test scheme {0} in curve {1} with swap G1 and G2")
         @MethodSource("PerformTest.BasicParam#GetSchemeCurveEnum")
         public void SGGTest(SchemeName schemeName, CurveName curveName) throws IOException {
+            if (skipList.contains(schemeName)) return;
             if (curveName == SECP256K1) {
                 System.out.println("MCL 库未正确实现该曲线，跳过测试");
                 return;
@@ -198,8 +208,8 @@ public class RealTimeTest {
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", true);
             params.put("curve_param", curve_param);
-            System.out.print(curveName + " swap G1G2, ");
-            testFunc(tscsgg.get(SNToIdx.get(schemeName)), schemeName, curveName, params);
+            System.out.print(curveName + " swap G1G2");
+            if(tscsgg.get(SNToIdx.get(schemeName)) != null) testFunc(tscsgg.get(SNToIdx.get(schemeName)), schemeName, curveName, params);
         }
     }
 

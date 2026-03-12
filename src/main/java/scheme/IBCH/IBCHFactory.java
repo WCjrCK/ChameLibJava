@@ -14,6 +14,7 @@ public class IBCHFactory {
         switch (schemeName) {
             case IBCH_ZSS_2003_S1: return new S1();
             case IBCH_ZSS_2003_S2: return new S2();
+            case IBCH_CZS_2014: return new scheme.IBCH.implement.CZS_2014.Scheme();
         }
         throw new IllegalArgumentException("尚未支持当前方案：" + schemeName.name());
     }

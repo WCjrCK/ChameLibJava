@@ -1,4 +1,4 @@
-package scheme.IBCH.implement.ZSS_2003;
+package scheme.IBCH.implement.CZS_2014;
 
 import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.AdditivePoint;
@@ -23,7 +23,7 @@ public class PublicParam extends scheme.Components.PublicParam {
         return "P = " + P.toString() + " | P_pub = " + P_pub.toString();
     }
 
-    public final AdditivePoint H0(String x) {
+    public final AdditivePoint H(String x) {
         MessageDigest messageDigest;
         byte[] hash;
         try {
@@ -36,7 +36,7 @@ public class PublicParam extends scheme.Components.PublicParam {
         return curve.HashToG1(hash);
     }
 
-    public final AdditivePoint H1(String x) {
+    public final AdditivePoint H_p(String x) {
         MessageDigest messageDigest;
         byte[] hash;
         try {
@@ -46,7 +46,7 @@ public class PublicParam extends scheme.Components.PublicParam {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        return curve.HashToZp(hash);
+        return curve.HashToG2(hash);
     }
 
     @Override
@@ -59,7 +59,18 @@ public class PublicParam extends scheme.Components.PublicParam {
 
     @Override
     public final scheme.Components.Message createMessage(String msg) {
-        return new Message(msg);
+        Message res = new Message();
+        MessageDigest messageDigest;
+        byte[] hash;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(msg.getBytes(StandardCharsets.UTF_8));
+            hash = messageDigest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        res.m = curve.HashToZp(hash);
+        return res;
     }
 
 }

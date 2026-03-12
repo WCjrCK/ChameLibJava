@@ -15,8 +15,6 @@ public abstract class IBCH extends Scheme {
 
     public abstract Identity createIdentity(String ID);
 
-    public abstract Message createMessage(String msg);
-
     public abstract HashValue createHashValue();
 
     public abstract Randomness createRandomness();

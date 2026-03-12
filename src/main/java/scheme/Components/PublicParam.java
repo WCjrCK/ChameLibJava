@@ -9,6 +9,8 @@ import java.util.Map;
 public abstract class PublicParam {
     public Curve curve;
 
+    public abstract Message createMessage(String msg);
+
     protected PublicParam(CurveName curveName, Map<String, Object> params) {
         curve = CurveFactory.create(curveName, (Map<String, Object>) params.get("curve_param"));
     }

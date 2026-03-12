@@ -6,6 +6,11 @@ import scheme.IBCH.IBCH;
 
 import java.util.Map;
 
+/*
+ * ID-Based Chameleon Hashes from Bilinear Pairings
+ * P4. 4.2 Scheme 2
+ */
+
 public class S2 extends IBCH {
     @Override
     public final scheme.Components.PublicParam createPublicParam(CurveName curveName, Map<String, Object> params) {
@@ -25,11 +30,6 @@ public class S2 extends IBCH {
     @Override
     public final scheme.Components.Identity createIdentity(String ID) {
         return new Identity(ID);
-    }
-
-    @Override
-    public final scheme.Components.Message createMessage(String msg) {
-        return new Message(msg);
     }
 
     @Override

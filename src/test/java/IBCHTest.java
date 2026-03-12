@@ -11,8 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import scheme.IBCH.IBCH;
-import scheme.IBCH.IB_CH_KEF_CZS_2014.MCL_swap;
-import scheme.IBCH.implement.ZSS_2003.*;
+import scheme.Components.*;
 import scheme.SchemeFactory;
 import scheme.SchemeName;
 import utils.Func;
@@ -69,29 +68,29 @@ public class IBCHTest {
         try {
             IBCH scheme = (IBCH) SchemeFactory.createScheme(schemeName, curveName, params);
             scheme.Components.PublicParam pp = scheme.createPublicParam(curveName, params);
-            MasterSecretKey msk = new MasterSecretKey();
+            MasterSecretKey msk = scheme.createMasterSecretKey();
             scheme.Setup(pp, msk);
-            SecretKey sk1 = new SecretKey();
-            Identity ID1 = new Identity("ID1");
+            SecretKey sk1 = scheme.createSecretKey();
+            Identity ID1 = scheme.createIdentity("ID1");
             scheme.KeyGen(sk1, pp, msk, ID1);
 
-            SecretKey sk2 = new SecretKey();
-            Identity ID2 = new Identity("ID2");
+            SecretKey sk2 = scheme.createSecretKey();
+            Identity ID2 = scheme.createIdentity("ID2");
             scheme.KeyGen(sk2, pp, msk, ID2);
 
-            Message m1 = new Message("msg11");
-            Message m2 = new Message("msg22");
+            Message m1 = pp.createMessage("msg11");
+            Message m2 = pp.createMessage("msg22");
 
-            HashValue h1 = new HashValue();
-            Randomness r1 = new Randomness();
+            HashValue h1 = scheme.createHashValue();
+            Randomness r1 = scheme.createRandomness();
             scheme.Hash(h1, r1, pp, ID1, m1);
 
             assertTrue(scheme.Ver(pp, ID1, m1, h1, r1));
             assertFalse(scheme.Ver(pp, ID2, m1, h1, r1));
             assertFalse(scheme.Ver(pp, ID1, m2, h1, r1));
 
-            HashValue h2 = new HashValue();
-            Randomness r2 = new Randomness();
+            HashValue h2 = scheme.createHashValue();
+            Randomness r2 = scheme.createRandomness();
             scheme.Hash(h2, r2, pp, ID2, m2);
 
             assertTrue(scheme.Ver(pp, ID2, m2, h2, r2));
@@ -100,7 +99,7 @@ public class IBCHTest {
             assertFalse(scheme.Ver(pp, ID2, m2, h1, r2));
             assertFalse(scheme.Ver(pp, ID2, m2, h2, r1));
 
-            Randomness r1_p = new Randomness();
+            Randomness r1_p = scheme.createRandomness();
 
             scheme.Col(r1_p, pp, ID1, sk1, m1, h1, r1, m2);
             assertTrue(scheme.Ver(pp, ID1, m1, h1, r1), "Adapt(L1, m2) valid");
@@ -114,159 +113,6 @@ public class IBCHTest {
             throw new RuntimeException(e);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    @DisplayName("test paper 《Identity-based chameleon hashing and signatures without key exposure》")
-    @Nested
-    class IdentityBasedChameleonHashingAndSignaturesWithoutKeyExposureTest {
-        @DisplayName("test IB_CH_KEF_CZS_2014")
-        @Nested
-        class IB_CH_KEF_CZS_2014_Test {
-            @DisplayName("test PBC impl")
-            @ParameterizedTest(name = "test curve {0} swap_G1G2 {1}")
-            @MethodSource("IBCHTest#GetPBCInvert")
-            void JPBCTest(PBC curve, boolean swap_G1G2) {
-                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC scheme = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC();
-                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.PublicParam SP = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.PublicParam(curve, swap_G1G2);
-                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.MasterSecretKey msk = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.MasterSecretKey();
-                scheme.SetUp(SP, msk);
-                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.SecretKey sk1 = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.SecretKey();
-                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.SecretKey sk2 = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.SecretKey();
-                Element ID1 = SP.GP.GetZrElement();
-                Element ID2 = SP.GP.GetZrElement();
-                assertFalse(ID1.isEqual(ID2), "ID1 != ID2");
-                Element m1 = SP.GP.GetZrElement();
-                Element m2 = SP.GP.GetZrElement();
-                assertFalse(m1.isEqual(m2), "m1 != m2");
-                Element L1 = SP.GP.GetZrElement();
-                Element L2 = SP.GP.GetZrElement();
-                assertFalse(L1.isEqual(L2), "L1 != L2");
-                scheme.KeyGen(sk1, SP, msk, ID1);
-                scheme.KeyGen(sk2, SP, msk, ID2);
-                assertFalse(sk1.S_ID.isEqual(sk2.S_ID), "sk1 != sk2");
-
-                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.HashValue h1 = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.HashValue();
-                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.HashValue h2 = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.HashValue();
-                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.Randomness r1 = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.Randomness();
-                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.Randomness r2 = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.Randomness();
-                scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.Randomness r1_p = new scheme.IBCH.IB_CH_KEF_CZS_2014.PBC.Randomness();
-
-                scheme.Hash(h1, r1, SP, ID1, L1, m1);
-                assertTrue(scheme.Check(h1, r1, SP, sk1, L1, m1), "H(L1, m1) valid");
-                assertFalse(scheme.Check(h1, r1, SP, sk1, L2, m1), "H(L2, m1) invalid");
-                assertFalse(scheme.Check(h1, r1, SP, sk1, L1, m2), "H(L1, m2) invalid");
-
-                scheme.Hash(h2, r2, SP, ID2, L2, m2);
-                assertTrue(scheme.Check(h2, r2, SP, sk2, L2, m2), "H(L2, m2) valid");
-                assertFalse(scheme.Check(h2, r2, SP, sk2, L1, m2), "H(L1, m2) invalid");
-                assertFalse(scheme.Check(h2, r2, SP, sk2, L2, m1), "H(L2, m1) invalid");
-
-                scheme.Adapt(r1_p, r1, SP, sk1, L1, m1, m2);
-                assertTrue(scheme.Check(h1, r1_p, SP, sk1, L1, m2), "Adapt(L1, m2) valid");
-                assertFalse(scheme.Check(h1, r1_p, SP, sk1, L1, m1), "Adapt(L1, m1) invalid");
-
-                scheme.Adapt(r1_p, r1, SP, sk1, L2, m1, m2);
-                assertFalse(scheme.Check(h1, r1_p, SP, sk1, L2, m2), "Adapt(L2, m2) invalid");
-            }
-
-            @DisplayName("test MCL impl")
-            @ParameterizedTest(name = "test curve {0}")
-            // BadCaseTest#MCL_Bad_Case#Case2
-            @EnumSource(names = {"BN254", "BLS12_381"})
-            void MCLTest(MCL curve) {
-                Func.MCLInit(curve);
-                {
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL scheme = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.PublicParam SP = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.PublicParam();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.MasterSecretKey msk = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.MasterSecretKey();
-                    scheme.SetUp(SP, msk);
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.SecretKey sk1 = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.SecretKey();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.SecretKey sk2 = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.SecretKey();
-                    String ID1 = UUID.randomUUID().toString();
-                    String ID2 = UUID.randomUUID().toString();
-                    assertNotEquals(ID1, ID2, "ID1 != ID2");
-                    Fr m1 = new Fr();
-                    Func.GetMCLZrRandomElement(m1);
-                    Fr m2 = new Fr();
-                    Func.GetMCLZrRandomElement(m2);
-                    assertFalse(m1.equals(m2), "m1 != m2");
-                    String L1 = UUID.randomUUID().toString();
-                    String L2 = UUID.randomUUID().toString();
-                    assertNotEquals(L1, L2, "L1 != L2");
-                    scheme.KeyGen(sk1, SP, msk, ID1);
-                    scheme.KeyGen(sk2, SP, msk, ID2);
-                    assertFalse(sk1.S_ID.equals(sk2.S_ID), "sk1 != sk2");
-
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.HashValue h1 = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.HashValue();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.HashValue h2 = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.HashValue();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.Randomness r1 = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.Randomness();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.Randomness r2 = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.Randomness();
-                    scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.Randomness r1_p = new scheme.IBCH.IB_CH_KEF_CZS_2014.MCL.Randomness();
-
-                    scheme.Hash(h1, r1, SP, ID1, L1, m1);
-                    assertTrue(scheme.Check(h1, r1, SP, sk1, L1, m1), "H(L1, m1) valid");
-                    assertFalse(scheme.Check(h1, r1, SP, sk1, L2, m1), "H(L2, m1) invalid");
-                    assertFalse(scheme.Check(h1, r1, SP, sk1, L1, m2), "H(L1, m2) invalid");
-
-                    scheme.Hash(h2, r2, SP, ID2, L2, m2);
-                    assertTrue(scheme.Check(h2, r2, SP, sk2, L2, m2), "H(L2, m2) valid");
-                    assertFalse(scheme.Check(h2, r2, SP, sk2, L1, m2), "H(L1, m2) invalid");
-                    assertFalse(scheme.Check(h2, r2, SP, sk2, L2, m1), "H(L2, m1) invalid");
-
-                    scheme.Adapt(r1_p, r1, SP, sk1, L1, m1, m2);
-                    assertTrue(scheme.Check(h1, r1_p, SP, sk1, L1, m2), "Adapt(L1, m2) valid");
-                    assertFalse(scheme.Check(h1, r1_p, SP, sk1, L1, m1), "Adapt(L1, m1) invalid");
-
-                    scheme.Adapt(r1_p, r1, SP, sk1, L2, m1, m2);
-                    assertFalse(scheme.Check(h1, r1_p, SP, sk1, L2, m2), "Adapt(L2, m2) invalid");
-                }
-                {
-                    MCL_swap scheme = new MCL_swap();
-                    MCL_swap.PublicParam SP = new MCL_swap.PublicParam();
-                    MCL_swap.MasterSecretKey msk = new MCL_swap.MasterSecretKey();
-                    scheme.SetUp(SP, msk);
-                    MCL_swap.SecretKey sk1 = new MCL_swap.SecretKey();
-                    MCL_swap.SecretKey sk2 = new MCL_swap.SecretKey();
-                    String ID1 = UUID.randomUUID().toString();
-                    String ID2 = UUID.randomUUID().toString();
-                    assertNotEquals(ID1, ID2, "ID1 != ID2");
-                    Fr m1 = new Fr();
-                    Func.GetMCLZrRandomElement(m1);
-                    Fr m2 = new Fr();
-                    Func.GetMCLZrRandomElement(m2);
-                    assertFalse(m1.equals(m2), "m1 != m2");
-                    String L1 = UUID.randomUUID().toString();
-                    String L2 = UUID.randomUUID().toString();
-                    assertNotEquals(L1, L2, "L1 != L2");
-                    scheme.KeyGen(sk1, SP, msk, ID1);
-                    scheme.KeyGen(sk2, SP, msk, ID2);
-                    assertFalse(sk1.S_ID.equals(sk2.S_ID), "sk1 != sk2");
-
-                    MCL_swap.HashValue h1 = new MCL_swap.HashValue();
-                    MCL_swap.HashValue h2 = new MCL_swap.HashValue();
-                    MCL_swap.Randomness r1 = new MCL_swap.Randomness();
-                    MCL_swap.Randomness r2 = new MCL_swap.Randomness();
-                    MCL_swap.Randomness r1_p = new MCL_swap.Randomness();
-
-                    scheme.Hash(h1, r1, SP, ID1, L1, m1);
-                    assertTrue(scheme.Check(h1, r1, SP, sk1, L1, m1), "H(L1, m1) valid");
-                    assertFalse(scheme.Check(h1, r1, SP, sk1, L2, m1), "H(L2, m1) invalid");
-                    assertFalse(scheme.Check(h1, r1, SP, sk1, L1, m2), "H(L1, m2) invalid");
-
-                    scheme.Hash(h2, r2, SP, ID2, L2, m2);
-                    assertTrue(scheme.Check(h2, r2, SP, sk2, L2, m2), "H(L2, m2) valid");
-                    assertFalse(scheme.Check(h2, r2, SP, sk2, L1, m2), "H(L1, m2) invalid");
-                    assertFalse(scheme.Check(h2, r2, SP, sk2, L2, m1), "H(L2, m1) invalid");
-
-                    scheme.Adapt(r1_p, r1, SP, sk1, L1, m1, m2);
-                    assertTrue(scheme.Check(h1, r1_p, SP, sk1, L1, m2), "Adapt(L1, m2) valid");
-                    assertFalse(scheme.Check(h1, r1_p, SP, sk1, L1, m1), "Adapt(L1, m1) invalid");
-
-                    scheme.Adapt(r1_p, r1, SP, sk1, L2, m1, m2);
-                    assertFalse(scheme.Check(h1, r1_p, SP, sk1, L2, m2), "Adapt(L2, m2) invalid");
-                }
-            }
         }
     }
 
@@ -312,59 +158,6 @@ public class IBCHTest {
                 assertFalse(scheme.Check(h2, r2, pp, ID2, m1), "H(L2, m1) invalid");
 
                 scheme.Adapt(r1_p, r1, sk1, m1, m2);
-                assertTrue(scheme.Check(h1, r1_p, pp, ID1, m2), "Adapt(L1, m2) valid");
-                assertFalse(scheme.Check(h1, r1_p, pp, ID1, m1), "Adapt(L1, m1) invalid");
-            }
-        }
-    }
-
-    @DisplayName("test paper 《ID-Based Chameleon Hashes from Bilinear Pairings》")
-    @Nested
-    class IDBasedChameleonHashesFromBilinearPairingsTest {
-        @DisplayName("test IB_CH_ZSS_S1_2003")
-        @Nested
-        class IB_CH_ZSS_S1_2003_Test {
-        }
-
-        @DisplayName("test IB_CH_ZSS_S2_2003")
-        @Nested
-        class IB_CH_ZSS_S2_2003_Test {
-            @DisplayName("test PBC impl")
-            @ParameterizedTest(name = "test curve {0}")
-            @EnumSource(names = {"A", "A1", "E"})
-            void JPBCTest(PBC curve) {
-                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC scheme = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC();
-                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.PublicParam pp = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.PublicParam(curve);
-                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.MasterSecretKey msk = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.MasterSecretKey();
-                scheme.SetUp(pp, msk);
-                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.SecretKey sk1 = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.SecretKey();
-                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.SecretKey sk2 = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.SecretKey();
-                Element ID1 = pp.GP.GetZrElement();
-                Element ID2 = pp.GP.GetZrElement();
-                assertFalse(ID1.isEqual(ID2), "ID1 != ID2");
-                Element m1 = pp.GP.GetZrElement();
-                Element m2 = pp.GP.GetZrElement();
-                assertFalse(m1.isEqual(m2), "m1 != m2");
-                scheme.KeyGen(sk1, pp, msk, ID1);
-                scheme.KeyGen(sk2, pp, msk, ID2);
-
-                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.HashValue h1 = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.HashValue();
-                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.HashValue h2 = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.HashValue();
-                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.Randomness r1 = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.Randomness();
-                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.Randomness r2 = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.Randomness();
-                scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.Randomness r1_p = new scheme.IBCH.IB_CH_ZSS_S2_2003.PBC.Randomness();
-
-                scheme.Hash(h1, r1, pp, ID1, m1);
-                assertTrue(scheme.Check(h1, r1, pp, ID1, m1), "H(ID1, m1) valid");
-                assertFalse(scheme.Check(h1, r1, pp, ID2, m1), "H(ID2, m1) invalid");
-                assertFalse(scheme.Check(h1, r1, pp, ID1, m2), "H(ID1, m2) invalid");
-
-                scheme.Hash(h2, r2, pp, ID2, m2);
-                assertTrue(scheme.Check(h2, r2, pp, ID2, m2), "H(L2, m2) valid");
-                assertFalse(scheme.Check(h2, r2, pp, ID1, m2), "H(L1, m2) invalid");
-                assertFalse(scheme.Check(h2, r2, pp, ID2, m1), "H(L2, m1) invalid");
-
-                scheme.Adapt(r1_p, r1, pp, sk1, m1, m2);
                 assertTrue(scheme.Check(h1, r1_p, pp, ID1, m2), "Adapt(L1, m2) valid");
                 assertFalse(scheme.Check(h1, r1_p, pp, ID1, m1), "Adapt(L1, m1) invalid");
             }
