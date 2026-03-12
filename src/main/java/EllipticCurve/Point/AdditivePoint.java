@@ -12,6 +12,8 @@ public interface AdditivePoint {
 
     AdditivePoint neg();
 
+    AdditivePoint invZn();
+
     CurveGroup group();
 
     CurveName curve();

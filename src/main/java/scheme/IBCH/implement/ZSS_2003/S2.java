@@ -1,15 +1,53 @@
-package scheme.IBCH.implement.ZSS_2003.S1;
+package scheme.IBCH.implement.ZSS_2003;
 
 import EllipticCurve.Curve.CurveGroup;
+import EllipticCurve.Curve.CurveName;
 import scheme.IBCH.IBCH;
 
-public class Impl extends IBCH {
+import java.util.Map;
+
+public class S2 extends IBCH {
+    @Override
+    public final scheme.Components.PublicParam createPublicParam(CurveName curveName, Map<String, Object> params) {
+        return new PublicParam(curveName, params);
+    }
+
+    @Override
+    public final scheme.Components.MasterSecretKey createMasterSecretKey() {
+        return new MasterSecretKey();
+    }
+
+    @Override
+    public final scheme.Components.SecretKey createSecretKey() {
+        return new SecretKey();
+    }
+
+    @Override
+    public final scheme.Components.Identity createIdentity(String ID) {
+        return new Identity(ID);
+    }
+
+    @Override
+    public final scheme.Components.Message createMessage(String msg) {
+        return new Message(msg);
+    }
+
+    @Override
+    public final scheme.Components.HashValue createHashValue() {
+        return new HashValue();
+    }
+
+    @Override
+    public final scheme.Components.Randomness createRandomness() {
+        return new Randomness();
+    }
+
     private void Setup(
             PublicParam pp,
             MasterSecretKey msk
     ) {
         msk.s = pp.curve.createPoint(CurveGroup.Zp);
-        pp.P = pp.curve.createPoint(CurveGroup.G2);
+        pp.P = pp.curve.createPoint(CurveGroup.G1);
         pp.P_pub = pp.P.mulZn(msk.s);
     }
 
@@ -30,7 +68,7 @@ public class Impl extends IBCH {
             Identity ID
     ) {
         sk.S_ID = pp.H0(ID.ID).mulZn(msk.s);
-
+        sk.S_ID = pp.P.mulZn(msk.s.add(pp.H1(ID.ID)).invZn());
     }
 
     @Override
@@ -48,7 +86,7 @@ public class Impl extends IBCH {
     }
 
     public void CalHash(HashValue h, PublicParam pp, Identity ID, Message m, Randomness r) {
-        h.h = pp.curve.Pairing(r.R, pp.P).mul(pp.curve.Pairing(pp.H0(ID.ID).mulZn(pp.H1(m.m)), pp.P_pub));
+        h.h = pp.curve.Pairing(pp.P, pp.P).mul(pp.curve.Pairing(pp.P_pub.add(pp.P.mulZn(pp.H1(ID.ID))), r.R)).pow(pp.H1(m.m));
     }
 
     public void Hash(HashValue h, Randomness r, PublicParam pp, Identity ID, Message m) {
@@ -95,7 +133,7 @@ public class Impl extends IBCH {
     }
 
     public void Col(Randomness r_p, PublicParam pp, SecretKey sk, Message m, Randomness r, Message m_p) {
-        r_p.R = sk.S_ID.mulZn(pp.H1(m.m).sub(pp.H1(m_p.m))).add(r.R);
+        r_p.R = sk.S_ID.mulZn(pp.H1(m.m).sub(pp.H1(m_p.m))).add(r.R.mulZn(pp.H1(m.m))).mulZn(pp.H1(m_p.m).invZn());
     }
 
     @Override

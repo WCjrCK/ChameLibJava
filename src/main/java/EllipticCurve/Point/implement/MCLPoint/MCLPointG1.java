@@ -18,6 +18,12 @@ public class MCLPointG1 extends Point {
         super(curve, group);
         this.p = p;
     }
+    @Override
+    public final MCLPointG1 invZn() {
+        G1 result = new G1();
+        Mcl.neg(result, p);
+        return new MCLPointG1(result, curve(), group());
+    }
     
     @Override
     protected final MCLPointG1 addCore(Point other) {

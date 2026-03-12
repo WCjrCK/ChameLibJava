@@ -59,7 +59,6 @@ public abstract class Curve {
         Point point = newPoint(group);
         if (point == null) throw new IllegalStateException("Point 实例化失败: 返回值为空");
         if (point.curve() != curveName) throw new IllegalStateException("Point 曲线不匹配: 期望 " + curveName + " 实际 " + point.curve());
-        if (point.group() != group) throw new IllegalStateException("Point 群类型不匹配: 期望 " + group + " 实际 " + point.group());
         if (!(point instanceof AdditivePoint)) throw new IllegalStateException("当前 Point 不支持加法群接口");
         return point;
     }
@@ -69,7 +68,6 @@ public abstract class Curve {
         Point point = newPoint(group);
         if (point == null) throw new IllegalStateException("Point 实例化失败: 返回值为空");
         if (point.curve() != curveName) throw new IllegalStateException("Point 曲线不匹配: 期望 " + curveName + " 实际 " + point.curve());
-        if (point.group() != group) throw new IllegalStateException("Point 群类型不匹配: 期望 " + group + " 实际 " + point.group());
         if (!(point instanceof MultivePoint)) throw new IllegalStateException("当前 Point 不支持乘法群接口");
         return point;
     }

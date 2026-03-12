@@ -47,12 +47,8 @@ public class MCLCurve extends Curve {
         random.nextBytes(m);
         switch (group) {
             case Zp: return HashToZp(m);
-            case G1: 
-                if (swap_G1G2) return HashToG2(m);
-                else return HashToG1(m);
-            case G2: 
-                if (swap_G1G2) return HashToG1(m);
-                else return HashToG2(m);
+            case G1: return HashToG1(m);
+            case G2: return HashToG2(m);
             case GT: return HashToGT(m);
             default: throw new IllegalArgumentException("尚不支持当前曲线: " + curveName());
         }
@@ -73,17 +69,29 @@ public class MCLCurve extends Curve {
     }
 
     @Override
-    public final MCLPointG1 HashToG1(byte[] hash) {
-        G1 res = new G1();
-        Mcl.hashAndMapToG1(res, hash);
-        return new MCLPointG1(res, curveName(), CurveGroup.G1);
+    public final Point HashToG1(byte[] hash) {
+        if (swap_G1G2) {
+            G2 res = new G2();
+            Mcl.hashAndMapToG2(res, hash);
+            return new MCLPointG2(res, curveName(), CurveGroup.G2);
+        } else {
+            G1 res = new G1();
+            Mcl.hashAndMapToG1(res, hash);
+            return new MCLPointG1(res, curveName(), CurveGroup.G1);
+        }
     }
 
     @Override
-    public final MCLPointG2 HashToG2(byte[] hash) {
-        G2 res = new G2();
-        Mcl.hashAndMapToG2(res, hash);
-        return new MCLPointG2(res, curveName(), CurveGroup.G2);
+    public final Point HashToG2(byte[] hash) {
+        if (swap_G1G2) {
+            G1 res = new G1();
+            Mcl.hashAndMapToG1(res, hash);
+            return new MCLPointG1(res, curveName(), CurveGroup.G1);
+        } else {
+            G2 res = new G2();
+            Mcl.hashAndMapToG2(res, hash);
+            return new MCLPointG2(res, curveName(), CurveGroup.G2);
+        }
     }
 
     @Override

@@ -44,6 +44,13 @@ public class MCLPointGT extends Point {
     }
 
     @Override
+    public final MCLPointGT invZn() {
+        GT result = new GT();
+        Mcl.inv(result, p);
+        return new MCLPointGT(result, curve(), group());
+    }
+
+    @Override
     protected final MCLPointGT negCore() {
         GT result = new GT();
         Mcl.inv(result, p);

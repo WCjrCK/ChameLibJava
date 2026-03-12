@@ -1,7 +1,9 @@
-package scheme.IBCH.implement.ZSS_2003.S1;
+package scheme.IBCH.implement.ZSS_2003;
 
 import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.AdditivePoint;
+import EllipticCurve.Point.Point;
+import utils.ElementCounter;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -9,8 +11,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 public class PublicParam extends scheme.Components.PublicParam {
-    public AdditivePoint P;
-    public AdditivePoint P_pub; // G_2
+    protected AdditivePoint P;
+    protected AdditivePoint P_pub;
 
     public PublicParam(CurveName curveName, Map<String, Object> params) {
         super(curveName, params);
@@ -45,5 +47,13 @@ public class PublicParam extends scheme.Components.PublicParam {
             throw new RuntimeException(e);
         }
         return curve.HashToZp(hash);
+    }
+
+    @Override
+    public final String TheoSize() {
+        ElementCounter res = new ElementCounter();
+        res.count((Point) P);
+        res.count((Point) P_pub);
+        return res.toString();
     }
 }

@@ -27,9 +27,9 @@ public class IB_CH_ZSS_S1_2003 extends BasicParam {
         try {
             File_Writer = new BufferedWriter(new FileWriter("./data/PBC/IBCH/IB_CH_ZSS_S1_2003.txt"));
             File_Writer.write(String.format("repeat count: %d\n", repeat_cnt));
-            File_Writer.write("IB_CH_ZSS_S1_2003\t\t\tSetUp, KeyGen, Hash, Check, Adapt\n");
+            File_Writer.write("IB_CH_ZSS_S1_2003\t\t\tSetUp, KeyGen, Hash, Ver, Col\n");
             System.out.println("IB_CH_ZSS_S1_2003");
-            System.out.println("\t\t\tSetUp, KeyGen, Hash, Check, Adapt");
+            System.out.println("\t\t\tSetUp, KeyGen, Hash, Ver, Col");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

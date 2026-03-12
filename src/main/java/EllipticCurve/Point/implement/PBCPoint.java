@@ -38,6 +38,11 @@ public class PBCPoint extends Point {
         return new PBCPoint(p.negate(), curve(), group());
     }
 
+    @Override
+    public final PBCPoint invZn() {
+        return new PBCPoint(p.invert(), curve(), group());
+    }
+
     // @Override
     // public final PBCPoint copy() {
     //     return new PBCPoint(p.duplicate(), curve(), group());

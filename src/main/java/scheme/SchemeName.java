@@ -1,20 +1,26 @@
 package scheme;
 
+import EllipticCurve.Curve.CurveName;
+
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static scheme.SchemeType.*;
+import static scheme.SchemeCurveRequire.*;
 
 public enum SchemeName {
-    IBCH_ZSS_2003_S1(IBCH);
+    IBCH_ZSS_2003_S1(IBCH, ALL),
+    IBCH_ZSS_2003_S2(IBCH, SYMMETRIC);
 
-    private final SchemeType schemeType;
+    public final SchemeType schemeType;
+    public final SchemeCurveRequire schemeCurveRequire;
 
     private static final Map<String, SchemeName> LOOKUP = new ConcurrentHashMap<>();
 
-    SchemeName(SchemeType schemeType) {
-        this.schemeType = schemeType;
+    SchemeName(SchemeType st, SchemeCurveRequire scr) {
+        schemeType = st;
+        schemeCurveRequire = scr;
     }
 
     static {
@@ -37,6 +43,11 @@ public enum SchemeName {
 
     public boolean checkType(SchemeType type) {
         return schemeType == type;
+    }
+
+    public boolean checkCurve(CurveName curveName) {
+        if (schemeCurveRequire == SYMMETRIC && !curveName.isSymmetic()) return false;
+        return true;
     }
 
     private static String normalize(String value) {

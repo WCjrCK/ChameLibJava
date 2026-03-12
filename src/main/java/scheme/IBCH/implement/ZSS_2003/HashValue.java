@@ -1,9 +1,11 @@
-package scheme.IBCH.implement.ZSS_2003.S1;
+package scheme.IBCH.implement.ZSS_2003;
 
 import EllipticCurve.Point.MultivePoint;
+import EllipticCurve.Point.Point;
+import utils.ElementCounter;
 
 public class HashValue extends scheme.Components.HashValue {
-    MultivePoint h; // G_T
+    protected MultivePoint h;
 
     @Override
     public final boolean isEqual(scheme.Components.HashValue other) {
@@ -14,5 +16,12 @@ public class HashValue extends scheme.Components.HashValue {
 
     public final boolean isEqual(HashValue other) {
         return h.isEqual(other.h);
+    }
+
+    @Override
+    public final String TheoSize() {
+        ElementCounter res = new ElementCounter();
+        res.count((Point) h);
+        return res.toString();
     }
 }

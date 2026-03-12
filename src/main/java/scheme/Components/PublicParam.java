@@ -14,4 +14,6 @@ public abstract class PublicParam {
     }
 
     public abstract String toString();
+
+    public abstract String TheoSize();
 }
