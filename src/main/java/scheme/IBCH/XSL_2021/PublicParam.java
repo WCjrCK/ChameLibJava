@@ -2,7 +2,6 @@ package scheme.IBCH.XSL_2021;
 
 import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.MultivePoint;
-import EllipticCurve.Point.Point;
 import EllipticCurve.Point.PointRepresentation;
 import utils.ElementCounter;
 
@@ -33,13 +32,10 @@ public class PublicParam extends scheme.Components.PublicParam {
     }
 
     @Override
-    public final String TheoSize() {
+    public final ElementCounter TheoSize() {
         ElementCounter res = new ElementCounter();
-        res.count((Point) g);
-        res.count((Point) g_1);
-        res.count((Point) g_2);
-        for(int i = 0;i < u.length;++i) res.count((Point) u[i]);
-        return res.toString();
+        res.count(this);
+        return res;
     }
 
     @Override

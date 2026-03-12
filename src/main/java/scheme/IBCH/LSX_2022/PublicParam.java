@@ -2,7 +2,6 @@ package scheme.IBCH.LSX_2022;
 
 import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.MultivePoint;
-import EllipticCurve.Point.Point;
 import EllipticCurve.Point.PointRepresentation;
 import utils.ElementCounter;
 
@@ -24,14 +23,10 @@ public class PublicParam extends scheme.Components.PublicParam {
     }
 
     @Override
-    public final String TheoSize() {
+    public final ElementCounter TheoSize() {
         ElementCounter res = new ElementCounter();
-        res.count((Point) g);
-        res.count((Point) g_1);
-        res.count((Point) g_2);
-        res.count((Point) egg);
-        res.count((Point) eg_2g);
-        return res.toString();
+        res.count(this);
+        return res;
     }
 
     @Override

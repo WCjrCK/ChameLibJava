@@ -1,21 +1,19 @@
 package EllipticCurve.Curve.implement;
 
-import java.util.Map;
-import java.util.Random;
-
-import com.herumi.mcl.G1;
-import com.herumi.mcl.G2;
-import com.herumi.mcl.GT;
-import com.herumi.mcl.Mcl;
-import com.herumi.mcl.Fr;
-
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Curve.GroupRepresentationProfile;
 import EllipticCurve.Point.Point;
-import EllipticCurve.Point.implement.MCLPoint.*;
+import EllipticCurve.Point.implement.MCLPoint.MCLPointG1;
+import EllipticCurve.Point.implement.MCLPoint.MCLPointG2;
+import EllipticCurve.Point.implement.MCLPoint.MCLPointGT;
+import EllipticCurve.Point.implement.MCLPoint.MCLPointZp;
+import com.herumi.mcl.*;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
+
+import java.util.Map;
+import java.util.Random;
 
 public class MCLCurve extends Curve {
     boolean swap_G1G2;

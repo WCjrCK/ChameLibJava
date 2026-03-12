@@ -2,7 +2,6 @@ package scheme.IBCH.ZSS_2003;
 
 import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.AdditivePoint;
-import EllipticCurve.Point.Point;
 import utils.ElementCounter;
 
 import java.nio.charset.StandardCharsets;
@@ -50,11 +49,10 @@ public class PublicParam extends scheme.Components.PublicParam {
     }
 
     @Override
-    public final String TheoSize() {
+    public final ElementCounter TheoSize() {
         ElementCounter res = new ElementCounter();
-        res.count((Point) P);
-        res.count((Point) P_pub);
-        return res.toString();
+        res.count(this);
+        return res;
     }
 
     @Override

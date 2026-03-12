@@ -1,7 +1,6 @@
 package scheme.IBCH.CZS_2014;
 
 import EllipticCurve.Point.AdditivePoint;
-import EllipticCurve.Point.Point;
 import utils.ElementCounter;
 
 public class HashValue extends scheme.Components.HashValue {
@@ -19,9 +18,9 @@ public class HashValue extends scheme.Components.HashValue {
     }
 
     @Override
-    public final String TheoSize() {
+    public final ElementCounter TheoSize() {
         ElementCounter res = new ElementCounter();
-        res.count((Point) h);
-        return res.toString();
+        res.count(this);
+        return res;
     }
 }

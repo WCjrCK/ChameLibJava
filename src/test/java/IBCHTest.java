@@ -4,18 +4,22 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import scheme.IBCH.IBCH;
 import scheme.Components.*;
+import scheme.IBCH.IBCH;
 import scheme.SchemeFactory;
 import scheme.SchemeName;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
-import static EllipticCurve.Curve.CurveName.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static EllipticCurve.Curve.CurveName.PBC_CUSTOM;
+import static EllipticCurve.Curve.CurveName.SECP256K1;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static scheme.SchemeName.*;
-import static scheme.SchemeName.IBCH_LSX_2022;
 import static utils.Func.InitialLib;
 
 public class IBCHTest {

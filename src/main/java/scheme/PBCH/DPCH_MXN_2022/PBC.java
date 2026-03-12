@@ -1,5 +1,6 @@
 package scheme.PBCH.DPCH_MXN_2022;
 
+import SE.AES_RAW;
 import it.unisa.dia.gas.jpbc.Element;
 import utils.Hash;
 
@@ -70,7 +71,7 @@ public class PBC {
 
     public static class HashValue {
         scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue h = new scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue();
-        SE.AES.CipherText c_SE = new SE.AES.CipherText();
+        AES_RAW.CipherText c_SE = new AES_RAW.CipherText();
         ABE.MA_ABE.PBC.CipherText c_MA_ABE = new ABE.MA_ABE.PBC.CipherText();
     }
 
@@ -134,9 +135,9 @@ public class PBC {
         rand.nextBytes(r_t);
         byte[] k = new byte[16];
         rand.nextBytes(k);
-        SE.AES.PlainText pt_SE = new SE.AES.PlainText();
+        AES_RAW.PlainText pt_SE = new AES_RAW.PlainText();
         pt_SE.pt = etd.sk_ch_2.d.toByteArray();
-        SE.AES.Encrypt(H.c_SE, pt_SE, k);
+        AES_RAW.Encrypt(H.c_SE, pt_SE, k);
 
         Hash.EncText enc = new Hash.EncText();
         Hash.Encode(enc, pp.GP_MA_ABE.GP.GT, new Hash.PlaText(k, r_t));
@@ -164,8 +165,8 @@ public class PBC {
 
         scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
 
-        SE.AES.PlainText pt_SE = new SE.AES.PlainText();
-        SE.AES.Decrypt(pt_SE, H.c_SE, pla.k);
+        AES_RAW.PlainText pt_SE = new AES_RAW.PlainText();
+        AES_RAW.Decrypt(pt_SE, H.c_SE, pla.k);
         etd.sk_ch_2.d = new BigInteger(pt_SE.pt);
         CH_ET.Adapt(R_p.r, H.h, R.r, etd, pk.pk_CH, sk.sk_CH, m, m_p);
     }

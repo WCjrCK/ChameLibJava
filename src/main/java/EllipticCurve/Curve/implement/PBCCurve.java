@@ -1,16 +1,16 @@
 package EllipticCurve.Curve.implement;
 
-import java.util.Map;
-
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Curve.GroupRepresentationProfile;
 import EllipticCurve.Point.Point;
 import EllipticCurve.Point.implement.PBCPoint;
+import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
-import it.unisa.dia.gas.jpbc.Field;
+
+import java.util.Map;
 
 @SuppressWarnings("rawtypes")
 public class PBCCurve extends Curve {

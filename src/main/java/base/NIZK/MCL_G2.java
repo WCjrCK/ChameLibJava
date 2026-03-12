@@ -1,7 +1,8 @@
 package base.NIZK;
 
-import com.herumi.mcl.*;
+import com.herumi.mcl.Fr;
 import com.herumi.mcl.G2;
+import com.herumi.mcl.Mcl;
 import utils.Func;
 import utils.Hash;
 

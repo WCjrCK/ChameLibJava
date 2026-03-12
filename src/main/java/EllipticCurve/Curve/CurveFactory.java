@@ -1,14 +1,15 @@
 package EllipticCurve.Curve;
 
+import EllipticCurve.Curve.implement.MCLCurve;
+import EllipticCurve.Curve.implement.PBCCurve;
+import EllipticCurve.Point.PointRepresentation;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
-import EllipticCurve.Point.PointRepresentation;
-import EllipticCurve.Curve.implement.PBCCurve;
-import EllipticCurve.Curve.implement.MCLCurve;
-
-import static EllipticCurve.Curve.implement.CurveImplementLib.*;
+import static EllipticCurve.Curve.implement.CurveImplementLib.MCL;
+import static EllipticCurve.Curve.implement.CurveImplementLib.PBC;
 
 public final class CurveFactory {
     private CurveFactory() {}

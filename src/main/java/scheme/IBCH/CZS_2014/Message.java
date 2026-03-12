@@ -1,7 +1,6 @@
 package scheme.IBCH.CZS_2014;
 
 import EllipticCurve.Point.AdditivePoint;
-import EllipticCurve.Point.Point;
 import utils.ElementCounter;
 
 public class Message extends scheme.Components.Message {
@@ -10,9 +9,9 @@ public class Message extends scheme.Components.Message {
     public Message() {}
 
     @Override
-    public final String TheoSize() {
+    public final ElementCounter TheoSize() {
         ElementCounter res = new ElementCounter();
-        res.count((Point) m);
-        return res.toString();
+        res.count(this);
+        return res;
     }
 }

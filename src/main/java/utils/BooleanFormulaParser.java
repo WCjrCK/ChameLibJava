@@ -1,12 +1,15 @@
 package utils;
 
+import base.LSSS.MCL;
 import base.LSSS.Native;
 import base.LSSS.PBC;
-import base.LSSS.MCL;
 import com.herumi.mcl.Fr;
 import it.unisa.dia.gas.jpbc.Element;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
 
 public class BooleanFormulaParser {
     private enum TokenType {

@@ -1,20 +1,19 @@
 package UnitTest;
 
+import EllipticCurve.Curve.Curve;
+import EllipticCurve.Curve.CurveFactory;
+import EllipticCurve.Curve.CurveGroup;
+import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
-
+import EllipticCurve.Point.PointRepresentation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import EllipticCurve.Curve.Curve;
-import EllipticCurve.Curve.CurveFactory;
-import EllipticCurve.Curve.CurveGroup;
-import EllipticCurve.Curve.CurveName;
-import EllipticCurve.Point.PointRepresentation;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static utils.Func.InitialLib;
 
 public class EllipticCurveTest {

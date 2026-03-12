@@ -7,9 +7,9 @@ public class MasterSecretKey extends scheme.Components.MasterSecretKey {
     protected Point x; // Z_p
 
     @Override
-    public final String TheoSize() {
+    public final ElementCounter TheoSize() {
         ElementCounter res = new ElementCounter();
-        res.count(x);
-        return res.toString();
+        res.count(this);
+        return res;
     }
 }

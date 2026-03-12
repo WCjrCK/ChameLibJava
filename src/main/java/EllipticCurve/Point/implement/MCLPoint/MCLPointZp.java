@@ -1,15 +1,13 @@
 package EllipticCurve.Point.implement.MCLPoint;
 
-import java.math.BigInteger;
-
-import EllipticCurve.Point.AdditivePoint;
-import EllipticCurve.Point.implement.PBCPoint;
-import com.herumi.mcl.Mcl;
-import com.herumi.mcl.Fr;
-
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
+import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.Point;
+import com.herumi.mcl.Fr;
+import com.herumi.mcl.Mcl;
+
+import java.math.BigInteger;
 
 public class MCLPointZp extends Point {
     public Fr p;

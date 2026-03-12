@@ -2,7 +2,9 @@ package MCLTest.CHTest;
 
 import MCLTest.BasicParam;
 import com.herumi.mcl.Fr;
-import com.herumi.mcl.*;
+import com.herumi.mcl.G1;
+import com.herumi.mcl.G2;
+import com.herumi.mcl.GT;
 import curve.MCL;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -10,7 +12,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import scheme.CH.CH_KEF_CZK_2004.*;
+import scheme.CH.CH_KEF_CZK_2004.MCL_G1;
+import scheme.CH.CH_KEF_CZK_2004.MCL_G2;
+import scheme.CH.CH_KEF_CZK_2004.MCL_GT;
 import utils.Func;
 
 import java.io.BufferedWriter;

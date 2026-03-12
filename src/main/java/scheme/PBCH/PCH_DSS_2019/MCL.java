@@ -1,5 +1,6 @@
 package scheme.PBCH.PCH_DSS_2019;
 
+import SE.AES_RAW;
 import utils.BooleanFormulaParser;
 import utils.Hash;
 
@@ -35,7 +36,7 @@ public class MCL {
     public static class HashValue {
         scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue h_CHET = new scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue();
         ABE.FAME.MCL.CipherText ct_ABE = new ABE.FAME.MCL.CipherText();
-        SE.AES.CipherText ct_SE = new SE.AES.CipherText();
+        AES_RAW.CipherText ct_SE = new AES_RAW.CipherText();
     }
 
     public static class Randomness {
@@ -77,7 +78,7 @@ public class MCL {
 
         ABE.Encrypt(H.ct_ABE, pp_PCH.pp_ABE, pk_PCH.mpk_ABE, MSP, new ABE.FAME.MCL.PlainText(enc.K), u.u_1, u.u_2);
 
-        SE.AES.Encrypt(H.ct_SE, new SE.AES.PlainText(etd.sk_ch_2.d.toByteArray()), k);
+        AES_RAW.Encrypt(H.ct_SE, new AES_RAW.PlainText(etd.sk_ch_2.d.toByteArray()), k);
     }
 
     public boolean Check(HashValue H, Randomness R, MasterPublicKey pk_PCH, String m) {
@@ -99,8 +100,8 @@ public class MCL {
 
         if(!ct_p.isEqual(H.ct_ABE)) throw new RuntimeException("wrong abe ciphertext");
         scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
-        SE.AES.PlainText se_pt = new SE.AES.PlainText();
-        SE.AES.Decrypt(se_pt, H.ct_SE, pla.k);
+        AES_RAW.PlainText se_pt = new AES_RAW.PlainText();
+        AES_RAW.Decrypt(se_pt, H.ct_SE, pla.k);
         etd.sk_ch_2.d = new BigInteger(se_pt.pt);
 
         CHET.Adapt(R_p.r_CHET, H.h_CHET, R.r_CHET, etd, pk_PCH.pk_CHET, sk.sk_CHET, m, m_p);

@@ -6,8 +6,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static scheme.SchemeType.*;
-import static scheme.SchemeCurveRequire.*;
+import static scheme.SchemeCurveRequire.ALL;
+import static scheme.SchemeCurveRequire.SYMMETRIC;
+import static scheme.SchemeType.IBCH;
 
 public enum SchemeName {
     IBCH_ZSS_2003_S1(IBCH, ALL),

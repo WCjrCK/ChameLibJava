@@ -2,8 +2,8 @@ package scheme.PBCH.RPCH_TMM_2022;
 
 import base.GroupParam.MCL.SingleGroup;
 import com.herumi.mcl.Fr;
-import com.herumi.mcl.GT;
 import com.herumi.mcl.G2;
+import com.herumi.mcl.GT;
 import com.herumi.mcl.Mcl;
 import utils.BooleanFormulaParser;
 import utils.Func;

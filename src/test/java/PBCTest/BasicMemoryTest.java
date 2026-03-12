@@ -3,13 +3,11 @@ package PBCTest;
 import curve.PBC;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
-//import org.apache.lucene.util.RamUsageEstimator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-//import org.openjdk.jol.info.ClassLayout;
 
 import static utils.Func.InitialLib;
 import static utils.Func.PairingGen;

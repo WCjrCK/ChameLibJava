@@ -4,6 +4,7 @@ import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveFactory;
 import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.PointRepresentation;
+import utils.ElementCounter;
 
 import java.util.Map;
 
@@ -24,5 +25,5 @@ public abstract class PublicParam {
 
     public abstract String toString();
 
-    public abstract String TheoSize();
+    public abstract ElementCounter TheoSize();
 }

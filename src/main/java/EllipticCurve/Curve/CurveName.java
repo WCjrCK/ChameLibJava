@@ -1,11 +1,12 @@
 package EllipticCurve.Curve;
 
+import EllipticCurve.Curve.implement.CurveImplementLib;
+
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import EllipticCurve.Curve.implement.CurveImplementLib;
-import static EllipticCurve.Curve.implement.CurveImplementLib.*;
+import static EllipticCurve.Curve.implement.CurveImplementLib.PBC;
 
 public enum CurveName {
     A(PBC, true),

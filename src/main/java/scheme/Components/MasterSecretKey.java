@@ -1,5 +1,7 @@
 package scheme.Components;
 
+import utils.ElementCounter;
+
 public abstract class MasterSecretKey {
-    public abstract String TheoSize();
+    public abstract ElementCounter TheoSize();
 }

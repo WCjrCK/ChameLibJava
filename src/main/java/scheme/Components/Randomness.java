@@ -1,5 +1,7 @@
 package scheme.Components;
 
+import utils.ElementCounter;
+
 public abstract class Randomness {
-    public abstract String TheoSize();
+    public abstract ElementCounter TheoSize();
 }

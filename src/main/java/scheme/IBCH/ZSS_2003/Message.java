@@ -12,8 +12,9 @@ public class Message extends scheme.Components.Message {
     }
 
     @Override
-    public final String TheoSize() {
+    public final ElementCounter TheoSize() {
         ElementCounter res = new ElementCounter();
-        return res.toString();
+        res.count(this);
+        return res;
     }
 }

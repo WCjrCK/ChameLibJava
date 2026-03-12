@@ -1,16 +1,15 @@
 package scheme.IBCH.ZSS_2003;
 
 import EllipticCurve.Point.AdditivePoint;
-import EllipticCurve.Point.Point;
 import utils.ElementCounter;
 
 public class Randomness extends scheme.Components.Randomness {
-    protected AdditivePoint R; // G_1
+    protected AdditivePoint R;
 
     @Override
-    public final String TheoSize() {
+    public final ElementCounter TheoSize() {
         ElementCounter res = new ElementCounter();
-        res.count((Point) R);
-        return res.toString();
+        res.count(this);
+        return res;
     }
 }

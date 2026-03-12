@@ -9,7 +9,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import scheme.CH.CH_KEF_DL_CZT_2011.*;
+import scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1;
+import scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2;
+import scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT;
 import utils.Func;
 
 import java.io.BufferedWriter;

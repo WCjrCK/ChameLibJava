@@ -3,7 +3,7 @@ package SE;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-public class AES {
+public class AES_RAW {
     public static class CipherText {
         public byte[] ct;
     }

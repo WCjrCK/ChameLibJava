@@ -5,7 +5,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import utils.BooleanFormulaParser;
 
 import java.io.BufferedWriter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Stream;
 
 @SuppressWarnings("unused")

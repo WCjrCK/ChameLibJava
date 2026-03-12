@@ -9,7 +9,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import scheme.CH.FCR_CH_PreQA_DKS_2020.*;
+import scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1;
+import scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2;
+import scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT;
 import utils.Func;
 
 import java.io.BufferedWriter;

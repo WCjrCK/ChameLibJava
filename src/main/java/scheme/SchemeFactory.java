@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static scheme.SchemeType.*;
+import static scheme.SchemeType.IBCH;
 
 public class SchemeFactory {
     private SchemeFactory() {}

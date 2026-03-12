@@ -1,12 +1,12 @@
 package EllipticCurve.Point.implement;
 
-import java.math.BigInteger;
-
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.Point;
 import it.unisa.dia.gas.jpbc.Element;
+
+import java.math.BigInteger;
 
 public class PBCPoint extends Point {
     public Element p;

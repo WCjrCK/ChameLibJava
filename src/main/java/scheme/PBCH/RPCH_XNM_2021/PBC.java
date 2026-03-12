@@ -1,5 +1,6 @@
 package scheme.PBCH.RPCH_XNM_2021;
 
+import SE.AES_RAW;
 import base.GroupParam.PBC.Asymmetry;
 import it.unisa.dia.gas.jpbc.Element;
 import utils.BooleanFormulaParser;
@@ -61,7 +62,7 @@ public class PBC {
     public static class HashValue {
         scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue h_CHET = new scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue();
         ABE.RABE.PBC.CipherText ct_RABE = new ABE.RABE.PBC.CipherText();
-        SE.AES.CipherText ct_SE = new SE.AES.CipherText();
+        AES_RAW.CipherText ct_SE = new AES_RAW.CipherText();
     }
 
     public static class Randomness {
@@ -114,7 +115,7 @@ public class PBC {
         Hash.H_2_element_String_3(u, SP.GP.Zr, Arrays.toString(r), MSP.formula, String.valueOf(t));
         RABE.Encrypt(H.ct_RABE, SP.SP_RABE, mpk.mpk_RABE, MSP, new ABE.RABE.PBC.PlainText(enc.K), t, u.u_1, u.u_2);
 
-        SE.AES.Encrypt(H.ct_SE, new SE.AES.PlainText(etd.sk_ch_2.d.toByteArray()), k);
+        AES_RAW.Encrypt(H.ct_SE, new AES_RAW.PlainText(etd.sk_ch_2.d.toByteArray()), k);
     }
 
     public boolean Check(HashValue H, Randomness R, MasterPublicKey mpk, String m) {
@@ -138,8 +139,8 @@ public class PBC {
         if(!ct_RABE.isEqual(H.ct_RABE)) throw new RuntimeException("wrong rabe ciphertext");
 
         scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
-        SE.AES.PlainText se_pt = new SE.AES.PlainText();
-        SE.AES.Decrypt(se_pt, H.ct_SE, pla.k);
+        AES_RAW.PlainText se_pt = new AES_RAW.PlainText();
+        AES_RAW.Decrypt(se_pt, H.ct_SE, pla.k);
         etd.sk_ch_2.d = new BigInteger(se_pt.pt);
 
         CHET.Adapt(R_p.r_CHET, H.h_CHET, R.r_CHET, etd, mpk.pk_CHET, dk.sk_CHET, m, m_p);

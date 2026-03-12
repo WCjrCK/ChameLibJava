@@ -1,0 +1,17 @@
+package scheme.IBCH.LJF_2025;
+
+import EllipticCurve.Point.AdditivePoint;
+import utils.ElementCounter;
+
+public class Message extends scheme.Components.Message {
+    protected AdditivePoint m;
+
+    public Message() {}
+
+    @Override
+    public final ElementCounter TheoSize() {
+        ElementCounter res = new ElementCounter();
+        res.count(this);
+        return res;
+    }
+}

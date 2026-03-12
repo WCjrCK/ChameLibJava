@@ -25,7 +25,7 @@ import java.util.Map;
 
 import static EllipticCurve.Curve.CurveName.PBC_CUSTOM;
 import static EllipticCurve.Curve.CurveName.SECP256K1;
-import static PerformTest.BasicParam.*;
+import static PerformTest.BasicParam.repeat_cnt;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RealTimeTest {
