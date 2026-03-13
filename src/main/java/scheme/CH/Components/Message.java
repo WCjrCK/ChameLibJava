@@ -1,7 +1,3 @@
 package scheme.CH.Components;
 
-import utils.ElementCounter;
-
-public interface Message {
-    ElementCounter TheoSize();
-}
+public abstract class Message extends scheme.Components.Message {}

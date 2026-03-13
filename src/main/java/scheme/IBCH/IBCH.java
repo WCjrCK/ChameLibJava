@@ -1,18 +1,28 @@
 package scheme.IBCH;
 
+import scheme.Components.PublicKey;
 import scheme.Config;
 import scheme.IBCH.Components.*;
+import scheme.Scheme;
 
-public interface IBCH {
-    PublicParam createPublicParam(Config config);
+public abstract class IBCH<
+        PP extends PublicParam<MSK, SK, ID, M, H, R>,
+        MSK extends MasterSecretKey,
+        SK extends SecretKey,
+        ID extends Identity,
+        M extends Message,
+        H extends HashValue<H>,
+        R extends Randomness
+        > extends Scheme<PP, MSK, PublicKey, SK, ID, M, H, R> {
+    public abstract PP createPublicParam(Config config);
 
-    void Setup(PublicParam pp, MasterSecretKey msk);
+    public abstract void Setup(PP pp, MSK msk);
 
-    void KeyGen(SecretKey sk, PublicParam pp, MasterSecretKey msk, Identity ID);
+    public abstract void KeyGen(SK sk, PP pp, MSK msk, ID ID);
 
-    void Hash(HashValue h, Randomness r, PublicParam pp, Identity ID, Message m);
+    public abstract void Hash(H h, R r, PP pp, ID ID, M m);
 
-    boolean Verify(PublicParam pp, Identity ID, Message m, HashValue h, Randomness r);
+    public abstract boolean Verify(PP pp, ID ID, M m, H h, R r);
 
-    void Collision(Randomness r_p, PublicParam pp, Identity ID, SecretKey sk, Message m, HashValue h, Randomness r, Message m_p);
+    public abstract void Collision(R r_p, PP pp, ID ID, SK sk, M m, H h, R r, M m_p);
 }

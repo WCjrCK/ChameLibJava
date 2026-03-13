@@ -9,7 +9,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.BitSet;
 
-public class PublicParam extends scheme.Components.PublicParam implements scheme.IBCH.Components.PublicParam {
+public class PublicParam
+        extends scheme.IBCH.Components.PublicParam<MasterSecretKey, SecretKey, Identity, Message, HashValue, Randomness> {
     protected MultivePoint g, g_1, g_2;
     protected MultivePoint[] u;
     int n;
@@ -34,7 +35,7 @@ public class PublicParam extends scheme.Components.PublicParam implements scheme
     }
 
     @Override
-    public final scheme.Components.Message createMessage(String msg) {
+    public final Message createMessage(String msg) {
         Message res = new Message();
         MessageDigest messageDigest;
         byte[] hash;
@@ -50,7 +51,7 @@ public class PublicParam extends scheme.Components.PublicParam implements scheme
     }
 
     @Override
-    public final scheme.Components.Identity createIdentity(String ID) {
+    public final Identity createIdentity(String ID) {
         Identity res = new Identity();
         MessageDigest messageDigest;
         byte[] hash = ID.getBytes(StandardCharsets.UTF_8);
@@ -72,22 +73,22 @@ public class PublicParam extends scheme.Components.PublicParam implements scheme
     }
 
     @Override
-    public final scheme.Components.MasterSecretKey createMasterSecretKey() {
+    public final MasterSecretKey createMasterSecretKey() {
         return new MasterSecretKey();
     }
 
     @Override
-    public final scheme.Components.SecretKey createSecretKey() {
+    public final SecretKey createSecretKey() {
         return new SecretKey();
     }
 
     @Override
-    public final scheme.Components.HashValue createHashValue() {
+    public final HashValue createHashValue() {
         return new HashValue();
     }
 
     @Override
-    public final scheme.Components.Randomness createRandomness() {
+    public final Randomness createRandomness() {
         return new Randomness();
     }
 

@@ -1,19 +1,28 @@
 package scheme.CH.Components;
 
-import utils.ElementCounter;
+import EllipticCurve.Curve.Config;
+import scheme.Components.Identity;
+import scheme.Components.MasterSecretKey;
+import scheme.Components.PublicKey;
 
-public interface PublicParam {
-    Message createMessage(String msg);
+public abstract class PublicParam<
+        PK extends PublicKey,
+        SK extends SecretKey,
+        M extends Message,
+        H extends HashValue<H>,
+        R extends Randomness
+        > extends scheme.Components.PublicParam<MasterSecretKey, PK, SK, Identity, M, H, R> {
+    protected PublicParam(Config config) {
+        super(config);
+    }
 
-    PublicKey createPublicKey();
+    public abstract M createMessage(String msg);
 
-    SecretKey createSecretKey();
+    public abstract PK createPublicKey();
 
-    HashValue createHashValue();
+    public abstract SK createSecretKey();
 
-    Randomness createRandomness();
+    public abstract H createHashValue();
 
-    String toString();
-
-    ElementCounter TheoSize();
+    public abstract R createRandomness();
 }

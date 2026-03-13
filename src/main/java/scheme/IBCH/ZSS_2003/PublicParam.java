@@ -8,7 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class PublicParam extends scheme.Components.PublicParam implements scheme.IBCH.Components.PublicParam {
+public class PublicParam
+        extends scheme.IBCH.Components.PublicParam<MasterSecretKey, SecretKey, Identity, Message, HashValue, Randomness>{
     protected AdditivePoint P;
     protected AdditivePoint P_pub;
 
@@ -55,32 +56,32 @@ public class PublicParam extends scheme.Components.PublicParam implements scheme
     }
 
     @Override
-    public final scheme.Components.Message createMessage(String msg) {
+    public final Message createMessage(String msg) {
         return new Message(msg);
     }
 
     @Override
-    public final scheme.Components.Identity createIdentity(String ID) {
+    public final Identity createIdentity(String ID) {
         return new scheme.IBCH.ZSS_2003.Identity(ID);
     }
 
     @Override
-    public final scheme.Components.MasterSecretKey createMasterSecretKey() {
+    public final MasterSecretKey createMasterSecretKey() {
         return new MasterSecretKey();
     }
 
     @Override
-    public final scheme.Components.SecretKey createSecretKey() {
+    public final SecretKey createSecretKey() {
         return new SecretKey();
     }
 
     @Override
-    public final scheme.Components.HashValue createHashValue() {
+    public final HashValue createHashValue() {
         return new HashValue();
     }
 
     @Override
-    public final scheme.Components.Randomness createRandomness() {
+    public final Randomness createRandomness() {
         return new Randomness();
     }
 

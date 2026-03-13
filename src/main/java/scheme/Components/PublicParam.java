@@ -5,24 +5,32 @@ import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveFactory;
 import utils.ElementCounter;
 
-public abstract class PublicParam {
+public abstract class PublicParam<
+        MSK extends MasterSecretKey,
+        PK extends PublicKey,
+        SK extends SecretKey,
+        ID extends Identity,
+        M extends Message,
+        H extends HashValue<H>,
+        R extends Randomness
+        > {
     public Curve curve;
 
     protected PublicParam(Config config) {
         curve = CurveFactory.create(config);
     }
 
-    public abstract Message createMessage(String msg);
+    public abstract M createMessage(String msg);
 
-    public abstract Identity createIdentity(String ID);
+    public abstract ID createIdentity(String ID);
 
-    public abstract MasterSecretKey createMasterSecretKey();
+    public abstract MSK createMasterSecretKey();
 
-    public abstract SecretKey createSecretKey();
+    public abstract SK createSecretKey();
 
-    public abstract HashValue createHashValue();
+    public abstract H createHashValue();
 
-    public abstract Randomness createRandomness();
+    public abstract R createRandomness();
 
     public abstract String toString();
 

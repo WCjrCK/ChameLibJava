@@ -3,7 +3,7 @@ package scheme.IBCH.XSL_2021;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class Randomness extends scheme.Components.Randomness {
+public class Randomness extends scheme.IBCH.Components.Randomness {
     protected MultivePoint r_1, r_2;
 
     @Override

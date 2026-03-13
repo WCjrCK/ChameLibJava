@@ -1,7 +1,3 @@
 package scheme.CH.Components;
 
-import utils.ElementCounter;
-
-public interface SecretKey {
-    ElementCounter TheoSize();
-}
+public abstract class SecretKey extends scheme.Components.SecretKey {}

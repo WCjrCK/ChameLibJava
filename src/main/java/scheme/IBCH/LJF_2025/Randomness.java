@@ -4,7 +4,7 @@ import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class Randomness extends scheme.Components.Randomness {
+public class Randomness extends scheme.IBCH.Components.Randomness {
     protected AdditivePoint r_1;
     protected MultivePoint r_2, r_3;
 

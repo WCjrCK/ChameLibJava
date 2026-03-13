@@ -1,7 +1,3 @@
 package scheme.IBCH.Components;
 
-import utils.ElementCounter;
-
-public interface Randomness {
-    ElementCounter TheoSize();
-}
+public abstract class Randomness extends scheme.Components.Randomness {}

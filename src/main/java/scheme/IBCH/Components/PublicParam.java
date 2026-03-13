@@ -1,21 +1,29 @@
 package scheme.IBCH.Components;
 
-import utils.ElementCounter;
+import EllipticCurve.Curve.Config;
+import scheme.Components.PublicKey;
 
-public interface PublicParam {
-    Message createMessage(String msg);
+public abstract class PublicParam<
+        MSK extends MasterSecretKey,
+        SK extends SecretKey,
+        ID extends Identity,
+        M extends Message,
+        H extends HashValue<H>,
+        R extends Randomness
+        > extends scheme.Components.PublicParam<MSK, PublicKey, SK, ID, M, H, R> {
+    protected PublicParam(Config config) {
+        super(config);
+    }
 
-    Identity createIdentity(String ID);
+    public abstract M createMessage(String msg);
 
-    MasterSecretKey createMasterSecretKey();
+    public abstract ID createIdentity(String ID);
 
-    SecretKey createSecretKey();
+    public abstract MSK createMasterSecretKey();
 
-    HashValue createHashValue();
+    public abstract SK createSecretKey();
 
-    Randomness createRandomness();
+    public abstract H createHashValue();
 
-    String toString();
-
-    ElementCounter TheoSize();
+    public abstract R createRandomness();
 }

@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import scheme.IBCH.Components.*;
+import scheme.IBCH.IBCH;
 import scheme.SchemeFactory;
 import scheme.SchemeName;
 
@@ -20,15 +21,14 @@ import static EllipticCurve.Curve.CurveName.PBC_CUSTOM;
 import static EllipticCurve.Curve.CurveName.SECP256K1;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static scheme.SchemeName.*;
 
 public class IBCHTest {
     static List<SchemeName> skipList = List.of(new SchemeName[]{
 //            IBCH_ZSS_2003_S1,
-            IBCH_ZSS_2003_S2,
-            IBCH_CZS_2014,
-            IBCH_LSX_2022,
-            IBCH_XSL_2021,
+//            IBCH_ZSS_2003_S2,
+//            IBCH_CZS_2014,
+//            IBCH_LSX_2022,
+//            IBCH_XSL_2021,
 //            IBCH_LJF_2025,
     });
 
@@ -39,7 +39,7 @@ public class IBCHTest {
     }
 
     private void testFunction(scheme.Config schemeConfig) {
-        scheme.IBCH.IBCH scheme = SchemeFactory.createScheme(schemeConfig);
+        scheme.IBCH.IBCH scheme = (IBCH) SchemeFactory.createScheme(schemeConfig);
         PublicParam pp = scheme.createPublicParam(schemeConfig);
         MasterSecretKey msk = pp.createMasterSecretKey();
         scheme.Setup(pp, msk);

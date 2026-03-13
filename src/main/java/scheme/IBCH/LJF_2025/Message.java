@@ -3,7 +3,7 @@ package scheme.IBCH.LJF_2025;
 import EllipticCurve.Point.AdditivePoint;
 import utils.ElementCounter;
 
-public class Message extends scheme.Components.Message {
+public class Message extends scheme.IBCH.Components.Message {
     protected AdditivePoint m;
 
     public Message() {}

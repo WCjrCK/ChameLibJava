@@ -6,10 +6,10 @@ import scheme.IBCH.IBCHFactory;
 public class SchemeFactory {
     private SchemeFactory() {}
 
-    public static Scheme createScheme(Config config) {
+    public static Scheme<?,?,?,?,?,?,?,?> createScheme(Config config) {
         switch (config.schemeName.schemeType) {
-            case CH: return (scheme.Scheme) CHFactory.createScheme(config);
-            case IBCH: return (scheme.Scheme) IBCHFactory.createScheme(config);
+            case CH: return CHFactory.createScheme(config);
+            case IBCH: return IBCHFactory.createScheme(config);
         }
         throw new IllegalArgumentException("尚未支持当前方案：" + config.schemeName.name());
     }

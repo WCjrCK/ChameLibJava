@@ -3,7 +3,7 @@ package scheme.IBCH.ZSS_2003;
 import EllipticCurve.Point.AdditivePoint;
 import utils.ElementCounter;
 
-public class SecretKey extends scheme.Components.SecretKey {
+public class SecretKey extends scheme.IBCH.Components.SecretKey {
     protected AdditivePoint S_ID; // G_1
 
     @Override

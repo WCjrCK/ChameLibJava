@@ -3,7 +3,7 @@ package scheme.IBCH.LSX_2022;
 import EllipticCurve.Point.AdditivePoint;
 import utils.ElementCounter;
 
-public class MasterSecretKey extends scheme.Components.MasterSecretKey {
+public class MasterSecretKey extends scheme.IBCH.Components.MasterSecretKey {
     protected AdditivePoint alpha, beta;
 
     @Override

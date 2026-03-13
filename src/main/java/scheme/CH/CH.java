@@ -2,19 +2,30 @@ package scheme.CH;
 
 import EllipticCurve.Curve.CurveName;
 import scheme.CH.Components.*;
+import scheme.Components.Identity;
+import scheme.Components.MasterSecretKey;
+import scheme.Scheme;
 
 import java.util.Map;
 
-public interface CH {
-    PublicParam createPublicParam(CurveName curveName, Map<String, Object> params);
+public abstract class CH<
+        PP extends PublicParam<PK, SK, M, H, R>,
+        PK extends PublicKey,
+        SK extends SecretKey,
+        M extends Message,
+        H extends HashValue<H>,
+        R extends Randomness
+        >
+        extends Scheme<PP, MasterSecretKey, PK, SK, Identity, M, H, R> {
+    public abstract PP createPublicParam(CurveName curveName, Map<String, Object> params);
 
-    void Setup(PublicParam pp);
+    public abstract void Setup(PP pp);
 
-    void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp);
+    public abstract void KeyGen(PK pk, SK sk, PP pp);
 
-    void Hash(HashValue h, Randomness r, PublicParam pp, Message m);
+    public abstract void Hash(H h, R r, PP pp, M m);
 
-    boolean Verify(PublicParam pp, Message m, HashValue h, Randomness r);
+    public abstract boolean Verify(PP pp, M m, H h, R r);
 
-    void Collision(Randomness r_p, PublicParam pp, SecretKey sk, Message m, HashValue h, Randomness r, Message m_p);
+    public abstract void Collision(R r_p, PP pp, SK sk, M m, H h, R r, M m_p);
 }

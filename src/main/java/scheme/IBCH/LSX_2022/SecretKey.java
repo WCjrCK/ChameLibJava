@@ -4,7 +4,7 @@ import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class SecretKey extends scheme.Components.SecretKey {
+public class SecretKey extends scheme.IBCH.Components.SecretKey {
     protected AdditivePoint td_1;
     protected MultivePoint td_2;
 

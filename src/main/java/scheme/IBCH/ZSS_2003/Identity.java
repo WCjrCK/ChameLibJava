@@ -2,7 +2,7 @@ package scheme.IBCH.ZSS_2003;
 
 import utils.ElementCounter;
 
-public class Identity extends scheme.Components.Identity {
+public class Identity extends scheme.IBCH.Components.Identity {
     protected String ID;
 
     public Identity() {}

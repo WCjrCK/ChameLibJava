@@ -3,7 +3,7 @@ package scheme.IBCH.XSL_2021;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class MasterSecretKey extends scheme.Components.MasterSecretKey {
+public class MasterSecretKey extends scheme.IBCH.Components.MasterSecretKey {
     protected MultivePoint g_2_alpha;
 
     @Override

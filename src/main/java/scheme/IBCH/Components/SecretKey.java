@@ -1,7 +1,3 @@
 package scheme.IBCH.Components;
 
-import utils.ElementCounter;
-
-public interface SecretKey {
-    ElementCounter TheoSize();
-}
+public abstract class SecretKey extends scheme.Components.SecretKey {}

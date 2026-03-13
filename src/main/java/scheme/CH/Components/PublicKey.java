@@ -1,7 +1,3 @@
 package scheme.CH.Components;
 
-import utils.ElementCounter;
-
-public interface PublicKey {
-    ElementCounter TheoSize();
-}
+public abstract class PublicKey extends scheme.Components.PublicKey {}

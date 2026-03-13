@@ -3,8 +3,8 @@ package scheme.IBCH.ZSS_2003;
 import EllipticCurve.Point.Point;
 import utils.ElementCounter;
 
-public class MasterSecretKey extends scheme.Components.MasterSecretKey {
-    protected Point s; // Z_p
+public class MasterSecretKey extends scheme.IBCH.Components.MasterSecretKey {
+    protected Point s;
 
     @Override
     public final ElementCounter TheoSize() {

@@ -2,7 +2,7 @@ package scheme.IBCH.ZSS_2003;
 
 import utils.ElementCounter;
 
-public class Message extends scheme.Components.Message {
+public class Message extends scheme.IBCH.Components.Message {
     protected String m;
 
     public Message() {}
