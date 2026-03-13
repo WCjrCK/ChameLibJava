@@ -4,7 +4,6 @@ import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.Point;
-import com.herumi.mcl.Fr;
 import com.herumi.mcl.GT;
 import com.herumi.mcl.Mcl;
 
@@ -38,7 +37,7 @@ public class MCLPointGT extends Point {
     @Override
     protected final MCLPointGT mulCore(AdditivePoint scalar) {
         GT result = new GT();
-        Mcl.pow(result, p, new Fr(scalar.toString()));
+        Mcl.pow(result, p, ((MCLPointZp) scalar).p);
         return new MCLPointGT(result, curve(), group());
     }
 

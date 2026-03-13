@@ -11,22 +11,24 @@ import static scheme.SchemeCurveRequire.SYMMETRIC;
 import static scheme.SchemeType.IBCH;
 
 public enum SchemeName {
-    IBCH_ZSS_2003_S1(IBCH, ALL),
-    IBCH_ZSS_2003_S2(IBCH, SYMMETRIC),
-    IBCH_CZS_2014(IBCH, ALL),
-    IBCH_LSX_2022(IBCH, SYMMETRIC),
-    IBCH_XSL_2021(IBCH, ALL),
-    IBCH_LJF_2025(IBCH, SYMMETRIC),
+    IBCH_ZSS_2003_S1(IBCH, ALL, scheme.IBCH.ZSS_2003.S1.class),
+    IBCH_ZSS_2003_S2(IBCH, SYMMETRIC, scheme.IBCH.ZSS_2003.S2.class),
+    IBCH_CZS_2014(IBCH, ALL, scheme.IBCH.CZS_2014.Scheme.class),
+    IBCH_LSX_2022(IBCH, SYMMETRIC, scheme.IBCH.LSX_2022.Scheme.class),
+    IBCH_XSL_2021(IBCH, ALL, scheme.IBCH.XSL_2021.Scheme.class),
+    IBCH_LJF_2025(IBCH, SYMMETRIC, scheme.IBCH.LJF_2025.Scheme.class),
     ;
 
     public final SchemeType schemeType;
     public final SchemeCurveRequire schemeCurveRequire;
+    public final Class<?> schemeClass;
 
     private static final Map<String, SchemeName> LOOKUP = new ConcurrentHashMap<>();
 
-    SchemeName(SchemeType st, SchemeCurveRequire scr) {
+    SchemeName(SchemeType st, SchemeCurveRequire scr, Class<?> schemeClass) {
         schemeType = st;
         schemeCurveRequire = scr;
+        this.schemeClass = schemeClass;
     }
 
     static {
@@ -45,10 +47,6 @@ public enum SchemeName {
         SchemeName curve = LOOKUP.get(key);
         if (curve == null) throw new IllegalArgumentException("尚不支持当前方案: " + name);
         return curve;
-    }
-
-    public boolean checkType(SchemeType type) {
-        return schemeType == type;
     }
 
     public boolean checkCurve(CurveName curveName) {

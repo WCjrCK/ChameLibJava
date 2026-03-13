@@ -24,7 +24,7 @@ import static scheme.SchemeName.*;
 
 public class IBCHTest {
     static List<SchemeName> skipList = List.of(new SchemeName[]{
-            IBCH_ZSS_2003_S1,
+//            IBCH_ZSS_2003_S1,
             IBCH_ZSS_2003_S2,
             IBCH_CZS_2014,
             IBCH_LSX_2022,

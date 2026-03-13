@@ -36,7 +36,7 @@ public class MCLPointZp extends Point {
     @Override
     protected final MCLPointZp mulCore(AdditivePoint scalar) {
         Fr result = new Fr();
-        Mcl.mul(result, p, new Fr(scalar.toString()));
+        Mcl.mul(result, p, ((MCLPointZp) scalar).p);
         return new MCLPointZp(result, curve(), group());
     }
 
