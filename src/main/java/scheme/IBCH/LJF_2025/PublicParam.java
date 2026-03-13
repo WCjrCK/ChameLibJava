@@ -43,8 +43,7 @@ public class PublicParam extends scheme.Components.PublicParam implements scheme
         return res;
     }
 
-    @Override
-    public final scheme.Components.Identity createIdentity(String ID) {
+    public final scheme.Components.Identity createIdentity(String ID, String L) {
         Identity res = new Identity();
         MessageDigest messageDigest;
         byte[] hash;
@@ -52,11 +51,33 @@ public class PublicParam extends scheme.Components.PublicParam implements scheme
             messageDigest = MessageDigest.getInstance("SHA-256");
             messageDigest.update(ID.getBytes(StandardCharsets.UTF_8));
             hash = messageDigest.digest();
+            res.ID = curve.HashToZp(hash);
+            messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(L.getBytes(StandardCharsets.UTF_8));
+            hash = messageDigest.digest();
+            res.L = curve.HashToZp(hash);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        res.ID = curve.HashToZp(hash);
         return res;
+    }
+
+    public final void resetLabel(Identity ID, String L) {
+        MessageDigest messageDigest;
+        byte[] hash;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(L.getBytes(StandardCharsets.UTF_8));
+            hash = messageDigest.digest();
+            ID.L = curve.HashToZp(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public final scheme.Components.Identity createIdentity(String ID) {
+        return createIdentity(ID, ID);
     }
 
     @Override

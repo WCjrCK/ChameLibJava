@@ -36,7 +36,6 @@ public class Scheme extends scheme.Scheme implements IBCH {
             scheme.IBCH.Components.MasterSecretKey msk
     ) {
         if(!(pp instanceof PublicParam)) throw new IllegalArgumentException("公共参数不适配当前方案");
-        System.out.println(msk.getClass());
         if(!(msk instanceof MasterSecretKey)) throw new IllegalArgumentException("主密钥不适配当前方案");
         Setup((PublicParam) pp, (MasterSecretKey) msk);
     }

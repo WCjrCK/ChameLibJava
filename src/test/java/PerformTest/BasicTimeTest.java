@@ -89,11 +89,12 @@ public class BasicTimeTest extends BasicParam {
             for (int i_ = 0; i_ < 4; i_++) File_Writer.write(String.format("R in %s,", idxgroup[i_].name()));
             for (int i_ = 0; i_ < 4; i_++) File_Writer.write(String.format("Add in %s,", idxgroup[i_].name()));
             for (int i_ = 0; i_ < 4; i_++) File_Writer.write(String.format("Pow in %s,", idxgroup[i_].name()));
-            File_Writer.write("Pairing");
-            for (CurveName curve : index_map.keySet()) {
-                File_Writer.write(String.format("%s,", curve));
+            File_Writer.write("Pairing\n");
+            for(CurveName curve : CurveName.values()) {
+                if (index_map.getOrDefault(curve, -1) == -1) continue;
+                File_Writer.write(String.format("%s", curve));
                 int i = index_map.get(curve);
-                for (int j = 0; j < op_time[i].length; j++) File_Writer.write(String.format("%.6f,", op_time[i][j]));
+                for (int j = 0; j < op_time[i].length; j++) File_Writer.write(String.format(",%.6f", op_time[i][j]));
                 File_Writer.write("\n");
             }
             System.out.println("{");

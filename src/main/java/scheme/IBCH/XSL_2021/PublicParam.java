@@ -4,13 +4,10 @@ import EllipticCurve.Point.MultivePoint;
 import scheme.Config;
 import utils.ElementCounter;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.BitSet;
-import java.util.Random;
 
 public class PublicParam extends scheme.Components.PublicParam implements scheme.IBCH.Components.PublicParam {
     protected MultivePoint g, g_1, g_2;
@@ -56,20 +53,21 @@ public class PublicParam extends scheme.Components.PublicParam implements scheme
     public final scheme.Components.Identity createIdentity(String ID) {
         Identity res = new Identity();
         MessageDigest messageDigest;
-        byte[] hash;
-        try {
-            messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.update(ID.getBytes(StandardCharsets.UTF_8));
-            hash = messageDigest.digest();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        ByteBuffer buffer = ByteBuffer.wrap(hash);
-        buffer.order(ByteOrder.BIG_ENDIAN); // 或 ByteOrder.LITTLE_ENDIAN
-        Random rand = new Random();
-        rand.setSeed(buffer.getLong());
+        byte[] hash = ID.getBytes(StandardCharsets.UTF_8);
         res.I = new BitSet(n);
-        for(int i = 0;i < n;++i) res.I.set(i, rand.nextBoolean());
+        for(int i = 0;i < n;) {
+            try {
+                messageDigest = MessageDigest.getInstance("SHA-256");
+                messageDigest.update(hash);
+                hash = messageDigest.digest();
+                for (int j = 0; j < hash.length * 8 && i + j < n; j++) {
+                    if ((hash[hash.length - j / 8 - 1] & (1 << (j % 8))) > 0) res.I.set(i + j);
+                }
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            }
+            i += hash.length * 8;
+        }
         return res;
     }
 

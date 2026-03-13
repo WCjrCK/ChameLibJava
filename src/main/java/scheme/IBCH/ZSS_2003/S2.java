@@ -41,7 +41,6 @@ public class S2 extends Scheme implements IBCH {
             MasterSecretKey msk,
             Identity ID
     ) {
-        sk.S_ID = pp.H0(ID.ID).mulZn(msk.s);
         sk.S_ID = pp.P.mulZn(msk.s.add(pp.H1(ID.ID)).invZn());
     }
 

@@ -2,10 +2,6 @@ package scheme.IBCH.LSX_2022;
 
 import EllipticCurve.Point.MultivePoint;
 import scheme.Config;
-import scheme.IBCH.ZSS_2003.HashValue;
-import scheme.IBCH.ZSS_2003.MasterSecretKey;
-import scheme.IBCH.ZSS_2003.Randomness;
-import scheme.IBCH.ZSS_2003.SecretKey;
 import utils.ElementCounter;
 
 import java.nio.charset.StandardCharsets;

@@ -2,6 +2,7 @@ package scheme.IBCH.LJF_2025;
 
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.AdditivePoint;
+import EllipticCurve.Point.MultivePoint;
 import scheme.Config;
 import scheme.IBCH.IBCH;
 
@@ -66,7 +67,7 @@ public class Scheme extends scheme.Scheme implements IBCH {
     }
 
     public void CalHash(HashValue h, PublicParam pp, Identity ID, Message m, Randomness r) {
-        h.h = pp.eg_2g.pow(m.m).mul(pp.egg.pow(r.r_1)).mul(pp.curve.Pairing(r.r_2, pp.g_1.mul(pp.g.pow(ID.ID.neg()))));
+        h.h = pp.eg_2g.pow(m.m).mul(pp.egg.pow(r.r_1)).mul(pp.curve.Pairing(r.r_2, pp.g_1.mul(pp.g.pow(ID.ID.neg())))).mul(pp.curve.Pairing(pp.u_2.mul(pp.h_2.pow(ID.ID.neg())).pow(ID.L), r.r_3));
     }
 
     public void Hash(HashValue h, Randomness r, PublicParam pp, Identity ID, Message m) {
@@ -114,10 +115,15 @@ public class Scheme extends scheme.Scheme implements IBCH {
         return Verify((PublicParam) pp, (Identity) ID, (Message) m, (HashValue) h, (Randomness) r);
     }
 
-    public void Collision(Randomness r_p, SecretKey sk, Message m, Randomness r, Message m_p) {
+
+    public void Collision(Randomness r_p, PublicParam pp, Identity ID, SecretKey sk, Message m, Randomness r, Message m_p) {
+        AdditivePoint t_p = pp.curve.createPoint(CurveGroup.Zp);
+        MultivePoint td_2 = sk.td_2.mul(pp.u_2.mul(pp.h_2.pow(ID.ID.neg())).pow(ID.L.mulZn(t_p)));
+        MultivePoint td_3 = pp.g_1.mul(pp.g.pow(ID.ID.neg())).pow(t_p);
         AdditivePoint delta_m = m.m.sub(m_p.m);
         r_p.r_1 = r.r_1.add(sk.td_1.mulZn(delta_m));
-        r_p.r_2 = r.r_2.mul(sk.td_2.pow(delta_m));
+        r_p.r_2 = r.r_2.mul(td_2.pow(delta_m));
+        r_p.r_3 = r.r_3.mul(td_3.pow(delta_m.neg()));
     }
 
     @Override
@@ -140,6 +146,6 @@ public class Scheme extends scheme.Scheme implements IBCH {
         if(!(r instanceof Randomness)) throw new IllegalArgumentException("随机值不适配当前方案");
         if(!(m_p instanceof Message)) throw new IllegalArgumentException("新消息不适配当前方案");
         if(!Verify((PublicParam) pp, (Identity) ID, (Message) m, (HashValue) h, (Randomness) r)) throw new IllegalArgumentException("参数有误，哈希值与原消息不对应");
-        Collision((Randomness) r_p, (SecretKey) sk, (Message) m, (Randomness) r, (Message) m_p);
+        Collision((Randomness) r_p, (PublicParam) pp, (Identity) ID, (SecretKey) sk, (Message) m, (Randomness) r, (Message) m_p);
     }
 }
