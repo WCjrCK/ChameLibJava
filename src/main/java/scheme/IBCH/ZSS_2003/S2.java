@@ -1,11 +1,9 @@
 package scheme.IBCH.ZSS_2003;
 
 import EllipticCurve.Curve.CurveGroup;
-import EllipticCurve.Curve.CurveName;
+import scheme.Config;
 import scheme.IBCH.IBCH;
 import scheme.Scheme;
-
-import java.util.Map;
 
 /*
  * ID-Based Chameleon Hashes from Bilinear Pairings
@@ -14,8 +12,8 @@ import java.util.Map;
 
 public class S2 extends Scheme implements IBCH {
     @Override
-    public final scheme.IBCH.Components.PublicParam createPublicParam(CurveName curveName, Map<String, Object> params) {
-        return new PublicParam(curveName, params);
+    public final scheme.IBCH.Components.PublicParam createPublicParam(Config config) {
+        return new PublicParam(config);
     }
 
     private void Setup(

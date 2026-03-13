@@ -1,35 +1,13 @@
 package Signature.BLS;
 
 import EllipticCurve.Curve.CurveGroup;
-import EllipticCurve.Curve.CurveName;
+import Signature.Config;
 import Signature.S;
-
-import java.util.Map;
 
 public class Scheme extends S {
     @Override
-    public final PublicParam createPublicParam(CurveName curveName, Map<String, Object> params) {
-        return new PublicParam(curveName, params);
-    }
-
-    @Override
-    public final SecretKey createSecretKey() {
-        return new SecretKey();
-    }
-
-    @Override
-    public final Message createMessage(String m) {
-        return new Message(m);
-    }
-
-    @Override
-    public final PublicKey createPublicKey() {
-        return new PublicKey();
-    }
-
-    @Override
-    public final SignValue createSignValue() {
-        return new SignValue();
+    public final PublicParam createPublicParam(Config config) {
+        return new PublicParam(config);
     }
 
     private void Setup(PublicParam pp) {

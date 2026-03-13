@@ -1,4 +1,4 @@
-package scheme.IBCH.Components;
+package scheme.CH.Components;
 
 import utils.ElementCounter;
 

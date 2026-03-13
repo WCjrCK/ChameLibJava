@@ -1,5 +1,6 @@
 package PerformTest.IBCH;
 
+import EllipticCurve.Curve.Config;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +32,7 @@ public class TheoStorageTest {
             IBCH_CZS_2014,
             IBCH_LSX_2022,
             IBCH_XSL_2021,
-//            IBCH_LJF_2025,
+            IBCH_LJF_2025,
     });
 
     @BeforeAll
@@ -42,9 +43,9 @@ public class TheoStorageTest {
     @DisplayName("test IBCH theory storage cost")
     @Nested
     class IBCHTSCTest {
-        private void testFunc(BufferedWriter theo_storage_cost, SchemeName schemeName, Map<String, Object> params) throws IOException {
-            IBCH scheme = (IBCH) SchemeFactory.createScheme(schemeName, E, params);
-            PublicParam pp = scheme.createPublicParam(E, params);
+        private void testFunc(BufferedWriter theo_storage_cost, scheme.Config schemeConfig) throws IOException {
+            IBCH scheme = (IBCH) SchemeFactory.createScheme(schemeConfig);
+            PublicParam pp = scheme.createPublicParam(schemeConfig);
             MasterSecretKey msk = pp.createMasterSecretKey();
             scheme.Setup(pp, msk);
             SecretKey sk = pp.createSecretKey();
@@ -67,13 +68,14 @@ public class TheoStorageTest {
         @EnumSource
         public void DSTest(SchemeName schemeName) throws IOException {
             if (skipList.contains(schemeName)) return;
-            Map<String, Object> params = new HashMap<>();
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", false);
-            params.put("curve_param", curve_param);
+            Config curveConfig = new Config(E, curve_param);
+            Map<String, Object> params = new HashMap<>();
             params.put("ID_Binary_Len", 100);
+            scheme.Config schemeConfig = new scheme.Config(schemeName, curveConfig, params);
             BufferedWriter theo_storage_cost = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/%s.csv", schemeName.name(), file_base_name)));
-            testFunc(theo_storage_cost, schemeName, params);
+            testFunc(theo_storage_cost, schemeConfig);
         }
 
         @DisplayName("swap G1 and G2")
@@ -85,13 +87,14 @@ public class TheoStorageTest {
                 System.out.println("对称方案，无需交换G1 G2");
                 return;
             }
-            Map<String, Object> params = new HashMap<>();
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", true);
-            params.put("curve_param", curve_param);
+            Config curveConfig = new Config(E, curve_param);
+            Map<String, Object> params = new HashMap<>();
             params.put("ID_Binary_Len", 100);
+            scheme.Config schemeConfig = new scheme.Config(schemeName, curveConfig, params);
             BufferedWriter theo_storage_cost = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/%s_swapG1G2.csv", schemeName.name(), file_base_name)));
-            testFunc(theo_storage_cost, schemeName, params);
+            testFunc(theo_storage_cost, schemeConfig);
         }
     }
 }

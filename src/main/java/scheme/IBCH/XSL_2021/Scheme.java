@@ -1,12 +1,10 @@
 package scheme.IBCH.XSL_2021;
 
 import EllipticCurve.Curve.CurveGroup;
-import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
+import scheme.Config;
 import scheme.IBCH.IBCH;
-
-import java.util.Map;
 
 /*
  * Identity-Based Chameleon Hash without Random Oracles and Application in the Mobile Internet
@@ -15,8 +13,8 @@ import java.util.Map;
 
 public class Scheme extends scheme.Scheme implements IBCH {
     @Override
-    public final scheme.IBCH.Components.PublicParam createPublicParam(CurveName curveName, Map<String, Object> params) {
-        return new PublicParam(curveName, params);
+    public final scheme.IBCH.Components.PublicParam createPublicParam(Config config) {
+        return new PublicParam(config);
     }
     
     private void Setup(

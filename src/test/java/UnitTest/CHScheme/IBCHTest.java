@@ -1,5 +1,6 @@
 package UnitTest.CHScheme;
 
+import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,16 +20,15 @@ import static EllipticCurve.Curve.CurveName.PBC_CUSTOM;
 import static EllipticCurve.Curve.CurveName.SECP256K1;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static scheme.SchemeName.*;
 
 public class IBCHTest {
     static List<SchemeName> skipList = List.of(new SchemeName[]{
-            IBCH_ZSS_2003_S1,
-            IBCH_ZSS_2003_S2,
-            IBCH_CZS_2014,
-            IBCH_LSX_2022,
-            IBCH_XSL_2021,
-            IBCH_LJF_2025,
+//            IBCH_ZSS_2003_S1,
+//            IBCH_ZSS_2003_S2,
+//            IBCH_CZS_2014,
+//            IBCH_LSX_2022,
+//            IBCH_XSL_2021,
+//            IBCH_LJF_2025,
     });
 
     public static Stream<Arguments> GetABSCP() {
@@ -37,10 +37,10 @@ public class IBCHTest {
         );
     }
 
-    private void testFunction(SchemeName schemeName, CurveName curveName, Map<String, Object> params) {
+    private void testFunction(scheme.Config schemeConfig) {
         try {
-            scheme.IBCH.IBCH scheme = SchemeFactory.createScheme(schemeName, curveName, params);
-            PublicParam pp = scheme.createPublicParam(curveName, params);
+            scheme.IBCH.IBCH scheme = SchemeFactory.createScheme(schemeConfig);
+            PublicParam pp = scheme.createPublicParam(schemeConfig);
             MasterSecretKey msk = pp.createMasterSecretKey();
             scheme.Setup(pp, msk);
             SecretKey sk1 = pp.createSecretKey();
@@ -104,9 +104,10 @@ public class IBCHTest {
             curve_param.put("param_file_path", "./jpbc/params/a.properties");
             System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
         }
-        params.put("curve_param", curve_param);
         params.put("ID_Binary_Len", 64);
-        testFunction(schemeName, curveName, params);
+        Config curveConfig = new Config(curveName, curve_param);
+        scheme.Config schemeConfig = new scheme.Config(schemeName, curveConfig, params);
+        testFunction(schemeConfig);
     }
 
     @DisplayName("test swap G1 and G2 implement")
@@ -114,6 +115,10 @@ public class IBCHTest {
     @MethodSource("UnitTest.CHScheme.IBCHTest#GetABSCP")
     void IBCHSGGTest(SchemeName schemeName, CurveName curveName) {
         if (skipList.contains(schemeName)) return;
+        if (curveName.isSymmetic()) {
+            System.out.println("对称曲线无需测试交换");
+            return;
+        }
         if (curveName == SECP256K1) {
             System.out.println("MCL 库未正确实现该曲线，跳过测试");
             return;
@@ -125,8 +130,9 @@ public class IBCHTest {
             curve_param.put("param_file_path", "./jpbc/params/a.properties");
             System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
         }
-        params.put("curve_param", curve_param);
         params.put("ID_Binary_Len", 64);
-        testFunction(schemeName, curveName, params);
+        Config curveConfig = new Config(curveName, curve_param);
+        scheme.Config schemeConfig = new scheme.Config(schemeName, curveConfig, params);
+        testFunction(schemeConfig);
     }
 }

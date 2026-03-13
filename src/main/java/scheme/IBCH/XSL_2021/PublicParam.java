@@ -1,8 +1,7 @@
 package scheme.IBCH.XSL_2021;
 
-import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.MultivePoint;
-import EllipticCurve.Point.PointRepresentation;
+import scheme.Config;
 import utils.ElementCounter;
 
 import java.nio.ByteBuffer;
@@ -11,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.BitSet;
-import java.util.Map;
 import java.util.Random;
 
 public class PublicParam extends scheme.Components.PublicParam implements scheme.IBCH.Components.PublicParam {
@@ -19,10 +17,10 @@ public class PublicParam extends scheme.Components.PublicParam implements scheme
     protected MultivePoint[] u;
     int n;
 
-    public PublicParam(CurveName curveName, Map<String, Object> params) {
-        super(curveName, PointRepresentation.MULTIVE, params);
-        if (!params.containsKey("ID_Binary_Len")) throw new IllegalArgumentException("需要指定身份标识的二进制长度（ID_Binary_Len）");
-        n = (int) params.get("ID_Binary_Len");
+    public PublicParam(Config config) {
+        super(config.curveConfig);
+        if (!config.params.containsKey("ID_Binary_Len")) throw new IllegalArgumentException("需要指定身份标识的二进制长度（ID_Binary_Len）");
+        n = (int) config.params.get("ID_Binary_Len");
         u = new MultivePoint[n + 1];
     }
 

@@ -1,15 +1,16 @@
 package scheme.Components;
 
+import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveFactory;
-import EllipticCurve.Curve.CurveName;
-import EllipticCurve.Point.PointRepresentation;
 import utils.ElementCounter;
-
-import java.util.Map;
 
 public abstract class PublicParam {
     public Curve curve;
+
+    protected PublicParam(Config config) {
+        curve = CurveFactory.create(config);
+    }
 
     public abstract Message createMessage(String msg);
 
@@ -22,14 +23,6 @@ public abstract class PublicParam {
     public abstract HashValue createHashValue();
 
     public abstract Randomness createRandomness();
-
-    protected PublicParam(CurveName curveName, Map<String, Object> params) {
-        curve = CurveFactory.create(curveName, (Map<String, Object>) params.get("curve_param"));
-    }
-
-    protected PublicParam(CurveName curveName, PointRepresentation PR, Map<String, Object> params) {
-        curve = CurveFactory.create(curveName, PR, (Map<String, Object>) params.get("curve_param"));
-    }
 
     public abstract String toString();
 

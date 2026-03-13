@@ -1,20 +1,9 @@
 package Signature;
 
-import EllipticCurve.Curve.CurveName;
 import Signature.Components.*;
 
-import java.util.Map;
-
 public abstract class S {
-    public abstract PublicParam createPublicParam(CurveName curveName, Map<String, Object> params);
-
-    public abstract SecretKey createSecretKey();
-
-    public abstract Message createMessage(String m);
-
-    public abstract PublicKey createPublicKey();
-
-    public abstract SignValue createSignValue();
+    public abstract PublicParam createPublicParam(Config config);
 
     public abstract void Setup(PublicParam pp);
 

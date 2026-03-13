@@ -7,12 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import scheme.*;
 import scheme.IBCH.Components.*;
 import scheme.IBCH.IBCH;
-import scheme.SchemeCurveRequire;
-import scheme.SchemeFactory;
-import scheme.SchemeName;
-import scheme.SchemeType;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -69,12 +66,12 @@ public class RealTimeTest {
     @DisplayName("test IBCH real time cost")
     @Nested
     class IBCHRTCTest {
-        private void testFunc(BufferedWriter theo_storage_cost, SchemeName schemeName, CurveName curveName, Map<String, Object> params) throws IOException {
-            theo_storage_cost.write(curveName.name());
+        private void testFunc(BufferedWriter theo_storage_cost, Config config) throws IOException {
+            theo_storage_cost.write(config.curveConfig.curveName.name());
             double[] time_cost = {0, 0, 0, 0, 0};
 
-            IBCH scheme = (IBCH) SchemeFactory.createScheme(schemeName, curveName, params);
-            PublicParam pp = scheme.createPublicParam(curveName, params);
+            IBCH scheme = (IBCH) SchemeFactory.createScheme(config);
+            PublicParam pp = scheme.createPublicParam(config);
             MasterSecretKey msk = pp.createMasterSecretKey();
 
             int stage_id = -1;
@@ -173,12 +170,12 @@ public class RealTimeTest {
                 System.out.println("方案 " + schemeName.name() + " 不支持曲线 " + curveName + " ，跳过测试");
                 return;
             }
-            Map<String, Object> params = new HashMap<>();
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", false);
-            params.put("curve_param", curve_param);
+            EllipticCurve.Curve.Config curveConfig = new EllipticCurve.Curve.Config(curveName, curve_param);
+            Config schemeConfig = new Config(schemeName, curveConfig);
             System.out.print(curveName.name());
-            if(tsc.get(SNToIdx.get(schemeName)) != null) testFunc(tsc.get(SNToIdx.get(schemeName)), schemeName, curveName, params);
+            if(tsc.get(SNToIdx.get(schemeName)) != null) testFunc(tsc.get(SNToIdx.get(schemeName)), schemeConfig);
         }
 
         @DisplayName("swap G1 and G2")
@@ -202,12 +199,13 @@ public class RealTimeTest {
                 System.out.println("方案 " + schemeName.name() + " 不支持曲线 " + curveName + " ，跳过测试");
                 return;
             }
-            Map<String, Object> params = new HashMap<>();
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", true);
-            params.put("curve_param", curve_param);
+            EllipticCurve.Curve.Config curveConfig = new EllipticCurve.Curve.Config(curveName, curve_param);
+            Config schemeConfig = new Config(schemeName, curveConfig);
+            System.out.print(curveName.name());
             System.out.print(curveName + " swap G1G2");
-            if(tscsgg.get(SNToIdx.get(schemeName)) != null) testFunc(tscsgg.get(SNToIdx.get(schemeName)), schemeName, curveName, params);
+            if(tscsgg.get(SNToIdx.get(schemeName)) != null) testFunc(tscsgg.get(SNToIdx.get(schemeName)), schemeConfig);
         }
     }
 

@@ -1,9 +1,6 @@
 package PerformTest;
 
-import EllipticCurve.Curve.Curve;
-import EllipticCurve.Curve.CurveFactory;
-import EllipticCurve.Curve.CurveGroup;
-import EllipticCurve.Curve.CurveName;
+import EllipticCurve.Curve.*;
 import EllipticCurve.Point.Point;
 import EllipticCurve.Point.PointRepresentation;
 import org.junit.jupiter.api.AfterAll;
@@ -37,9 +34,10 @@ public class BasicTimeTest extends BasicParam {
     @ParameterizedTest(name = "test curve {0}")
     @EnumSource
     void TimeTest(CurveName curveName) {
+        Config config = new Config(curveName, PointRepresentation.MULTIVE);
         if (index_map.getOrDefault(curveName, -1) == -1) return;
         int index = index_map.get(curveName);
-        Curve curve = CurveFactory.create(curveName, PointRepresentation.MULTIVE);
+        Curve curve = CurveFactory.create(config);
         Point[][] Points = new Point[4][repeat_cnt + 1];
 
 

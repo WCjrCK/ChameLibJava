@@ -1,12 +1,10 @@
 package scheme.IBCH;
 
-import EllipticCurve.Curve.CurveName;
+import scheme.Config;
 import scheme.IBCH.Components.*;
 
-import java.util.Map;
-
 public interface IBCH {
-    PublicParam createPublicParam(CurveName curveName, Map<String, Object> params);
+    PublicParam createPublicParam(Config config);
 
     void Setup(PublicParam pp, MasterSecretKey msk);
 

@@ -1,20 +1,18 @@
 package scheme.IBCH.LJF_2025;
 
-import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.MultivePoint;
-import EllipticCurve.Point.PointRepresentation;
+import scheme.Config;
 import utils.ElementCounter;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 
 public class PublicParam extends scheme.Components.PublicParam implements scheme.IBCH.Components.PublicParam {
     protected MultivePoint g, g_1, g_2, h_2, u_2, egg, eg_2g;
 
-    public PublicParam(CurveName curveName, Map<String, Object> params) {
-        super(curveName, PointRepresentation.MULTIVE, params);
+    public PublicParam(Config config) {
+        super(config.curveConfig);
     }
 
     @Override

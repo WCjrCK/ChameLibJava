@@ -1,9 +1,8 @@
 package EllipticCurve.Curve.implement;
 
+import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveGroup;
-import EllipticCurve.Curve.CurveName;
-import EllipticCurve.Curve.GroupRepresentationProfile;
 import EllipticCurve.Point.Point;
 import EllipticCurve.Point.implement.MCLPoint.MCLPointG1;
 import EllipticCurve.Point.implement.MCLPoint.MCLPointG2;
@@ -12,19 +11,18 @@ import EllipticCurve.Point.implement.MCLPoint.MCLPointZp;
 import com.herumi.mcl.*;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
-import java.util.Map;
 import java.util.Random;
 
 public class MCLCurve extends Curve {
     boolean swap_G1G2;
-    public MCLCurve(CurveName curveName, GroupRepresentationProfile profile, Map<String, Object> params) {
-        super(curveName, profile, params);
+    public MCLCurve(Config config) {
+        super(config);
         System.loadLibrary("mcljava");
         PairingFactory.getInstance().setUsePBCWhenPossible(true);
-        if (!curveName.checkLib(CurveImplementLib.MCL)) throw new IllegalArgumentException("曲线 " + curveName + " 不属于 MCL 库");
-        if (!params.containsKey("swap_G1G2")) this.swap_G1G2 = false;
-        else this.swap_G1G2 = (Boolean) params.get("swap_G1G2");
-        switch (curveName) {
+        if (!config.curveName.checkLib(CurveImplementLib.MCL)) throw new IllegalArgumentException("曲线 " + config.curveName + " 不属于 MCL 库");
+        if (!config.params.containsKey("swap_G1G2")) this.swap_G1G2 = false;
+        else this.swap_G1G2 = (Boolean) config.params.get("swap_G1G2");
+        switch (config.curveName) {
             case BN254:
                 Mcl.SystemInit(Mcl.BN254);
                 break;
@@ -37,7 +35,7 @@ public class MCLCurve extends Curve {
                 Mcl.SystemInit(Mcl.SECP256K1);
                 break;
 
-            default: throw new IllegalArgumentException("尚不支持当前曲线：" + curveName);
+            default: throw new IllegalArgumentException("尚不支持当前曲线：" + config.curveName);
         }
     }
 

@@ -2,24 +2,21 @@ package Signature.BLS;
 
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveFactory;
-import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.MultivePoint;
-import EllipticCurve.Point.PointRepresentation;
+import Signature.Config;
 import utils.ElementCounter;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 
 public class PublicParam extends Signature.Components.PublicParam {
     protected MultivePoint g;
 
     public Curve curve;
 
-    protected PublicParam(CurveName curveName, Map<String, Object> params) {
-        super(params);
-        curve = CurveFactory.create(curveName, PointRepresentation.MULTIVE, (Map<String, Object>) params.get("curve_param"));
+    protected PublicParam(Config config) {
+        curve = CurveFactory.create(config.curveConfig);
     }
 
     public final MultivePoint H(String x) {
@@ -45,6 +42,21 @@ public class PublicParam extends Signature.Components.PublicParam {
     @Override
     public final Message createMessage(String msg) {
         return new Message(msg);
+    }
+
+    @Override
+    public final SecretKey createSecretKey() {
+        return new SecretKey();
+    }
+
+    @Override
+    public final PublicKey createPublicKey() {
+        return new PublicKey();
+    }
+
+    @Override
+    public final SignValue createSignValue() {
+        return new SignValue();
     }
 
 }

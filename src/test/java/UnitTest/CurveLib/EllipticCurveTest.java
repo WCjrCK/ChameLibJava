@@ -1,9 +1,6 @@
 package UnitTest.CurveLib;
 
-import EllipticCurve.Curve.Curve;
-import EllipticCurve.Curve.CurveFactory;
-import EllipticCurve.Curve.CurveGroup;
-import EllipticCurve.Curve.CurveName;
+import EllipticCurve.Curve.*;
 import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.PointRepresentation;
@@ -28,7 +25,8 @@ public class EllipticCurveTest {
         @DisplayName("示例1: 按曲线+表示配置+群类型创建 Point")
         @Test
         void createPointByCurveAndGroup() {
-            Curve curve = CurveFactory.create(CurveName.A, PointRepresentation.MULTIVE);
+            Config config = new Config(CurveName.A, PointRepresentation.MULTIVE);
+            Curve curve = CurveFactory.create(config);
             AdditivePoint g1 = curve.createPoint(CurveGroup.G1);
             AdditivePoint g1_t = curve.createPoint(CurveGroup.G1);
             AdditivePoint g2 = curve.createPoint(CurveGroup.G2);
@@ -47,7 +45,8 @@ public class EllipticCurveTest {
             gt = curve.Pairing(g1, g2);
             gt_t = gt.mul(gt_t);
 
-            curve = CurveFactory.create(CurveName.BN254, PointRepresentation.MULTIVE);
+            config = new Config(CurveName.BN254, PointRepresentation.MULTIVE);
+            curve = CurveFactory.create(config);
             g1 = curve.createPoint(CurveGroup.G1);
             g1_t = curve.createPoint(CurveGroup.G1);
             g2 = curve.createPoint(CurveGroup.G2);

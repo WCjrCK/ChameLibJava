@@ -2,13 +2,15 @@ package Signature.Components;
 
 import utils.ElementCounter;
 
-import java.util.Map;
-
 public abstract class PublicParam {
 
     public abstract Message createMessage(String msg);
 
-    protected PublicParam(Map<String, Object> params) {}
+    public abstract SecretKey createSecretKey();
+
+    public abstract PublicKey createPublicKey();
+
+    public abstract SignValue createSignValue();
 
     public abstract ElementCounter TheoSize();
 }

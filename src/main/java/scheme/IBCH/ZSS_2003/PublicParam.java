@@ -1,20 +1,19 @@
 package scheme.IBCH.ZSS_2003;
 
-import EllipticCurve.Curve.CurveName;
 import EllipticCurve.Point.AdditivePoint;
+import scheme.Config;
 import utils.ElementCounter;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 
 public class PublicParam extends scheme.Components.PublicParam implements scheme.IBCH.Components.PublicParam {
     protected AdditivePoint P;
     protected AdditivePoint P_pub;
 
-    public PublicParam(CurveName curveName, Map<String, Object> params) {
-        super(curveName, params);
+    public PublicParam(Config config) {
+        super(config.curveConfig);
     }
 
     @Override

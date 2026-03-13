@@ -1,38 +1,36 @@
 package EllipticCurve.Curve.implement;
 
+import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
-import EllipticCurve.Curve.GroupRepresentationProfile;
 import EllipticCurve.Point.Point;
 import EllipticCurve.Point.implement.PBCPoint;
 import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
-import java.util.Map;
-
 @SuppressWarnings("rawtypes")
 public class PBCCurve extends Curve {
     Pairing pairing;
     boolean swap_G1G2;
     public Field Zp, G1, G2, GT;
-    public PBCCurve(CurveName curveName, GroupRepresentationProfile profile, Map<String, Object> params) {
-        super(curveName, profile, params);
-        if (!curveName.checkLib(CurveImplementLib.PBC)) throw new IllegalArgumentException("曲线 " + curveName + " 不属于 PBC 库");
+    public PBCCurve(Config config) {
+        super(config);
+        if (!config.curveName.checkLib(CurveImplementLib.PBC)) throw new IllegalArgumentException("曲线 " + config.curveName + " 不属于 PBC 库");
         final String base_path = "./jpbc/params/";
         String param_path;
-        if(curveName == CurveName.PBC_CUSTOM) {
-            if(!params.containsKey("param_file_path")) throw new IllegalArgumentException("自定义 PBC 曲线必须提供参数文件路径（param_file_path）");
-            param_path = params.get("param_file_path").toString();
-        }else param_path = base_path + curveName.name().toLowerCase() + ".properties";
+        if(config.curveName == CurveName.PBC_CUSTOM) {
+            if(!config.params.containsKey("param_file_path")) throw new IllegalArgumentException("自定义 PBC 曲线必须提供参数文件路径（param_file_path）");
+            param_path = config.params.get("param_file_path").toString();
+        }else param_path = base_path + config.curveName.name().toLowerCase() + ".properties";
         try {
             pairing = PairingFactory.getPairing(param_path);
         } catch (Exception e) {
             throw new IllegalArgumentException("曲线参数加载失败: " + e.getMessage() + " , 参数路径: " + param_path, e);
         }
-        if (!params.containsKey("swap_G1G2")) this.swap_G1G2 = false;
-        else this.swap_G1G2 = (Boolean) params.get("swap_G1G2");
+        if (!config.params.containsKey("swap_G1G2")) this.swap_G1G2 = false;
+        else this.swap_G1G2 = (Boolean) config.params.get("swap_G1G2");
         Zp = pairing.getZr();
         G1 = swap_G1G2 ? pairing.getG2() : pairing.getG1();
         G2 = swap_G1G2 ? pairing.getG1() : pairing.getG2();
