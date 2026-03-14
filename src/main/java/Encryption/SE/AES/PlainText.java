@@ -1,11 +1,11 @@
-package Encryption.AES;
+package Encryption.SE.AES;
 
 import utils.ElementCounter;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-public class PlainText extends Encryption.Components.PlainText {
+public class PlainText extends Encryption.Components.PlainText<PlainText> {
     public byte[] pt;
 
     PlainText(String m) {
@@ -13,9 +13,8 @@ public class PlainText extends Encryption.Components.PlainText {
     }
 
     @Override
-    public final boolean isEqual(Encryption.Components.PlainText o) {
-        if(o instanceof PlainText) return Arrays.equals(pt, ((PlainText) o).pt);
-        return false;
+    public final boolean isEqual(PlainText o) {
+        return Arrays.equals(pt, o.pt);
     }
 
     @Override

@@ -1,17 +1,11 @@
-package Encryption.AES;
+package Encryption.AE.RSA;
 
 import utils.ElementCounter;
 
-import java.util.Random;
+import java.math.BigInteger;
 
 public class SecretKey extends Encryption.Components.SecretKey {
-    byte[] key;
-
-    SecretKey() {
-        key = new byte[32];
-        Random rand = new Random();
-        rand.nextBytes(key);
-    }
+    public BigInteger p, q, d;
 
     @Override
     public final ElementCounter TheoSize() {

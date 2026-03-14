@@ -1,0 +1,26 @@
+package Encryption.AE;
+
+
+import Encryption.AE.Components.PublicKey;
+import Encryption.AE.Components.PublicParam;
+import Encryption.Components.CipherText;
+import Encryption.Components.PlainText;
+import Encryption.Components.SecretKey;
+
+import java.util.Map;
+
+public abstract class AE<
+        PP extends PublicParam<PK, SK, PT, CT>,
+        PK extends PublicKey,
+        SK extends SecretKey,
+        PT extends PlainText<PT>,
+        CT extends CipherText<CT>
+        > {
+    public abstract void KeyGen(PK pk, SK sk, PP pp);
+
+    public abstract void Encrypt(CT ct, PP pp, PK pk, PT pt);
+
+    public abstract void Decrypt(PT pt, PP pp, PK pk, SK sk, CT ct);
+
+    public abstract PP createPublicParam(Map<String, Object> params);
+}
