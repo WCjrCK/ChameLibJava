@@ -88,7 +88,7 @@ public class BasicTimeTest extends BasicParam {
         try {
             File_Writer.write("curve,");
             for (int i_ = 0; i_ < 4; i_++) File_Writer.write(String.format("R in %s,", idxgroup[i_].name()));
-            for (int i_ = 0; i_ < 4; i_++) File_Writer.write(String.format("Add in %s,", idxgroup[i_].name()));
+            for (int i_ = 0; i_ < 4; i_++) File_Writer.write(String.format("Mul in %s,", idxgroup[i_].name()));
             for (int i_ = 0; i_ < 4; i_++) File_Writer.write(String.format("Pow in %s,", idxgroup[i_].name()));
             File_Writer.write("Pairing\n");
             for(CurveName curve : CurveName.values()) {

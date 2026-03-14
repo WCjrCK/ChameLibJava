@@ -20,8 +20,8 @@ public class S1 extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identity, 
             PublicParam pp,
             MasterSecretKey msk
     ) {
-        msk.s = pp.curve.createScalar();
-        pp.P = pp.curve.createPoint(CurveGroup.G2);
+        msk.s = pp.curve.getRandomScalar();
+        pp.P = pp.curve.getRandomPoint(CurveGroup.G2);
         pp.P_pub = pp.P.mul(msk.s);
     }
 
@@ -47,7 +47,7 @@ public class S1 extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identity, 
             Identity ID,
             Message m
     ) {
-        r.R = pp.curve.createPoint(CurveGroup.G1);
+        r.R = pp.curve.getRandomPoint(CurveGroup.G1);
         CalHash(h, pp, ID, m, r);
     }
 

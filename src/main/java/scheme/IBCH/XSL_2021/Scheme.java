@@ -22,12 +22,12 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             PublicParam pp,
             MasterSecretKey msk
     ) {
-        Scalar alpha = pp.curve.createScalar();
-        pp.g = pp.curve.createPoint(CurveGroup.G1);
+        Scalar alpha = pp.curve.getRandomScalar();
+        pp.g = pp.curve.getRandomPoint(CurveGroup.G1);
         pp.g_1 = pp.g.pow(alpha);
 
-        pp.g_2 = pp.curve.createPoint(CurveGroup.G2);
-        for(int i = 0;i <= pp.n;++i) pp.u[i] = pp.curve.createPoint(CurveGroup.G2);
+        pp.g_2 = pp.curve.getRandomPoint(CurveGroup.G2);
+        for(int i = 0;i <= pp.n;++i) pp.u[i] = pp.curve.getRandomPoint(CurveGroup.G2);
         msk.g_2_alpha = pp.g_2.pow(alpha);
     }
 
@@ -46,7 +46,7 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             MasterSecretKey msk,
             Identity ID
     ) {
-        Scalar t = pp.curve.createScalar();
+        Scalar t = pp.curve.getRandomScalar();
         sk.tk_1 = msk.g_2_alpha.mul(getIDItem(pp, ID).pow(t));
         sk.tk_2 = pp.g.pow(t);
     }
@@ -63,8 +63,8 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             Identity ID,
             Message m
     ) {
-        r.r_1 = pp.curve.createPoint(CurveGroup.G2);
-        r.r_2 = pp.curve.createPoint(CurveGroup.G1);
+        r.r_1 = pp.curve.getRandomPoint(CurveGroup.G2);
+        r.r_2 = pp.curve.getRandomPoint(CurveGroup.G1);
         CalHash(h, pp, ID, m, r);
     }
 

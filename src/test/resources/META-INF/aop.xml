@@ -1,0 +1,11 @@
+<aspectj>
+    <aspects>
+        <aspect name="PerformTest.CallAspect"/>
+    </aspects>
+    <weaver options="-verbose">
+        <include within="EllipticCurve.Point..*"/>
+        <include within="EllipticCurve.Curve..*"/>
+        <include within="scheme..*"/>
+        <include within="PerformTest..*"/>
+    </weaver>
+</aspectj>

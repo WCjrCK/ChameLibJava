@@ -76,8 +76,27 @@ public abstract class Curve<G1 extends Point, G2 extends Point, GT extends Point
         else return HashToG2Core(hash);
     }
 
+    public final Point getRandomPoint(CurveGroup group) {
+        switch (group) {
+            case G1:
+                if(swap_G1G2) return createG2();
+                else return createG1();
+
+            case G2:
+                if(swap_G1G2) return createG1();
+                else return createG2();
+
+            case GT: return createGT();
+        }
+        throw new IllegalArgumentException("不支持当前群： " + group);
+    }
+
+    public final Scalar getRandomScalar() {
+        return createZp();
+    }
+
     public final Point HashToGT(byte[] hash) {
-        return HashToGT(hash);
+        return HashToGTCore(hash);
     }
 
     public final Scalar HashToZp(byte[] hash) {

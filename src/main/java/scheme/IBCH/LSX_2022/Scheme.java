@@ -21,9 +21,9 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             PublicParam pp,
             MasterSecretKey msk
     ) {
-        msk.alpha = pp.curve.createScalar();
-        msk.beta = pp.curve.createScalar();
-        pp.g = pp.curve.createPoint(CurveGroup.G1);
+        msk.alpha = pp.curve.getRandomScalar();
+        msk.beta = pp.curve.getRandomScalar();
+        pp.g = pp.curve.getRandomPoint(CurveGroup.G1);
         pp.g_1 = pp.g.pow(msk.alpha);
         pp.g_2 = pp.g.pow(msk.beta);
         pp.egg = pp.curve.Pairing(pp.g, pp.g);
@@ -37,7 +37,7 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             MasterSecretKey msk,
             Identity ID
     ) {
-        sk.td_1 = pp.curve.createScalar();
+        sk.td_1 = pp.curve.getRandomScalar();
         sk.td_2 = pp.g.pow(msk.beta.sub(sk.td_1).div(msk.alpha.sub(ID.ID)));
     }
 
@@ -53,8 +53,8 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             Identity ID,
             Message m
     ) {
-        r.r_1 = pp.curve.createScalar();
-        r.r_2 = pp.curve.createPoint(CurveGroup.G1);
+        r.r_1 = pp.curve.getRandomScalar();
+        r.r_2 = pp.curve.getRandomPoint(CurveGroup.G1);
         CalHash(h, pp, ID, m, r);
     }
 

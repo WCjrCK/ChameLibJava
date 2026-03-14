@@ -55,7 +55,7 @@ public class PBCCurve extends Curve<Group, Group, Group, Zp> {
     }
 
     @Override
-    public Group Pairing(Group p1, Group p2) {
+    protected Group Pairing(Group p1, Group p2) {
         if (p1.curve() != curveName()) throw new IllegalArgumentException("点 " + p1.curve() + " 不属于当前曲线: " + curveName());
         if (p2.curve() != curveName()) throw new IllegalArgumentException("点 " + p2.curve() + " 不属于当前曲线: " + curveName());
         if (pairing.isSymmetric() || ((Group) p1).p.getField() == G1 && ((Group) p2).p.getField() == G2) {
