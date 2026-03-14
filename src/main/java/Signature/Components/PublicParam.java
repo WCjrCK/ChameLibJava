@@ -2,15 +2,20 @@ package Signature.Components;
 
 import utils.ElementCounter;
 
-public abstract class PublicParam {
+public abstract class PublicParam<
+        PK extends PublicKey,
+        SK extends SecretKey,
+        M extends Message,
+        S extends SignValue
+        > {
 
-    public abstract Message createMessage(String msg);
+    public abstract M createMessage(String msg);
 
-    public abstract SecretKey createSecretKey();
+    public abstract SK createSecretKey();
 
-    public abstract PublicKey createPublicKey();
+    public abstract PK createPublicKey();
 
-    public abstract SignValue createSignValue();
+    public abstract S createSignValue();
 
     public abstract ElementCounter TheoSize();
 }

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import scheme.CH.CH_CDK_2017.Native;
+import ChameleonHash.CH.CH_CDK_2017.Native;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing;
+import ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

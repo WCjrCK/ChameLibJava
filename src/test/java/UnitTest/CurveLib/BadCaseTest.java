@@ -59,16 +59,16 @@ public class BadCaseTest {
             curve.PBC curve = PBC.G_149;
             Group group = Group.G2;
 
-            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC();
-            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
-            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey pk = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey();
-            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey sk = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey();
+            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC();
+            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
+            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey pk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey();
+            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey sk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey();
             scheme.KeyGen(pk, sk, pp);
             Element m1 = pp.GP.GetZrElement();
 
-            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue H = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
+            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue H = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
 
-            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness R = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
+            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness R = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
             Element T1, T2;
             { // scheme.Hash
                 Element xi, k_1_1, k_1_2;
@@ -99,8 +99,8 @@ public class BadCaseTest {
             Element m2 = pp.GP.GetZrElement();
             assertFalse(m1.isEqual(m2), "m1 != m2");
 
-            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue h1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
-            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
+            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue h1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
+            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
             scheme.Hash(h1, r1, pp, pk, m1);
             assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
             assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -118,7 +118,7 @@ public class BadCaseTest {
             curve.PBC curve = PBC.G_149;
             Group group = Group.GT;
 
-            scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
+            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
             {
                 Pairing pairing = Func.PairingGen(curve);
                 pp.GP.G = Func.GetPBCField(pairing, group);

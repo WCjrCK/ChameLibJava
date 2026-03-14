@@ -5,7 +5,7 @@
     <weaver options="-verbose">
         <include within="EllipticCurve.Point..*"/>
         <include within="EllipticCurve.Curve..*"/>
-        <include within="scheme..*"/>
+        <include within="ChameleonHash..*"/>
         <include within="PerformTest..*"/>
     </weaver>
 </aspectj>

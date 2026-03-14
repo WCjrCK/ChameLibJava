@@ -249,18 +249,18 @@ public class CHTest {
             @Test
             void NativeTest() {
                 Random rand = new Random();
-                scheme.CH.CH_KEF_NoMH_AM_2004.Native scheme = new scheme.CH.CH_KEF_NoMH_AM_2004.Native();
-                scheme.CH.CH_KEF_NoMH_AM_2004.Native.PublicKey pk = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.PublicKey();
-                scheme.CH.CH_KEF_NoMH_AM_2004.Native.SecretKey sk = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.SecretKey();
+                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native scheme = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native();
+                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.PublicKey pk = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.PublicKey();
+                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.SecretKey sk = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.SecretKey();
                 scheme.KeyGen(pk, sk, 512);
                 BigInteger m1 = new BigInteger(256, rand);
                 BigInteger m2 = new BigInteger(256, rand);
                 assertTrue(m1.compareTo(m2) != 0, "m1 != m2");
-                scheme.CH.CH_KEF_NoMH_AM_2004.Native.HashValue h1 = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.HashValue();
-                scheme.CH.CH_KEF_NoMH_AM_2004.Native.HashValue h2 = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.HashValue();
-                scheme.CH.CH_KEF_NoMH_AM_2004.Native.Randomness r1 = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.Randomness();
-                scheme.CH.CH_KEF_NoMH_AM_2004.Native.Randomness r2 = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.Randomness();
-                scheme.CH.CH_KEF_NoMH_AM_2004.Native.Randomness r1_p = new scheme.CH.CH_KEF_NoMH_AM_2004.Native.Randomness();
+                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.HashValue h1 = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.HashValue();
+                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.HashValue h2 = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.HashValue();
+                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.Randomness r1 = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.Randomness();
+                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.Randomness r2 = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.Randomness();
+                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.Randomness r1_p = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.Randomness();
                 scheme.Hash(h1, r1, pk, m1);
                 assertTrue(scheme.Check(h1, r1, pk, m1), "H(m1) valid");
                 scheme.Hash(h2, r2, pk, m2);
@@ -281,22 +281,22 @@ public class CHTest {
             @Test
             void NativeTest() {
                 Random rand = new Random();
-                scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native scheme = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native();
-                scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicParam pp = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicParam();
+                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native scheme = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native();
+                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicParam pp = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicParam();
                 scheme.SetUp(pp, 512, 1024);
-                scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicKey pk = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicKey();
-                scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.SecretKey sk = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.SecretKey();
+                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicKey pk = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicKey();
+                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.SecretKey sk = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.SecretKey();
                 scheme.KeyGen(pk, sk, pp);
                 BigInteger m1 = new BigInteger(256, rand);
                 BigInteger m2 = new BigInteger(256, rand);
                 BigInteger L1 = new BigInteger(512, rand);
                 BigInteger L2 = new BigInteger(512, rand);
                 assertTrue(m1.compareTo(m2) != 0, "m1 != m2");
-                scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue h1 = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue();
-                scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue h2 = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue();
-                scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r1 = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
-                scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r2 = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
-                scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r1_p = new scheme.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
+                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue h1 = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue();
+                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue h2 = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue();
+                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r1 = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
+                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r2 = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
+                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r1_p = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
                 scheme.Hash(h1, r1, pk, L1, m1, pp);
                 assertTrue(scheme.Check(h1, r1, pk, L1, m1, pp), "H(L1, m1) valid");
                 assertFalse(scheme.Check(h1, r1, pk, L2, m1, pp), "not H(L2, m1)");
@@ -322,20 +322,20 @@ public class CHTest {
             @Test
             void NativeTest() {
                 Random rand = new Random();
-                scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native scheme = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native();
-                scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.PublicKey pk = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.PublicKey();
-                scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.SecretKey sk = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.SecretKey();
+                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native scheme = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native();
+                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.PublicKey pk = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.PublicKey();
+                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.SecretKey sk = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.SecretKey();
                 scheme.KeyGen(pk, sk, 512);
                 BigInteger m1 = new BigInteger(256, rand);
                 BigInteger m2 = new BigInteger(256, rand);
                 BigInteger L1 = new BigInteger(512, rand);
                 BigInteger L2 = new BigInteger(512, rand);
                 assertTrue(m1.compareTo(m2) != 0, "m1 != m2");
-                scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue h1 = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue();
-                scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue h2 = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue();
-                scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r1 = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
-                scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r2 = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
-                scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r1_p = new scheme.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
+                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue h1 = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue();
+                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue h2 = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue();
+                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r1 = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
+                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r2 = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
+                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r1_p = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
                 scheme.Hash(h1, r1, pk, L1, m1);
                 assertTrue(scheme.Check(h1, r1, pk, L1, m1), "H(L1, m1) valid");
                 assertFalse(scheme.Check(h1, r1, pk, L2, m1), "not H(L2, m1)");
@@ -361,10 +361,10 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicParam pp = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicParam(curve, group);
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicKey pk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicKey();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.SecretKey sk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.SecretKey();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC scheme = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicParam pp = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicParam(curve, group);
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicKey pk = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.PublicKey();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.SecretKey sk = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.SecretKey();
                 scheme.KeyGen(pk, sk, pp);
                 Element m1 = pp.GP.GetZrElement();
                 Element m2 = pp.GP.GetZrElement();
@@ -372,11 +372,11 @@ public class CHTest {
                 Element L2 = pp.GP.GetZrElement();
                 assertFalse(m1.isEqual(m2), "m1 != m2");
 
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.HashValue h1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.HashValue();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.HashValue h2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.HashValue();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.Randomness r1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.Randomness();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.Randomness r2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.Randomness();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.Randomness r1_p = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.Randomness();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.HashValue h1 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.HashValue();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.HashValue h2 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.HashValue();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.Randomness r1 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.Randomness();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.Randomness r2 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.Randomness();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.Randomness r1_p = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC.Randomness();
                 scheme.Hash(h1, r1, pp, pk, L1, m1);
                 assertTrue(scheme.Check(h1, r1, pp, pk, L1, m1), "H(L1, m1) valid");
                 assertFalse(scheme.Check(h1, r1, pp, pk, L2, m1), "not H(L2, m1)");
@@ -400,10 +400,10 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0}")
             @EnumSource(names = {"A", "A1", "E"})
             void JPBCPairingTest(curve.PBC curve) {
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.PublicParam pp = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.PublicParam(curve);
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.PublicKey pk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.PublicKey();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.SecretKey sk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.SecretKey();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing scheme = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.PublicParam pp = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.PublicParam(curve);
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.PublicKey pk = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.PublicKey();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.SecretKey sk = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.SecretKey();
                 scheme.KeyGen(pk, sk, pp);
                 Element m1 = pp.GP.GetZrElement();
                 Element m2 = pp.GP.GetZrElement();
@@ -411,11 +411,11 @@ public class CHTest {
                 Element L2 = pp.GP.GetZrElement();
                 assertFalse(m1.isEqual(m2), "m1 != m2");
 
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.HashValue h1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.HashValue();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.HashValue h2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.HashValue();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness r1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness r2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness();
-                scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness r1_p = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.HashValue h1 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.HashValue();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.HashValue h2 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.HashValue();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness r1 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness r2 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness();
+                ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness r1_p = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.PBC_pairing.Randomness();
                 scheme.Hash(h1, r1, pp, pk, L1, m1);
                 assertTrue(scheme.Check(h1, r1, pp, pk, L1, m1), "H(L1, m1) valid");
                 assertFalse(scheme.Check(h1, r1, pp, pk, L2, m1), "not H(L2, m1)");
@@ -443,10 +443,10 @@ public class CHTest {
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
                 {
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1 scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.PublicParam pp = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.PublicParam();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.PublicKey pk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.PublicKey();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.SecretKey sk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.SecretKey();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1 scheme = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.PublicParam pp = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.PublicParam();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.PublicKey pk = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.PublicKey();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.SecretKey sk = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
                     pp.GP.GetZrElement(m1);
@@ -458,11 +458,11 @@ public class CHTest {
                     pp.GP.GetZrElement(L2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.HashValue h1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.HashValue();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.HashValue h2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.HashValue();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness r1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness r2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness r1_p = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.HashValue h1 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.HashValue h2 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness r1 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness r2 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness r1_p = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G1.Randomness();
                     scheme.Hash(h1, r1, pp, pk, L1, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, L1, m1), "H(L1, m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, L2, m1), "not H(L2, m1)");
@@ -482,10 +482,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h2, r1_p, pp, pk, L1, m1), "not L1");
                 }
                 {
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2 scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.PublicParam pp = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.PublicParam();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.PublicKey pk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.PublicKey();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.SecretKey sk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.SecretKey();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2 scheme = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.PublicParam pp = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.PublicParam();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.PublicKey pk = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.PublicKey();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.SecretKey sk = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
                     pp.GP.GetZrElement(m1);
@@ -497,11 +497,11 @@ public class CHTest {
                     pp.GP.GetZrElement(L2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.HashValue h1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.HashValue();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.HashValue h2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.HashValue();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness r1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness r2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness r1_p = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.HashValue h1 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.HashValue h2 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness r1 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness r2 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness r1_p = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_G2.Randomness();
                     scheme.Hash(h1, r1, pp, pk, L1, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, L1, m1), "H(L1, m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, L2, m1), "not H(L2, m1)");
@@ -521,10 +521,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h2, r1_p, pp, pk, L1, m1), "not L1");
                 }
                 {
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT scheme = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.PublicParam pp = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.PublicParam();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.PublicKey pk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.PublicKey();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.SecretKey sk = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.SecretKey();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT scheme = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.PublicParam pp = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.PublicParam();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.PublicKey pk = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.PublicKey();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.SecretKey sk = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
                     pp.GP.GetZrElement(m1);
@@ -536,11 +536,11 @@ public class CHTest {
                     pp.GP.GetZrElement(L2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.HashValue h1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.HashValue();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.HashValue h2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.HashValue();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness r1 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness r2 = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness();
-                    scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness r1_p = new scheme.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.HashValue h1 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.HashValue();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.HashValue h2 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.HashValue();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness r1 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness r2 = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness r1_p = new ChameleonHash.CH.CH_KEF_MH_SDH_DL_AM_2004.MCL_GT.Randomness();
                     scheme.Hash(h1, r1, pp, pk, L1, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, L1, m1), "H(L1, m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, L2, m1), "not H(L2, m1)");
@@ -574,11 +574,11 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.PublicParam PP = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.PublicParam(curve, group);
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.LabelManager LM = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.LabelManager(PP);
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC scheme = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC();
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.PublicKey pk = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.PublicKey();
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.SecretKey sk = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.SecretKey();
+                ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.PublicParam PP = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.PublicParam(curve, group);
+                ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.LabelManager LM = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.LabelManager(PP);
+                ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC scheme = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC();
+                ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.PublicKey pk = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.PublicKey();
+                ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.SecretKey sk = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.SecretKey();
                 scheme.KeyGen(pk, sk, PP, LM);
                 Element m1 = PP.GP.GetZrElement();
                 Element m2 = PP.GP.GetZrElement();
@@ -586,14 +586,14 @@ public class CHTest {
                 assertFalse(m1.isEqual(m2), "m1 != m2");
                 assertFalse(m1.isEqual(m3), "m1 != m3");
                 assertFalse(m2.isEqual(m3), "m2 != m3");
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Label L1 = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Label();
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Label L2 = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Label();
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.HashValue h1 = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.HashValue();
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.HashValue h2 = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.HashValue();
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness r1 = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness();
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness r2 = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness();
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness r1_p = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness();
-                scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness r1_pp = new scheme.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness();
+                ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.Label L1 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.Label();
+                ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.Label L2 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.Label();
+                ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.HashValue h1 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.HashValue();
+                ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.HashValue h2 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.HashValue();
+                ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness r1 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness();
+                ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness r2 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness();
+                ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness r1_p = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness();
+                ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness r1_pp = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC.Randomness();
                 scheme.Hash(h1, r1, L1, PP, LM, pk, m1);
                 scheme.Hash(h2, r2, L2, PP, LM, pk, m2);
                 assertTrue(scheme.Check(h1, r1, PP, pk, L1, m1), "H(L1, m1) valid");
@@ -624,11 +624,11 @@ public class CHTest {
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
                 do {
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.PublicParam PP = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.PublicParam();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.LabelManager LM = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.LabelManager(PP);
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1 scheme = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.PublicKey pk = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.PublicKey();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.SecretKey sk = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.SecretKey();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.PublicParam PP = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.PublicParam();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.LabelManager LM = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.LabelManager(PP);
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1 scheme = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.PublicKey pk = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.PublicKey();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.SecretKey sk = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.SecretKey();
                     scheme.KeyGen(pk, sk, PP, LM);
                     Fr m1 = new Fr();
                     PP.GP.GetZrElement(m1);
@@ -639,14 +639,14 @@ public class CHTest {
                     assertFalse(m1.equals(m2), "m1 != m2");
                     assertFalse(m1.equals(m3), "m1 != m3");
                     assertFalse(m2.equals(m3), "m2 != m3");
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Label L1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Label();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Label L2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Label();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.HashValue h1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.HashValue();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.HashValue h2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.HashValue();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness r1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness r2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness r1_p = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness r1_pp = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Label L1 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Label();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Label L2 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Label();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.HashValue h1 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.HashValue h2 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness r1 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness r2 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness r1_p = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness r1_pp = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G1.Randomness();
 
                     System.out.println("\n\n12312415124");
                     scheme.Hash(h1, r1, L1, PP, LM, pk, m1);
@@ -674,11 +674,11 @@ public class CHTest {
 
                 if(curve != MCL.SECP256K1) {
                     // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case1
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicParam PP = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicParam();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.LabelManager LM = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.LabelManager(PP);
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2 scheme = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicKey pk = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicKey();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.SecretKey sk = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.SecretKey();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicParam PP = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicParam();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.LabelManager LM = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.LabelManager(PP);
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2 scheme = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicKey pk = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.PublicKey();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.SecretKey sk = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.SecretKey();
                     scheme.KeyGen(pk, sk, PP, LM);
                     Fr m1 = new Fr();
                     PP.GP.GetZrElement(m1);
@@ -689,14 +689,14 @@ public class CHTest {
                     assertFalse(m1.equals(m2), "m1 != m2");
                     assertFalse(m1.equals(m3), "m1 != m3");
                     assertFalse(m2.equals(m3), "m2 != m3");
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Label L1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Label();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Label L2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Label();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.HashValue h1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.HashValue();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.HashValue h2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.HashValue();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r1_p = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r1_pp = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Label L1 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Label();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Label L2 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Label();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.HashValue h1 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.HashValue h2 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r1 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r2 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r1_p = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness r1_pp = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_G2.Randomness();
                     scheme.Hash(h1, r1, L1, PP, LM, pk, m1);
                     assertTrue(scheme.Check(h1, r1, PP, pk, L1, m1), "H(L1, m1) valid");
                     assertFalse(scheme.Check(h1, r1, PP, pk, L2, m1), "not H(L2, m1)");
@@ -718,11 +718,11 @@ public class CHTest {
                     assertTrue(scheme.Check(h1, r1_pp, PP, pk, L1, m3), "Adapt(m3) valid");
                 }{
                     // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case1
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicParam PP = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicParam();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.LabelManager LM = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.LabelManager(PP);
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT scheme = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicKey pk = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicKey();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.SecretKey sk = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.SecretKey();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicParam PP = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicParam();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.LabelManager LM = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.LabelManager(PP);
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT scheme = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicKey pk = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.PublicKey();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.SecretKey sk = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.SecretKey();
                     scheme.KeyGen(pk, sk, PP, LM);
                     Fr m1 = new Fr();
                     PP.GP.GetZrElement(m1);
@@ -733,14 +733,14 @@ public class CHTest {
                     assertFalse(m1.equals(m2), "m1 != m2");
                     assertFalse(m1.equals(m3), "m1 != m3");
                     assertFalse(m2.equals(m3), "m2 != m3");
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Label L1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Label();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Label L2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Label();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.HashValue h1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.HashValue();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.HashValue h2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.HashValue();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness r1 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness r2 = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness r1_p = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness();
-                    scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness r1_pp = new scheme.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Label L1 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Label();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Label L2 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Label();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.HashValue h1 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.HashValue();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.HashValue h2 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.HashValue();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness r1 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness r2 = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness r1_p = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness r1_pp = new ChameleonHash.CH.CH_KEF_DLP_LLA_2012.MCL_GT.Randomness();
                     scheme.Hash(h1, r1, L1, PP, LM, pk, m1);
                     assertTrue(scheme.Check(h1, r1, PP, pk, L1, m1), "H(L1, m1) valid");
                     assertFalse(scheme.Check(h1, r1, PP, pk, L2, m1), "not H(L2, m1)");
@@ -775,19 +775,19 @@ public class CHTest {
             @ParameterizedTest(name = "test lambda = {0}")
             @ValueSource(ints = {256, 512, 1024, 2048})
             void NativeTest(int lambda) {
-                scheme.CH.CH_ET_BC_CDK_2017.Native scheme = new scheme.CH.CH_ET_BC_CDK_2017.Native(lambda);
-                scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey pk = new scheme.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
-                scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey sk = new scheme.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+                ChameleonHash.CH.CH_ET_BC_CDK_2017.Native scheme = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native(lambda);
+                ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.PublicKey pk = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
+                ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey sk = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
                 scheme.KeyGen(pk, sk);
                 String m1 = "WCjrCK";
                 String m2 = "123";
-                scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue h1 = new scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue();
-                scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue h2 = new scheme.CH.CH_ET_BC_CDK_2017.Native.HashValue();
-                scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness r1 = new scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness();
-                scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness r1_p = new scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness();
-                scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness r2 = new scheme.CH.CH_ET_BC_CDK_2017.Native.Randomness();
-                scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd1 = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
-                scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd2 = new scheme.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
+                ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.HashValue h1 = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.HashValue();
+                ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.HashValue h2 = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.HashValue();
+                ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness r1 = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness r1_p = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness r2 = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd1 = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
+                ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd2 = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
                 scheme.Hash(h1, r1, etd1, pk, m1);
                 assertTrue(scheme.Check(h1, r1, pk, m1), "H(m1) valid");
                 scheme.Hash(h2, r2, etd2, pk, m2);
@@ -809,20 +809,20 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicParam pp = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicParam(curve, group, 1024);
-                scheme.CH.CH_ET_KOG_CDK_2017.PBC scheme = new scheme.CH.CH_ET_KOG_CDK_2017.PBC();
-                scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicKey pk = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.PublicKey();
-                scheme.CH.CH_ET_KOG_CDK_2017.PBC.SecretKey sk = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.SecretKey();
+                ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.PublicParam pp = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.PublicParam(curve, group, 1024);
+                ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC scheme = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC();
+                ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.PublicKey pk = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.PublicKey();
+                ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.SecretKey sk = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.SecretKey();
                 scheme.KeyGen(pk, sk, pp);
                 Element m1 = pp.GP.GetZrElement();
                 Element m2 = pp.GP.GetZrElement();
-                scheme.CH.CH_ET_KOG_CDK_2017.PBC.HashValue h1 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.HashValue();
-                scheme.CH.CH_ET_KOG_CDK_2017.PBC.HashValue h2 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.HashValue();
-                scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness r1 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness();
-                scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness r1_p = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness();
-                scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness r2 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.Randomness();
-                scheme.CH.CH_ET_KOG_CDK_2017.PBC.ETrapdoor etd1 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.ETrapdoor();
-                scheme.CH.CH_ET_KOG_CDK_2017.PBC.ETrapdoor etd2 = new scheme.CH.CH_ET_KOG_CDK_2017.PBC.ETrapdoor();
+                ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.HashValue h1 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.HashValue();
+                ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.HashValue h2 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.HashValue();
+                ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.Randomness r1 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.Randomness();
+                ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.Randomness r1_p = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.Randomness();
+                ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.Randomness r2 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.Randomness();
+                ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.ETrapdoor etd1 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.ETrapdoor();
+                ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.ETrapdoor etd2 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.PBC.ETrapdoor();
                 scheme.Hash(h1, r1, etd1, pp, pk, m1);
                 assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                 scheme.Hash(h2, r2, etd2, pp, pk, m2);
@@ -843,22 +843,22 @@ public class CHTest {
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
                 {
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.PublicParam pp = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.PublicParam(1024);
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1 scheme = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.PublicKey pk = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.PublicKey();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.SecretKey sk = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.SecretKey();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.PublicParam pp = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.PublicParam(1024);
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1 scheme = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.PublicKey pk = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.PublicKey();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.SecretKey sk = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
                     pp.GP.GetZrElement(m1);
                     Fr m2 = new Fr();
                     pp.GP.GetZrElement(m2);
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.HashValue h1 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.HashValue();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.HashValue h2 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.HashValue();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness r1 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness r1_p = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness r2 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.ETrapdoor etd1 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.ETrapdoor();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.ETrapdoor etd2 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G1.ETrapdoor();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.HashValue h1 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.HashValue h2 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness r1 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness r1_p = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness r2 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.ETrapdoor etd1 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.ETrapdoor();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.ETrapdoor etd2 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G1.ETrapdoor();
                     scheme.Hash(h1, r1, etd1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                     scheme.Hash(h2, r2, etd2, pp, pk, m2);
@@ -872,22 +872,22 @@ public class CHTest {
                     assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not adapt m1");
                 }
                 {
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.PublicParam pp = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.PublicParam(1024);
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2 scheme = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.PublicKey pk = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.PublicKey();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.SecretKey sk = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.SecretKey();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.PublicParam pp = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.PublicParam(1024);
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2 scheme = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.PublicKey pk = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.PublicKey();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.SecretKey sk = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
                     pp.GP.GetZrElement(m1);
                     Fr m2 = new Fr();
                     pp.GP.GetZrElement(m2);
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.HashValue h1 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.HashValue();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.HashValue h2 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.HashValue();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness r1 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness r1_p = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness r2 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.ETrapdoor etd1 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.ETrapdoor();
-                    scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.ETrapdoor etd2 = new scheme.CH.CH_ET_KOG_CDK_2017.MCL_G2.ETrapdoor();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.HashValue h1 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.HashValue h2 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness r1 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness r1_p = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness r2 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.ETrapdoor etd1 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.ETrapdoor();
+                    ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.ETrapdoor etd2 = new ChameleonHash.CH.CH_ET_KOG_CDK_2017.MCL_G2.ETrapdoor();
                     scheme.Hash(h1, r1, etd1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                     scheme.Hash(h2, r2, etd2, pp, pk, m2);
@@ -911,19 +911,19 @@ public class CHTest {
             @ValueSource(ints = {256, 512, 1024, 2048})
             void NativeTest(int lambda) {
                 Random rand = new Random();
-                scheme.CH.CH_CDK_2017.Native scheme = new scheme.CH.CH_CDK_2017.Native(lambda);
-                scheme.CH.CH_CDK_2017.Native.PublicKey pk = new scheme.CH.CH_CDK_2017.Native.PublicKey();
-                scheme.CH.CH_CDK_2017.Native.SecretKey sk = new scheme.CH.CH_CDK_2017.Native.SecretKey();
+                ChameleonHash.CH.CH_CDK_2017.Native scheme = new ChameleonHash.CH.CH_CDK_2017.Native(lambda);
+                ChameleonHash.CH.CH_CDK_2017.Native.PublicKey pk = new ChameleonHash.CH.CH_CDK_2017.Native.PublicKey();
+                ChameleonHash.CH.CH_CDK_2017.Native.SecretKey sk = new ChameleonHash.CH.CH_CDK_2017.Native.SecretKey();
                 scheme.KeyGen(pk, sk);
                 BigInteger m1 = new BigInteger(lambda, rand);
                 BigInteger m2 = new BigInteger(lambda, rand);
                 BigInteger l1 = new BigInteger(lambda, rand);
                 BigInteger l2 = new BigInteger(lambda, rand);
-                scheme.CH.CH_CDK_2017.Native.HashValue h1 = new scheme.CH.CH_CDK_2017.Native.HashValue();
-                scheme.CH.CH_CDK_2017.Native.HashValue h2 = new scheme.CH.CH_CDK_2017.Native.HashValue();
-                scheme.CH.CH_CDK_2017.Native.Randomness r1 = new scheme.CH.CH_CDK_2017.Native.Randomness();
-                scheme.CH.CH_CDK_2017.Native.Randomness r1_p = new scheme.CH.CH_CDK_2017.Native.Randomness();
-                scheme.CH.CH_CDK_2017.Native.Randomness r2 = new scheme.CH.CH_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.CH_CDK_2017.Native.HashValue h1 = new ChameleonHash.CH.CH_CDK_2017.Native.HashValue();
+                ChameleonHash.CH.CH_CDK_2017.Native.HashValue h2 = new ChameleonHash.CH.CH_CDK_2017.Native.HashValue();
+                ChameleonHash.CH.CH_CDK_2017.Native.Randomness r1 = new ChameleonHash.CH.CH_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.CH_CDK_2017.Native.Randomness r1_p = new ChameleonHash.CH.CH_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.CH_CDK_2017.Native.Randomness r2 = new ChameleonHash.CH.CH_CDK_2017.Native.Randomness();
                 scheme.Hash(h1, r1, pk, l1, m1);
                 assertTrue(scheme.Check(h1, r1, pk, l1, m1), "H(l1, m1) valid");
                 assertFalse(scheme.Check(h1, r1, pk, l2, m1), "not H(l2, m1)");
@@ -949,17 +949,17 @@ public class CHTest {
             @ParameterizedTest(name = "test lambda = {0}")
             @ValueSource(ints = {256, 512, 1024, 2048})
             void NativeTest(int lambda) {
-                scheme.CH.MCH_CDK_2017.Native scheme = new scheme.CH.MCH_CDK_2017.Native(lambda);
-                scheme.CH.MCH_CDK_2017.Native.PublicKey pk = new scheme.CH.MCH_CDK_2017.Native.PublicKey();
-                scheme.CH.MCH_CDK_2017.Native.SecretKey sk = new scheme.CH.MCH_CDK_2017.Native.SecretKey();
+                ChameleonHash.CH.MCH_CDK_2017.Native scheme = new ChameleonHash.CH.MCH_CDK_2017.Native(lambda);
+                ChameleonHash.CH.MCH_CDK_2017.Native.PublicKey pk = new ChameleonHash.CH.MCH_CDK_2017.Native.PublicKey();
+                ChameleonHash.CH.MCH_CDK_2017.Native.SecretKey sk = new ChameleonHash.CH.MCH_CDK_2017.Native.SecretKey();
                 scheme.KeyGen(pk, sk);
                 String m1 = "WCjrCK";
                 String m2 = "123";
-                scheme.CH.MCH_CDK_2017.Native.HashValue h1 = new scheme.CH.MCH_CDK_2017.Native.HashValue();
-                scheme.CH.MCH_CDK_2017.Native.HashValue h2 = new scheme.CH.MCH_CDK_2017.Native.HashValue();
-                scheme.CH.MCH_CDK_2017.Native.Randomness r1 = new scheme.CH.MCH_CDK_2017.Native.Randomness();
-                scheme.CH.MCH_CDK_2017.Native.Randomness r1_p = new scheme.CH.MCH_CDK_2017.Native.Randomness();
-                scheme.CH.MCH_CDK_2017.Native.Randomness r2 = new scheme.CH.MCH_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.MCH_CDK_2017.Native.HashValue h1 = new ChameleonHash.CH.MCH_CDK_2017.Native.HashValue();
+                ChameleonHash.CH.MCH_CDK_2017.Native.HashValue h2 = new ChameleonHash.CH.MCH_CDK_2017.Native.HashValue();
+                ChameleonHash.CH.MCH_CDK_2017.Native.Randomness r1 = new ChameleonHash.CH.MCH_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.MCH_CDK_2017.Native.Randomness r1_p = new ChameleonHash.CH.MCH_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.MCH_CDK_2017.Native.Randomness r2 = new ChameleonHash.CH.MCH_CDK_2017.Native.Randomness();
                 scheme.Hash(h1, r1, pk, m1);
                 assertTrue(scheme.Check(h1, r1, pk, m1), "H(m1) valid");
                 scheme.Hash(h2, r2, pk, m2);
@@ -982,20 +982,20 @@ public class CHTest {
             @ValueSource(ints = {128, 256, 512})
             void NativeTest(int lambda) {
                 Random rand = new Random();
-                scheme.CH.CHET_RSA_CDK_2017.Native scheme = new scheme.CH.CHET_RSA_CDK_2017.Native(lambda);
-                scheme.CH.CHET_RSA_CDK_2017.Native.PublicKey pk = new scheme.CH.CHET_RSA_CDK_2017.Native.PublicKey();
-                scheme.CH.CHET_RSA_CDK_2017.Native.SecretKey sk = new scheme.CH.CHET_RSA_CDK_2017.Native.SecretKey();
+                ChameleonHash.CH.CHET_RSA_CDK_2017.Native scheme = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native(lambda);
+                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.PublicKey pk = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.PublicKey();
+                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.SecretKey sk = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.SecretKey();
                 scheme.KeyGen(pk, sk);
                 BigInteger m1 = new BigInteger(lambda, rand);
                 BigInteger m2 = new BigInteger(lambda, rand);
                 assertTrue(m1.compareTo(m2) != 0, "m1 != m2");
-                scheme.CH.CHET_RSA_CDK_2017.Native.HashValue h1 = new scheme.CH.CHET_RSA_CDK_2017.Native.HashValue();
-                scheme.CH.CHET_RSA_CDK_2017.Native.HashValue h2 = new scheme.CH.CHET_RSA_CDK_2017.Native.HashValue();
-                scheme.CH.CHET_RSA_CDK_2017.Native.Randomness r1 = new scheme.CH.CHET_RSA_CDK_2017.Native.Randomness();
-                scheme.CH.CHET_RSA_CDK_2017.Native.Randomness r1_p = new scheme.CH.CHET_RSA_CDK_2017.Native.Randomness();
-                scheme.CH.CHET_RSA_CDK_2017.Native.Randomness r2 = new scheme.CH.CHET_RSA_CDK_2017.Native.Randomness();
-                scheme.CH.CHET_RSA_CDK_2017.Native.ETrapdoor etd1 = new scheme.CH.CHET_RSA_CDK_2017.Native.ETrapdoor();
-                scheme.CH.CHET_RSA_CDK_2017.Native.ETrapdoor etd2 = new scheme.CH.CHET_RSA_CDK_2017.Native.ETrapdoor();
+                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.HashValue h1 = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.HashValue();
+                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.HashValue h2 = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.HashValue();
+                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.Randomness r1 = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.Randomness r1_p = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.Randomness r2 = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.ETrapdoor etd1 = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.ETrapdoor();
+                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.ETrapdoor etd2 = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.ETrapdoor();
                 scheme.Hash(h1, r1, etd1, pk, m1);
                 assertTrue(scheme.Check(h1, r1, pk, m1), "H(m1) valid");
                 scheme.Hash(h2, r2, etd2, pk, m2);
@@ -1021,10 +1021,10 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                scheme.CH.CH_KEF_CZK_2004.PBC scheme = new scheme.CH.CH_KEF_CZK_2004.PBC();
-                scheme.CH.CH_KEF_CZK_2004.PBC.PublicParam SP = new scheme.CH.CH_KEF_CZK_2004.PBC.PublicParam(curve, group);
-                scheme.CH.CH_KEF_CZK_2004.PBC.PublicKey pk = new scheme.CH.CH_KEF_CZK_2004.PBC.PublicKey();
-                scheme.CH.CH_KEF_CZK_2004.PBC.SecretKey sk = new scheme.CH.CH_KEF_CZK_2004.PBC.SecretKey();
+                ChameleonHash.CH.CH_KEF_CZK_2004.PBC scheme = new ChameleonHash.CH.CH_KEF_CZK_2004.PBC();
+                ChameleonHash.CH.CH_KEF_CZK_2004.PBC.PublicParam SP = new ChameleonHash.CH.CH_KEF_CZK_2004.PBC.PublicParam(curve, group);
+                ChameleonHash.CH.CH_KEF_CZK_2004.PBC.PublicKey pk = new ChameleonHash.CH.CH_KEF_CZK_2004.PBC.PublicKey();
+                ChameleonHash.CH.CH_KEF_CZK_2004.PBC.SecretKey sk = new ChameleonHash.CH.CH_KEF_CZK_2004.PBC.SecretKey();
                 scheme.KeyGen(pk, sk, SP);
                 Element m1 = SP.GP.GetZrElement();
                 Element m2 = SP.GP.GetZrElement();
@@ -1034,11 +1034,11 @@ public class CHTest {
                 L1 = SP.H("S11|R11|T11");
                 L2 = SP.H("S22|R22|T22");
                 assertFalse(L1.isEqual(L2), "L1 != L2");
-                scheme.CH.CH_KEF_CZK_2004.PBC.HashValue h1 = new scheme.CH.CH_KEF_CZK_2004.PBC.HashValue();
-                scheme.CH.CH_KEF_CZK_2004.PBC.HashValue h2 = new scheme.CH.CH_KEF_CZK_2004.PBC.HashValue();
-                scheme.CH.CH_KEF_CZK_2004.PBC.Randomness r1 = new scheme.CH.CH_KEF_CZK_2004.PBC.Randomness();
-                scheme.CH.CH_KEF_CZK_2004.PBC.Randomness r2 = new scheme.CH.CH_KEF_CZK_2004.PBC.Randomness();
-                scheme.CH.CH_KEF_CZK_2004.PBC.Randomness r1_p = new scheme.CH.CH_KEF_CZK_2004.PBC.Randomness();
+                ChameleonHash.CH.CH_KEF_CZK_2004.PBC.HashValue h1 = new ChameleonHash.CH.CH_KEF_CZK_2004.PBC.HashValue();
+                ChameleonHash.CH.CH_KEF_CZK_2004.PBC.HashValue h2 = new ChameleonHash.CH.CH_KEF_CZK_2004.PBC.HashValue();
+                ChameleonHash.CH.CH_KEF_CZK_2004.PBC.Randomness r1 = new ChameleonHash.CH.CH_KEF_CZK_2004.PBC.Randomness();
+                ChameleonHash.CH.CH_KEF_CZK_2004.PBC.Randomness r2 = new ChameleonHash.CH.CH_KEF_CZK_2004.PBC.Randomness();
+                ChameleonHash.CH.CH_KEF_CZK_2004.PBC.Randomness r1_p = new ChameleonHash.CH.CH_KEF_CZK_2004.PBC.Randomness();
                 scheme.Hash(h1, r1, SP, pk, L1, m1);
                 assertTrue(scheme.Check(h1, r1, SP, L1, m1), "H(L1, m1) valid");
                 assertFalse(scheme.Check(h1, r1, SP, L2, m1), "not H(L2, m1)");
@@ -1062,10 +1062,10 @@ public class CHTest {
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
                 {
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G1 scheme = new scheme.CH.CH_KEF_CZK_2004.MCL_G1();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G1.PublicParam SP = new scheme.CH.CH_KEF_CZK_2004.MCL_G1.PublicParam();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G1.PublicKey pk = new scheme.CH.CH_KEF_CZK_2004.MCL_G1.PublicKey();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G1.SecretKey sk = new scheme.CH.CH_KEF_CZK_2004.MCL_G1.SecretKey();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1 scheme = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.PublicParam SP = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.PublicParam();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.PublicKey pk = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.PublicKey();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.SecretKey sk = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.SecretKey();
                     scheme.KeyGen(pk, sk, SP);
                     Fr m1 = new Fr();
                     SP.GP.GetZrElement(m1);
@@ -1078,11 +1078,11 @@ public class CHTest {
                     SP.GP.GetGElement(L2);
 
                     assertFalse(L1.equals(L2), "L1 != L2");
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G1.HashValue h1 = new scheme.CH.CH_KEF_CZK_2004.MCL_G1.HashValue();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G1.HashValue h2 = new scheme.CH.CH_KEF_CZK_2004.MCL_G1.HashValue();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G1.Randomness r1 = new scheme.CH.CH_KEF_CZK_2004.MCL_G1.Randomness();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G1.Randomness r2 = new scheme.CH.CH_KEF_CZK_2004.MCL_G1.Randomness();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G1.Randomness r1_p = new scheme.CH.CH_KEF_CZK_2004.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.HashValue h1 = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.HashValue h2 = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.Randomness r1 = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.Randomness r2 = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.Randomness r1_p = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G1.Randomness();
                     scheme.Hash(h1, r1, SP, pk, L1, m1);
                     assertTrue(scheme.Check(h1, r1, SP, L1, m1), "H(L1, m1) valid");
                     assertFalse(scheme.Check(h1, r1, SP, L2, m1), "not H(L2, m1)");
@@ -1099,10 +1099,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h2, r1_p, SP, L1, m1), "not Adapt(m1)");
                 }
                 {
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G2 scheme = new scheme.CH.CH_KEF_CZK_2004.MCL_G2();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G2.PublicParam SP = new scheme.CH.CH_KEF_CZK_2004.MCL_G2.PublicParam();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G2.PublicKey pk = new scheme.CH.CH_KEF_CZK_2004.MCL_G2.PublicKey();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G2.SecretKey sk = new scheme.CH.CH_KEF_CZK_2004.MCL_G2.SecretKey();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2 scheme = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.PublicParam SP = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.PublicParam();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.PublicKey pk = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.PublicKey();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.SecretKey sk = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.SecretKey();
                     scheme.KeyGen(pk, sk, SP);
                     Fr m1 = new Fr();
                     SP.GP.GetZrElement(m1);
@@ -1115,11 +1115,11 @@ public class CHTest {
                     SP.GP.GetGElement(L2);
 
                     assertFalse(L1.equals(L2), "L1 != L2");
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G2.HashValue h1 = new scheme.CH.CH_KEF_CZK_2004.MCL_G2.HashValue();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G2.HashValue h2 = new scheme.CH.CH_KEF_CZK_2004.MCL_G2.HashValue();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G2.Randomness r1 = new scheme.CH.CH_KEF_CZK_2004.MCL_G2.Randomness();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G2.Randomness r2 = new scheme.CH.CH_KEF_CZK_2004.MCL_G2.Randomness();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_G2.Randomness r1_p = new scheme.CH.CH_KEF_CZK_2004.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.HashValue h1 = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.HashValue h2 = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.Randomness r1 = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.Randomness r2 = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.Randomness r1_p = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_G2.Randomness();
                     scheme.Hash(h1, r1, SP, pk, L1, m1);
                     assertTrue(scheme.Check(h1, r1, SP, L1, m1), "H(L1, m1) valid");
                     assertFalse(scheme.Check(h1, r1, SP, L2, m1), "not H(L2, m1)");
@@ -1136,10 +1136,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h2, r1_p, SP, L1, m1), "not Adapt(m1)");
                 }
                 {
-                    scheme.CH.CH_KEF_CZK_2004.MCL_GT scheme = new scheme.CH.CH_KEF_CZK_2004.MCL_GT();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.PublicParam SP = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.PublicParam();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.PublicKey pk = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.PublicKey();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.SecretKey sk = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.SecretKey();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT scheme = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.PublicParam SP = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.PublicParam();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.PublicKey pk = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.PublicKey();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.SecretKey sk = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.SecretKey();
                     scheme.KeyGen(pk, sk, SP);
                     Fr m1 = new Fr();
                     SP.GP.GetZrElement(m1);
@@ -1152,11 +1152,11 @@ public class CHTest {
                     SP.GP.GetGElement(L2);
 
                     assertFalse(L1.equals(L2), "L1 != L2");
-                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.HashValue h1 = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.HashValue();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.HashValue h2 = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.HashValue();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.Randomness r1 = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.Randomness();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.Randomness r2 = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.Randomness();
-                    scheme.CH.CH_KEF_CZK_2004.MCL_GT.Randomness r1_p = new scheme.CH.CH_KEF_CZK_2004.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.HashValue h1 = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.HashValue();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.HashValue h2 = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.HashValue();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.Randomness r1 = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.Randomness r2 = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.Randomness r1_p = new ChameleonHash.CH.CH_KEF_CZK_2004.MCL_GT.Randomness();
                     scheme.Hash(h1, r1, SP, pk, L1, m1);
                     assertTrue(scheme.Check(h1, r1, SP, L1, m1), "H(L1, m1) valid");
                     assertFalse(scheme.Check(h1, r1, SP, L2, m1), "not H(L2, m1)");
@@ -1186,10 +1186,10 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                scheme.CH.CH_KEF_DL_CZT_2011.PBC scheme = new scheme.CH.CH_KEF_DL_CZT_2011.PBC();
-                scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicParam SP = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicParam(curve, group);
-                scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicKey pk = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.PublicKey();
-                scheme.CH.CH_KEF_DL_CZT_2011.PBC.SecretKey sk = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.SecretKey();
+                ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC scheme = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC();
+                ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.PublicParam SP = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.PublicParam(curve, group);
+                ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.PublicKey pk = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.PublicKey();
+                ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.SecretKey sk = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.SecretKey();
                 scheme.KeyGen(pk, sk, SP);
                 Element m1 = SP.GP.GetZrElement();
                 Element m2 = SP.GP.GetZrElement();
@@ -1197,11 +1197,11 @@ public class CHTest {
                 Element L1 = SP.GP.GetZrElement();
                 Element L2 = SP.GP.GetZrElement();
                 assertFalse(L1.isEqual(L2), "L1 != L2");
-                scheme.CH.CH_KEF_DL_CZT_2011.PBC.HashValue h1 = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.HashValue();
-                scheme.CH.CH_KEF_DL_CZT_2011.PBC.HashValue h2 = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.HashValue();
-                scheme.CH.CH_KEF_DL_CZT_2011.PBC.Randomness r1 = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.Randomness();
-                scheme.CH.CH_KEF_DL_CZT_2011.PBC.Randomness r2 = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.Randomness();
-                scheme.CH.CH_KEF_DL_CZT_2011.PBC.Randomness r1_p = new scheme.CH.CH_KEF_DL_CZT_2011.PBC.Randomness();
+                ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.HashValue h1 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.HashValue();
+                ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.HashValue h2 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.HashValue();
+                ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.Randomness r1 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.Randomness();
+                ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.Randomness r2 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.Randomness();
+                ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.Randomness r1_p = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.PBC.Randomness();
                 scheme.Hash(h1, r1, SP, pk, L1, m1);
                 assertTrue(scheme.Check(h1, r1, SP, pk, L1, m1), "H(L1, m1) valid");
                 assertFalse(scheme.Check(h1, r1, SP, pk, L2, m1), "not H(L2, m1)");
@@ -1225,10 +1225,10 @@ public class CHTest {
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
                 {
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1 scheme = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.PublicParam SP = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.PublicParam();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.PublicKey pk = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.PublicKey();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.SecretKey sk = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.SecretKey();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1 scheme = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.PublicParam SP = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.PublicParam();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.PublicKey pk = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.PublicKey();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.SecretKey sk = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.SecretKey();
                     scheme.KeyGen(pk, sk, SP);
                     Fr m1 = new Fr();
                     SP.GP.GetZrElement(m1);
@@ -1240,11 +1240,11 @@ public class CHTest {
                     Fr L2 = new Fr();
                     SP.GP.GetZrElement(L2);
                     assertFalse(L1.equals(L2), "L1 != L2");
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.HashValue h1 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.HashValue();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.HashValue h2 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.HashValue();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.Randomness r1 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.Randomness();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.Randomness r2 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.Randomness();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.Randomness r1_p = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.HashValue h1 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.HashValue h2 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.Randomness r1 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.Randomness r2 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.Randomness r1_p = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G1.Randomness();
                     scheme.Hash(h1, r1, SP, pk, L1, m1);
                     assertTrue(scheme.Check(h1, r1, SP, pk, L1, m1), "H(L1, m1) valid");
                     assertFalse(scheme.Check(h1, r1, SP, pk, L2, m1), "not H(L2, m1)");
@@ -1261,10 +1261,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h2, r1_p, SP, pk, L1, m1), "not Adapt(m1)");
                 }
                 {
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2 scheme = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.PublicParam SP = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.PublicParam();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.PublicKey pk = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.PublicKey();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.SecretKey sk = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.SecretKey();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2 scheme = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.PublicParam SP = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.PublicParam();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.PublicKey pk = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.PublicKey();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.SecretKey sk = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.SecretKey();
                     scheme.KeyGen(pk, sk, SP);
                     Fr m1 = new Fr();
                     SP.GP.GetZrElement(m1);
@@ -1276,11 +1276,11 @@ public class CHTest {
                     Fr L2 = new Fr();
                     SP.GP.GetZrElement(L2);
                     assertFalse(L1.equals(L2), "L1 != L2");
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.HashValue h1 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.HashValue();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.HashValue h2 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.HashValue();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.Randomness r1 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.Randomness();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.Randomness r2 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.Randomness();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.Randomness r1_p = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.HashValue h1 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.HashValue h2 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.Randomness r1 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.Randomness r2 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.Randomness r1_p = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_G2.Randomness();
                     scheme.Hash(h1, r1, SP, pk, L1, m1);
                     assertTrue(scheme.Check(h1, r1, SP, pk, L1, m1), "H(L1, m1) valid");
                     assertFalse(scheme.Check(h1, r1, SP, pk, L2, m1), "not H(L2, m1)");
@@ -1297,10 +1297,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h2, r1_p, SP, pk, L1, m1), "not Adapt(m1)");
                 }
                 {
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT scheme = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.PublicParam SP = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.PublicParam();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.PublicKey pk = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.PublicKey();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.SecretKey sk = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.SecretKey();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT scheme = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.PublicParam SP = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.PublicParam();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.PublicKey pk = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.PublicKey();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.SecretKey sk = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.SecretKey();
                     scheme.KeyGen(pk, sk, SP);
                     Fr m1 = new Fr();
                     SP.GP.GetZrElement(m1);
@@ -1312,11 +1312,11 @@ public class CHTest {
                     Fr L2 = new Fr();
                     SP.GP.GetZrElement(L2);
                     assertFalse(L1.equals(L2), "L1 != L2");
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.HashValue h1 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.HashValue();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.HashValue h2 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.HashValue();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness r1 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness r2 = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness();
-                    scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness r1_p = new scheme.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.HashValue h1 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.HashValue();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.HashValue h2 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.HashValue();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness r1 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness r2 = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness r1_p = new ChameleonHash.CH.CH_KEF_DL_CZT_2011.MCL_GT.Randomness();
                     scheme.Hash(h1, r1, SP, pk, L1, m1);
                     assertTrue(scheme.Check(h1, r1, SP, pk, L1, m1), "H(L1, m1) valid");
                     assertFalse(scheme.Check(h1, r1, SP, pk, L2, m1), "not H(L2, m1)");
@@ -1346,20 +1346,20 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC();
-                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
-                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey pk = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey();
-                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey sk = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey();
+                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC();
+                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
+                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey pk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey();
+                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey sk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey();
                 scheme.KeyGen(pk, sk, pp);
                 Element m1 = pp.GP.GetZrElement();
                 Element m2 = pp.GP.GetZrElement();
                 assertFalse(m1.isEqual(m2), "m1 != m2");
 
-                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue h1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
-                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue h2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
-                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
-                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
-                scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1_p = new scheme.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
+                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue h1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
+                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue h2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
+                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
+                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
+                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1_p = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
                 scheme.Hash(h1, r1, pp, pk, m1);
                 assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                 assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -1379,10 +1379,10 @@ public class CHTest {
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
                 {
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1 scheme = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.PublicParam();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.PublicKey pk = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.PublicKey();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.SecretKey sk = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.SecretKey();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1 scheme = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.PublicParam();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.PublicKey pk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.PublicKey();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.SecretKey sk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
                     pp.GP.GetZrElement(m1);
@@ -1390,11 +1390,11 @@ public class CHTest {
                     pp.GP.GetZrElement(m2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.HashValue h1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.HashValue();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.HashValue h2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.HashValue();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness r1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness r2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness r1_p = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.HashValue h1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.HashValue();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.HashValue h2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.HashValue();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness r1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness r2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness r1_p = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness();
                     scheme.Hash(h1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -1407,10 +1407,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
                 }
                 {
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2 scheme = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.PublicParam();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.PublicKey pk = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.PublicKey();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.SecretKey sk = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.SecretKey();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2 scheme = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.PublicParam();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.PublicKey pk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.PublicKey();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.SecretKey sk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
                     pp.GP.GetZrElement(m1);
@@ -1418,11 +1418,11 @@ public class CHTest {
                     pp.GP.GetZrElement(m2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.HashValue h1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.HashValue();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.HashValue h2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.HashValue();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness r1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness r2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness r1_p = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.HashValue h1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.HashValue();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.HashValue h2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.HashValue();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness r1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness r2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness r1_p = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness();
                     scheme.Hash(h1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -1435,10 +1435,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
                 }
                 {
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT scheme = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicParam pp = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicParam();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicKey pk = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicKey();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.SecretKey sk = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.SecretKey();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT scheme = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicParam();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicKey pk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicKey();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.SecretKey sk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
                     pp.GP.GetZrElement(m1);
@@ -1446,11 +1446,11 @@ public class CHTest {
                     pp.GP.GetZrElement(m2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue h1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue h2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness r1 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness r2 = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness();
-                    scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness r1_p = new scheme.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue h1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue h2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness r1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness r2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness();
+                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness r1_p = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness();
                     scheme.Hash(h1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -1476,20 +1476,20 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                scheme.CH.CR_CH_DSS_2020.PBC scheme = new scheme.CH.CR_CH_DSS_2020.PBC();
-                scheme.CH.CR_CH_DSS_2020.PBC.PublicParam pp = new scheme.CH.CR_CH_DSS_2020.PBC.PublicParam(curve, group);
-                scheme.CH.CR_CH_DSS_2020.PBC.PublicKey pk = new scheme.CH.CR_CH_DSS_2020.PBC.PublicKey();
-                scheme.CH.CR_CH_DSS_2020.PBC.SecretKey sk = new scheme.CH.CR_CH_DSS_2020.PBC.SecretKey();
+                ChameleonHash.CH.CR_CH_DSS_2020.PBC scheme = new ChameleonHash.CH.CR_CH_DSS_2020.PBC();
+                ChameleonHash.CH.CR_CH_DSS_2020.PBC.PublicParam pp = new ChameleonHash.CH.CR_CH_DSS_2020.PBC.PublicParam(curve, group);
+                ChameleonHash.CH.CR_CH_DSS_2020.PBC.PublicKey pk = new ChameleonHash.CH.CR_CH_DSS_2020.PBC.PublicKey();
+                ChameleonHash.CH.CR_CH_DSS_2020.PBC.SecretKey sk = new ChameleonHash.CH.CR_CH_DSS_2020.PBC.SecretKey();
                 scheme.KeyGen(pk, sk, pp);
                 Element m1 = pp.GP.GetGElement();
                 Element m2 = pp.GP.GetGElement();
                 assertFalse(m1.isEqual(m2), "m1 != m2");
 
-                scheme.CH.CR_CH_DSS_2020.PBC.HashValue h1 = new scheme.CH.CR_CH_DSS_2020.PBC.HashValue();
-                scheme.CH.CR_CH_DSS_2020.PBC.HashValue h2 = new scheme.CH.CR_CH_DSS_2020.PBC.HashValue();
-                scheme.CH.CR_CH_DSS_2020.PBC.Randomness r1 = new scheme.CH.CR_CH_DSS_2020.PBC.Randomness();
-                scheme.CH.CR_CH_DSS_2020.PBC.Randomness r2 = new scheme.CH.CR_CH_DSS_2020.PBC.Randomness();
-                scheme.CH.CR_CH_DSS_2020.PBC.Randomness r1_p = new scheme.CH.CR_CH_DSS_2020.PBC.Randomness();
+                ChameleonHash.CH.CR_CH_DSS_2020.PBC.HashValue h1 = new ChameleonHash.CH.CR_CH_DSS_2020.PBC.HashValue();
+                ChameleonHash.CH.CR_CH_DSS_2020.PBC.HashValue h2 = new ChameleonHash.CH.CR_CH_DSS_2020.PBC.HashValue();
+                ChameleonHash.CH.CR_CH_DSS_2020.PBC.Randomness r1 = new ChameleonHash.CH.CR_CH_DSS_2020.PBC.Randomness();
+                ChameleonHash.CH.CR_CH_DSS_2020.PBC.Randomness r2 = new ChameleonHash.CH.CR_CH_DSS_2020.PBC.Randomness();
+                ChameleonHash.CH.CR_CH_DSS_2020.PBC.Randomness r1_p = new ChameleonHash.CH.CR_CH_DSS_2020.PBC.Randomness();
                 scheme.Hash(h1, r1, pp, pk, m1);
                 assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                 assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -1509,10 +1509,10 @@ public class CHTest {
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
                 {
-                    scheme.CH.CR_CH_DSS_2020.MCL_G1 scheme = new scheme.CH.CR_CH_DSS_2020.MCL_G1();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G1.PublicParam pp = new scheme.CH.CR_CH_DSS_2020.MCL_G1.PublicParam();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G1.PublicKey pk = new scheme.CH.CR_CH_DSS_2020.MCL_G1.PublicKey();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G1.SecretKey sk = new scheme.CH.CR_CH_DSS_2020.MCL_G1.SecretKey();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1 scheme = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.PublicParam pp = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.PublicParam();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.PublicKey pk = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.PublicKey();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.SecretKey sk = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     G1 m1 = new G1();
                     pp.GP.GetGElement(m1);
@@ -1520,11 +1520,11 @@ public class CHTest {
                     pp.GP.GetGElement(m2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.CR_CH_DSS_2020.MCL_G1.HashValue h1 = new scheme.CH.CR_CH_DSS_2020.MCL_G1.HashValue();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G1.HashValue h2 = new scheme.CH.CR_CH_DSS_2020.MCL_G1.HashValue();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G1.Randomness r1 = new scheme.CH.CR_CH_DSS_2020.MCL_G1.Randomness();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G1.Randomness r2 = new scheme.CH.CR_CH_DSS_2020.MCL_G1.Randomness();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G1.Randomness r1_p = new scheme.CH.CR_CH_DSS_2020.MCL_G1.Randomness();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.HashValue h1 = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.HashValue();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.HashValue h2 = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.HashValue();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.Randomness r1 = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.Randomness();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.Randomness r2 = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.Randomness();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.Randomness r1_p = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1.Randomness();
                     scheme.Hash(h1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -1537,10 +1537,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
                 }
                 {
-                    scheme.CH.CR_CH_DSS_2020.MCL_G2 scheme = new scheme.CH.CR_CH_DSS_2020.MCL_G2();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G2.PublicParam pp = new scheme.CH.CR_CH_DSS_2020.MCL_G2.PublicParam();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G2.PublicKey pk = new scheme.CH.CR_CH_DSS_2020.MCL_G2.PublicKey();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G2.SecretKey sk = new scheme.CH.CR_CH_DSS_2020.MCL_G2.SecretKey();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2 scheme = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.PublicParam pp = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.PublicParam();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.PublicKey pk = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.PublicKey();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.SecretKey sk = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     G2 m1 = new G2();
                     pp.GP.GetGElement(m1);
@@ -1548,11 +1548,11 @@ public class CHTest {
                     pp.GP.GetGElement(m2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.CR_CH_DSS_2020.MCL_G2.HashValue h1 = new scheme.CH.CR_CH_DSS_2020.MCL_G2.HashValue();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G2.HashValue h2 = new scheme.CH.CR_CH_DSS_2020.MCL_G2.HashValue();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G2.Randomness r1 = new scheme.CH.CR_CH_DSS_2020.MCL_G2.Randomness();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G2.Randomness r2 = new scheme.CH.CR_CH_DSS_2020.MCL_G2.Randomness();
-                    scheme.CH.CR_CH_DSS_2020.MCL_G2.Randomness r1_p = new scheme.CH.CR_CH_DSS_2020.MCL_G2.Randomness();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.HashValue h1 = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.HashValue();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.HashValue h2 = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.HashValue();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.Randomness r1 = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.Randomness();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.Randomness r2 = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.Randomness();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.Randomness r1_p = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2.Randomness();
                     scheme.Hash(h1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -1565,10 +1565,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
                 }
                 {
-                    scheme.CH.CR_CH_DSS_2020.MCL_GT scheme = new scheme.CH.CR_CH_DSS_2020.MCL_GT();
-                    scheme.CH.CR_CH_DSS_2020.MCL_GT.PublicParam pp = new scheme.CH.CR_CH_DSS_2020.MCL_GT.PublicParam();
-                    scheme.CH.CR_CH_DSS_2020.MCL_GT.PublicKey pk = new scheme.CH.CR_CH_DSS_2020.MCL_GT.PublicKey();
-                    scheme.CH.CR_CH_DSS_2020.MCL_GT.SecretKey sk = new scheme.CH.CR_CH_DSS_2020.MCL_GT.SecretKey();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT scheme = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.PublicParam pp = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.PublicParam();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.PublicKey pk = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.PublicKey();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.SecretKey sk = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     GT m1 = new GT();
                     pp.GP.GetGElement(m1);
@@ -1576,11 +1576,11 @@ public class CHTest {
                     pp.GP.GetGElement(m2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.CR_CH_DSS_2020.MCL_GT.HashValue h1 = new scheme.CH.CR_CH_DSS_2020.MCL_GT.HashValue();
-                    scheme.CH.CR_CH_DSS_2020.MCL_GT.HashValue h2 = new scheme.CH.CR_CH_DSS_2020.MCL_GT.HashValue();
-                    scheme.CH.CR_CH_DSS_2020.MCL_GT.Randomness r1 = new scheme.CH.CR_CH_DSS_2020.MCL_GT.Randomness();
-                    scheme.CH.CR_CH_DSS_2020.MCL_GT.Randomness r2 = new scheme.CH.CR_CH_DSS_2020.MCL_GT.Randomness();
-                    scheme.CH.CR_CH_DSS_2020.MCL_GT.Randomness r1_p = new scheme.CH.CR_CH_DSS_2020.MCL_GT.Randomness();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.HashValue h1 = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.HashValue();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.HashValue h2 = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.HashValue();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.Randomness r1 = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.Randomness();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.Randomness r2 = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.Randomness();
+                    ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.Randomness r1_p = new ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT.Randomness();
                     scheme.Hash(h1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -1606,20 +1606,20 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                scheme.CH.CH_FS_ECC_CCT_2024.PBC scheme = new scheme.CH.CH_FS_ECC_CCT_2024.PBC();
-                scheme.CH.CH_FS_ECC_CCT_2024.PBC.PublicParam pp = new scheme.CH.CH_FS_ECC_CCT_2024.PBC.PublicParam(curve, group);
-                scheme.CH.CH_FS_ECC_CCT_2024.PBC.PublicKey pk = new scheme.CH.CH_FS_ECC_CCT_2024.PBC.PublicKey();
-                scheme.CH.CH_FS_ECC_CCT_2024.PBC.SecretKey sk = new scheme.CH.CH_FS_ECC_CCT_2024.PBC.SecretKey();
+                ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC scheme = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC();
+                ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.PublicParam pp = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.PublicParam(curve, group);
+                ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.PublicKey pk = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.PublicKey();
+                ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.SecretKey sk = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.SecretKey();
                 scheme.KeyGen(pk, sk, pp);
                 Element m1 = pp.GP.GetGElement();
                 Element m2 = pp.GP.GetGElement();
                 assertFalse(m1.isEqual(m2), "m1 != m2");
 
-                scheme.CH.CH_FS_ECC_CCT_2024.PBC.HashValue h1 = new scheme.CH.CH_FS_ECC_CCT_2024.PBC.HashValue();
-                scheme.CH.CH_FS_ECC_CCT_2024.PBC.HashValue h2 = new scheme.CH.CH_FS_ECC_CCT_2024.PBC.HashValue();
-                scheme.CH.CH_FS_ECC_CCT_2024.PBC.Randomness r1 = new scheme.CH.CH_FS_ECC_CCT_2024.PBC.Randomness();
-                scheme.CH.CH_FS_ECC_CCT_2024.PBC.Randomness r2 = new scheme.CH.CH_FS_ECC_CCT_2024.PBC.Randomness();
-                scheme.CH.CH_FS_ECC_CCT_2024.PBC.Randomness r1_p = new scheme.CH.CH_FS_ECC_CCT_2024.PBC.Randomness();
+                ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.HashValue h1 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.HashValue();
+                ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.HashValue h2 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.HashValue();
+                ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.Randomness r1 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.Randomness();
+                ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.Randomness r2 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.Randomness();
+                ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.Randomness r1_p = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.PBC.Randomness();
                 scheme.Hash(h1, r1, pp, pk, m1);
                 assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                 assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -1639,10 +1639,10 @@ public class CHTest {
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
                 {
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1 scheme = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.PublicParam pp = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.PublicParam();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.PublicKey pk = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.PublicKey();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.SecretKey sk = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.SecretKey();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1 scheme = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.PublicParam pp = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.PublicParam();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.PublicKey pk = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.PublicKey();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.SecretKey sk = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
                     pp.GP.GetZrElement(m1);
@@ -1650,11 +1650,11 @@ public class CHTest {
                     pp.GP.GetZrElement(m2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.HashValue h1 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.HashValue();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.HashValue h2 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.HashValue();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.Randomness r1 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.Randomness();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.Randomness r2 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.Randomness();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.Randomness r1_p = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.HashValue h1 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.HashValue h2 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.Randomness r1 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.Randomness r2 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.Randomness r1_p = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G1.Randomness();
                     scheme.Hash(h1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -1667,10 +1667,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
                 }
                 {
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2 scheme = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.PublicParam pp = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.PublicParam();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.PublicKey pk = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.PublicKey();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.SecretKey sk = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.SecretKey();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2 scheme = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.PublicParam pp = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.PublicParam();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.PublicKey pk = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.PublicKey();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.SecretKey sk = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
                     pp.GP.GetZrElement(m1);
@@ -1678,11 +1678,11 @@ public class CHTest {
                     pp.GP.GetZrElement(m2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.HashValue h1 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.HashValue();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.HashValue h2 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.HashValue();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness r1 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness r2 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness r1_p = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.HashValue h1 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.HashValue h2 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness r1 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness r2 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness r1_p = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_G2.Randomness();
                     scheme.Hash(h1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -1695,10 +1695,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
                 }
                 {
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT scheme = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.PublicParam pp = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.PublicParam();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.PublicKey pk = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.PublicKey();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.SecretKey sk = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.SecretKey();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT scheme = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.PublicParam pp = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.PublicParam();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.PublicKey pk = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.PublicKey();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.SecretKey sk = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.SecretKey();
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
                     pp.GP.GetZrElement(m1);
@@ -1706,11 +1706,11 @@ public class CHTest {
                     pp.GP.GetZrElement(m2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.HashValue h1 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.HashValue();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.HashValue h2 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.HashValue();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness r1 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness r2 = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness();
-                    scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness r1_p = new scheme.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.HashValue h1 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.HashValue();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.HashValue h2 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.HashValue();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness r1 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness r2 = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness r1_p = new ChameleonHash.CH.CH_FS_ECC_CCT_2024.MCL_GT.Randomness();
                     scheme.Hash(h1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
@@ -1736,24 +1736,24 @@ public class CHTest {
             @ParameterizedTest(name = "test curve {0} group {1}")
             @MethodSource("CHTest#GetPBCCartesianProduct")
             void JPBCTest(curve.PBC curve, Group group) {
-                scheme.CH.CH_AMV_2017.PBC scheme = new scheme.CH.CH_AMV_2017.PBC();
-                scheme.CH.CH_AMV_2017.PBC.PublicParam pp = new scheme.CH.CH_AMV_2017.PBC.PublicParam();
-                scheme.CH.CH_AMV_2017.PBC.PublicKey pk = new scheme.CH.CH_AMV_2017.PBC.PublicKey();
-                scheme.CH.CH_AMV_2017.PBC.SecretKey sk = new scheme.CH.CH_AMV_2017.PBC.SecretKey();
+                ChameleonHash.CH.CH_AMV_2017.PBC scheme = new ChameleonHash.CH.CH_AMV_2017.PBC();
+                ChameleonHash.CH.CH_AMV_2017.PBC.PublicParam pp = new ChameleonHash.CH.CH_AMV_2017.PBC.PublicParam();
+                ChameleonHash.CH.CH_AMV_2017.PBC.PublicKey pk = new ChameleonHash.CH.CH_AMV_2017.PBC.PublicKey();
+                ChameleonHash.CH.CH_AMV_2017.PBC.SecretKey sk = new ChameleonHash.CH.CH_AMV_2017.PBC.SecretKey();
                 scheme.SetUp(pp, curve, group);
                 scheme.KeyGen(pk, sk, pp);
                 Element m1 = pp.GetZrElement();
                 Element m2 = pp.GetZrElement();
                 assertFalse(m1.isEqual(m2), "m1 != m2");
 
-                scheme.CH.CH_AMV_2017.PBC.HashValue h1 = new scheme.CH.CH_AMV_2017.PBC.HashValue();
-                scheme.CH.CH_AMV_2017.PBC.HashValue h2 = new scheme.CH.CH_AMV_2017.PBC.HashValue();
-                scheme.CH.CH_AMV_2017.PBC.Randomness r1 = new scheme.CH.CH_AMV_2017.PBC.Randomness();
-                scheme.CH.CH_AMV_2017.PBC.Randomness r2 = new scheme.CH.CH_AMV_2017.PBC.Randomness();
-                scheme.CH.CH_AMV_2017.PBC.Randomness r1_p = new scheme.CH.CH_AMV_2017.PBC.Randomness();
-                scheme.CH.CH_AMV_2017.PBC.EncRandomness er1 = new scheme.CH.CH_AMV_2017.PBC.EncRandomness();
-                scheme.CH.CH_AMV_2017.PBC.EncRandomness er2 = new scheme.CH.CH_AMV_2017.PBC.EncRandomness();
-                scheme.CH.CH_AMV_2017.PBC.EncRandomness er1_p = new scheme.CH.CH_AMV_2017.PBC.EncRandomness();
+                ChameleonHash.CH.CH_AMV_2017.PBC.HashValue h1 = new ChameleonHash.CH.CH_AMV_2017.PBC.HashValue();
+                ChameleonHash.CH.CH_AMV_2017.PBC.HashValue h2 = new ChameleonHash.CH.CH_AMV_2017.PBC.HashValue();
+                ChameleonHash.CH.CH_AMV_2017.PBC.Randomness r1 = new ChameleonHash.CH.CH_AMV_2017.PBC.Randomness();
+                ChameleonHash.CH.CH_AMV_2017.PBC.Randomness r2 = new ChameleonHash.CH.CH_AMV_2017.PBC.Randomness();
+                ChameleonHash.CH.CH_AMV_2017.PBC.Randomness r1_p = new ChameleonHash.CH.CH_AMV_2017.PBC.Randomness();
+                ChameleonHash.CH.CH_AMV_2017.PBC.EncRandomness er1 = new ChameleonHash.CH.CH_AMV_2017.PBC.EncRandomness();
+                ChameleonHash.CH.CH_AMV_2017.PBC.EncRandomness er2 = new ChameleonHash.CH.CH_AMV_2017.PBC.EncRandomness();
+                ChameleonHash.CH.CH_AMV_2017.PBC.EncRandomness er1_p = new ChameleonHash.CH.CH_AMV_2017.PBC.EncRandomness();
                 scheme.Hash(h1, er1, r1, pp, pk, m1);
                 assertTrue(scheme.Check(h1, er1, pp, pk, m1), "H(m1) valid");
                 assertFalse(scheme.Check(h1, er1, pp, pk, m2), "not H(m1)");
@@ -1773,10 +1773,10 @@ public class CHTest {
             void MCLTest(MCL curve) {
                 Func.MCLInit(curve);
                 {
-                    scheme.CH.CH_AMV_2017.MCL_G1 scheme = new scheme.CH.CH_AMV_2017.MCL_G1();
-                    scheme.CH.CH_AMV_2017.MCL_G1.PublicParam pp = new scheme.CH.CH_AMV_2017.MCL_G1.PublicParam();
-                    scheme.CH.CH_AMV_2017.MCL_G1.PublicKey pk = new scheme.CH.CH_AMV_2017.MCL_G1.PublicKey();
-                    scheme.CH.CH_AMV_2017.MCL_G1.SecretKey sk = new scheme.CH.CH_AMV_2017.MCL_G1.SecretKey();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G1 scheme = new ChameleonHash.CH.CH_AMV_2017.MCL_G1();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G1.PublicParam pp = new ChameleonHash.CH.CH_AMV_2017.MCL_G1.PublicParam();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G1.PublicKey pk = new ChameleonHash.CH.CH_AMV_2017.MCL_G1.PublicKey();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G1.SecretKey sk = new ChameleonHash.CH.CH_AMV_2017.MCL_G1.SecretKey();
                     scheme.SetUp(pp);
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
@@ -1785,14 +1785,14 @@ public class CHTest {
                     pp.GP.GetZrElement(m2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.CH_AMV_2017.MCL_G1.HashValue h1 = new scheme.CH.CH_AMV_2017.MCL_G1.HashValue();
-                    scheme.CH.CH_AMV_2017.MCL_G1.HashValue h2 = new scheme.CH.CH_AMV_2017.MCL_G1.HashValue();
-                    scheme.CH.CH_AMV_2017.MCL_G1.Randomness r1 = new scheme.CH.CH_AMV_2017.MCL_G1.Randomness();
-                    scheme.CH.CH_AMV_2017.MCL_G1.Randomness r2 = new scheme.CH.CH_AMV_2017.MCL_G1.Randomness();
-                    scheme.CH.CH_AMV_2017.MCL_G1.Randomness r1_p = new scheme.CH.CH_AMV_2017.MCL_G1.Randomness();
-                    scheme.CH.CH_AMV_2017.MCL_G1.EncRandomness er1 = new scheme.CH.CH_AMV_2017.MCL_G1.EncRandomness();
-                    scheme.CH.CH_AMV_2017.MCL_G1.EncRandomness er2 = new scheme.CH.CH_AMV_2017.MCL_G1.EncRandomness();
-                    scheme.CH.CH_AMV_2017.MCL_G1.EncRandomness er1_p = new scheme.CH.CH_AMV_2017.MCL_G1.EncRandomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G1.HashValue h1 = new ChameleonHash.CH.CH_AMV_2017.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G1.HashValue h2 = new ChameleonHash.CH.CH_AMV_2017.MCL_G1.HashValue();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G1.Randomness r1 = new ChameleonHash.CH.CH_AMV_2017.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G1.Randomness r2 = new ChameleonHash.CH.CH_AMV_2017.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G1.Randomness r1_p = new ChameleonHash.CH.CH_AMV_2017.MCL_G1.Randomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G1.EncRandomness er1 = new ChameleonHash.CH.CH_AMV_2017.MCL_G1.EncRandomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G1.EncRandomness er2 = new ChameleonHash.CH.CH_AMV_2017.MCL_G1.EncRandomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G1.EncRandomness er1_p = new ChameleonHash.CH.CH_AMV_2017.MCL_G1.EncRandomness();
                     scheme.Hash(h1, er1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, er1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, er1, pp, pk, m2), "not H(m1)");
@@ -1805,10 +1805,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h1, er1_p, pp, pk, m1), "not Adapt(m1)");
                 }
                 {
-                    scheme.CH.CH_AMV_2017.MCL_G2 scheme = new scheme.CH.CH_AMV_2017.MCL_G2();
-                    scheme.CH.CH_AMV_2017.MCL_G2.PublicParam pp = new scheme.CH.CH_AMV_2017.MCL_G2.PublicParam();
-                    scheme.CH.CH_AMV_2017.MCL_G2.PublicKey pk = new scheme.CH.CH_AMV_2017.MCL_G2.PublicKey();
-                    scheme.CH.CH_AMV_2017.MCL_G2.SecretKey sk = new scheme.CH.CH_AMV_2017.MCL_G2.SecretKey();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G2 scheme = new ChameleonHash.CH.CH_AMV_2017.MCL_G2();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G2.PublicParam pp = new ChameleonHash.CH.CH_AMV_2017.MCL_G2.PublicParam();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G2.PublicKey pk = new ChameleonHash.CH.CH_AMV_2017.MCL_G2.PublicKey();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G2.SecretKey sk = new ChameleonHash.CH.CH_AMV_2017.MCL_G2.SecretKey();
                     scheme.SetUp(pp);
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
@@ -1817,14 +1817,14 @@ public class CHTest {
                     pp.GP.GetZrElement(m2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.CH_AMV_2017.MCL_G2.HashValue h1 = new scheme.CH.CH_AMV_2017.MCL_G2.HashValue();
-                    scheme.CH.CH_AMV_2017.MCL_G2.HashValue h2 = new scheme.CH.CH_AMV_2017.MCL_G2.HashValue();
-                    scheme.CH.CH_AMV_2017.MCL_G2.Randomness r1 = new scheme.CH.CH_AMV_2017.MCL_G2.Randomness();
-                    scheme.CH.CH_AMV_2017.MCL_G2.Randomness r2 = new scheme.CH.CH_AMV_2017.MCL_G2.Randomness();
-                    scheme.CH.CH_AMV_2017.MCL_G2.Randomness r1_p = new scheme.CH.CH_AMV_2017.MCL_G2.Randomness();
-                    scheme.CH.CH_AMV_2017.MCL_G2.EncRandomness er1 = new scheme.CH.CH_AMV_2017.MCL_G2.EncRandomness();
-                    scheme.CH.CH_AMV_2017.MCL_G2.EncRandomness er2 = new scheme.CH.CH_AMV_2017.MCL_G2.EncRandomness();
-                    scheme.CH.CH_AMV_2017.MCL_G2.EncRandomness er1_p = new scheme.CH.CH_AMV_2017.MCL_G2.EncRandomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G2.HashValue h1 = new ChameleonHash.CH.CH_AMV_2017.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G2.HashValue h2 = new ChameleonHash.CH.CH_AMV_2017.MCL_G2.HashValue();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G2.Randomness r1 = new ChameleonHash.CH.CH_AMV_2017.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G2.Randomness r2 = new ChameleonHash.CH.CH_AMV_2017.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G2.Randomness r1_p = new ChameleonHash.CH.CH_AMV_2017.MCL_G2.Randomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G2.EncRandomness er1 = new ChameleonHash.CH.CH_AMV_2017.MCL_G2.EncRandomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G2.EncRandomness er2 = new ChameleonHash.CH.CH_AMV_2017.MCL_G2.EncRandomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_G2.EncRandomness er1_p = new ChameleonHash.CH.CH_AMV_2017.MCL_G2.EncRandomness();
                     scheme.Hash(h1, er1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, er1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, er1, pp, pk, m2), "not H(m1)");
@@ -1837,10 +1837,10 @@ public class CHTest {
                     assertFalse(scheme.Check(h1, er1_p, pp, pk, m1), "not Adapt(m1)");
                 }
                 {
-                    scheme.CH.CH_AMV_2017.MCL_GT scheme = new scheme.CH.CH_AMV_2017.MCL_GT();
-                    scheme.CH.CH_AMV_2017.MCL_GT.PublicParam pp = new scheme.CH.CH_AMV_2017.MCL_GT.PublicParam();
-                    scheme.CH.CH_AMV_2017.MCL_GT.PublicKey pk = new scheme.CH.CH_AMV_2017.MCL_GT.PublicKey();
-                    scheme.CH.CH_AMV_2017.MCL_GT.SecretKey sk = new scheme.CH.CH_AMV_2017.MCL_GT.SecretKey();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_GT scheme = new ChameleonHash.CH.CH_AMV_2017.MCL_GT();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_GT.PublicParam pp = new ChameleonHash.CH.CH_AMV_2017.MCL_GT.PublicParam();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_GT.PublicKey pk = new ChameleonHash.CH.CH_AMV_2017.MCL_GT.PublicKey();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_GT.SecretKey sk = new ChameleonHash.CH.CH_AMV_2017.MCL_GT.SecretKey();
                     scheme.SetUp(pp);
                     scheme.KeyGen(pk, sk, pp);
                     Fr m1 = new Fr();
@@ -1849,14 +1849,14 @@ public class CHTest {
                     pp.GP.GetZrElement(m2);
                     assertFalse(m1.equals(m2), "m1 != m2");
 
-                    scheme.CH.CH_AMV_2017.MCL_GT.HashValue h1 = new scheme.CH.CH_AMV_2017.MCL_GT.HashValue();
-                    scheme.CH.CH_AMV_2017.MCL_GT.HashValue h2 = new scheme.CH.CH_AMV_2017.MCL_GT.HashValue();
-                    scheme.CH.CH_AMV_2017.MCL_GT.Randomness r1 = new scheme.CH.CH_AMV_2017.MCL_GT.Randomness();
-                    scheme.CH.CH_AMV_2017.MCL_GT.Randomness r2 = new scheme.CH.CH_AMV_2017.MCL_GT.Randomness();
-                    scheme.CH.CH_AMV_2017.MCL_GT.Randomness r1_p = new scheme.CH.CH_AMV_2017.MCL_GT.Randomness();
-                    scheme.CH.CH_AMV_2017.MCL_GT.EncRandomness er1 = new scheme.CH.CH_AMV_2017.MCL_GT.EncRandomness();
-                    scheme.CH.CH_AMV_2017.MCL_GT.EncRandomness er2 = new scheme.CH.CH_AMV_2017.MCL_GT.EncRandomness();
-                    scheme.CH.CH_AMV_2017.MCL_GT.EncRandomness er1_p = new scheme.CH.CH_AMV_2017.MCL_GT.EncRandomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_GT.HashValue h1 = new ChameleonHash.CH.CH_AMV_2017.MCL_GT.HashValue();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_GT.HashValue h2 = new ChameleonHash.CH.CH_AMV_2017.MCL_GT.HashValue();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_GT.Randomness r1 = new ChameleonHash.CH.CH_AMV_2017.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_GT.Randomness r2 = new ChameleonHash.CH.CH_AMV_2017.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_GT.Randomness r1_p = new ChameleonHash.CH.CH_AMV_2017.MCL_GT.Randomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_GT.EncRandomness er1 = new ChameleonHash.CH.CH_AMV_2017.MCL_GT.EncRandomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_GT.EncRandomness er2 = new ChameleonHash.CH.CH_AMV_2017.MCL_GT.EncRandomness();
+                    ChameleonHash.CH.CH_AMV_2017.MCL_GT.EncRandomness er1_p = new ChameleonHash.CH.CH_AMV_2017.MCL_GT.EncRandomness();
                     scheme.Hash(h1, er1, r1, pp, pk, m1);
                     assertTrue(scheme.Check(h1, er1, pp, pk, m1), "H(m1) valid");
                     assertFalse(scheme.Check(h1, er1, pp, pk, m2), "not H(m1)");

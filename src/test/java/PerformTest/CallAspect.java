@@ -11,21 +11,38 @@ import org.aspectj.lang.annotation.Aspect;
 public class CallAspect {
     @Around(
             "(" +
+                    "execution(* ChameleonHash.*CH..*.Setup(..))" +
+                    " || execution(* ChameleonHash.*CH..*.KeyGen(..))" +
+                    " || execution(* ChameleonHash.*CH..*.Hash(..))" +
+                    " || execution(* ChameleonHash.*CH..*.Verify(..))" +
+                    " || execution(* ChameleonHash.*CH..*.Collision(..))" +
+            ")" +
+            " && !execution(* EllipticCurve..*(..))" +
+            " && !within(PerformTest..*)"
+    )
+    public Object aroundAllCHStage(ProceedingJoinPoint pjp) throws Throwable {
+//        System.out.println(pjp.getSignature().toString());
+        TraceScope.enter(pjp.getSignature().toString());
+        Object ret_val = pjp.proceed();
+        TraceScope.exit();
+        return ret_val;
+    }
+
+    @Around(
+            "(" +
                     "execution(* EllipticCurve.Point..*.*Core(..))" +
                     " || execution(* EllipticCurve.Curve..*.createPoint(..))" +
                     " || execution(* EllipticCurve.Curve..*.createScalar(..))" +
                     " || execution(protected * EllipticCurve.Curve..*.Pairing(..))" +
-//                    " || execution(* EllipticCurve.Curve..*.HashTo*(..))" +
                     " || execution(* EllipticCurve.Curve..*.getRandom*(..))" +
-//                    " || execution(* EllipticCurve.Curve..*.Hash*Core(..))" +
-                    " || execution(* scheme..PublicParam+.H*(..))" +
+                    " || execution(* ChameleonHash..PublicParam+.H*(..))" +
             ")" +
             " && !execution(* *.toString(..))" +
             " && !execution(* *.hashCode(..))" +
             " && !execution(* *.equals(..))" +
             " && !within(PerformTest..*)"
     )
-    public Object trace(ProceedingJoinPoint pjp) throws Throwable {
+    public Object countBaseInst(ProceedingJoinPoint pjp) throws Throwable {
         if (!TraceScope.active()) return pjp.proceed();
         Object target = pjp.getTarget();
         Object[] args = pjp.getArgs();

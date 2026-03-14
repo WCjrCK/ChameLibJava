@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import scheme.CH.CH_KEF_DLP_LLA_2012.PBC;
+import ChameleonHash.CH.CH_KEF_DLP_LLA_2012.PBC;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

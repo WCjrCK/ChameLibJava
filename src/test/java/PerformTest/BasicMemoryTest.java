@@ -1,12 +1,14 @@
 package PerformTest;
 
-import EllipticCurve.Curve.CurveName;
+import EllipticCurve.Curve.*;
+import EllipticCurve.Point.Point;
 import PBCTest.BasicParam;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.openjdk.jol.info.GraphLayout;
 
 import static utils.Func.InitialLib;
 
@@ -22,12 +24,14 @@ public class BasicMemoryTest extends BasicParam {
     @ParameterizedTest(name = "test curve {0}")
     @EnumSource
     void JPBCTest(CurveName curveName) {
-//        Curve curve = CurveFactory.create(curveName, PointRepresentation.MULTIVE);
-//        Point[] G1List = new Point[repeat_cnt];
-//        for (int i = 0; i < repeat_cnt; i++) G1List[i] = curve.createPoint(CurveGroup.G1);
+        Config config = new Config(curveName);
+        Curve curve = CurveFactory.create(config);
+        Point[] G1List = new Point[repeat_cnt];
+        for (int i = 0; i < repeat_cnt; i++) G1List[i] = curve.createPoint(CurveGroup.G1);
+
 //        jol
 //        org.openjdk.jol.info.GraphLayout.parseInstance
-//        System.out.println("G1 size: " + (inst.getObjectSize(G1List) / repeat_cnt));
+        System.out.println("G1 size: " + (GraphLayout.parseInstance((Object) G1List).totalSize() / repeat_cnt));
 //        Point[] GList = {
 
 

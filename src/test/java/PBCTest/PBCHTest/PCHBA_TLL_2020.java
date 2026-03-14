@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import scheme.PBCH.PCHBA_TLL_2020.PBC;
+import ChameleonHash.PBCH.PCHBA_TLL_2020.PBC;
 import utils.BooleanFormulaParser;
 
 import java.io.BufferedWriter;

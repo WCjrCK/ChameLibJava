@@ -2,14 +2,20 @@ package Signature;
 
 import Signature.Components.*;
 
-public abstract class S {
-    public abstract PublicParam createPublicParam(Config config);
+public abstract class S<
+        PP extends PublicParam,
+        PK extends PublicKey,
+        SK extends SecretKey,
+        M extends Message,
+        S extends SignValue
+        > {
+    public abstract PP createPublicParam(Config config);
 
-    public abstract void Setup(PublicParam pp);
+    public abstract void Setup(PP pp);
 
-    public abstract void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp);
+    public abstract void KeyGen(PK pk, SK sk, PP pp);
 
-    public abstract void Sign(SignValue s, PublicParam pp, SecretKey sk, Message m);
+    public abstract void Sign(S s, PP pp, SK sk, M m);
 
-    public abstract boolean Verify(PublicParam pp, PublicKey pk, SignValue s, Message m);
+    public abstract boolean Verify(PP pp, PK pk, S s, M m);
 }

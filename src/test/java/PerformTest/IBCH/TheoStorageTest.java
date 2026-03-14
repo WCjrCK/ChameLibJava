@@ -6,11 +6,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import scheme.IBCH.Components.*;
-import scheme.IBCH.IBCH;
-import scheme.SchemeCurveRequire;
-import scheme.SchemeFactory;
-import scheme.SchemeName;
+import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.IBCH;
+import ChameleonHash.SchemeCurveRequire;
+import ChameleonHash.SchemeFactory;
+import ChameleonHash.SchemeName;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -42,7 +42,7 @@ public class TheoStorageTest {
     @DisplayName("test IBCH theory storage cost")
     @Nested
     class IBCHTSCTest {
-        private void testFunc(BufferedWriter theo_storage_cost, scheme.Config schemeConfig) throws IOException {
+        private void testFunc(BufferedWriter theo_storage_cost, ChameleonHash.Config schemeConfig) throws IOException {
             IBCH scheme = (IBCH) SchemeFactory.createScheme(schemeConfig);
             PublicParam pp = scheme.createPublicParam(schemeConfig);
             MasterSecretKey msk = pp.createMasterSecretKey();
@@ -72,7 +72,7 @@ public class TheoStorageTest {
             Config curveConfig = new Config(E, curve_param);
             Map<String, Object> params = new HashMap<>();
             params.put("ID_Binary_Len", 100);
-            scheme.Config schemeConfig = new scheme.Config(schemeName, curveConfig, params);
+            ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
             BufferedWriter theo_storage_cost = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/%s.csv", schemeName.name(), file_base_name)));
             testFunc(theo_storage_cost, schemeConfig);
         }
@@ -91,7 +91,7 @@ public class TheoStorageTest {
             Config curveConfig = new Config(E, curve_param);
             Map<String, Object> params = new HashMap<>();
             params.put("ID_Binary_Len", 100);
-            scheme.Config schemeConfig = new scheme.Config(schemeName, curveConfig, params);
+            ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
             BufferedWriter theo_storage_cost = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/%s_swapG1G2.csv", schemeName.name(), file_base_name)));
             testFunc(theo_storage_cost, schemeConfig);
         }

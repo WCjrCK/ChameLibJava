@@ -10,7 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class PublicParam extends Signature.Components.PublicParam {
+public class PublicParam
+        extends Signature.Components.PublicParam<PublicKey, SecretKey, Message, SignValue> {
     protected MultivePoint g;
 
     public Curve curve;

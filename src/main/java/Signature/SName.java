@@ -1,9 +1,9 @@
 package Signature;
 
 import EllipticCurve.Curve.CurveName;
-import scheme.SchemeCurveRequire;
+import ChameleonHash.SchemeCurveRequire;
 
-import static scheme.SchemeCurveRequire.SYMMETRIC;
+import static ChameleonHash.SchemeCurveRequire.SYMMETRIC;
 
 public enum SName {
     BLS(SYMMETRIC)

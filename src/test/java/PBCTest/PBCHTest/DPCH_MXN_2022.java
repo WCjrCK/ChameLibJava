@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import scheme.PBCH.DPCH_MXN_2022.PBC;
+import ChameleonHash.PBCH.DPCH_MXN_2022.PBC;
 import utils.BooleanFormulaParser;
 
 import java.io.BufferedWriter;

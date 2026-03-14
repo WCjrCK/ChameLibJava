@@ -7,9 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import scheme.*;
-import scheme.IBCH.Components.*;
-import scheme.IBCH.IBCH;
+import ChameleonHash.*;
+import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.IBCH;
 
 import java.io.BufferedWriter;
 import java.io.File;

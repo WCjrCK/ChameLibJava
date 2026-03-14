@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import scheme.PBCH.RPCH_XNM_2021.MCL;
-import scheme.PBCH.RPCH_XNM_2021.MCL_swap;
+import ChameleonHash.PBCH.RPCH_XNM_2021.MCL;
+import ChameleonHash.PBCH.RPCH_XNM_2021.MCL_swap;
 import utils.BooleanFormulaParser;
 import utils.Func;
 

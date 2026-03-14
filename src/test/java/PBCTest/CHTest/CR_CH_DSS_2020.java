@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import scheme.CH.CR_CH_DSS_2020.PBC;
+import ChameleonHash.CH.CR_CH_DSS_2020.PBC;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

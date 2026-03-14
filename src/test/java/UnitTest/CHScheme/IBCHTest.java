@@ -6,10 +6,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import scheme.IBCH.Components.*;
-import scheme.IBCH.IBCH;
-import scheme.SchemeFactory;
-import scheme.SchemeName;
+import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.IBCH;
+import ChameleonHash.SchemeFactory;
+import ChameleonHash.SchemeName;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -38,8 +38,8 @@ public class IBCHTest {
         );
     }
 
-    private void testFunction(scheme.Config schemeConfig) {
-        scheme.IBCH.IBCH scheme = (IBCH) SchemeFactory.createScheme(schemeConfig);
+    private void testFunction(ChameleonHash.Config schemeConfig) {
+        ChameleonHash.IBCH.IBCH scheme = (IBCH) SchemeFactory.createScheme(schemeConfig);
         PublicParam pp = scheme.createPublicParam(schemeConfig);
         MasterSecretKey msk = pp.createMasterSecretKey();
         scheme.Setup(pp, msk);
@@ -104,7 +104,7 @@ public class IBCHTest {
         }
         params.put("ID_Binary_Len", 64);
         Config curveConfig = new Config(curveName, curve_param);
-        scheme.Config schemeConfig = new scheme.Config(schemeName, curveConfig, params);
+        ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
         testFunction(schemeConfig);
     }
 
@@ -137,7 +137,7 @@ public class IBCHTest {
         }
         params.put("ID_Binary_Len", 64);
         Config curveConfig = new Config(curveName, curve_param);
-        scheme.Config schemeConfig = new scheme.Config(schemeName, curveConfig, params);
+        ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
         testFunction(schemeConfig);
     }
 }

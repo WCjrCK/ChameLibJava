@@ -3,7 +3,7 @@ package PerformTest;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 import org.junit.jupiter.params.provider.Arguments;
-import scheme.SchemeName;
+import ChameleonHash.SchemeName;
 import utils.BooleanFormulaParser;
 
 import java.io.BufferedWriter;

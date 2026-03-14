@@ -11,9 +11,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import scheme.CH.CR_CH_DSS_2020.MCL_G1;
-import scheme.CH.CR_CH_DSS_2020.MCL_G2;
-import scheme.CH.CR_CH_DSS_2020.MCL_GT;
+import ChameleonHash.CH.CR_CH_DSS_2020.MCL_G1;
+import ChameleonHash.CH.CR_CH_DSS_2020.MCL_G2;
+import ChameleonHash.CH.CR_CH_DSS_2020.MCL_GT;
 import utils.Func;
 
 import java.io.BufferedWriter;
