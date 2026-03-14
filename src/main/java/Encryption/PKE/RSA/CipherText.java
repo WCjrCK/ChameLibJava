@@ -1,4 +1,4 @@
-package Encryption.AE.RSA;
+package Encryption.PKE.RSA;
 
 import utils.ElementCounter;
 

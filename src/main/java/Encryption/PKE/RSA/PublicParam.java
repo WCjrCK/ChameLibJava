@@ -1,10 +1,10 @@
-package Encryption.AE.RSA;
+package Encryption.PKE.RSA;
 
 import utils.ElementCounter;
 
 import java.util.Map;
 
-public class PublicParam extends Encryption.AE.Components.PublicParam<PublicKey, SecretKey, PlainText, CipherText> {
+public class PublicParam extends Encryption.PKE.Components.PublicParam<PublicKey, SecretKey, PlainText, CipherText> {
     int p_bit = 1024, q_bit = 1024, e_bit = -1;
 
     protected PublicParam(Map<String, Object> params) {

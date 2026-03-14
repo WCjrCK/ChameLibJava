@@ -1,8 +1,8 @@
-package ABE.Components;
+package Encryption.ABE.Components;
 
-import ABE.Config;
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveFactory;
+import Encryption.ABE.Config;
 
 public abstract class PublicParam {
     public Curve curve;

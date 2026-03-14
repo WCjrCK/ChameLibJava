@@ -1,4 +1,4 @@
-package ABE;
+package Encryption.ABE;
 
 public class Config {
     public EllipticCurve.Curve.Config curveConfig;

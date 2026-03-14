@@ -1,4 +1,4 @@
-package Encryption.AE.Components;
+package Encryption.PKE.Components;
 
 import utils.ElementCounter;
 

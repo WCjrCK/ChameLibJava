@@ -1,6 +1,6 @@
-package Encryption.AE.RSA;
+package Encryption.PKE.RSA;
 
-import Encryption.AE.AE;
+import Encryption.PKE.PKE;
 
 import java.math.BigInteger;
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.Random;
 
 import static utils.Func.phi;
 
-public class Scheme extends AE<PublicParam, PublicKey, SecretKey, PlainText, CipherText> {
+public class Scheme extends PKE<PublicParam, PublicKey, SecretKey, PlainText, CipherText> {
     @Override
     public final PublicParam createPublicParam(Map<String, Object> params) {
         return new PublicParam(params);

@@ -27,18 +27,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CHTest {
     static List<SchemeName> skipList = List.of(new SchemeName[]{
-//            IBCH_ZSS_2003_S1,
-//            IBCH_ZSS_2003_S2,
-//            IBCH_CZS_2014,
-//            IBCH_LSX_2022,
-//            IBCH_XSL_2021,
-//            IBCH_LJF_2025,
+//            CH_LLA_2012,
+
     });
 
     public static Stream<Arguments> GetAllCHSchemeCurve() {
         return EnumSet.allOf(SchemeName.class).stream()
                 .filter(a -> !skipList.contains(a))
                 .filter(a -> a.schemeType == SchemeType.CH)
+                .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP)
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
                                 .filter(b -> b != SECP256K1)
@@ -51,6 +48,7 @@ public class CHTest {
         return EnumSet.allOf(SchemeName.class).stream()
                 .filter(a -> !skipList.contains(a))
                 .filter(a -> a.schemeType == SchemeType.CH)
+                .filter(a -> a.schemeCurveRequire == SchemeCurveRequire.ALL)
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
                                 .filter(b -> b != SECP256K1)
@@ -120,7 +118,7 @@ public class CHTest {
 
     @DisplayName("test abstract implement")
     @ParameterizedTest(name = "test scheme {0} curve {1}")
-    @MethodSource("UnitTest.CHScheme.IBCHTest#GetAllIBCHSchemeCurve")
+    @MethodSource("UnitTest.CHScheme.CHTest#GetAllCHSchemeCurve")
     void CHDSTest(SchemeName schemeName, CurveName curveName) {
         if (skipList.contains(schemeName)) {
             System.out.println("跳过测试：方案 " + schemeName);
@@ -148,7 +146,7 @@ public class CHTest {
 
     @DisplayName("test swap G1 and G2 implement")
     @ParameterizedTest(name = "test scheme {0} curve {1}")
-    @MethodSource("UnitTest.CHScheme.CHTest#GetAllCHSchemeCurve")
+    @MethodSource("UnitTest.CHScheme.CHTest#GetAllCHSchemeASCurve")
     void CHSGGTest(SchemeName schemeName, CurveName curveName) {
         if (skipList.contains(schemeName)) {
             System.out.println("跳过测试：方案 " + schemeName);

@@ -1,11 +1,11 @@
-package Encryption.AE.RSA;
+package Encryption.PKE.RSA;
 
 import utils.ElementCounter;
 
 import java.math.BigInteger;
 
-public class SecretKey extends Encryption.Components.SecretKey {
-    public BigInteger p, q, d;
+public class PublicKey extends Encryption.PKE.Components.PublicKey {
+    public BigInteger N, e;
 
     @Override
     public final ElementCounter TheoSize() {

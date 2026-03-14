@@ -1,9 +1,9 @@
 package UnitTest.ToolsScheme;
 
-import Encryption.AE.AE;
-import Encryption.AE.AEFactory;
-import Encryption.AE.AEName;
-import Encryption.AE.Components.PublicKey;
+import Encryption.PKE.PKE;
+import Encryption.PKE.PKEFactory;
+import Encryption.PKE.PKEName;
+import Encryption.PKE.Components.PublicKey;
 import Encryption.Components.CipherText;
 import Encryption.Components.PlainText;
 import Encryption.Components.PublicParam;
@@ -63,13 +63,13 @@ public class EncryptionTest {
     @DisplayName("test asymmetric encryption scheme")
     @ParameterizedTest(name = "test scheme {0}")
     @EnumSource
-    void AETest(AEName aeName) {
+    void AETest(PKEName PKEName) {
         Map<String, Object> params = new HashMap<>();
 //        params.put("algorithm", "AES");
 //        params.put("transformation", "AES/ECB/PKCS5Padding");
-        Encryption.AE.Config aeConfig = new Encryption.AE.Config(aeName, params);
-        AE scheme = AEFactory.createAE(aeConfig);
-        Encryption.AE.Components.PublicParam pp = scheme.createPublicParam(params);
+        Encryption.PKE.Config aeConfig = new Encryption.PKE.Config(PKEName, params);
+        PKE scheme = PKEFactory.createAE(aeConfig);
+        Encryption.PKE.Components.PublicParam pp = scheme.createPublicParam(params);
         PublicKey pk1 = pp.createPublicKey();
         SecretKey sk1 = pp.createSecretKey();
 

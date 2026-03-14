@@ -1,15 +1,15 @@
-package Encryption.AE;
+package Encryption.PKE;
 
 
-import Encryption.AE.Components.PublicKey;
-import Encryption.AE.Components.PublicParam;
+import Encryption.PKE.Components.PublicKey;
+import Encryption.PKE.Components.PublicParam;
 import Encryption.Components.CipherText;
 import Encryption.Components.PlainText;
 import Encryption.Components.SecretKey;
 
 import java.util.Map;
 
-public abstract class AE<
+public abstract class PKE<
         PP extends PublicParam<PK, SK, PT, CT>,
         PK extends PublicKey,
         SK extends SecretKey,

@@ -1,4 +1,4 @@
-package Encryption.AE.Components;
+package Encryption.PKE.Components;
 
 import Encryption.Components.CipherText;
 import Encryption.Components.PlainText;
