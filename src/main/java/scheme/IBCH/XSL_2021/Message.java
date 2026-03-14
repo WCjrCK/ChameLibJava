@@ -1,10 +1,10 @@
 package scheme.IBCH.XSL_2021;
 
-import EllipticCurve.Point.AdditivePoint;
+import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
 public class Message extends scheme.IBCH.Components.Message {
-    protected AdditivePoint m;
+    protected Scalar m;
 
     public Message() {}
 

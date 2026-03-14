@@ -3,78 +3,104 @@ package EllipticCurve.Curve;
 import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Point;
-import EllipticCurve.Point.PointRepresentation;
+import EllipticCurve.Point.Scalar;
 
 import java.util.Objects;
 
-public abstract class Curve {
+public abstract class Curve<G1 extends Point, G2 extends Point, GT extends Point, Zp extends Scalar> {
     private final Config config;
+    boolean swap_G1G2;
     protected Curve(Config config) {
         this.config = config;
+        if (!config.params.containsKey("swap_G1G2")) this.swap_G1G2 = false;
+        else this.swap_G1G2 = (Boolean) config.params.get("swap_G1G2");
     }
 
     public final CurveName curveName() {
         return config.curveName;
     }
 
-    public final PointRepresentation representation(CurveGroup group) {
-        switch (group) {
-            case G1: return config.G1r;
-            case G2: return config.G2r;
-            case GT: return config.GTr;
-            case Zp: return PointRepresentation.ADDITIVE;
-        }
-        throw new IllegalArgumentException("尚未支持当前群：" + group);
-    }
+    protected abstract G1 createG1();
+
+    protected abstract G2 createG2();
+
+    protected abstract GT createGT();
+
+    protected abstract Zp createZp();
+
+    protected abstract G1 HashToG1Core(byte[] hash);
+
+    protected abstract G2 HashToG2Core(byte[] hash);
+
+    protected abstract GT HashToGTCore(byte[] hash);
+
+    protected abstract Zp HashToZpCore(byte[] hash);
+
+    protected abstract GT Pairing(G1 p1, G2 p2);
+
+//    protected abstract Point newPoint(CurveGroup group);
 
     public final Point createPoint(CurveGroup group) {
         Objects.requireNonNull(group, "群类型不能为空");
-        if (group == CurveGroup.Zp) return (Point) createAdditivePoint(group);
-        if (representation(group) == PointRepresentation.ADDITIVE) return (Point) createAdditivePoint(group);
-        return (Point) createMultivePoint(group);
-    }
-
-    private AdditivePoint createAdditivePoint(CurveGroup group) {
-        if (representation(group) != PointRepresentation.ADDITIVE) throw new IllegalStateException("当前群被配置为乘法表示: " + group);
-        Point point = newPoint(group);
+        Point point;
+        switch (group) {
+            case G1:
+                if (swap_G1G2) point = createG2();
+                else point = createG1();
+                break;
+            case G2:
+                if (swap_G1G2) point = createG1();
+                else point = createG2();
+                break;
+            case GT:
+                point = createGT();
+                break;
+            default: throw new IllegalArgumentException("不支持当前群类型： " + group);
+        }
         if (point == null) throw new IllegalStateException("Point 实例化失败: 返回值为空");
         if (point.curve() != config.curveName) throw new IllegalStateException("Point 曲线不匹配: 期望 " + config.curveName + " 实际 " + point.curve());
         return point;
     }
 
-    private MultivePoint createMultivePoint(CurveGroup group) {
-        if (representation(group) != PointRepresentation.MULTIVE) throw new IllegalStateException("当前群被配置为加法表示: " + group);
-        Point point = newPoint(group);
-        if (point == null) throw new IllegalStateException("Point 实例化失败: 返回值为空");
-        if (point.curve() != config.curveName) throw new IllegalStateException("Point 曲线不匹配: 期望 " + config.curveName + " 实际 " + point.curve());
-        return point;
+    public final Scalar createScalar() {
+        return createZp();
     }
 
-    protected abstract Point newPoint(CurveGroup group);
-
-    public abstract Point Pairing(Point p1, Point p2);
-
-    public abstract Point HashToG1(byte[] hash);
-
-    public abstract Point HashToG2(byte[] hash);
-
-    public abstract Point HashToGT(byte[] hash);
-
-    public abstract Point HashToZp(byte[] hash);
-
-    public final Point Pairing(AdditivePoint p1, AdditivePoint p2) {
-        return Pairing((Point) p1, (Point) p2);
+    public final Point HashToG1(byte[] hash) {
+        if(swap_G1G2) return HashToG2Core(hash);
+        else return HashToG1Core(hash);
     }
 
-    public final Point Pairing(AdditivePoint p1, MultivePoint p2) {
-        return Pairing((Point) p1, (Point) p2);
+    public final Point HashToG2(byte[] hash) {
+        if(swap_G1G2) return HashToG1Core(hash);
+        else return HashToG2Core(hash);
     }
 
-    public final Point Pairing(MultivePoint p1, AdditivePoint p2) {
-        return Pairing((Point) p1, (Point) p2);
+    public final Point HashToGT(byte[] hash) {
+        return HashToGT(hash);
     }
 
-    public final Point Pairing(MultivePoint p1, MultivePoint p2) {
-        return Pairing((Point) p1, (Point) p2);
+    public final Scalar HashToZp(byte[] hash) {
+        return HashToZpCore(hash);
+    }
+
+    public final GT Pairing(AdditivePoint p1, AdditivePoint p2) {
+        if(swap_G1G2) return Pairing((G1) p2, (G2) p1);
+        else return Pairing((G1) p1, (G2) p2);
+    }
+
+    public final GT Pairing(AdditivePoint p1, MultivePoint p2) {
+        if(swap_G1G2) return Pairing((G1) p2, (G2) p1);
+        else return Pairing((G1) p1, (G2) p2);
+    }
+
+    public final GT Pairing(MultivePoint p1, AdditivePoint p2) {
+        if(swap_G1G2) return Pairing((G1) p2, (G2) p1);
+        else return Pairing((G1) p1, (G2) p2);
+    }
+
+    public final GT Pairing(MultivePoint p1, MultivePoint p2) {
+        if(swap_G1G2) return Pairing((G1) p2, (G2) p1);
+        else return Pairing((G1) p1, (G2) p2);
     }
 }

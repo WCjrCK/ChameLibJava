@@ -20,9 +20,9 @@ public class S2 extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identity, 
             PublicParam pp,
             MasterSecretKey msk
     ) {
-        msk.s = pp.curve.createPoint(CurveGroup.Zp);
+        msk.s = pp.curve.createScalar();
         pp.P = pp.curve.createPoint(CurveGroup.G1);
-        pp.P_pub = pp.P.mulZn(msk.s);
+        pp.P_pub = pp.P.mul(msk.s);
     }
 
     @Override
@@ -32,11 +32,11 @@ public class S2 extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identity, 
             MasterSecretKey msk,
             Identity ID
     ) {
-        sk.S_ID = pp.P.mulZn(msk.s.add(pp.H1(ID.ID)).invZn());
+        sk.S_ID = pp.P.div(msk.s.add(pp.H1(ID.ID)));
     }
 
     public void CalHash(HashValue h, PublicParam pp, Identity ID, Message m, Randomness r) {
-        h.h = pp.curve.Pairing(pp.P, pp.P).mul(pp.curve.Pairing(pp.P_pub.add(pp.P.mulZn(pp.H1(ID.ID))), r.R)).pow(pp.H1(m.m));
+        h.h = pp.curve.Pairing(pp.P, pp.P).mul(pp.curve.Pairing(pp.P_pub.add(pp.P.mul(pp.H1(ID.ID))), r.R)).pow(pp.H1(m.m));
     }
 
     @Override
@@ -75,6 +75,6 @@ public class S2 extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identity, 
             Randomness r,
             Message m_p
     ) {
-        r_p.R = sk.S_ID.mulZn(pp.H1(m.m).sub(pp.H1(m_p.m))).add(r.R.mulZn(pp.H1(m.m))).mulZn(pp.H1(m_p.m).invZn());
+        r_p.R = sk.S_ID.mul(pp.H1(m.m).sub(pp.H1(m_p.m))).add(r.R.mul(pp.H1(m.m))).div(pp.H1(m_p.m));
     }
 }

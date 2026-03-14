@@ -1,6 +1,7 @@
 package scheme.IBCH.ZSS_2003;
 
 import EllipticCurve.Point.AdditivePoint;
+import EllipticCurve.Point.Scalar;
 import scheme.Config;
 import utils.ElementCounter;
 
@@ -35,7 +36,7 @@ public class PublicParam
         return curve.HashToG1(hash);
     }
 
-    public final AdditivePoint H1(String x) {
+    public final Scalar H1(String x) {
         MessageDigest messageDigest;
         byte[] hash;
         try {

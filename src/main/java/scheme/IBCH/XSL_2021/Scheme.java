@@ -1,8 +1,8 @@
 package scheme.IBCH.XSL_2021;
 
 import EllipticCurve.Curve.CurveGroup;
-import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
+import EllipticCurve.Point.Scalar;
 import scheme.Config;
 import scheme.IBCH.IBCH;
 
@@ -22,7 +22,7 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             PublicParam pp,
             MasterSecretKey msk
     ) {
-        AdditivePoint alpha = pp.curve.createPoint(CurveGroup.Zp);
+        Scalar alpha = pp.curve.createScalar();
         pp.g = pp.curve.createPoint(CurveGroup.G1);
         pp.g_1 = pp.g.pow(alpha);
 
@@ -46,7 +46,7 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             MasterSecretKey msk,
             Identity ID
     ) {
-        AdditivePoint t = pp.curve.createPoint(CurveGroup.Zp);
+        Scalar t = pp.curve.createScalar();
         sk.tk_1 = msk.g_2_alpha.mul(getIDItem(pp, ID).pow(t));
         sk.tk_2 = pp.g.pow(t);
     }
@@ -91,7 +91,8 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             HashValue h,
             Randomness r,
             Message m_p
-    ) {        AdditivePoint delta_m = m.m.sub(m_p.m);
+    ) {
+        Scalar delta_m = m.m.sub(m_p.m);
         r_p.r_1 = r.r_1.mul(sk.tk_1.pow(delta_m));
         r_p.r_2 = r.r_2.mul(sk.tk_2.pow(delta_m));
     }

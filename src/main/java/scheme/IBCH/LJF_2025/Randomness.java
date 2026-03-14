@@ -1,11 +1,11 @@
 package scheme.IBCH.LJF_2025;
 
-import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
+import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
 public class Randomness extends scheme.IBCH.Components.Randomness {
-    protected AdditivePoint r_1;
+    protected Scalar r_1;
     protected MultivePoint r_2, r_3;
 
     @Override

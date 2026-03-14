@@ -1,10 +1,10 @@
 package scheme.IBCH.LJF_2025;
 
-import EllipticCurve.Point.AdditivePoint;
+import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
 public class Identity extends scheme.IBCH.Components.Identity {
-    protected AdditivePoint ID, L;
+    protected Scalar ID, L;
 
     public Identity() {}
 

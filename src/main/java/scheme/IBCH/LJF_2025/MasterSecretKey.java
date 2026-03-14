@@ -1,10 +1,10 @@
 package scheme.IBCH.LJF_2025;
 
-import EllipticCurve.Point.AdditivePoint;
+import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
 public class MasterSecretKey extends scheme.IBCH.Components.MasterSecretKey {
-    protected AdditivePoint alpha, beta;
+    protected Scalar alpha, beta;
 
     @Override
     public final ElementCounter TheoSize() {

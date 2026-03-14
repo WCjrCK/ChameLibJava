@@ -1,10 +1,10 @@
 package Signature.BLS;
 
-import EllipticCurve.Point.AdditivePoint;
+import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
 public class SecretKey extends Signature.Components.SecretKey {
-    AdditivePoint alpha;
+    Scalar alpha;
 
     @Override
     public final ElementCounter TheoSize() {

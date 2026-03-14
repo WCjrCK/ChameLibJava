@@ -3,7 +3,6 @@ package UnitTest.CurveLib;
 import EllipticCurve.Curve.*;
 import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
-import EllipticCurve.Point.PointRepresentation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -25,7 +24,7 @@ public class EllipticCurveTest {
         @DisplayName("示例1: 按曲线+表示配置+群类型创建 Point")
         @Test
         void createPointByCurveAndGroup() {
-            Config config = new Config(CurveName.A, PointRepresentation.MULTIVE);
+            Config config = new Config(CurveName.A);
             Curve curve = CurveFactory.create(config);
             AdditivePoint g1 = curve.createPoint(CurveGroup.G1);
             AdditivePoint g1_t = curve.createPoint(CurveGroup.G1);
@@ -45,7 +44,7 @@ public class EllipticCurveTest {
             gt = curve.Pairing(g1, g2);
             gt_t = gt.mul(gt_t);
 
-            config = new Config(CurveName.BN254, PointRepresentation.MULTIVE);
+            config = new Config(CurveName.BN254);
             curve = CurveFactory.create(config);
             g1 = curve.createPoint(CurveGroup.G1);
             g1_t = curve.createPoint(CurveGroup.G1);

@@ -3,14 +3,16 @@ package EllipticCurve.Point;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 
-public interface MultivePoint {
-    MultivePoint mul(MultivePoint other);
+public interface MultivePoint<P extends Point<P, S>, S extends Scalar<S>> {
+    MultivePoint<P, S> mul(MultivePoint<P, S> other);
 
-    MultivePoint div(MultivePoint other);
+    MultivePoint<P, S> div(MultivePoint<P, S> other);
 
-    MultivePoint pow(AdditivePoint exponent);
+    MultivePoint<P, S> pow(S exponent);
 
-    MultivePoint inv();
+    MultivePoint<P, S> ext(S exponent);
+
+    MultivePoint<P, S> inv();
 
     CurveGroup group();
 
@@ -18,7 +20,7 @@ public interface MultivePoint {
 
     String toString();
 
-    boolean isEqual(MultivePoint other);
+    boolean isEqual(MultivePoint<P, S> other);
 
-    MultivePoint copy();
+    MultivePoint<P, S> copy();
 }

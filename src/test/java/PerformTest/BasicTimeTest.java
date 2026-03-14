@@ -1,8 +1,8 @@
 package PerformTest;
 
 import EllipticCurve.Curve.*;
-import EllipticCurve.Point.Point;
-import EllipticCurve.Point.PointRepresentation;
+import EllipticCurve.Point.MultivePoint;
+import EllipticCurve.Point.Scalar;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -34,18 +34,19 @@ public class BasicTimeTest extends BasicParam {
     @ParameterizedTest(name = "test curve {0}")
     @EnumSource
     void TimeTest(CurveName curveName) {
-        Config config = new Config(curveName, PointRepresentation.MULTIVE);
+        Config config = new Config(curveName);
         if (index_map.getOrDefault(curveName, -1) == -1) return;
         int index = index_map.get(curveName);
         Curve curve = CurveFactory.create(config);
-        Point[][] Points = new Point[4][repeat_cnt + 1];
+        MultivePoint[][] Points = new MultivePoint[3][repeat_cnt + 1];
+        Scalar[] Zps = new Scalar[repeat_cnt + 1];
 
 
         for (int i = 0; i <= repeat_cnt; i++) {
             Points[0][i] = curve.createPoint(CurveGroup.G1);
             Points[1][i] = curve.createPoint(CurveGroup.G2);
             Points[2][i] = curve.createPoint(CurveGroup.GT);
-            Points[3][i] = curve.createPoint(CurveGroup.Zp);
+            Zps[i] = curve.createScalar();
         }
         int op_time_id = -1;
 
@@ -67,7 +68,7 @@ public class BasicTimeTest extends BasicParam {
 
         for (int i_ = 0; i_ < 4; i_++) {
             long start = System.nanoTime();
-            for(int i = 0;i < repeat_cnt;++i) Points[i_][i].pow(Points[3][i]);
+            for(int i = 0;i < repeat_cnt;++i) Points[i_][i].pow(Zps[i]);
             long end = System.nanoTime();
             double duration = (end - start) / 1.0e6;
             op_time[index][++op_time_id] = duration / repeat_cnt;

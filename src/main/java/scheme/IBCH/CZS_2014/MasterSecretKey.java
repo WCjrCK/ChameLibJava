@@ -1,10 +1,10 @@
 package scheme.IBCH.CZS_2014;
 
-import EllipticCurve.Point.Point;
+import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
 public class MasterSecretKey extends scheme.IBCH.Components.MasterSecretKey {
-    protected Point x;
+    protected Scalar x;
 
     @Override
     public final ElementCounter TheoSize() {

@@ -1,8 +1,8 @@
 package scheme.IBCH.LJF_2025;
 
 import EllipticCurve.Curve.CurveGroup;
-import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
+import EllipticCurve.Point.Scalar;
 import scheme.Config;
 import scheme.IBCH.IBCH;
 
@@ -22,8 +22,8 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             PublicParam pp,
             MasterSecretKey msk
     ) {
-        msk.alpha = pp.curve.createPoint(CurveGroup.Zp);
-        msk.beta = pp.curve.createPoint(CurveGroup.Zp);
+        msk.alpha = pp.curve.createScalar();
+        msk.beta = pp.curve.createScalar();
         pp.g = pp.curve.createPoint(CurveGroup.G1);
         pp.g_1 = pp.g.pow(msk.alpha);
         pp.g_2 = pp.g.pow(msk.beta);
@@ -40,12 +40,12 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             MasterSecretKey msk,
             Identity ID
     ) {
-        sk.td_1 = pp.curve.createPoint(CurveGroup.Zp);
-        sk.td_2 = pp.g.pow(msk.beta.sub(sk.td_1).mulZn(msk.alpha.sub(ID.ID).invZn()));
+        sk.td_1 = pp.curve.createScalar();
+        sk.td_2 = pp.g.pow(msk.beta.sub(sk.td_1).div(msk.alpha.sub(ID.ID)));
     }
 
     public void CalHash(HashValue h, PublicParam pp, Identity ID, Message m, Randomness r) {
-        h.h = pp.eg_2g.pow(m.m).mul(pp.egg.pow(r.r_1)).mul(pp.curve.Pairing(r.r_2, pp.g_1.mul(pp.g.pow(ID.ID.neg())))).mul(pp.curve.Pairing(pp.u_2.mul(pp.h_2.pow(ID.ID.neg())).pow(ID.L), r.r_3));
+        h.h = pp.eg_2g.pow(m.m).mul(pp.egg.pow(r.r_1)).mul(pp.curve.Pairing(r.r_2, pp.g_1.div(pp.g.pow(ID.ID)))).mul(pp.curve.Pairing(pp.u_2.div(pp.h_2.pow(ID.ID)).pow(ID.L), r.r_3));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             Identity ID,
             Message m
     ) {
-        r.r_1 = pp.curve.createPoint(CurveGroup.Zp);
+        r.r_1 = pp.curve.createScalar();
         r.r_2 = pp.curve.createPoint(CurveGroup.G1);
         r.r_3 = pp.curve.createPoint(CurveGroup.G1);
         CalHash(h, pp, ID, m, r);
@@ -86,12 +86,12 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             Randomness r,
             Message m_p
     ) {
-        AdditivePoint t_p = pp.curve.createPoint(CurveGroup.Zp);
-        MultivePoint td_2 = sk.td_2.mul(pp.u_2.mul(pp.h_2.pow(ID.ID.neg())).pow(ID.L.mulZn(t_p)));
-        MultivePoint td_3 = pp.g_1.mul(pp.g.pow(ID.ID.neg())).pow(t_p);
-        AdditivePoint delta_m = m.m.sub(m_p.m);
-        r_p.r_1 = r.r_1.add(sk.td_1.mulZn(delta_m));
+        Scalar t_p = pp.curve.createScalar();
+        MultivePoint td_2 = sk.td_2.mul(pp.u_2.div(pp.h_2.pow(ID.ID)).pow(ID.L.mul(t_p)));
+        MultivePoint td_3 = pp.g_1.div(pp.g.pow(ID.ID)).pow(t_p);
+        Scalar delta_m = m.m.sub(m_p.m);
+        r_p.r_1 = r.r_1.add(sk.td_1.mul(delta_m));
         r_p.r_2 = r.r_2.mul(td_2.pow(delta_m));
-        r_p.r_3 = r.r_3.mul(td_3.pow(delta_m.neg()));
+        r_p.r_3 = r.r_3.div(td_3.pow(delta_m));
     }
 }

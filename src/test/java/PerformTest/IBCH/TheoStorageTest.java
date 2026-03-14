@@ -21,18 +21,17 @@ import java.util.List;
 import java.util.Map;
 
 import static EllipticCurve.Curve.CurveName.E;
-import static scheme.SchemeName.*;
 
 public class TheoStorageTest {
     static public final String file_base_name = "theo_storage_cost";
 
     static List<SchemeName> skipList = List.of(new SchemeName[]{
-            IBCH_ZSS_2003_S1,
-            IBCH_ZSS_2003_S2,
-            IBCH_CZS_2014,
-            IBCH_LSX_2022,
-            IBCH_XSL_2021,
-            IBCH_LJF_2025,
+//            IBCH_ZSS_2003_S1,
+//            IBCH_ZSS_2003_S2,
+//            IBCH_CZS_2014,
+//            IBCH_LSX_2022,
+//            IBCH_XSL_2021,
+//            IBCH_LJF_2025,
     });
 
     @BeforeAll

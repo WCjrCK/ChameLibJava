@@ -21,7 +21,7 @@ public class Scheme extends S {
     }
 
     private void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp) {
-        sk.alpha = pp.curve.createPoint(CurveGroup.Zp);
+        sk.alpha = pp.curve.createScalar();
         pk.h = pp.g.pow(sk.alpha);
     }
 

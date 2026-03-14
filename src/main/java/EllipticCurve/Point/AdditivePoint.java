@@ -3,16 +3,16 @@ package EllipticCurve.Point;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 
-public interface AdditivePoint {
-    AdditivePoint add(AdditivePoint other);
+public interface AdditivePoint<P extends Point<P, S>, S extends Scalar<S>> {
+    AdditivePoint<P, S> add(AdditivePoint<P, S> other);
 
-    AdditivePoint sub(AdditivePoint other);
+    AdditivePoint<P, S> sub(AdditivePoint<P, S> other);
 
-    AdditivePoint mulZn(AdditivePoint scalar);
+    AdditivePoint<P, S> mul(S scalar);
 
-    AdditivePoint neg();
+    AdditivePoint<P, S> div(S scalar);
 
-    AdditivePoint invZn();
+    AdditivePoint<P, S> neg();
 
     CurveGroup group();
 
@@ -20,7 +20,7 @@ public interface AdditivePoint {
 
     String toString();
 
-    boolean isEqual(AdditivePoint other);
+    boolean isEqual(AdditivePoint<P, S> other);
 
-    AdditivePoint copy();
+    AdditivePoint<P, S> copy();
 }

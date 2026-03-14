@@ -1,11 +1,11 @@
 package scheme.IBCH.LSX_2022;
 
-import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
+import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
 public class SecretKey extends scheme.IBCH.Components.SecretKey {
-    protected AdditivePoint td_1;
+    protected Scalar td_1;
     protected MultivePoint td_2;
 
     @Override
