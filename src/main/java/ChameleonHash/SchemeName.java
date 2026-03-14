@@ -6,11 +6,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static ChameleonHash.SchemeCurveRequire.ALL;
-import static ChameleonHash.SchemeCurveRequire.SYMMETRIC;
+import static ChameleonHash.SchemeCurveRequire.*;
+import static ChameleonHash.SchemeType.CH;
 import static ChameleonHash.SchemeType.IBCH;
 
 public enum SchemeName {
+    CH_LLA_2012(CH, SINGLEGROUP, ChameleonHash.CH.LLA_2012.Scheme.class),
     IBCH_ZSS_2003_S1(IBCH, ALL, ChameleonHash.IBCH.ZSS_2003.S1.class),
     IBCH_ZSS_2003_S2(IBCH, SYMMETRIC, ChameleonHash.IBCH.ZSS_2003.S2.class),
     IBCH_CZS_2014(IBCH, ALL, ChameleonHash.IBCH.CZS_2014.Scheme.class),

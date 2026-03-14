@@ -1,9 +1,8 @@
 package ChameleonHash.CH.Components;
 
-import EllipticCurve.Curve.Config;
 import ChameleonHash.Components.Identity;
 import ChameleonHash.Components.MasterSecretKey;
-import ChameleonHash.Components.PublicKey;
+import EllipticCurve.Curve.Config;
 import utils.ElementCounter;
 
 public abstract class PublicParam<

@@ -1,15 +1,16 @@
 package UnitTest.CHScheme;
 
+import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.IBCH;
+import ChameleonHash.SchemeFactory;
+import ChameleonHash.SchemeName;
+import ChameleonHash.SchemeType;
 import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import ChameleonHash.IBCH.Components.*;
-import ChameleonHash.IBCH.IBCH;
-import ChameleonHash.SchemeFactory;
-import ChameleonHash.SchemeName;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -32,10 +33,29 @@ public class IBCHTest {
 //            IBCH_LJF_2025,
     });
 
-    public static Stream<Arguments> GetABSCP() {
-        return EnumSet.allOf(SchemeName.class).stream().flatMap(
-                a -> EnumSet.allOf(CurveName.class).stream().flatMap(b -> Stream.of(Arguments.of(a, b)))
-        );
+    public static Stream<Arguments> GetAllIBCHSchemeCurve() {
+        return EnumSet.allOf(SchemeName.class).stream()
+                .filter(a -> !skipList.contains(a))
+                .filter(a -> a.schemeType == SchemeType.IBCH)
+                .flatMap(
+                        a -> EnumSet.allOf(CurveName.class).stream()
+                                .filter(b -> b != SECP256K1)
+                                .filter(a::checkCurve)
+                                .flatMap(b -> Stream.of(Arguments.of(a, b)))
+                );
+    }
+
+    public static Stream<Arguments> GetAllIBCHSchemeASCurve() {
+        return EnumSet.allOf(SchemeName.class).stream()
+                .filter(a -> !skipList.contains(a))
+                .filter(a -> a.schemeType == SchemeType.IBCH)
+                .flatMap(
+                        a -> EnumSet.allOf(CurveName.class).stream()
+                                .filter(b -> b != SECP256K1)
+                                .filter(b -> !b.isSymmetic())
+                                .filter(a::checkCurve)
+                                .flatMap(b -> Stream.of(Arguments.of(a, b)))
+                );
     }
 
     private void testFunction(ChameleonHash.Config schemeConfig) {
@@ -82,20 +102,8 @@ public class IBCHTest {
 
     @DisplayName("test abstract implement")
     @ParameterizedTest(name = "test scheme {0} curve {1}")
-    @MethodSource("UnitTest.CHScheme.IBCHTest#GetABSCP")
+    @MethodSource("UnitTest.CHScheme.IBCHTest#GetAllIBCHSchemeCurve")
     void IBCHDSTest(SchemeName schemeName, CurveName curveName) {
-        if (skipList.contains(schemeName)) {
-            System.out.println("跳过测试：方案 " + schemeName);
-            return;
-        }
-        if (!schemeName.checkCurve(curveName)) {
-            System.out.println("跳过测试：方案 " + schemeName + " 不支持曲线 " + curveName);
-            return;
-        }
-        if (curveName == SECP256K1) {
-            System.out.println("MCL 库未正确实现该曲线，跳过测试");
-            return;
-        }
         Map<String, Object> params = new HashMap<>();
         Map<String, Object> curve_param = new HashMap<>();
         if (curveName == PBC_CUSTOM) {
@@ -110,22 +118,10 @@ public class IBCHTest {
 
     @DisplayName("test swap G1 and G2 implement")
     @ParameterizedTest(name = "test scheme {0} curve {1}")
-    @MethodSource("UnitTest.CHScheme.IBCHTest#GetABSCP")
+    @MethodSource("UnitTest.CHScheme.IBCHTest#GetAllIBCHSchemeASCurve")
     void IBCHSGGTest(SchemeName schemeName, CurveName curveName) {
         if (skipList.contains(schemeName)) {
             System.out.println("跳过测试：方案 " + schemeName);
-            return;
-        }
-        if (!schemeName.checkCurve(curveName)) {
-            System.out.println("跳过测试：方案 " + schemeName + " 不支持曲线 " + curveName);
-            return;
-        }
-        if (curveName.isSymmetic()) {
-            System.out.println("对称曲线无需测试交换");
-            return;
-        }
-        if (curveName == SECP256K1) {
-            System.out.println("MCL 库未正确实现该曲线，跳过测试");
             return;
         }
         Map<String, Object> params = new HashMap<>();
