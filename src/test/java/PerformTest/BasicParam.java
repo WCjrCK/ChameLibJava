@@ -3,7 +3,6 @@ package PerformTest;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 import org.junit.jupiter.params.provider.Arguments;
-import ChameleonHash.SchemeName;
 import utils.BooleanFormulaParser;
 
 import java.io.BufferedWriter;
@@ -62,13 +61,13 @@ public class BasicParam {
         );
     }
 
-    public static Stream<Arguments> GetSchemeCurveEnum() {
-        return EnumSet.allOf(SchemeName.class).stream().flatMap(a ->
-                EnumSet.allOf(CurveName.class).stream().flatMap(b ->
-                        Stream.of(Arguments.of(a, b))
-                )
-        );
-    }
+//    public static Stream<Arguments> GetSchemeCurveEnum() {
+//        return EnumSet.allOf(SchemeName.class).stream().flatMap(a ->
+//                EnumSet.allOf(CurveName.class).stream().flatMap(b ->
+//                        Stream.of(Arguments.of(a, b))
+//                )
+//        );
+//    }
 
 //    public static Stream<Arguments> GetPBCInvert() {
 //        return EnumSet.allOf(PBC.class).stream().flatMap(a ->

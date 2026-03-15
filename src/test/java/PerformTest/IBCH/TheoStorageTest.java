@@ -2,13 +2,13 @@ package PerformTest.IBCH;
 
 import ChameleonHash.IBCH.BaseIBCH.BaseIBCHFactory;
 import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.IBCHConfig;
+import ChameleonHash.IBCH.IBCHName;
 import ChameleonHash.IBCH.LabelIBCH.Components.Label;
 import ChameleonHash.IBCH.LabelIBCH.LabelIBCHFactory;
 import ChameleonHash.Interface.BaseIBCH;
 import ChameleonHash.Interface.LabelIBCH;
 import ChameleonHash.SchemeCurveRequire;
-import ChameleonHash.SchemeName;
-import ChameleonHash.SchemeType;
 import EllipticCurve.Curve.Config;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +32,7 @@ import static EllipticCurve.Curve.CurveName.E;
 public class TheoStorageTest {
     static public final String file_base_name = "theo_storage_cost";
 
-    static List<SchemeName> skipList = List.of(new SchemeName[]{
+    static List<IBCHName> skipList = List.of(new IBCHName[]{
 //            IBCH_ZSS_2003_S1,
 //            IBCH_ZSS_2003_S2,
 //            IBCH_CZS_2014,
@@ -42,35 +42,32 @@ public class TheoStorageTest {
     });
 
     public static Stream<Arguments> GetAllIBCHScheme() {
-        return EnumSet.allOf(SchemeName.class).stream()
+        return EnumSet.allOf(IBCHName.class).stream()
                 .filter(a -> !skipList.contains(a))
-                .filter(a -> a.schemeType == SchemeType.IBCH)
                 .flatMap(a -> Stream.of(Arguments.of(a)));
     }
 
     public static Stream<Arguments> GetAllIBCHSchemeASCurve() {
-        return EnumSet.allOf(SchemeName.class).stream()
+        return EnumSet.allOf(IBCHName.class).stream()
                 .filter(a -> !skipList.contains(a))
-                .filter(a -> a.schemeType == SchemeType.IBCH)
                 .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SYMMETRIC)
                 .flatMap(a -> Stream.of(Arguments.of(a)));
     }
 
     @BeforeAll
     static void initTest() {
-        for (SchemeName value : SchemeName.values())
-            if (value.schemeType == SchemeType.IBCH) new File(String.format("./data/IBCH/%s", value.name())).mkdirs();
+        for (IBCHName value : IBCHName.values()) new File(String.format("./data/IBCH/%s", value.name())).mkdirs();
     }
 
     @DisplayName("test IBCH theory storage cost")
     @Nested
     class IBCHTSCTest {
-        private void testFunc(BufferedWriter theo_storage_cost, ChameleonHash.Config schemeConfig) throws IOException {
+        private void testFunc(BufferedWriter theo_storage_cost, IBCHConfig schemeConfig) throws IOException {
             if (schemeConfig.schemeName.has_label) testLabelIBCH(theo_storage_cost, schemeConfig);
             else testBaseIBCH(theo_storage_cost, schemeConfig);
         }
 
-        private void testBaseIBCH(BufferedWriter theo_storage_cost, ChameleonHash.Config schemeConfig) throws IOException {
+        private void testBaseIBCH(BufferedWriter theo_storage_cost, IBCHConfig schemeConfig) throws IOException {
             BaseIBCH scheme = BaseIBCHFactory.createScheme(schemeConfig);
             PublicParam pp = scheme.createPublicParam(schemeConfig);
             MasterSecretKey msk = pp.createMasterSecretKey();
@@ -90,7 +87,7 @@ public class TheoStorageTest {
             theo_storage_cost.close();
         }
 
-        private void testLabelIBCH(BufferedWriter theo_storage_cost, ChameleonHash.Config schemeConfig) throws IOException {
+        private void testLabelIBCH(BufferedWriter theo_storage_cost, IBCHConfig schemeConfig) throws IOException {
             LabelIBCH scheme = LabelIBCHFactory.createScheme(schemeConfig);
             ChameleonHash.IBCH.LabelIBCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
             MasterSecretKey msk = pp.createMasterSecretKey();
@@ -114,14 +111,14 @@ public class TheoStorageTest {
         @DisplayName("test direct scheme")
         @ParameterizedTest(name = "test scheme {0}")
         @MethodSource("PerformTest.IBCH.TheoStorageTest#GetAllIBCHScheme")
-        public void DSTest(SchemeName schemeName) throws IOException {
+        public void DSTest(IBCHName schemeName) throws IOException {
             if (skipList.contains(schemeName)) return;
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", false);
             Config curveConfig = new Config(E, curve_param);
             Map<String, Object> params = new HashMap<>();
             params.put("ID_Binary_Len", 100);
-            ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
+            IBCHConfig schemeConfig = new IBCHConfig(schemeName, curveConfig, params);
             BufferedWriter theo_storage_cost = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/%s.csv", schemeName.name(), file_base_name)));
             testFunc(theo_storage_cost, schemeConfig);
         }
@@ -129,13 +126,13 @@ public class TheoStorageTest {
         @DisplayName("swap G1 and G2")
         @ParameterizedTest(name = "test scheme {0}")
         @MethodSource("PerformTest.IBCH.TheoStorageTest#GetAllIBCHSchemeASCurve")
-        public void SGGTest(SchemeName schemeName) throws IOException {
+        public void SGGTest(IBCHName schemeName) throws IOException {
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", true);
             Config curveConfig = new Config(E, curve_param);
             Map<String, Object> params = new HashMap<>();
             params.put("ID_Binary_Len", 100);
-            ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
+            IBCHConfig schemeConfig = new IBCHConfig(schemeName, curveConfig, params);
             BufferedWriter theo_storage_cost = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/%s_swapG1G2.csv", schemeName.name(), file_base_name)));
             testFunc(theo_storage_cost, schemeConfig);
         }

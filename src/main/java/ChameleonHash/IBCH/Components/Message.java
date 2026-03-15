@@ -1,3 +1,7 @@
 package ChameleonHash.IBCH.Components;
 
-public abstract class Message extends ChameleonHash.Components.Message {}
+import utils.ElementCounter;
+
+public abstract class Message {
+    public abstract ElementCounter TheoSize();
+}

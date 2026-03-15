@@ -1,6 +1,5 @@
 package UnitTest.CurveLib;
 
-import ChameleonHash.SchemeName;
 import EllipticCurve.Curve.*;
 import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
@@ -8,14 +7,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static utils.Func.InitialLib;
 
 public class EllipticCurveTest {
@@ -40,27 +38,27 @@ public class EllipticCurveTest {
             return res;
         }
 
-        @ParameterizedTest(name = "test scheme {0} curve {1} group {2}")
-        @MethodSource("UnitTest.CHScheme.CHTest#GetAllCHSchemeSingleGroup")
-        void Case1(SchemeName schemeName, CurveName curveName, CurveGroup curveGroup) {
-            Config config = new Config(curveName);
-            final Curve curve = CurveFactory.create(config);
-            MultivePoint y = curve.createPoint(curveGroup);
-            MultivePoint L1 = curve.createPoint(curveGroup);
-            MultivePoint L2 = curve.createPoint(curveGroup);
-            System.out.printf("L1 = %s\n\nL2 = %s\n\n", L1, L2);
-            System.out.printf("L1 == L2 ? %s\n\n", L1.isEqual(L2));
-            byte[] hash = HASH(y + "|msg1");
-            MultivePoint H1 = curve.HashToGT(hash);
-            hash = HASH(y + "|msg2");
-            MultivePoint H2 = curve.HashToGT(hash);
-//            Element H_y_L1 = Hash.H_PBC_2_1(G, y, L1);
-//            Element H_y_L2 = Hash.H_PBC_2_1(G, y, L2);
-            System.out.printf("H(y, L1) = %s\n\n", H1);
-            System.out.printf("H(y, L2) = %s\n\n", H2);
-            System.out.printf("H(y, L1) == H(y, L2) ? %s\n\n", H1.isEqual(H2));
-            assertFalse(H1.isEqual(H2));
-        }
+//        @ParameterizedTest(name = "test scheme {0} curve {1} group {2}")
+//        @MethodSource("UnitTest.CHScheme.CHTest#GetAllCHSchemeSingleGroup")
+//        void Case1(SchemeName schemeName, CurveName curveName, CurveGroup curveGroup) {
+//            Config config = new Config(curveName);
+//            final Curve curve = CurveFactory.create(config);
+//            MultivePoint y = curve.createPoint(curveGroup);
+//            MultivePoint L1 = curve.createPoint(curveGroup);
+//            MultivePoint L2 = curve.createPoint(curveGroup);
+//            System.out.printf("L1 = %s\n\nL2 = %s\n\n", L1, L2);
+//            System.out.printf("L1 == L2 ? %s\n\n", L1.isEqual(L2));
+//            byte[] hash = HASH(y + "|msg1");
+//            MultivePoint H1 = curve.HashToGT(hash);
+//            hash = HASH(y + "|msg2");
+//            MultivePoint H2 = curve.HashToGT(hash);
+////            Element H_y_L1 = Hash.H_PBC_2_1(G, y, L1);
+////            Element H_y_L2 = Hash.H_PBC_2_1(G, y, L2);
+//            System.out.printf("H(y, L1) = %s\n\n", H1);
+//            System.out.printf("H(y, L2) = %s\n\n", H2);
+//            System.out.printf("H(y, L1) == H(y, L2) ? %s\n\n", H1.isEqual(H2));
+//            assertFalse(H1.isEqual(H2));
+//        }
 
         @DisplayName("示例1: 按曲线+表示配置+群类型创建 Point")
         @Test

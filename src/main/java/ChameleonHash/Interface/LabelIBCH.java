@@ -1,7 +1,7 @@
 package ChameleonHash.Interface;
 
-import ChameleonHash.Config;
 import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.IBCHConfig;
 
 public interface LabelIBCH<
         PP extends ChameleonHash.IBCH.LabelIBCH.Components.PublicParam<MSK, SK, M, ID, L, H, R>,
@@ -13,7 +13,7 @@ public interface LabelIBCH<
         H extends HashValue<H>,
         R extends Randomness
         > {
-    PP createPublicParam(Config config);
+    PP createPublicParam(IBCHConfig config);
 
     void Setup(PP pp, MSK msk);
 

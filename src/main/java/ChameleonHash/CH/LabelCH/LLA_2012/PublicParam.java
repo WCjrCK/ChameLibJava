@@ -1,6 +1,6 @@
 package ChameleonHash.CH.LabelCH.LLA_2012;
 
-import ChameleonHash.Config;
+import ChameleonHash.CH.CHConfig;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
@@ -14,7 +14,7 @@ public class PublicParam
         extends ChameleonHash.CH.LabelCH.Components.PublicParam<PublicKey, SecretKey, Message, Label, HashValue, Randomness> {
     public CurveGroup curveGroup;
 
-    public PublicParam(Config config) {
+    public PublicParam(CHConfig config) {
         super(config.curveConfig);
         if (!config.params.containsKey("curve_group")) throw new IllegalArgumentException("未设置方案所在群（curve_group）");
         curveGroup = (CurveGroup) config.params.get("curve_group");

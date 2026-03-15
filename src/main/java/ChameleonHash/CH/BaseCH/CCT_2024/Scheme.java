@@ -1,6 +1,6 @@
 package ChameleonHash.CH.BaseCH.CCT_2024;
 
-import ChameleonHash.Config;
+import ChameleonHash.CH.CHConfig;
 import ChameleonHash.Interface.BaseCH;
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
@@ -14,7 +14,7 @@ public class Scheme
         extends ChameleonHash.CH.BaseCH.Scheme<PublicParam, PublicKey, SecretKey, Message, HashValue, Randomness>
         implements BaseCH<PublicParam, PublicKey, SecretKey, Message, HashValue, Randomness> {
     @Override
-    public final PublicParam createPublicParam(Config config) {
+    public final PublicParam createPublicParam(CHConfig config) {
         return new PublicParam(config);
     }
 

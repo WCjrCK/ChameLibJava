@@ -1,15 +1,12 @@
 package ChameleonHash.CH;
 
 import ChameleonHash.CH.LabelCH.LabelCHFactory;
-import ChameleonHash.Config;
-import ChameleonHash.SchemeType;
 
 public class CHFactory {
     private CHFactory() {}
 
-    public static CH createScheme(Config config) {
+    public static CH createScheme(CHConfig config) {
         try {
-            assert config.schemeName.schemeType == SchemeType.CH;
             if (config.schemeName.has_label) return (CH) LabelCHFactory.createScheme(config);
             return (CH) config.schemeName.schemeClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {

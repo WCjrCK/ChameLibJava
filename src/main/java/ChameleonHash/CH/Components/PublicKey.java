@@ -1,3 +1,7 @@
 package ChameleonHash.CH.Components;
 
-public abstract class PublicKey extends ChameleonHash.Components.PublicKey {}
+import utils.ElementCounter;
+
+public abstract class PublicKey {
+    public abstract ElementCounter TheoSize();
+}

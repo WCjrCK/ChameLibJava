@@ -1,6 +1,8 @@
 package ChameleonHash.CH.Components;
 
 import EllipticCurve.Curve.Config;
+import EllipticCurve.Curve.Curve;
+import EllipticCurve.Curve.CurveFactory;
 import utils.ElementCounter;
 
 public abstract class PublicParam<
@@ -9,9 +11,10 @@ public abstract class PublicParam<
         M extends Message,
         H extends HashValue<H>,
         R extends Randomness
-        > extends ChameleonHash.Components.PublicParam<SK, M, H, R> {
+        > {
+    public final Curve curve;
     protected PublicParam(Config config) {
-        super(config);
+        curve = CurveFactory.create(config);
     }
 
     public abstract M createMessage(String msg);

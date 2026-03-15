@@ -2,12 +2,12 @@ package UnitTest.CHScheme;
 
 import ChameleonHash.IBCH.BaseIBCH.BaseIBCHFactory;
 import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.IBCHConfig;
+import ChameleonHash.IBCH.IBCHName;
 import ChameleonHash.IBCH.LabelIBCH.Components.Label;
 import ChameleonHash.IBCH.LabelIBCH.LabelIBCHFactory;
 import ChameleonHash.Interface.BaseIBCH;
 import ChameleonHash.Interface.LabelIBCH;
-import ChameleonHash.SchemeName;
-import ChameleonHash.SchemeType;
 import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveName;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IBCHTest {
-    static List<SchemeName> skipList = List.of(new SchemeName[]{
+    static List<IBCHName> skipList = List.of(new IBCHName[]{
 //            IBCH_ZSS_2003_S1,
 //            IBCH_ZSS_2003_S2,
 //            IBCH_CZS_2014,
@@ -37,9 +37,8 @@ public class IBCHTest {
     });
 
     public static Stream<Arguments> GetAllIBCHSchemeCurve() {
-        return EnumSet.allOf(SchemeName.class).stream()
+        return EnumSet.allOf(IBCHName.class).stream()
                 .filter(a -> !skipList.contains(a))
-                .filter(a -> a.schemeType == SchemeType.IBCH)
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
                                 .filter(b -> b != SECP256K1)
@@ -49,9 +48,8 @@ public class IBCHTest {
     }
 
     public static Stream<Arguments> GetAllIBCHSchemeASCurve() {
-        return EnumSet.allOf(SchemeName.class).stream()
+        return EnumSet.allOf(IBCHName.class).stream()
                 .filter(a -> !skipList.contains(a))
-                .filter(a -> a.schemeType == SchemeType.IBCH)
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
                                 .filter(b -> b != SECP256K1)
@@ -61,12 +59,12 @@ public class IBCHTest {
                 );
     }
 
-    private void testFunction(ChameleonHash.Config schemeConfig) {
+    private void testFunction(IBCHConfig schemeConfig) {
         if (schemeConfig.schemeName.has_label) testLabelIBCH(schemeConfig);
         else testIBCH(schemeConfig);
     }
 
-    private void testIBCH(ChameleonHash.Config schemeConfig) {
+    private void testIBCH(IBCHConfig schemeConfig) {
         BaseIBCH scheme = BaseIBCHFactory.createScheme(schemeConfig);
         PublicParam pp = scheme.createPublicParam(schemeConfig);
         MasterSecretKey msk = pp.createMasterSecretKey();
@@ -108,7 +106,7 @@ public class IBCHTest {
         assertFalse(scheme.Verify(pp, ID1, m1, h1, r1_p), "Adapt(L1, m1) invalid");
     }
 
-    private void testLabelIBCH(ChameleonHash.Config schemeConfig) {
+    private void testLabelIBCH(IBCHConfig schemeConfig) {
         LabelIBCH scheme = LabelIBCHFactory.createScheme(schemeConfig);
         ChameleonHash.IBCH.LabelIBCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
         MasterSecretKey msk = pp.createMasterSecretKey();
@@ -157,7 +155,7 @@ public class IBCHTest {
     @DisplayName("test abstract implement")
     @ParameterizedTest(name = "test scheme {0} curve {1}")
     @MethodSource("UnitTest.CHScheme.IBCHTest#GetAllIBCHSchemeCurve")
-    void IBCHDSTest(SchemeName schemeName, CurveName curveName) {
+    void IBCHDSTest(IBCHName schemeName, CurveName curveName) {
         Map<String, Object> params = new HashMap<>();
         Map<String, Object> curve_param = new HashMap<>();
         if (curveName == PBC_CUSTOM) {
@@ -166,14 +164,14 @@ public class IBCHTest {
         }
         params.put("ID_Binary_Len", 64);
         Config curveConfig = new Config(curveName, curve_param);
-        ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
+        IBCHConfig schemeConfig = new IBCHConfig(schemeName, curveConfig, params);
         testFunction(schemeConfig);
     }
 
     @DisplayName("test swap G1 and G2 implement")
     @ParameterizedTest(name = "test scheme {0} curve {1}")
     @MethodSource("UnitTest.CHScheme.IBCHTest#GetAllIBCHSchemeASCurve")
-    void IBCHSGGTest(SchemeName schemeName, CurveName curveName) {
+    void IBCHSGGTest(IBCHName schemeName, CurveName curveName) {
         if (skipList.contains(schemeName)) {
             System.out.println("跳过测试：方案 " + schemeName);
             return;
@@ -187,7 +185,7 @@ public class IBCHTest {
         }
         params.put("ID_Binary_Len", 64);
         Config curveConfig = new Config(curveName, curve_param);
-        ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
+        IBCHConfig schemeConfig = new IBCHConfig(schemeName, curveConfig, params);
         testFunction(schemeConfig);
     }
 }

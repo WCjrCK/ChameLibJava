@@ -1,6 +1,6 @@
 package ChameleonHash.IBCH.LabelIBCH.LJF_2025;
 
-import ChameleonHash.Config;
+import ChameleonHash.IBCH.IBCHConfig;
 import ChameleonHash.Interface.LabelIBCH;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
@@ -15,7 +15,7 @@ public class Scheme
         extends ChameleonHash.IBCH.LabelIBCH.Scheme<PublicParam, MasterSecretKey, SecretKey, Identity, Message, Label, HashValue, Randomness>
         implements LabelIBCH<PublicParam, MasterSecretKey, SecretKey, Identity, Message, Label, HashValue, Randomness> {
     @Override
-    public final PublicParam createPublicParam(Config config) {
+    public final PublicParam createPublicParam(IBCHConfig config) {
         return new PublicParam(config);
     }
 

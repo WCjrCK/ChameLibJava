@@ -1,6 +1,6 @@
 package ChameleonHash.CH.LabelCH.CZK_2004;
 
-import ChameleonHash.Config;
+import ChameleonHash.CH.CHConfig;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
@@ -14,7 +14,7 @@ public class PublicParam
     final protected CurveGroup curveGroup;
     protected MultivePoint g;
 
-    public PublicParam(Config config) {
+    public PublicParam(CHConfig config) {
         super(config.curveConfig);
         if (!config.params.containsKey("curve_group")) throw new IllegalArgumentException("未设置方案所在群（curve_group）");
         curveGroup = (CurveGroup) config.params.get("curve_group");

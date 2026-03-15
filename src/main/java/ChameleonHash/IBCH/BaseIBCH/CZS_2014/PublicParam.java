@@ -1,6 +1,6 @@
 package ChameleonHash.IBCH.BaseIBCH.CZS_2014;
 
-import ChameleonHash.Config;
+import ChameleonHash.IBCH.IBCHConfig;
 import EllipticCurve.Point.AdditivePoint;
 import utils.ElementCounter;
 
@@ -12,7 +12,7 @@ public class PublicParam
         extends ChameleonHash.IBCH.Components.PublicParam<MasterSecretKey, SecretKey, Message, Identity, HashValue, Randomness> {
     protected AdditivePoint P, P_pub;
 
-    public PublicParam(Config config) {
+    public PublicParam(IBCHConfig config) {
         super(config.curveConfig);
     }
 

@@ -1,15 +1,14 @@
 package ChameleonHash.CH.LabelCH;
 
-import ChameleonHash.Config;
+import ChameleonHash.CH.CHConfig;
 import ChameleonHash.Interface.LabelCH;
-import ChameleonHash.SchemeType;
 
 public class LabelCHFactory {
     private LabelCHFactory() {}
 
-    public static LabelCH createScheme(Config config) {
+    public static LabelCH createScheme(CHConfig config) {
         try {
-            assert config.schemeName.schemeType == SchemeType.CH && config.schemeName.has_label;
+            assert config.schemeName.has_label;
             return (LabelCH) config.schemeName.schemeClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new IllegalArgumentException("尚未支持当前方案：" + config.schemeName.name());

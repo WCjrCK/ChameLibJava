@@ -1,16 +1,13 @@
 package ChameleonHash.IBCH;
 
-import ChameleonHash.Config;
 import ChameleonHash.IBCH.BaseIBCH.BaseIBCHFactory;
 import ChameleonHash.IBCH.LabelIBCH.LabelIBCHFactory;
-import ChameleonHash.SchemeType;
 
 public class IBCHFactory {
     private IBCHFactory() {}
 
-    public static ChameleonHash.IBCH.IBCH createScheme(Config config) {
+    public static ChameleonHash.IBCH.IBCH createScheme(IBCHConfig config) {
         try {
-            assert config.schemeName.schemeType == SchemeType.IBCH;
             if (config.schemeName.has_label) return (IBCH) LabelIBCHFactory.createScheme(config);
             else return (IBCH) BaseIBCHFactory.createScheme(config);
         } catch (Exception e) {

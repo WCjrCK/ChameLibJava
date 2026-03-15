@@ -1,3 +1,7 @@
 package ChameleonHash.IBCH.Components;
 
-public abstract class Identity extends ChameleonHash.Components.Identity {}
+import utils.ElementCounter;
+
+public abstract class Identity {
+    public abstract ElementCounter TheoSize();
+}

@@ -1,14 +1,14 @@
 package PerformTest.CH;
 
 import ChameleonHash.CH.BaseCH.BaseCHFactory;
+import ChameleonHash.CH.CHConfig;
+import ChameleonHash.CH.CHName;
 import ChameleonHash.CH.Components.*;
 import ChameleonHash.CH.LabelCH.Components.Label;
 import ChameleonHash.CH.LabelCH.LabelCHFactory;
 import ChameleonHash.Interface.BaseCH;
 import ChameleonHash.Interface.LabelCH;
 import ChameleonHash.SchemeCurveRequire;
-import ChameleonHash.SchemeName;
-import ChameleonHash.SchemeType;
 import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveGroup;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,49 +33,45 @@ import static EllipticCurve.Curve.CurveName.E;
 public class TheoStorageTest {
     static public final String file_base_name = "theo_storage_cost";
 
-    static List<SchemeName> skipList = List.of(new SchemeName[]{
+    static List<CHName> skipList = List.of(new CHName[]{
     });
 
     public static Stream<Arguments> GetAllCHScheme() {
-        return EnumSet.allOf(SchemeName.class).stream()
+        return EnumSet.allOf(CHName.class).stream()
                 .filter(a -> !skipList.contains(a))
-                .filter(a -> a.schemeType == SchemeType.CH)
                 .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP)
                 .flatMap(a -> Stream.of(Arguments.of(a)));
     }
 
     public static Stream<Arguments> GetAllCHSchemeASCurve() {
-        return EnumSet.allOf(SchemeName.class).stream()
+        return EnumSet.allOf(CHName.class).stream()
                 .filter(a -> !skipList.contains(a))
-                .filter(a -> a.schemeType == SchemeType.CH)
                 .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SYMMETRIC)
                 .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP)
                 .flatMap(a -> Stream.of(Arguments.of(a)));
     }
 
     public static Stream<Arguments> GetAllCHSchemeSingleGroup() {
-        return EnumSet.allOf(SchemeName.class).stream()
+        return EnumSet.allOf(CHName.class).stream()
                 .filter(a -> !skipList.contains(a))
-                .filter(a -> a.schemeType == SchemeType.CH)
                 .filter(a -> a.schemeCurveRequire == SchemeCurveRequire.SINGLEGROUP)
                 .flatMap(a -> Stream.of(Arguments.of(a)));
     }
 
     @BeforeAll
     static void initTest() {
-        for (SchemeName value : SchemeName.values())
-            if (value.schemeType == SchemeType.CH) new File(String.format("./data/CH/%s", value.name())).mkdirs();
+        for (CHName value : CHName.values()) new File(String.format("./data/CH/%s", value.name())).mkdirs();
     }
 
     @DisplayName("test CH theory storage cost")
     @Nested
     class CHTSCTest {
-        private void testFunc(BufferedWriter theo_storage_cost, ChameleonHash.Config schemeConfig) throws IOException {
+        private void testFunc(BufferedWriter theo_storage_cost, CHConfig schemeConfig) throws IOException {
             if (schemeConfig.schemeName.has_label) testLabelCH(theo_storage_cost, schemeConfig);
             else testBaseCH(theo_storage_cost, schemeConfig);
         }
 
-        private void testBaseCH(BufferedWriter theo_storage_cost, ChameleonHash.Config schemeConfig) throws IOException {
+        private void testBaseCH(BufferedWriter theo_storage_cost, CHConfig schemeConfig) throws IOException {
             BaseCH scheme = BaseCHFactory.createScheme(schemeConfig);
             PublicParam pp = scheme.createPublicParam(schemeConfig);
             scheme.Setup(pp);
@@ -95,7 +91,7 @@ public class TheoStorageTest {
             theo_storage_cost.close();
         }
 
-        private void testLabelCH(BufferedWriter theo_storage_cost, ChameleonHash.Config schemeConfig) throws IOException {
+        private void testLabelCH(BufferedWriter theo_storage_cost, CHConfig schemeConfig) throws IOException {
             LabelCH scheme = LabelCHFactory.createScheme(schemeConfig);
             ChameleonHash.CH.LabelCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
             scheme.Setup(pp);
@@ -119,12 +115,12 @@ public class TheoStorageTest {
         @DisplayName("test direct scheme")
         @ParameterizedTest(name = "test scheme {0}")
         @MethodSource("PerformTest.CH.TheoTimeTest#GetAllCHScheme")
-        public void DSTest(SchemeName schemeName) throws IOException {
+        public void DSTest(CHName schemeName) throws IOException {
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", false);
             Config curveConfig = new Config(E, curve_param);
             Map<String, Object> params = new HashMap<>();
-            ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
+            CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
             BufferedWriter theo_storage_cost = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/%s.csv", schemeName.name(), file_base_name)));
             testFunc(theo_storage_cost, schemeConfig);
         }
@@ -132,12 +128,12 @@ public class TheoStorageTest {
         @DisplayName("swap G1 and G2")
         @ParameterizedTest(name = "test scheme {0}")
         @MethodSource("PerformTest.CH.TheoTimeTest#GetAllCHSchemeASCurve")
-        public void SGGTest(SchemeName schemeName) throws IOException {
+        public void SGGTest(CHName schemeName) throws IOException {
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", true);
             Config curveConfig = new Config(E, curve_param);
             Map<String, Object> params = new HashMap<>();
-            ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
+            CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
             BufferedWriter theo_storage_cost = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/%s_swapG1G2.csv", schemeName.name(), file_base_name)));
             testFunc(theo_storage_cost, schemeConfig);
         }
@@ -145,12 +141,12 @@ public class TheoStorageTest {
         @DisplayName("test single group scheme")
         @ParameterizedTest(name = "test scheme {0}")
         @MethodSource("PerformTest.CH.TheoTimeTest#GetAllCHSchemeSingleGroup")
-        void CHSingleGroupTest(SchemeName schemeName) throws IOException {
+        void CHSingleGroupTest(CHName schemeName) throws IOException {
             Map<String, Object> params = new HashMap<>();
             Map<String, Object> curve_param = new HashMap<>();
             params.put("curve_group", CurveGroup.G1);
             Config curveConfig = new Config(E, curve_param);
-            ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
+            CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
             BufferedWriter theo_storage_cost = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/%s.csv", schemeName.name(), file_base_name)));
             testFunc(theo_storage_cost, schemeConfig);
         }

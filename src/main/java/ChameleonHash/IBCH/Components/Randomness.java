@@ -1,3 +1,7 @@
 package ChameleonHash.IBCH.Components;
 
-public abstract class Randomness extends ChameleonHash.Components.Randomness {}
+import utils.ElementCounter;
+
+public abstract class Randomness {
+    public abstract ElementCounter TheoSize();
+}

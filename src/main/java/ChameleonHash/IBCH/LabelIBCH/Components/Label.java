@@ -1,3 +1,7 @@
 package ChameleonHash.IBCH.LabelIBCH.Components;
 
-public abstract class Label extends ChameleonHash.Components.Label {}
+import utils.ElementCounter;
+
+public abstract class Label {
+    public abstract ElementCounter TheoSize();
+}

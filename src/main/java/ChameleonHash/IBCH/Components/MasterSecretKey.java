@@ -1,3 +1,7 @@
 package ChameleonHash.IBCH.Components;
 
-public abstract class MasterSecretKey extends ChameleonHash.Components.MasterSecretKey {}
+import utils.ElementCounter;
+
+public abstract class MasterSecretKey {
+    public abstract ElementCounter TheoSize();
+}

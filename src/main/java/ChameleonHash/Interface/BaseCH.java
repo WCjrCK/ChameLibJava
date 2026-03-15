@@ -1,7 +1,7 @@
 package ChameleonHash.Interface;
 
+import ChameleonHash.CH.CHConfig;
 import ChameleonHash.CH.Components.*;
-import ChameleonHash.Config;
 
 public interface BaseCH<
         PP extends PublicParam<PK, SK, M, H, R>,
@@ -11,7 +11,7 @@ public interface BaseCH<
         H extends HashValue<H>,
         R extends Randomness
         > {
-    PP createPublicParam(Config config);
+    PP createPublicParam(CHConfig config);
 
     void Setup(PP pp);
 

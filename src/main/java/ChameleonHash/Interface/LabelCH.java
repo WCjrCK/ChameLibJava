@@ -1,7 +1,7 @@
 package ChameleonHash.Interface;
 
+import ChameleonHash.CH.CHConfig;
 import ChameleonHash.CH.Components.*;
-import ChameleonHash.Config;
 
 public interface LabelCH<
         PP extends ChameleonHash.CH.LabelCH.Components.PublicParam<PK, SK, M, L, H, R>,
@@ -12,7 +12,7 @@ public interface LabelCH<
         H extends HashValue<H>,
         R extends Randomness
         > {
-    PP createPublicParam(Config config);
+    PP createPublicParam(CHConfig config);
 
     void Setup(PP pp);
 

@@ -1,6 +1,6 @@
 package ChameleonHash.IBCH.LabelIBCH.LJF_2025;
 
-import ChameleonHash.Config;
+import ChameleonHash.IBCH.IBCHConfig;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 public class PublicParam extends ChameleonHash.IBCH.LabelIBCH.Components.PublicParam<MasterSecretKey, SecretKey, Message, Identity, Label, HashValue, Randomness> {
     protected MultivePoint g, g_1, g_2, h_2, u_2, egg, eg_2g;
 
-    public PublicParam(Config config) {
+    public PublicParam(IBCHConfig config) {
         super(config.curveConfig);
     }
 

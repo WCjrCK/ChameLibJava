@@ -1,6 +1,6 @@
 package ChameleonHash.IBCH.BaseIBCH.XSL_2021;
 
-import ChameleonHash.Config;
+import ChameleonHash.IBCH.IBCHConfig;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
@@ -15,7 +15,7 @@ public class PublicParam
     protected MultivePoint[] u;
     int n;
 
-    public PublicParam(Config config) {
+    public PublicParam(IBCHConfig config) {
         super(config.curveConfig);
         if (!config.params.containsKey("ID_Binary_Len")) throw new IllegalArgumentException("需要指定身份标识的二进制长度（ID_Binary_Len）");
         n = (int) config.params.get("ID_Binary_Len");

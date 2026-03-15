@@ -1,6 +1,6 @@
 package ChameleonHash.CH.LabelCH.CZK_2004;
 
-import ChameleonHash.Config;
+import ChameleonHash.CH.CHConfig;
 import ChameleonHash.Interface.LabelCH;
 import EllipticCurve.Point.Scalar;
 
@@ -13,7 +13,7 @@ public class Scheme
         extends ChameleonHash.CH.LabelCH.Scheme<PublicParam, PublicKey, SecretKey, Message, Label, HashValue, Randomness>
         implements LabelCH<PublicParam, PublicKey, SecretKey, Message, Label, HashValue, Randomness> {
     @Override
-    public final PublicParam createPublicParam(Config config) {
+    public final PublicParam createPublicParam(CHConfig config) {
         return new PublicParam(config);
     }
 

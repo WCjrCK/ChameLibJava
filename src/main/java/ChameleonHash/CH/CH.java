@@ -2,8 +2,6 @@ package ChameleonHash.CH;
 
 import ChameleonHash.CH.Components.*;
 import ChameleonHash.CH.LabelCH.Components.Label;
-import ChameleonHash.Config;
-import ChameleonHash.Scheme;
 
 public abstract class CH<
         PP extends PublicParam<PK, SK, M, H, R>,
@@ -13,9 +11,8 @@ public abstract class CH<
         L extends Label,
         H extends HashValue<H>,
         R extends Randomness
-        >
-        extends Scheme<PP, SK, M, H, R> {
-    public abstract PP createPublicParam(Config config);
+        > {
+    public abstract PP createPublicParam(CHConfig config);
 
     public abstract void Setup(PP pp);
 

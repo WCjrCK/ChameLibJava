@@ -1,6 +1,9 @@
 package ChameleonHash.IBCH.Components;
 
 import EllipticCurve.Curve.Config;
+import EllipticCurve.Curve.Curve;
+import EllipticCurve.Curve.CurveFactory;
+import utils.ElementCounter;
 
 public abstract class PublicParam<
         MSK extends MasterSecretKey,
@@ -9,9 +12,11 @@ public abstract class PublicParam<
         I extends Identity,
         H extends HashValue<H>,
         R extends Randomness
-        > extends ChameleonHash.Components.PublicParam<SK, M, H, R> {
+        > {
+    public final Curve curve;
+
     protected PublicParam(Config config) {
-        super(config);
+        curve = CurveFactory.create(config);
     }
 
     public abstract MSK createMasterSecretKey();
@@ -25,4 +30,8 @@ public abstract class PublicParam<
     public abstract H createHashValue();
 
     public abstract R createRandomness();
+
+    public abstract String toString();
+
+    public abstract ElementCounter TheoSize();
 }

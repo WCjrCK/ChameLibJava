@@ -1,6 +1,6 @@
 package ChameleonHash.IBCH.BaseIBCH.ZSS_2003;
 
-import ChameleonHash.Config;
+import ChameleonHash.IBCH.IBCHConfig;
 import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
@@ -14,7 +14,7 @@ public class PublicParam
     protected AdditivePoint P;
     protected AdditivePoint P_pub;
 
-    public PublicParam(Config config) {
+    public PublicParam(IBCHConfig config) {
         super(config.curveConfig);
     }
 

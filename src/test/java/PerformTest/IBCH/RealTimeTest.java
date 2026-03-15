@@ -1,15 +1,14 @@
 package PerformTest.IBCH;
 
-import ChameleonHash.Config;
 import ChameleonHash.IBCH.BaseIBCH.BaseIBCHFactory;
 import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.IBCHConfig;
+import ChameleonHash.IBCH.IBCHName;
 import ChameleonHash.IBCH.LabelIBCH.Components.Label;
 import ChameleonHash.IBCH.LabelIBCH.LabelIBCHFactory;
 import ChameleonHash.Interface.BaseIBCH;
 import ChameleonHash.Interface.LabelIBCH;
 import ChameleonHash.SchemeCurveRequire;
-import ChameleonHash.SchemeName;
-import ChameleonHash.SchemeType;
 import EllipticCurve.Curve.CurveName;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -34,21 +33,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class RealTimeTest {
     static List<BufferedWriter> tsc = new ArrayList<>();
     static List<BufferedWriter> tscsgg = new ArrayList<>();
-    static HashMap<SchemeName, Integer> SNToIdx = new HashMap<>();
+    static HashMap<IBCHName, Integer> SNToIdx = new HashMap<>();
 
-    static List<SchemeName> skipList = List.of(new SchemeName[]{
-            SchemeName.IBCH_ZSS_2003_S1,
-            SchemeName.IBCH_ZSS_2003_S2,
-            SchemeName.IBCH_CZS_2014,
-            SchemeName.IBCH_LSX_2022,
-            SchemeName.IBCH_XSL_2021,
-            SchemeName.IBCH_LJF_2025,
+    static List<IBCHName> skipList = List.of(new IBCHName[]{
+            IBCHName.IBCH_ZSS_2003_S1,
+            IBCHName.IBCH_ZSS_2003_S2,
+            IBCHName.IBCH_CZS_2014,
+            IBCHName.IBCH_LSX_2022,
+            IBCHName.IBCH_XSL_2021,
+            IBCHName.IBCH_LJF_2025,
     });
 
     public static Stream<Arguments> GetAllIBCHSchemeCurve() {
-        return EnumSet.allOf(SchemeName.class).stream()
+        return EnumSet.allOf(IBCHName.class).stream()
                 .filter(a -> !skipList.contains(a))
-                .filter(a -> a.schemeType == SchemeType.IBCH)
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
                                 .filter(b -> ((b != SECP256K1) && (b != PBC_CUSTOM)))
@@ -58,9 +56,8 @@ public class RealTimeTest {
     }
 
     public static Stream<Arguments> GetAllIBCHSchemeASCurve() {
-        return EnumSet.allOf(SchemeName.class).stream()
+        return EnumSet.allOf(IBCHName.class).stream()
                 .filter(a -> !skipList.contains(a))
-                .filter(a -> a.schemeType == SchemeType.IBCH)
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
                                 .filter(b -> ((b != SECP256K1) && (b != PBC_CUSTOM)))
@@ -74,25 +71,22 @@ public class RealTimeTest {
     @BeforeAll
     static void initTest() {
         repeat_cnt = 1000;
-        for (SchemeName value : SchemeName.values())
-            if (value.schemeType == SchemeType.IBCH) new File(String.format("./data/IBCH/%s", value.name())).mkdirs();
+        for (IBCHName value : IBCHName.values()) new File(String.format("./data/IBCH/%s", value.name())).mkdirs();
         try {
             int i = 0;
-            for (SchemeName value : SchemeName.values()) {
-                if (value.schemeType == SchemeType.IBCH) {
-                    BufferedWriter tmp = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/real_time_cost_%d.csv", value.name(), repeat_cnt)));
+            for (IBCHName value : IBCHName.values()) {
+                BufferedWriter tmp = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/real_time_cost_%d.csv", value.name(), repeat_cnt)));
+                tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
+                tsc.add(tmp);
+                if (value.schemeCurveRequire == SchemeCurveRequire.SYMMETRIC) {
+                    tscsgg.add(null);
+                } else {
+                    tmp = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/real_time_cost_swapG1G2_%d.csv", value.name(), repeat_cnt)));
                     tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
-                    tsc.add(tmp);
-                    if (value.schemeCurveRequire == SchemeCurveRequire.SYMMETRIC) {
-                        tscsgg.add(null);
-                    } else {
-                        tmp = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/real_time_cost_swapG1G2_%d.csv", value.name(), repeat_cnt)));
-                        tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
-                        tscsgg.add(tmp);
-                    }
-                    SNToIdx.put(value, i);
-                    i++;
+                    tscsgg.add(tmp);
                 }
+                SNToIdx.put(value, i);
+                i++;
             }
             System.out.println("\t\t\tSetUp, KeyGen, Hash, Ver, Col");
         } catch (IOException e) {
@@ -103,12 +97,12 @@ public class RealTimeTest {
     @DisplayName("test IBCH real time cost")
     @Nested
     class IBCHRTCTest {
-        private void testFunc(BufferedWriter real_time_test, Config schemeConfig) throws IOException {
+        private void testFunc(BufferedWriter real_time_test, IBCHConfig schemeConfig) throws IOException {
             if (schemeConfig.schemeName.has_label) testLabelIBCH(real_time_test, schemeConfig);
             else testBaseIBCH(real_time_test, schemeConfig);
         }
 
-        private void testBaseIBCH(BufferedWriter real_time_test, Config config) throws IOException {
+        private void testBaseIBCH(BufferedWriter real_time_test, IBCHConfig config) throws IOException {
             real_time_test.write(config.curveConfig.curveName.name());
             double[] time_cost = {0, 0, 0, 0, 0};
 
@@ -195,7 +189,7 @@ public class RealTimeTest {
             }
         }
 
-        private void testLabelIBCH(BufferedWriter real_time_test, Config config) throws IOException {
+        private void testLabelIBCH(BufferedWriter real_time_test, IBCHConfig config) throws IOException {
             real_time_test.write(config.curveConfig.curveName.name());
             double[] time_cost = {0, 0, 0, 0, 0};
 
@@ -288,13 +282,13 @@ public class RealTimeTest {
         @DisplayName("test direct scheme")
         @ParameterizedTest(name = "test scheme {0} in curve {1}")
         @MethodSource("PerformTest.IBCH.RealTimeTest#GetAllIBCHSchemeCurve")
-        public void DSTest(SchemeName schemeName, CurveName curveName) throws IOException {
+        public void DSTest(IBCHName schemeName, CurveName curveName) throws IOException {
             Map<String, Object> params = new HashMap<>();
             params.put("ID_Binary_Len", 64);
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", false);
             EllipticCurve.Curve.Config curveConfig = new EllipticCurve.Curve.Config(curveName, curve_param);
-            Config schemeConfig = new Config(schemeName, curveConfig, params);
+            IBCHConfig schemeConfig = new IBCHConfig(schemeName, curveConfig, params);
             System.out.print(curveName.name());
             if(tsc.get(SNToIdx.get(schemeName)) != null) testFunc(tsc.get(SNToIdx.get(schemeName)), schemeConfig);
         }
@@ -302,13 +296,13 @@ public class RealTimeTest {
         @DisplayName("swap G1 and G2")
         @ParameterizedTest(name = "test scheme {0} in curve {1} with swap G1 and G2")
         @MethodSource("PerformTest.IBCH.RealTimeTest#GetAllIBCHSchemeASCurve")
-        public void SGGTest(SchemeName schemeName, CurveName curveName) throws IOException {
+        public void SGGTest(IBCHName schemeName, CurveName curveName) throws IOException {
             Map<String, Object> params = new HashMap<>();
             params.put("ID_Binary_Len", 64);
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", true);
             EllipticCurve.Curve.Config curveConfig = new EllipticCurve.Curve.Config(curveName, curve_param);
-            Config schemeConfig = new Config(schemeName, curveConfig, params);
+            IBCHConfig schemeConfig = new IBCHConfig(schemeName, curveConfig, params);
             System.out.print(curveName + " swap G1G2");
             if(tscsgg.get(SNToIdx.get(schemeName)) != null) testFunc(tscsgg.get(SNToIdx.get(schemeName)), schemeConfig);
         }

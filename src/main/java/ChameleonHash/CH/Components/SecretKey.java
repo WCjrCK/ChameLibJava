@@ -1,3 +1,7 @@
 package ChameleonHash.CH.Components;
 
-public abstract class SecretKey extends ChameleonHash.Components.SecretKey {}
+import utils.ElementCounter;
+
+public abstract class SecretKey {
+    public abstract ElementCounter TheoSize();
+}

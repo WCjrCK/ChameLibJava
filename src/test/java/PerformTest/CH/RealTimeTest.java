@@ -1,15 +1,14 @@
 package PerformTest.CH;
 
 import ChameleonHash.CH.BaseCH.BaseCHFactory;
+import ChameleonHash.CH.CHConfig;
+import ChameleonHash.CH.CHName;
 import ChameleonHash.CH.Components.*;
 import ChameleonHash.CH.LabelCH.Components.Label;
 import ChameleonHash.CH.LabelCH.LabelCHFactory;
-import ChameleonHash.Config;
 import ChameleonHash.Interface.BaseCH;
 import ChameleonHash.Interface.LabelCH;
 import ChameleonHash.SchemeCurveRequire;
-import ChameleonHash.SchemeName;
-import ChameleonHash.SchemeType;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 import org.junit.jupiter.api.AfterAll;
@@ -38,19 +37,18 @@ public class RealTimeTest {
     static List<BufferedWriter> tscsgG1 = new ArrayList<>();
     static List<BufferedWriter> tscsgG2 = new ArrayList<>();
     static List<BufferedWriter> tscsgGT = new ArrayList<>();
-    static HashMap<SchemeName, Integer> SNToIdx = new HashMap<>();
+    static HashMap<CHName, Integer> SNToIdx = new HashMap<>();
 
-    static List<SchemeName> skipList = List.of(new SchemeName[]{
-            SchemeName.CH_LLA_2012,
-//            SchemeName.CH_CZK_2004,
-//            SchemeName.CH_CZT_2011,
-//            SchemeName.CH_CCT_2024,
+    static List<CHName> skipList = List.of(new CHName[]{
+            CHName.CH_LLA_2012,
+//            CHScheme.CH_CZK_2004,
+//            CHScheme.CH_CZT_2011,
+//            CHScheme.CH_CCT_2024,
     });
 
     public static Stream<Arguments> GetAllCHSchemeCurve() {
-        return EnumSet.allOf(SchemeName.class).stream()
+        return EnumSet.allOf(CHName.class).stream()
                 .filter(a -> !skipList.contains(a))
-                .filter(a -> a.schemeType == SchemeType.CH)
                 .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP)
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
@@ -62,9 +60,8 @@ public class RealTimeTest {
     }
 
     public static Stream<Arguments> GetAllCHSchemeASCurve() {
-        return EnumSet.allOf(SchemeName.class).stream()
+        return EnumSet.allOf(CHName.class).stream()
                 .filter(a -> !skipList.contains(a))
-                .filter(a -> a.schemeType == SchemeType.CH)
                 .filter(a -> a.schemeCurveRequire == SchemeCurveRequire.ALL)
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
@@ -77,9 +74,8 @@ public class RealTimeTest {
     }
 
     public static Stream<Arguments> GetAllCHSchemeSingleGroup() {
-        return EnumSet.allOf(SchemeName.class).stream()
+        return EnumSet.allOf(CHName.class).stream()
                 .filter(a -> !skipList.contains(a))
-                .filter(a -> a.schemeType == SchemeType.CH)
                 .filter(a -> a.schemeCurveRequire == SchemeCurveRequire.SINGLEGROUP)
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
@@ -97,42 +93,39 @@ public class RealTimeTest {
     @BeforeAll
     static void initTest() {
         repeat_cnt = 1000;
-        for (SchemeName value : SchemeName.values())
-            if (value.schemeType == SchemeType.CH) new File(String.format("./data/CH/%s", value.name())).mkdirs();
+        for (CHName value : CHName.values()) new File(String.format("./data/CH/%s", value.name())).mkdirs();
         try {
             int i = 0;
-            for (SchemeName value : SchemeName.values()) {
-                if (value.schemeType == SchemeType.CH) {
-                    BufferedWriter tmp;
-                    if (value.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP) {
-                        tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_%d.csv", value.name(), repeat_cnt)));
-                        tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
-                        tsc.add(tmp);
-                    } else tsc.add(null);
-                    if (value.schemeCurveRequire == SchemeCurveRequire.SYMMETRIC || value.schemeCurveRequire == SchemeCurveRequire.SINGLEGROUP) tscsgg.add(null);
-                    else {
-                        tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_swapG1G2_%d.csv", value.name(), repeat_cnt)));
-                        tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
-                        tscsgg.add(tmp);
-                    }
-                    if (value.schemeCurveRequire == SchemeCurveRequire.SINGLEGROUP) {
-                        tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_inG1_%d.csv", value.name(), repeat_cnt)));
-                        tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
-                        tscsgG1.add(tmp);
-                        tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_inG2_%d.csv", value.name(), repeat_cnt)));
-                        tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
-                        tscsgG2.add(tmp);
-                        tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_inGT_%d.csv", value.name(), repeat_cnt)));
-                        tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
-                        tscsgGT.add(tmp);
-                    } else {
-                        tscsgG1.add(null);
-                        tscsgG2.add(null);
-                        tscsgGT.add(null);
-                    }
-                    SNToIdx.put(value, i);
-                    i++;
+            for (CHName value : CHName.values()) {
+                BufferedWriter tmp;
+                if (value.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP) {
+                    tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_%d.csv", value.name(), repeat_cnt)));
+                    tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
+                    tsc.add(tmp);
+                } else tsc.add(null);
+                if (value.schemeCurveRequire == SchemeCurveRequire.SYMMETRIC || value.schemeCurveRequire == SchemeCurveRequire.SINGLEGROUP) tscsgg.add(null);
+                else {
+                    tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_swapG1G2_%d.csv", value.name(), repeat_cnt)));
+                    tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
+                    tscsgg.add(tmp);
                 }
+                if (value.schemeCurveRequire == SchemeCurveRequire.SINGLEGROUP) {
+                    tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_inG1_%d.csv", value.name(), repeat_cnt)));
+                    tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
+                    tscsgG1.add(tmp);
+                    tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_inG2_%d.csv", value.name(), repeat_cnt)));
+                    tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
+                    tscsgG2.add(tmp);
+                    tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_inGT_%d.csv", value.name(), repeat_cnt)));
+                    tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
+                    tscsgGT.add(tmp);
+                } else {
+                    tscsgG1.add(null);
+                    tscsgG2.add(null);
+                    tscsgGT.add(null);
+                }
+                SNToIdx.put(value, i);
+                i++;
             }
             System.out.println("\t\t\tSetUp, KeyGen, Hash, Ver, Col");
         } catch (IOException e) {
@@ -143,12 +136,12 @@ public class RealTimeTest {
     @DisplayName("test CH real time cost")
     @Nested
     class CHRTCTest {
-        private void testFunc(BufferedWriter real_time_test, Config schemeConfig) throws IOException {
+        private void testFunc(BufferedWriter real_time_test, CHConfig schemeConfig) throws IOException {
             if (schemeConfig.schemeName.has_label) testLabelCH(real_time_test, schemeConfig);
             else testBaseCH(real_time_test, schemeConfig);
         }
 
-        private void testBaseCH(BufferedWriter real_time_test, Config config) throws IOException {
+        private void testBaseCH(BufferedWriter real_time_test, CHConfig config) throws IOException {
             real_time_test.write(config.curveConfig.curveName.name());
             double[] time_cost = {0, 0, 0, 0, 0};
 
@@ -234,7 +227,7 @@ public class RealTimeTest {
             }
         }
 
-        private void testLabelCH(BufferedWriter real_time_test, Config config) throws IOException {
+        private void testLabelCH(BufferedWriter real_time_test, CHConfig config) throws IOException {
             real_time_test.write(config.curveConfig.curveName.name());
             double[] time_cost = {0, 0, 0, 0, 0};
 
@@ -326,12 +319,12 @@ public class RealTimeTest {
         @DisplayName("test direct scheme")
         @ParameterizedTest(name = "test scheme {0} in curve {1}")
         @MethodSource("PerformTest.CH.RealTimeTest#GetAllCHSchemeCurve")
-        public void DSTest(SchemeName schemeName, CurveName curveName) throws IOException {
+        public void DSTest(CHName schemeName, CurveName curveName) throws IOException {
             Map<String, Object> params = new HashMap<>();
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", false);
             EllipticCurve.Curve.Config curveConfig = new EllipticCurve.Curve.Config(curveName, curve_param);
-            Config schemeConfig = new Config(schemeName, curveConfig, params);
+            CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
             System.out.print(curveName.name());
             if(tsc.get(SNToIdx.get(schemeName)) != null) testFunc(tsc.get(SNToIdx.get(schemeName)), schemeConfig);
         }
@@ -339,12 +332,12 @@ public class RealTimeTest {
         @DisplayName("swap G1 and G2")
         @ParameterizedTest(name = "test scheme {0} in curve {1} with swap G1 and G2")
         @MethodSource("PerformTest.CH.RealTimeTest#GetAllCHSchemeASCurve")
-        public void SGGTest(SchemeName schemeName, CurveName curveName) throws IOException {
+        public void SGGTest(CHName schemeName, CurveName curveName) throws IOException {
             Map<String, Object> params = new HashMap<>();
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", true);
             EllipticCurve.Curve.Config curveConfig = new EllipticCurve.Curve.Config(curveName, curve_param);
-            Config schemeConfig = new Config(schemeName, curveConfig, params);
+            CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
             System.out.print(curveName + " swap G1G2");
             if(tscsgg.get(SNToIdx.get(schemeName)) != null) testFunc(tscsgg.get(SNToIdx.get(schemeName)), schemeConfig);
         }
@@ -352,12 +345,12 @@ public class RealTimeTest {
         @DisplayName("test single group scheme")
         @ParameterizedTest(name = "test scheme {0} curve {1} group {2}")
         @MethodSource("PerformTest.CH.RealTimeTest#GetAllCHSchemeSingleGroup")
-        void CHSingleGroupTest(SchemeName schemeName, CurveName curveName, CurveGroup curveGroup) throws IOException {
+        void CHSingleGroupTest(CHName schemeName, CurveName curveName, CurveGroup curveGroup) throws IOException {
             Map<String, Object> params = new HashMap<>();
             Map<String, Object> curve_param = new HashMap<>();
             params.put("curve_group", curveGroup);
             EllipticCurve.Curve.Config curveConfig = new EllipticCurve.Curve.Config(curveName, curve_param);
-            ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
+            CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
             switch (curveGroup) {
                 case G1:
                     if(tscsgG1.get(SNToIdx.get(schemeName)) != null) testFunc(tscsgG1.get(SNToIdx.get(schemeName)), schemeConfig);
