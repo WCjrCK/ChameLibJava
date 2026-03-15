@@ -61,8 +61,23 @@ public class PBC {
         R.z_1 = pp.GP.GetZrElement();
         R.z_2 = pp.GP.GetZrElement();
 
+
+        System.out.println(pp.g.powZn(R.z_2));
+
         R.c_1 = pp.H_p(pp.g.powZn(R.z_2), pk.g_x, H.h, m);
         R.z_2 = R.z_2.sub(pp.H_p(pp.g.powZn(R.z_1).mul(pk.g_x.powZn(R.c_1)), pk.g_x, H.h, m).mul(rho)).getImmutable();
+
+
+        Element c_2 = pp.H_p(pp.g.powZn(R.z_1).mul(pk.g_x.powZn(R.c_1)), pk.g_x, H.h, m);
+
+        Element T_2 = pp.g.powZn(R.z_2).mul(H.h.powZn(c_2));
+        System.out.println(T_2);
+        System.out.println();
+        System.out.println(pp.g.powZn(rho).powZn(c_2));
+        System.out.println(pp.g.powZn(c_2).powZn(rho));
+        System.out.println(pp.g.powZn(c_2.mul(rho)));
+        System.out.println(pp.g.powZn(rho.mul(c_2)));
+        System.out.println();
 
         H.h = H.h.mul(pp.H(m)).getImmutable();
     }

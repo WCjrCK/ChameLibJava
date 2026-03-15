@@ -3,6 +3,7 @@ package ChameleonHash.CH.BaseCH.CCT_2024;
 import ChameleonHash.Config;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
+import EllipticCurve.Point.Point;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
@@ -43,7 +44,7 @@ public class PublicParam extends ChameleonHash.CH.Components.PublicParam<PublicK
     }
 
     public final Scalar H_p(MultivePoint m1, MultivePoint m2, MultivePoint m3, Scalar m4) {
-        return curve.HashToZp(hash(String.format("%s|%s|%s|%s", m1, m2, m3, m4)));
+        return curve.HashToZp(hash(String.format("%s|%s|%s|%s", curve.PowNdonr((Point) m1), m2, m3, m4)));
     }
 
     @Override

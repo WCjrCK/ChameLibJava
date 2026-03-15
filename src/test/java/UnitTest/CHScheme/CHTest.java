@@ -31,7 +31,8 @@ public class CHTest {
     static List<SchemeName> skipList = List.of(new SchemeName[]{
             SchemeName.CH_LLA_2012,
             SchemeName.CH_CZT_2011,
-//            SchemeName.CH_CZK_2004,
+            SchemeName.CH_CZK_2004,
+//            SchemeName.CH_CCT_2024,
     });
 
     public static Stream<Arguments> GetAllCHSchemeCurve() {

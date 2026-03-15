@@ -27,11 +27,9 @@ public class Scheme
         sk.alpha = pp.curve.getRandomScalar();
         sk.x_1 = pp.curve.getRandomScalar();
         sk.x_2 = pp.curve.getRandomScalar();
-        LabelGen lg = new LabelGen();
-        lg.y_1 = pk.g.pow(sk.x_1);
-        lg.omega_1 = lg.y_1.pow(sk.alpha);
+        pk.y_1 = pk.g.pow(sk.x_1);
+        pk.omega_1 = pk.y_1.pow(sk.alpha);
         pk.y_2 = pk.g.pow(sk.x_2);
-        pp.LM.add(pp, pk, lg);
     }
 
     public void CalHash(HashValue h, PublicParam pp, PublicKey pk, Message m, Label L, Randomness r) {
@@ -40,7 +38,10 @@ public class Scheme
 
     @Override
     public void Hash(HashValue h, Randomness r, PublicParam pp, PublicKey pk, Message m, Label L) {
-        pp.LM.get(L, pp, pk);
+        MultivePoint t = pp.curve.getRandomPoint(pp.curveGroup);
+        Scalar H_2t = pp.H2(t);
+        L.L = pk.y_1.pow(H_2t);
+        L.R = t.mul(pk.omega_1.pow(H_2t));
         r.r = pp.curve.getRandomScalar();
         CalHash(h, pp, pk, m, L, r);
     }

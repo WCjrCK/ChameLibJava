@@ -13,7 +13,6 @@ import java.security.NoSuchAlgorithmException;
 public class PublicParam
         extends ChameleonHash.CH.LabelCH.Components.PublicParam<PublicKey, SecretKey, Message, Label, HashValue, Randomness> {
     public CurveGroup curveGroup;
-    protected LabelManager LM = new LabelManager();
 
     public PublicParam(Config config) {
         super(config.curveConfig);
@@ -98,6 +97,6 @@ public class PublicParam
 
     @Override
     public Label createLabel(String L) {
-        return null;
+        return new Label();
     }
 }

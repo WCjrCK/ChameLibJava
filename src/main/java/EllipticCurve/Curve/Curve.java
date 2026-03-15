@@ -38,6 +38,21 @@ public abstract class Curve<G1 extends Point, G2 extends Point, GT extends Point
 
     protected abstract GT Pairing(G1 p1, G2 p2);
 
+    protected abstract G2 PowNdonrCore(G2 p);
+
+    public final Point PowNdonr(Point p) {
+        if (p.group() == CurveGroup.G2) return PowNdonrCore((G2) p);
+        return p;
+    }
+
+    public final Point PowNdonr(AdditivePoint p) {
+        return PowNdonr((Point) p);
+    }
+
+    public final Point PowNdonr(MultivePoint p) {
+        return PowNdonr((Point) p);
+    }
+
 //    protected abstract Point newPoint(CurveGroup group);
 
     public final Point createPoint(CurveGroup group) {

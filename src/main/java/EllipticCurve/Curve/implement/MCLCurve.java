@@ -69,6 +69,11 @@ public class MCLCurve extends Curve<G1, G2, GT, Zp> {
     }
 
     @Override
+    public final G2 PowNdonrCore(G2 p) {
+        return p;
+    }
+
+    @Override
     protected GT Pairing(G1 p1, G2 p2) {
         if (p1.curve() != curveName()) throw new IllegalArgumentException("点 " + p1.curve() + " 不属于当前曲线: " + curveName());
         if (p2.curve() != curveName()) throw new IllegalArgumentException("点 " + p2.curve() + " 不属于当前曲线: " + curveName());

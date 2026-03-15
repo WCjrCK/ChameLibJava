@@ -809,7 +809,7 @@ public class CHTest {
             }
         }
     }
-    
+
     @DisplayName("test paper 《Fully Collision-Resistant Chameleon-Hashes from Simpler and Post-Quantum Assumptions》")
     @Nested
     class FullyCollisionResistantChameleonHashesFromSimplerAndPostQuantumAssumptionsTest {

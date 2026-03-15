@@ -8,12 +8,36 @@ import EllipticCurve.Point.implement.PBCPoint.Group;
 import EllipticCurve.Point.implement.PBCPoint.Zp;
 import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
+import it.unisa.dia.gas.jpbc.PairingParameters;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
+
+import java.math.BigInteger;
 
 @SuppressWarnings("rawtypes")
 public class PBCCurve extends Curve<Group, Group, Group, Zp> {
     final Pairing pairing;
     public final Field Zp, G1, G2, GT;
+    public final BigInteger G2_ndonr;
+
+    private BigInteger pbc_mpz_trace_n(BigInteger q, BigInteger trace, int n) {
+        int i;
+        BigInteger c2 = BigInteger.TWO;
+        BigInteger c1 = trace;
+        BigInteger c0, t0;
+        for (i=2; i<=n; i++) {
+            c0 = trace.multiply(c1);
+            t0 = q.multiply(c2);
+            c0 = c0.subtract(t0);
+            c2 = c1;
+            c1 = c0;
+        }
+        return c1;
+    }
+
+    private BigInteger pbc_mpz_curve_order_extn(BigInteger q, BigInteger t, int k) {
+        return q.pow(k).add(BigInteger.ONE).subtract(pbc_mpz_trace_n(q, t, k));
+    }
+
     public PBCCurve(Config config) {
         super(config);
         PairingFactory.getInstance().setUsePBCWhenPossible(true);
@@ -33,6 +57,34 @@ public class PBCCurve extends Curve<Group, Group, Group, Zp> {
         G1 = pairing.getG1();
         G2 = pairing.getG2();
         GT = pairing.getGT();
+
+        PairingParameters param = PairingFactory.getPairingParameters(param_path);
+        switch (param.getString("type")) {
+            case "d":
+                this.G2_ndonr = pbc_mpz_curve_order_extn(
+                            param.getBigInteger("q"),
+                            param.getBigInteger("q").subtract(param.getBigInteger("n")).add(BigInteger.ONE).negate(),
+                            (int) (param.getBigInteger("k").divide(BigInteger.TWO)).longValueExact()
+                    ).divide(param.getBigInteger("r"));
+                break;
+            case "f":
+                this.G2_ndonr = pbc_mpz_curve_order_extn(
+                            param.getBigInteger("q"),
+                            param.getBigInteger("q").subtract(param.getBigInteger("r")).add(BigInteger.ONE),
+                            12
+                    ).divide(param.getBigInteger("r")).divide(param.getBigInteger("r"));
+                break;
+            case "g":
+                this.G2_ndonr = pbc_mpz_curve_order_extn(
+                            param.getBigInteger("q"),
+                            param.getBigInteger("q").subtract(param.getBigInteger("n")).add(BigInteger.ONE).negate(),
+                            5
+                    ).divide(param.getBigInteger("r"));
+                break;
+            default:
+                this.G2_ndonr = BigInteger.ONE;
+                break;
+        }
     }
 
     @Override
@@ -82,5 +134,11 @@ public class PBCCurve extends Curve<Group, Group, Group, Zp> {
     @Override
     public final Zp HashToZpCore(byte[] hash) {
         return new Zp(Zp.newElementFromHash(hash, 0, hash.length).getImmutable(), curveName());
+    }
+
+    @Override
+    public final Group PowNdonrCore(Group p) {
+        if (p.group() == CurveGroup.G2) return new Group(p.p.pow(G2_ndonr), curveName(), CurveGroup.G2);
+        return p;
     }
 }

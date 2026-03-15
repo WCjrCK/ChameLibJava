@@ -33,17 +33,20 @@ public class Scheme
     public void Hash(HashValue h, Randomness r, PublicParam pp, PublicKey pk, Message m) {
         Scalar rho = pp.curve.getRandomScalar();
         h.h = pp.g.pow(rho);
+
         r.z_1 = pp.curve.getRandomScalar();
         r.z_2 = pp.curve.getRandomScalar();
 
         r.c_1 = pp.H_p(pp.g.pow(r.z_2), pk.g_x, h.h, m.m);
         r.z_2 = r.z_2.sub(pp.H_p(pp.g.pow(r.z_1).mul(pk.g_x.pow(r.c_1)), pk.g_x, h.h, m.m).mul(rho));
+
         h.h = h.h.mul(pp.H(m.m));
     }
 
     @Override
     public boolean Verify(PublicParam pp, PublicKey pk, Message m, HashValue h, Randomness r) {
         MultivePoint y_p = h.h.div(pp.H(m.m));
+
         return r.c_1.isEqual(pp.H_p(
                 pp.g.pow(r.z_2).mul(y_p.pow(pp.H_p(
                         pp.g.pow(r.z_1).mul(pk.g_x.pow(r.c_1)), pk.g_x, y_p, m.m
