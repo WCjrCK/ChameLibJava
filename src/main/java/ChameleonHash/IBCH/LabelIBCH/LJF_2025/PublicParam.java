@@ -1,14 +1,14 @@
-package ChameleonHash.IBCH.LJF_2025;
+package ChameleonHash.IBCH.LabelIBCH.LJF_2025;
 
-import EllipticCurve.Point.MultivePoint;
 import ChameleonHash.Config;
+import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class PublicParam extends ChameleonHash.IBCH.Components.PublicParam<MasterSecretKey, SecretKey, Identity, Message, HashValue, Randomness> {
+public class PublicParam extends ChameleonHash.IBCH.LabelIBCH.Components.PublicParam<MasterSecretKey, SecretKey, Identity, Message, Label, HashValue, Randomness> {
     protected MultivePoint g, g_1, g_2, h_2, u_2, egg, eg_2g;
 
     public PublicParam(Config config) {
@@ -43,7 +43,8 @@ public class PublicParam extends ChameleonHash.IBCH.Components.PublicParam<Maste
         return res;
     }
 
-    public final Identity createIdentity(String ID, String L) {
+    @Override
+    public final Identity createIdentity(String ID) {
         Identity res = new Identity();
         MessageDigest messageDigest;
         byte[] hash;
@@ -52,32 +53,10 @@ public class PublicParam extends ChameleonHash.IBCH.Components.PublicParam<Maste
             messageDigest.update(ID.getBytes(StandardCharsets.UTF_8));
             hash = messageDigest.digest();
             res.ID = curve.HashToZp(hash);
-            messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.update(L.getBytes(StandardCharsets.UTF_8));
-            hash = messageDigest.digest();
-            res.L = curve.HashToZp(hash);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
         return res;
-    }
-
-    public final void resetLabel(Identity ID, String L) {
-        MessageDigest messageDigest;
-        byte[] hash;
-        try {
-            messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.update(L.getBytes(StandardCharsets.UTF_8));
-            hash = messageDigest.digest();
-            ID.L = curve.HashToZp(hash);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public final Identity createIdentity(String ID) {
-        return createIdentity(ID, ID);
     }
 
     @Override
@@ -100,4 +79,19 @@ public class PublicParam extends ChameleonHash.IBCH.Components.PublicParam<Maste
         return new Randomness();
     }
 
+    @Override
+    public Label createLabel(String L) {
+        Label res = new Label();
+        MessageDigest messageDigest;
+        byte[] hash;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(L.getBytes(StandardCharsets.UTF_8));
+            hash = messageDigest.digest();
+            res.L = curve.HashToZp(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        return res;
+    }
 }

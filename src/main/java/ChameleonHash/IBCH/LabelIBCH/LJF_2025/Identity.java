@@ -1,10 +1,10 @@
-package ChameleonHash.IBCH.LJF_2025;
+package ChameleonHash.IBCH.LabelIBCH.LJF_2025;
 
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
 public class Identity extends ChameleonHash.IBCH.Components.Identity {
-    protected Scalar ID, L;
+    protected Scalar ID;
 
     public Identity() {}
 

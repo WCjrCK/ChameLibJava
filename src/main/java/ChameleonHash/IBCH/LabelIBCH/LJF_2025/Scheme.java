@@ -1,17 +1,19 @@
-package ChameleonHash.IBCH.LJF_2025;
+package ChameleonHash.IBCH.LabelIBCH.LJF_2025;
 
+import ChameleonHash.Config;
+import ChameleonHash.Interface.LabelIBCH;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
-import ChameleonHash.Config;
-import ChameleonHash.IBCH.IBCH;
 
 /*
  * Identity-Based Chameleon Hashes in the Standard Model for Mobile Devices
  * P6. V. PROPOSED IB-CH SCHEME WITHOUT KEY EXPOSURE
  */
 
-public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identity, Message, HashValue, Randomness> {
+public class Scheme
+        extends ChameleonHash.IBCH.LabelIBCH.Scheme<PublicParam, MasterSecretKey, SecretKey, Identity, Message, Label, HashValue, Randomness>
+        implements LabelIBCH<PublicParam, MasterSecretKey, SecretKey, Identity, Message, Label, HashValue, Randomness> {
     @Override
     public final PublicParam createPublicParam(Config config) {
         return new PublicParam(config);
@@ -44,8 +46,8 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
         sk.td_2 = pp.g.pow(msk.beta.sub(sk.td_1).div(msk.alpha.sub(ID.ID)));
     }
 
-    public void CalHash(HashValue h, PublicParam pp, Identity ID, Message m, Randomness r) {
-        h.h = pp.eg_2g.pow(m.m).mul(pp.egg.pow(r.r_1)).mul(pp.curve.Pairing(r.r_2, pp.g_1.div(pp.g.pow(ID.ID)))).mul(pp.curve.Pairing(pp.u_2.div(pp.h_2.pow(ID.ID)).pow(ID.L), r.r_3));
+    public void CalHash(HashValue h, PublicParam pp, Identity ID, Message m, Label L, Randomness r) {
+        h.h = pp.eg_2g.pow(m.m).mul(pp.egg.pow(r.r_1)).mul(pp.curve.Pairing(r.r_2, pp.g_1.div(pp.g.pow(ID.ID)))).mul(pp.curve.Pairing(pp.u_2.div(pp.h_2.pow(ID.ID)).pow(L.L), r.r_3));
     }
 
     @Override
@@ -54,12 +56,12 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             Randomness r,
             PublicParam pp,
             Identity ID,
-            Message m
+            Message m, Label L
     ) {
         r.r_1 = pp.curve.getRandomScalar();
         r.r_2 = pp.curve.getRandomPoint(CurveGroup.G1);
         r.r_3 = pp.curve.getRandomPoint(CurveGroup.G1);
-        CalHash(h, pp, ID, m, r);
+        CalHash(h, pp, ID, m, L, r);
     }
 
     @Override
@@ -67,11 +69,12 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             PublicParam pp,
             Identity ID,
             Message m,
+            Label L,
             HashValue h,
             Randomness r
     ) {
         HashValue tmp = new HashValue();
-        CalHash(tmp, pp, ID, m, r);
+        CalHash(tmp, pp, ID, m, L, r);
         return tmp.isEqual(h);
     }
 
@@ -82,12 +85,13 @@ public class Scheme extends IBCH<PublicParam, MasterSecretKey, SecretKey, Identi
             Identity ID,
             SecretKey sk,
             Message m,
+            Label L,
             HashValue h,
             Randomness r,
             Message m_p
     ) {
         Scalar t_p = pp.curve.getRandomScalar();
-        MultivePoint td_2 = sk.td_2.mul(pp.u_2.div(pp.h_2.pow(ID.ID)).pow(ID.L.mul(t_p)));
+        MultivePoint td_2 = sk.td_2.mul(pp.u_2.div(pp.h_2.pow(ID.ID)).pow(L.L.mul(t_p)));
         MultivePoint td_3 = pp.g_1.div(pp.g.pow(ID.ID)).pow(t_p);
         Scalar delta_m = m.m.sub(m_p.m);
         r_p.r_1 = r.r_1.add(sk.td_1.mul(delta_m));

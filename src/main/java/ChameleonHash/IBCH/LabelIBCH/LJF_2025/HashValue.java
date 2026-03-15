@@ -1,4 +1,4 @@
-package ChameleonHash.IBCH.LJF_2025;
+package ChameleonHash.IBCH.LabelIBCH.LJF_2025;
 
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;

@@ -1,5 +1,6 @@
 package ChameleonHash;
 
+import ChameleonHash.IBCH.LabelIBCH.LJF_2025.Scheme;
 import EllipticCurve.Curve.CurveName;
 
 import java.util.Locale;
@@ -11,25 +12,39 @@ import static ChameleonHash.SchemeType.CH;
 import static ChameleonHash.SchemeType.IBCH;
 
 public enum SchemeName {
-    CH_LLA_2012(CH, SINGLEGROUP, ChameleonHash.CH.LLA_2012.Scheme.class),
-    IBCH_ZSS_2003_S1(IBCH, ALL, ChameleonHash.IBCH.ZSS_2003.S1.class),
-    IBCH_ZSS_2003_S2(IBCH, SYMMETRIC, ChameleonHash.IBCH.ZSS_2003.S2.class),
-    IBCH_CZS_2014(IBCH, ALL, ChameleonHash.IBCH.CZS_2014.Scheme.class),
-    IBCH_LSX_2022(IBCH, SYMMETRIC, ChameleonHash.IBCH.LSX_2022.Scheme.class),
-    IBCH_XSL_2021(IBCH, ALL, ChameleonHash.IBCH.XSL_2021.Scheme.class),
-    IBCH_LJF_2025(IBCH, SYMMETRIC, ChameleonHash.IBCH.LJF_2025.Scheme.class),
+    CH_LLA_2012(CH, SINGLEGROUP, ChameleonHash.CH.LLA_2012.Scheme.class, true),
+    CH_CZT_2011(CH, SINGLEGROUP, ChameleonHash.CH.CZT_2011.Scheme.class, true),
+    CH_CZK_2004(CH, SINGLEGROUP, ChameleonHash.CH.CZK_2004.Scheme.class, true),
+//    CH_KEF_MH_SDH_DL_AM_2004(CH, SINGLEGROUP, ChameleonHash.CH.KEF_MH_SDH_DL_AM_2004.Scheme.class),
+//    CH_ET_KOG_CDK_2017(CH, SINGLEGROUP, ChameleonHash.CH.ET_KOG_CDK_2017.Scheme.class),
+//    CH_FS_ECC_CCT_2024(CH, SINGLEGROUP, ChameleonHash.CH.FS_ECC_CCT_2024.Scheme.class),
+//    CH_KEF_NoMH_AM_2004(CH, ALL, ChameleonHash.CH.KEF_NoMH_AM_2004.Scheme.class),
+//    CH_KEF_MH_RSA_F_AM_2004(CH, ALL, ChameleonHash.CH.KEF_MH_RSA_F_AM_2004.Scheme.class),
+//    CH_KEF_MH_RSANN_F_AM_2004(CH, ALL, ChameleonHash.CH.KEF_MH_RSANN_F_AM_2004.Scheme.class),
+//    CH_CDK_2017(CH, ALL, ChameleonHash.CH.CDK_2017.Scheme.class),
+//    CH_ET_BC_CDK_2017(CH, ALL, ChameleonHash.CH.ET_BC_CDK_2017.Scheme.class),
+//    CHET_RSA_CDK_2017(CH, ALL, ChameleonHash.CH.RSA_CDK_2017.Scheme.class),
+
+    IBCH_ZSS_2003_S1(IBCH, ALL, ChameleonHash.IBCH.ZSS_2003.S1.class, false),
+    IBCH_ZSS_2003_S2(IBCH, SYMMETRIC, ChameleonHash.IBCH.ZSS_2003.S2.class, false),
+    IBCH_CZS_2014(IBCH, ALL, ChameleonHash.IBCH.CZS_2014.Scheme.class, false),
+    IBCH_LSX_2022(IBCH, SYMMETRIC, ChameleonHash.IBCH.LSX_2022.Scheme.class, false),
+    IBCH_XSL_2021(IBCH, ALL, ChameleonHash.IBCH.XSL_2021.Scheme.class, false),
+    IBCH_LJF_2025(IBCH, SYMMETRIC, Scheme.class, true),
     ;
 
     public final SchemeType schemeType;
     public final SchemeCurveRequire schemeCurveRequire;
     public final Class<?> schemeClass;
+    public final boolean has_label;
 
     private static final Map<String, SchemeName> LOOKUP = new ConcurrentHashMap<>();
 
-    SchemeName(SchemeType st, SchemeCurveRequire scr, Class<?> schemeClass) {
+    SchemeName(SchemeType st, SchemeCurveRequire scr, Class<?> schemeClass, boolean has_label) {
         schemeType = st;
         schemeCurveRequire = scr;
         this.schemeClass = schemeClass;
+        this.has_label = has_label;
     }
 
     static {

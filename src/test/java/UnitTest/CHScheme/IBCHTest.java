@@ -1,8 +1,10 @@
 package UnitTest.CHScheme;
 
 import ChameleonHash.IBCH.Components.*;
-import ChameleonHash.IBCH.IBCH;
-import ChameleonHash.SchemeFactory;
+import ChameleonHash.IBCH.IBCHFactory;
+import ChameleonHash.IBCH.LabelIBCH.Components.Label;
+import ChameleonHash.IBCH.LabelIBCH.LabelIBCHFactory;
+import ChameleonHash.Interface.LabelIBCH;
 import ChameleonHash.SchemeName;
 import ChameleonHash.SchemeType;
 import EllipticCurve.Curve.Config;
@@ -59,7 +61,12 @@ public class IBCHTest {
     }
 
     private void testFunction(ChameleonHash.Config schemeConfig) {
-        ChameleonHash.IBCH.IBCH scheme = (IBCH) SchemeFactory.createScheme(schemeConfig);
+        if (schemeConfig.schemeName.has_label) testLabelIBCH(schemeConfig);
+        else testIBCH(schemeConfig);
+    }
+
+    private void testIBCH(ChameleonHash.Config schemeConfig) {
+        ChameleonHash.IBCH.IBCH scheme = IBCHFactory.createScheme(schemeConfig);
         PublicParam pp = scheme.createPublicParam(schemeConfig);
         MasterSecretKey msk = pp.createMasterSecretKey();
         scheme.Setup(pp, msk);
@@ -98,6 +105,52 @@ public class IBCHTest {
         assertTrue(scheme.Verify(pp, ID1, m1, h1, r1), "Adapt(L1, m2) valid");
         assertTrue(scheme.Verify(pp, ID1, m2, h1, r1_p), "Adapt(L1, m2) valid");
         assertFalse(scheme.Verify(pp, ID1, m1, h1, r1_p), "Adapt(L1, m1) invalid");
+    }
+
+    private void testLabelIBCH(ChameleonHash.Config schemeConfig) {
+        LabelIBCH scheme = LabelIBCHFactory.createScheme(schemeConfig);
+        ChameleonHash.IBCH.LabelIBCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
+        MasterSecretKey msk = pp.createMasterSecretKey();
+        scheme.Setup(pp, msk);
+        SecretKey sk1 = pp.createSecretKey();
+        Identity ID1 = pp.createIdentity("ID1");
+        scheme.KeyGen(sk1, pp, msk, ID1);
+
+        SecretKey sk2 = pp.createSecretKey();
+        Identity ID2 = pp.createIdentity("ID2");
+        scheme.KeyGen(sk2, pp, msk, ID2);
+
+        Message m1 = pp.createMessage("msg1");
+        Label l1 = pp.createLabel("label1");
+        Message m2 = pp.createMessage("msg2");
+        Label l2 = pp.createLabel("label2");
+
+        HashValue h1 = pp.createHashValue();
+        Randomness r1 = pp.createRandomness();
+        scheme.Hash(h1, r1, pp, ID1, m1, l1);
+
+        assertTrue(scheme.Verify(pp, ID1, m1, l1, h1, r1));
+        assertFalse(scheme.Verify(pp, ID2, m1, l1, h1, r1));
+        assertFalse(scheme.Verify(pp, ID1, m2, l1, h1, r1));
+        assertFalse(scheme.Verify(pp, ID1, m1, l2, h1, r1));
+
+        HashValue h2 = pp.createHashValue();
+        Randomness r2 = pp.createRandomness();
+        scheme.Hash(h2, r2, pp, ID2, m2, l2);
+
+        assertTrue(scheme.Verify(pp, ID2, m2, l2, h2, r2));
+        assertFalse(scheme.Verify(pp, ID1, m2, l2, h2, r2));
+        assertFalse(scheme.Verify(pp, ID2, m1, l2, h2, r2));
+        assertFalse(scheme.Verify(pp, ID2, m2, l1, h2, r2));
+        assertFalse(scheme.Verify(pp, ID2, m2, l2, h1, r2));
+        assertFalse(scheme.Verify(pp, ID2, m2, l2, h2, r1));
+
+        Randomness r1_p = pp.createRandomness();
+
+        scheme.Collision(r1_p, pp, ID1, sk1, m1, l1, h1, r1, m2);
+        assertTrue(scheme.Verify(pp, ID1, m1, l1, h1, r1), "Adapt(L1, m2) valid");
+        assertTrue(scheme.Verify(pp, ID1, m2, l1, h1, r1_p), "Adapt(L1, m2) valid");
+        assertFalse(scheme.Verify(pp, ID1, m1, l1, h1, r1_p), "Adapt(L1, m1) invalid");
     }
 
     @DisplayName("test abstract implement")

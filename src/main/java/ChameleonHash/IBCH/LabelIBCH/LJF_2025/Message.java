@@ -1,12 +1,12 @@
-package ChameleonHash.IBCH.LJF_2025;
+package ChameleonHash.IBCH.LabelIBCH.LJF_2025;
 
-import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class SecretKey extends ChameleonHash.IBCH.Components.SecretKey {
-    protected Scalar td_1;
-    protected MultivePoint td_2;
+public class Message extends ChameleonHash.IBCH.Components.Message {
+    protected Scalar m;
+
+    public Message() {}
 
     @Override
     public final ElementCounter TheoSize() {
