@@ -1,6 +1,8 @@
-package MathStructure.LSSS;
+package Encryption.ABE.utils;
 
-import base.LSSS.Native;
+import EllipticCurve.Curve.Curve;
+import EllipticCurve.Point.Scalar;
+import Encryption.ABE.Components.Policy;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
@@ -14,7 +16,7 @@ public class BooleanFormulaParser {
 
     private static class Node {
         public int x;
-        public short[] tag;
+        public Scalar[] tag;
     }
 
     public static class AttributeList {
@@ -25,20 +27,11 @@ public class BooleanFormulaParser {
         }
     }
 
-    public static class PolicyList {
-        public String[] policy;
-
-        public void Resize(int n) {
-            policy = new String[n];
-        }
-    }
-
-    TokenType[] tokens;
-    public int[][] range;
-    public int n, m, x;
-    public String formula;
-
-    public BooleanFormulaParser(String BooleanFormulas, PolicyList pi) {
+    public static void parse(Policy pi, Curve curve, String BooleanFormulas) {
+        TokenType[] tokens;
+        int[][] range;
+        int n, m, x = 0;
+        String formula;
         formula = BooleanFormulas;
         n = 0;
         m = 1;
@@ -78,7 +71,7 @@ public class BooleanFormulaParser {
                     break;
             }
         }
-        pi.Resize(n);
+        pi.policy = new String[n];
         int L, R, loop_cnt = 0, row_cnt = 0;
         while(!gates.isEmpty()) {
             if(loop_cnt >= gates.size()) throw new RuntimeException("wrong boolean formulas");
@@ -120,60 +113,66 @@ public class BooleanFormulaParser {
         }
         if(range[0][1] != BooleanFormulas.length() - 1 || range[BooleanFormulas.length() - 1][0] != 0) throw new RuntimeException("wrong boolean formulas");
         if(x == -1) pi.policy[0] = formula;
-    }
 
-    public void SetToNativeMatrix(Native.Matrix M) {
-        M.Resize(n, m);
-        if(x == -1) {
-            M.M[0][0] = 1;
-        } else {
-            Queue<Node> rt = new ArrayDeque<>();
-            Node tmp = new Node();
-            tmp.x = x;
-            tmp.tag = new short[m];
-            tmp.tag[0] = 1;
-            rt.add(tmp);
-            int col_cnt = 1;
-            while(!rt.isEmpty()) {
-                tmp = rt.poll();
-                if(tokens[tmp.x] == TokenType.AND) {
-                    if(range[tmp.x][0] < 1) {
-                        if (col_cnt >= 0) System.arraycopy(tmp.tag, 0, M.M[-range[tmp.x][0]], 0, col_cnt);
-                        M.M[-range[tmp.x][0]][col_cnt] = 1;
-                    } else {
-                        Node tmp_L = new Node();
-                        tmp_L.x = range[tmp.x][0];
-                        tmp_L.tag = new short[m];
-                        if (col_cnt >= 0) System.arraycopy(tmp.tag, 0, tmp_L.tag, 0, col_cnt);
-                        tmp_L.tag[col_cnt] = 1;
-                        rt.add(tmp_L);
-                    }
-                    if(range[tmp.x][1] < 1) {
-                        M.M[-range[tmp.x][1]][col_cnt] = -1;
-                    } else {
-                        Node tmp_R = new Node();
-                        tmp_R.x = range[tmp.x][1];
-                        tmp_R.tag = new short[m];
-                        tmp_R.tag[col_cnt] = -1;
-                        rt.add(tmp_R);
-                    }
-                    ++col_cnt;
-                } else if (tokens[tmp.x] == TokenType.OR) {
-                    if(range[tmp.x][0] < 1) {
-                        if (col_cnt >= 0) System.arraycopy(tmp.tag, 0, M.M[-range[tmp.x][0]], 0, col_cnt);
-                    } else {
-                        Node tmp_L = new Node();
-                        tmp_L.x = range[tmp.x][0];
-                        tmp_L.tag = tmp.tag;
-                        rt.add(tmp_L);
-                    }
-                    if(range[tmp.x][1] < 1) {
-                        if (col_cnt >= 0) System.arraycopy(tmp.tag, 0, M.M[-range[tmp.x][1]], 0, col_cnt);
-                    } else {
-                        Node tmp_R = new Node();
-                        tmp_R.x = range[tmp.x][1];
-                        tmp_R.tag = tmp.tag;
-                        rt.add(tmp_R);
+        {
+            pi.formula = formula;
+            pi.M = new Scalar[n][m];
+            Scalar[] zeroList = new Scalar[m];
+            for (int i = 0; i < m; ++i) zeroList[i] = curve.getZeroScalar();
+            if (x == -1) {
+                pi.M[0][0] = curve.getOneScalar();
+            } else {
+                Queue<Node> rt = new ArrayDeque<>();
+                Node tmp = new Node();
+                tmp.x = x;
+                tmp.tag = new Scalar[m];
+                System.arraycopy(zeroList, 0, tmp.tag, 0, m);
+                tmp.tag[0] = curve.getOneScalar();
+                rt.add(tmp);
+                int col_cnt = 1;
+                while (!rt.isEmpty()) {
+                    tmp = rt.poll();
+                    if (tokens[tmp.x] == TokenType.AND) {
+                        if (range[tmp.x][0] < 1) {
+                            System.arraycopy(tmp.tag, 0, pi.M[-range[tmp.x][0]], 0, m);
+                            pi.M[-range[tmp.x][0]][col_cnt] = curve.getOneScalar();
+                        } else {
+                            Node tmp_L = new Node();
+                            tmp_L.x = range[tmp.x][0];
+                            tmp_L.tag = new Scalar[m];
+                            System.arraycopy(tmp.tag, 0, tmp_L.tag, 0, m);
+                            tmp_L.tag[col_cnt] = curve.getOneScalar();
+                            rt.add(tmp_L);
+                        }
+                        if (range[tmp.x][1] < 1) {
+                            System.arraycopy(zeroList, 0, pi.M[-range[tmp.x][1]], 0, m);
+                            pi.M[-range[tmp.x][1]][col_cnt] = curve.getOneScalar().neg();
+                        } else {
+                            Node tmp_R = new Node();
+                            tmp_R.x = range[tmp.x][1];
+                            tmp_R.tag = new Scalar[m];
+                            System.arraycopy(zeroList, 0, tmp_R.tag, 0, m);
+                            tmp_R.tag[col_cnt] = curve.getOneScalar().neg();
+                            rt.add(tmp_R);
+                        }
+                        ++col_cnt;
+                    } else if (tokens[tmp.x] == TokenType.OR) {
+                        if (range[tmp.x][0] < 1) {
+                            System.arraycopy(tmp.tag, 0, pi.M[-range[tmp.x][0]], 0, m);
+                        } else {
+                            Node tmp_L = new Node();
+                            tmp_L.x = range[tmp.x][0];
+                            tmp_L.tag = tmp.tag;
+                            rt.add(tmp_L);
+                        }
+                        if (range[tmp.x][1] < 1) {
+                            System.arraycopy(tmp.tag, 0, pi.M[-range[tmp.x][1]], 0, m);
+                        } else {
+                            Node tmp_R = new Node();
+                            tmp_R.x = range[tmp.x][1];
+                            tmp_R.tag = tmp.tag;
+                            rt.add(tmp_R);
+                        }
                     }
                 }
             }

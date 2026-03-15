@@ -1,5 +1,7 @@
 package Encryption.ABE.Components;
 
+import utils.ElementCounter;
+
 public abstract class MasterPublicKey {
-    public abstract String TheoSize();
+    public abstract ElementCounter TheoSize();
 }

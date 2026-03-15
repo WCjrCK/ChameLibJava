@@ -28,6 +28,22 @@ public abstract class Curve<G1 extends Point, G2 extends Point, GT extends Point
 
     protected abstract Zp createZp();
 
+    protected abstract G1 getOneG1();
+
+    protected abstract G2 getOneG2();
+
+    protected abstract GT getOneGT();
+
+    protected abstract Zp getOneZp();
+
+    protected abstract G1 getZeroG1();
+
+    protected abstract G2 getZeroG2();
+
+    protected abstract GT getZeroGT();
+
+    protected abstract Zp getZeroZp();
+
     protected abstract G1 HashToG1Core(byte[] hash);
 
     protected abstract G2 HashToG2Core(byte[] hash);
@@ -45,15 +61,41 @@ public abstract class Curve<G1 extends Point, G2 extends Point, GT extends Point
         return p;
     }
 
-    public final Point PowNdonr(AdditivePoint p) {
-        return PowNdonr((Point) p);
+    public final Point getOne(CurveGroup group) {
+        switch (group) {
+            case G1:
+                if (swap_G1G2) return getOneG2();
+                else return getOneG1();
+            case G2:
+                if (swap_G1G2) return getOneG1();
+                else return getOneG2();
+            case GT: return getOneGT();
+        }
+        throw new RuntimeException("尚未适配群 " + group);
     }
 
-    public final Point PowNdonr(MultivePoint p) {
-        return PowNdonr((Point) p);
+    public final Scalar getOneScalar() {
+        return getOneZp();
     }
 
-//    protected abstract Point newPoint(CurveGroup group);
+    public final Point getZero(CurveGroup group) {
+        switch (group) {
+            case G1:
+                if (swap_G1G2) return getZeroG2();
+                else return getZeroG1();
+            case G2:
+                if (swap_G1G2) return getZeroG1();
+                else return getZeroG2();
+            case GT: return getZeroGT();
+        }
+        throw new RuntimeException("尚未适配群 " + group);
+    }
+
+    public final Scalar getZeroScalar() {
+        return getZeroZp();
+    }
+
+    //    protected abstract Point newPoint(CurveGroup group);
 
     public final Point createPoint(CurveGroup group) {
         Objects.requireNonNull(group, "群类型不能为空");

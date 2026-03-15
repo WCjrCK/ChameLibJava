@@ -108,6 +108,46 @@ public class PBCCurve extends Curve<Group, Group, Group, Zp> {
     }
 
     @Override
+    protected Group getOneG1() {
+        return new Group(G1.newOneElement().getImmutable(), curveName(), CurveGroup.G1);
+    }
+
+    @Override
+    protected Group getOneG2() {
+        return new Group(G2.newOneElement().getImmutable(), curveName(), CurveGroup.G2);
+    }
+
+    @Override
+    protected Group getOneGT() {
+        return new Group(GT.newOneElement().getImmutable(), curveName(), CurveGroup.GT);
+    }
+
+    @Override
+    protected Zp getOneZp() {
+        return new Zp(Zp.newOneElement().getImmutable(), curveName());
+    }
+
+    @Override
+    protected Group getZeroG1() {
+        return new Group(G1.newZeroElement().getImmutable(), curveName(), CurveGroup.G1);
+    }
+
+    @Override
+    protected Group getZeroG2() {
+        return new Group(G2.newZeroElement().getImmutable(), curveName(), CurveGroup.G2);
+    }
+
+    @Override
+    protected Group getZeroGT() {
+        return new Group(GT.newZeroElement().getImmutable(), curveName(), CurveGroup.GT);
+    }
+
+    @Override
+    protected Zp getZeroZp() {
+        return new Zp(Zp.newZeroElement().getImmutable(), curveName());
+    }
+
+    @Override
     protected Group Pairing(Group p1, Group p2) {
         if (p1.curve() != curveName()) throw new IllegalArgumentException("点 " + p1.curve() + " 不属于当前曲线: " + curveName());
         if (p2.curve() != curveName()) throw new IllegalArgumentException("点 " + p2.curve() + " 不属于当前曲线: " + curveName());

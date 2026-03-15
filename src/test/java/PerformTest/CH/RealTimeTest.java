@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static EllipticCurve.Curve.CurveName.PBC_CUSTOM;
 import static EllipticCurve.Curve.CurveName.SECP256K1;
 import static PerformTest.BasicParam.repeat_cnt;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -54,6 +55,7 @@ public class RealTimeTest {
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
                                 .filter(b -> b != SECP256K1)
+                                .filter(b -> b != PBC_CUSTOM)
                                 .filter(a::checkCurve)
                                 .flatMap(b -> Stream.of(Arguments.of(a, b)))
                 );
@@ -67,6 +69,7 @@ public class RealTimeTest {
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
                                 .filter(b -> b != SECP256K1)
+                                .filter(b -> b != PBC_CUSTOM)
                                 .filter(b -> !b.isSymmetic())
                                 .filter(a::checkCurve)
                                 .flatMap(b -> Stream.of(Arguments.of(a, b)))
@@ -81,6 +84,7 @@ public class RealTimeTest {
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
                                 .filter(b -> b != SECP256K1)
+                                .filter(b -> b != PBC_CUSTOM)
                                 .filter(a::checkCurve)
                                 .flatMap(
                                         b -> EnumSet.allOf(CurveGroup.class).stream()
@@ -99,12 +103,14 @@ public class RealTimeTest {
             int i = 0;
             for (SchemeName value : SchemeName.values()) {
                 if (value.schemeType == SchemeType.CH) {
-                    BufferedWriter tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_%d.csv", value.name(), repeat_cnt)));
-                    tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
-                    tsc.add(tmp);
-                    if (value.schemeCurveRequire == SchemeCurveRequire.SYMMETRIC || value.schemeCurveRequire == SchemeCurveRequire.SINGLEGROUP) {
-                        tscsgg.add(null);
-                    } else {
+                    BufferedWriter tmp;
+                    if (value.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP) {
+                        tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_%d.csv", value.name(), repeat_cnt)));
+                        tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
+                        tsc.add(tmp);
+                    } else tsc.add(null);
+                    if (value.schemeCurveRequire == SchemeCurveRequire.SYMMETRIC || value.schemeCurveRequire == SchemeCurveRequire.SINGLEGROUP) tscsgg.add(null);
+                    else {
                         tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_swapG1G2_%d.csv", value.name(), repeat_cnt)));
                         tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
                         tscsgg.add(tmp);
@@ -119,6 +125,10 @@ public class RealTimeTest {
                         tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_inGT_%d.csv", value.name(), repeat_cnt)));
                         tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
                         tscsgGT.add(tmp);
+                    } else {
+                        tscsgG1.add(null);
+                        tscsgG2.add(null);
+                        tscsgGT.add(null);
                     }
                     SNToIdx.put(value, i);
                     i++;

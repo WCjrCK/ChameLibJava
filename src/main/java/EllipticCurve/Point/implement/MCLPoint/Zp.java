@@ -69,4 +69,14 @@ public class Zp extends Scalar<Zp> {
     public final boolean isEqual(Zp other) {
         return p.equals(other.p);
     }
+
+    @Override
+    public boolean isOne() {
+        return p.isOne();
+    }
+
+    @Override
+    public boolean isZero() {
+        return p.isZero();
+    }
 }

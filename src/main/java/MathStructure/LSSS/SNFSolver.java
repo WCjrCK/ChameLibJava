@@ -4,19 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.function.IntFunction;
 
-public class Scheme {
-    @FunctionalInterface
-    public interface TypeToInt<T> {
-        int toInt(T value);
-    }
-
-    @FunctionalInterface
-    public interface IntToType<T> {
-        T fromInt(int value);
-    }
-
+public class SNFSolver {
     public static final class SolveResult {
         public final boolean solvable;
         public final int[] x;
@@ -77,7 +66,7 @@ public class Scheme {
         }
     }
 
-    private Scheme() {}
+    private SNFSolver() {}
 
     public static SolveResult solveAxEqB(int[][] A, int[] b) {
         validateMatrix(A);
@@ -156,33 +145,6 @@ public class Scheme {
         return new PolicySolveResult(partial.solvable, fullX, activeRows, partial.rank);
     }
 
-    public static <T> int[][] toIntMatrix(T[][] src, TypeToInt<T> converter) {
-        int rows = src.length;
-        int cols = rows == 0 ? 0 : src[0].length;
-        int[][] ret = new int[rows][cols];
-        for (int i = 0; i < rows; i++) {
-            if (src[i].length != cols) {
-                throw new IllegalArgumentException("matrix must be rectangular");
-            }
-            for (int j = 0; j < cols; j++) {
-                ret[i][j] = converter.toInt(src[i][j]);
-            }
-        }
-        return ret;
-    }
-
-    public static <T> int[] toIntVector(T[] src, TypeToInt<T> converter) {
-        int[] ret = new int[src.length];
-        for (int i = 0; i < src.length; i++) ret[i] = converter.toInt(src[i]);
-        return ret;
-    }
-
-    public static <T> T[] fromIntVector(int[] src, IntToType<T> converter, IntFunction<T[]> arrayFactory) {
-        T[] ret = arrayFactory.apply(src.length);
-        for (int i = 0; i < src.length; i++) ret[i] = converter.fromInt(src[i]);
-        return ret;
-    }
-
     private static SnfWork smithNormalForm(int[][] A) {
         SnfWork w = new SnfWork(A);
         int k = 0;
@@ -233,10 +195,11 @@ public class Scheme {
             for (int i = 0; i < w.rowCount; i++) {
                 if (i == k) continue;
                 while (w.A[i][k] != 0) {
+                    if (w.A[k][k] == 0 && !promotePivot(w, k)) return;
                     int pivot = w.A[k][k];
                     int q = w.A[i][k] / pivot;
                     addRow(w, i, k, -q);
-                    if (absAsLong(w.A[i][k]) < absAsLong(w.A[k][k])) {
+                    if (w.A[i][k] != 0 && absAsLong(w.A[i][k]) < absAsLong(w.A[k][k])) {
                         swapRows(w, i, k);
                     }
                     changed = true;
@@ -246,10 +209,11 @@ public class Scheme {
             for (int j = 0; j < w.colCount; j++) {
                 if (j == k) continue;
                 while (w.A[k][j] != 0) {
+                    if (w.A[k][k] == 0 && !promotePivot(w, k)) return;
                     int pivot = w.A[k][k];
                     int q = w.A[k][j] / pivot;
                     addCol(w, j, k, -q);
-                    if (absAsLong(w.A[k][j]) < absAsLong(w.A[k][k])) {
+                    if (w.A[k][j] != 0 && absAsLong(w.A[k][j]) < absAsLong(w.A[k][k])) {
                         swapCols(w, j, k);
                     }
                     changed = true;
@@ -289,7 +253,6 @@ public class Scheme {
             addCol(w, j, k, -q);
         }
     }
-
     private static void validateMatrix(int[][] A) {
         if (A == null) throw new IllegalArgumentException("A is null");
         int cols = A.length == 0 ? 0 : A[0].length;
@@ -393,5 +356,32 @@ public class Scheme {
 
     private static long absAsLong(int v) {
         return v == Integer.MIN_VALUE ? (long) Integer.MAX_VALUE + 1L : Math.abs(v);
+    }
+
+    private static boolean promotePivot(SnfWork w, int k) {
+        if (w.A[k][k] != 0) return true;
+
+        for (int i = k + 1; i < w.rowCount; i++) {
+            if (w.A[i][k] != 0) {
+                swapRows(w, i, k);
+                return true;
+            }
+        }
+        for (int j = k + 1; j < w.colCount; j++) {
+            if (w.A[k][j] != 0) {
+                swapCols(w, j, k);
+                return true;
+            }
+        }
+        for (int i = k + 1; i < w.rowCount; i++) {
+            for (int j = k + 1; j < w.colCount; j++) {
+                if (w.A[i][j] != 0) {
+                    swapRows(w, i, k);
+                    swapCols(w, j, k);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

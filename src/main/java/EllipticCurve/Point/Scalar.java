@@ -50,6 +50,10 @@ public abstract class Scalar<S extends Scalar<S>> {
         return negCore();
     }
 
+    public abstract boolean isOne();
+
+    public abstract boolean isZero();
+
     public final CurveName curve() {
         return curve;
     }

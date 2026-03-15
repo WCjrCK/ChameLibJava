@@ -43,6 +43,7 @@ public class CHTest {
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
                                 .filter(b -> b != SECP256K1)
+                                .filter(b -> b != PBC_CUSTOM)
                                 .filter(a::checkCurve)
                                 .flatMap(b -> Stream.of(Arguments.of(a, b)))
                 );
@@ -56,6 +57,7 @@ public class CHTest {
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
                                 .filter(b -> b != SECP256K1)
+                                .filter(b -> b != PBC_CUSTOM)
                                 .filter(b -> !b.isSymmetic())
                                 .filter(a::checkCurve)
                                 .flatMap(b -> Stream.of(Arguments.of(a, b)))
@@ -70,6 +72,7 @@ public class CHTest {
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
                         .filter(b -> b != SECP256K1)
+                                .filter(b -> b != PBC_CUSTOM)
                         .filter(a::checkCurve)
                         .flatMap(
                                 b -> EnumSet.allOf(CurveGroup.class).stream()

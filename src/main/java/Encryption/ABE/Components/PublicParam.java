@@ -3,15 +3,40 @@ package Encryption.ABE.Components;
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveFactory;
 import Encryption.ABE.Config;
+import Encryption.ABE.utils.BooleanFormulaParser;
+import utils.ElementCounter;
 
-public abstract class PublicParam {
-    public Curve curve;
+public abstract class PublicParam<
+        MPK extends MasterPublicKey,
+        MSK extends MasterSecretKey,
+        SK extends SecretKey,
+        PT extends PlainText<PT>,
+        CT extends CipherText<CT>
+        > {
+    public final Curve curve;
 
     protected PublicParam(Config config) {
         curve = CurveFactory.create(config.curveConfig);
     }
 
-    public abstract String toString();
+    public abstract Attributes createAttributes();
 
-    public abstract String TheoSize();
+    public final Policy createPolicy(String BooleanFormulas) {
+        Policy res = new Policy();
+        res.formula = BooleanFormulas;
+        BooleanFormulaParser.parse(res, curve, BooleanFormulas);
+        return res;
+    }
+
+    public abstract MPK createMasterPublicKey();
+
+    public abstract MSK createMasterSecretKey();
+
+    public abstract SK createSecretKey();
+
+    public abstract PT createPlainText(String msg);
+
+    public abstract CT createCipherText();
+
+    public abstract ElementCounter TheoSize();
 }

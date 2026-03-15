@@ -69,6 +69,46 @@ public class MCLCurve extends Curve<G1, G2, GT, Zp> {
     }
 
     @Override
+    protected G1 getOneG1() {
+        throw new RuntimeException("暂未实现MCL的G1群单位元获取");
+    }
+
+    @Override
+    protected G2 getOneG2() {
+        throw new RuntimeException("暂未实现MCL的G2群单位元获取");
+    }
+
+    @Override
+    protected GT getOneGT() {
+        throw new RuntimeException("暂未实现MCL的GT群单位元获取");
+    }
+
+    @Override
+    protected Zp getOneZp() {
+        return new Zp(new Fr(1), curveName());
+    }
+
+    @Override
+    protected G1 getZeroG1() {
+        throw new RuntimeException("暂未实现MCL的G1群零元获取");
+    }
+
+    @Override
+    protected G2 getZeroG2() {
+        throw new RuntimeException("暂未实现MCL的G2群零元获取");
+    }
+
+    @Override
+    protected GT getZeroGT() {
+        throw new RuntimeException("暂未实现MCL的GT群零元获取");
+    }
+
+    @Override
+    protected Zp getZeroZp() {
+        return new Zp(new Fr(0), curveName());
+    }
+
+    @Override
     public final G2 PowNdonrCore(G2 p) {
         return p;
     }
