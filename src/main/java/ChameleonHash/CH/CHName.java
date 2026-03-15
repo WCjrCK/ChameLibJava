@@ -11,22 +11,24 @@ import static ChameleonHash.SchemeCurveRequire.SINGLEGROUP;
 import static ChameleonHash.SchemeCurveRequire.SYMMETRIC;
 
 public enum CHName {
-    CH_LLA_2012(SINGLEGROUP, ChameleonHash.CH.LabelCH.LLA_2012.Scheme.class, true),
-    CH_CZT_2011(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZT_2011.Scheme.class, true),
-    CH_CZK_2004(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZK_2004.Scheme.class, true),
-    CH_CCT_2024(SINGLEGROUP, ChameleonHash.CH.BaseCH.CCT_2024.Scheme.class, false),
+    CH_LLA_2012(SINGLEGROUP, ChameleonHash.CH.LabelCH.LLA_2012.Scheme.class, true, false),
+    CH_CZT_2011(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZT_2011.Scheme.class, true, false),
+    CH_CZK_2004(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZK_2004.Scheme.class, true, false),
+    CH_CCT_2024(SINGLEGROUP, ChameleonHash.CH.BaseCH.CCT_2024.Scheme.class, false, false),
     ;
 
     public final SchemeCurveRequire schemeCurveRequire;
     public final Class<?> schemeClass;
     public final boolean has_label;
+    public final boolean has_ET;
 
     private static final Map<String, CHName> LOOKUP = new ConcurrentHashMap<>();
 
-    CHName(SchemeCurveRequire scr, Class<?> schemeClass, boolean has_label) {
+    CHName(SchemeCurveRequire scr, Class<?> schemeClass, boolean has_label, boolean has_ET) {
         schemeCurveRequire = scr;
         this.schemeClass = schemeClass;
         this.has_label = has_label;
+        this.has_ET = has_ET;
     }
 
     static {
