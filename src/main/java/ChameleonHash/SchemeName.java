@@ -1,5 +1,7 @@
 package ChameleonHash;
 
+import ChameleonHash.IBCH.BaseIBCH.ZSS_2003.S1;
+import ChameleonHash.IBCH.BaseIBCH.ZSS_2003.S2;
 import ChameleonHash.IBCH.LabelIBCH.LJF_2025.Scheme;
 import EllipticCurve.Curve.CurveName;
 
@@ -12,9 +14,10 @@ import static ChameleonHash.SchemeType.CH;
 import static ChameleonHash.SchemeType.IBCH;
 
 public enum SchemeName {
-    CH_LLA_2012(CH, SINGLEGROUP, ChameleonHash.CH.LLA_2012.Scheme.class, true),
-    CH_CZT_2011(CH, SINGLEGROUP, ChameleonHash.CH.CZT_2011.Scheme.class, true),
-    CH_CZK_2004(CH, SINGLEGROUP, ChameleonHash.CH.CZK_2004.Scheme.class, true),
+    CH_LLA_2012(CH, SINGLEGROUP, ChameleonHash.CH.LabelCH.LLA_2012.Scheme.class, true),
+    CH_CZT_2011(CH, SINGLEGROUP, ChameleonHash.CH.LabelCH.CZT_2011.Scheme.class, true),
+    CH_CZK_2004(CH, SINGLEGROUP, ChameleonHash.CH.LabelCH.CZK_2004.Scheme.class, true),
+    CH_CCT_2024(CH, SINGLEGROUP, ChameleonHash.CH.BaseCH.CCT_2024.Scheme.class, false),
 //    CH_KEF_MH_SDH_DL_AM_2004(CH, SINGLEGROUP, ChameleonHash.CH.KEF_MH_SDH_DL_AM_2004.Scheme.class),
 //    CH_ET_KOG_CDK_2017(CH, SINGLEGROUP, ChameleonHash.CH.ET_KOG_CDK_2017.Scheme.class),
 //    CH_FS_ECC_CCT_2024(CH, SINGLEGROUP, ChameleonHash.CH.FS_ECC_CCT_2024.Scheme.class),
@@ -25,11 +28,11 @@ public enum SchemeName {
 //    CH_ET_BC_CDK_2017(CH, ALL, ChameleonHash.CH.ET_BC_CDK_2017.Scheme.class),
 //    CHET_RSA_CDK_2017(CH, ALL, ChameleonHash.CH.RSA_CDK_2017.Scheme.class),
 
-    IBCH_ZSS_2003_S1(IBCH, ALL, ChameleonHash.IBCH.ZSS_2003.S1.class, false),
-    IBCH_ZSS_2003_S2(IBCH, SYMMETRIC, ChameleonHash.IBCH.ZSS_2003.S2.class, false),
-    IBCH_CZS_2014(IBCH, ALL, ChameleonHash.IBCH.CZS_2014.Scheme.class, false),
-    IBCH_LSX_2022(IBCH, SYMMETRIC, ChameleonHash.IBCH.LSX_2022.Scheme.class, false),
-    IBCH_XSL_2021(IBCH, ALL, ChameleonHash.IBCH.XSL_2021.Scheme.class, false),
+    IBCH_ZSS_2003_S1(IBCH, ALL, S1.class, false),
+    IBCH_ZSS_2003_S2(IBCH, SYMMETRIC, S2.class, false),
+    IBCH_CZS_2014(IBCH, ALL, ChameleonHash.IBCH.BaseIBCH.CZS_2014.Scheme.class, false),
+    IBCH_LSX_2022(IBCH, SYMMETRIC, ChameleonHash.IBCH.BaseIBCH.LSX_2022.Scheme.class, false),
+    IBCH_XSL_2021(IBCH, ALL, ChameleonHash.IBCH.BaseIBCH.XSL_2021.Scheme.class, false),
     IBCH_LJF_2025(IBCH, SYMMETRIC, Scheme.class, true),
     ;
 

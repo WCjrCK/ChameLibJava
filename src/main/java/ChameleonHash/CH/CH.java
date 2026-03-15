@@ -11,6 +11,7 @@ public abstract class CH<
         PK extends PublicKey,
         SK extends SecretKey,
         M extends Message,
+        L extends Label,
         H extends HashValue<H>,
         R extends Randomness
         >
@@ -23,7 +24,13 @@ public abstract class CH<
 
     public abstract void Hash(H h, R r, PP pp, PK pk, M m);
 
+    public abstract void Hash(H h, R r, PP pp, PK pk, M m, L l);
+
     public abstract boolean Verify(PP pp, PK pk, M m, H h, R r);
 
+    public abstract boolean Verify(PP pp, PK pk, M m, L l, H h, R r);
+
     public abstract void Collision(R r_p, PP pp, PK pk, SK sk, M m, H h, R r, M m_p);
+
+    public abstract void Collision(R r_p, PP pp, PK pk, SK sk, M m, L l, H h, R r, M m_p);
 }

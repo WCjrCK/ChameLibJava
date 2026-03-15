@@ -1,0 +1,79 @@
+package ChameleonHash.CH.LabelCH.LLA_2012;
+
+import ChameleonHash.Config;
+import ChameleonHash.Interface.LabelCH;
+import EllipticCurve.Point.MultivePoint;
+import EllipticCurve.Point.Scalar;
+
+/*
+ * Key exposure free chameleon hash schemes based on discrete logarithm problem
+ * P4. CH_inf: a key exposure free chameleon hash scheme
+ */
+
+public class Scheme
+        extends ChameleonHash.CH.LabelCH.Scheme<PublicParam, PublicKey, SecretKey, Message, Label, HashValue, Randomness>
+        implements LabelCH<PublicParam, PublicKey, SecretKey, Message, Label, HashValue, Randomness> {
+    @Override
+    public final PublicParam createPublicParam(Config config) {
+        return new PublicParam(config);
+    }
+
+    @Override
+    public void Setup(PublicParam pp) {}
+
+    @Override
+    public void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp) {
+        pk.g = pp.curve.getRandomPoint(pp.curveGroup);
+        sk.alpha = pp.curve.getRandomScalar();
+        sk.x_1 = pp.curve.getRandomScalar();
+        sk.x_2 = pp.curve.getRandomScalar();
+        LabelGen lg = new LabelGen();
+        lg.y_1 = pk.g.pow(sk.x_1);
+        lg.omega_1 = lg.y_1.pow(sk.alpha);
+        pk.y_2 = pk.g.pow(sk.x_2);
+        pp.LM.add(pp, pk, lg);
+    }
+
+    public void CalHash(HashValue h, PublicParam pp, PublicKey pk, Message m, Label L, Randomness r) {
+        h.S = pk.g.pow(m.m).mul(L.L.mul(pk.y_2.pow(pp.H1(L.L, L.R, L.L))).pow(r.r));
+    }
+
+    @Override
+    public void Hash(HashValue h, Randomness r, PublicParam pp, PublicKey pk, Message m, Label L) {
+        pp.LM.get(L, pp, pk);
+        r.r = pp.curve.getRandomScalar();
+        CalHash(h, pp, pk, m, L, r);
+    }
+
+    @Override
+    public boolean Verify(
+            PublicParam pp,
+            PublicKey pk,
+            Message m,
+            Label L,
+            HashValue h,
+            Randomness r
+    ) {
+        HashValue tmp = new HashValue();
+        CalHash(tmp, pp, pk, m, L, r);
+        return tmp.isEqual(h);
+    }
+
+    @Override
+    public void Collision(
+            Randomness r_p,
+            PublicParam pp,
+            PublicKey pk,
+            SecretKey sk,
+            Message m,
+            Label L,
+            HashValue h,
+            Randomness r,
+            Message m_p
+    ) {
+        MultivePoint t = L.R.div(L.L.pow(sk.alpha));
+        Scalar H_2t = pp.H2(t);
+        Scalar c = pp.H1(L.L, L.R, L.L);
+        r_p.r = r.r.add(m.m.sub(m_p.m).div(sk.x_1.mul(H_2t).add(sk.x_2.mul(c))));
+    }
+}

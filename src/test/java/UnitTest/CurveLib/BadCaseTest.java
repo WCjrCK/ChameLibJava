@@ -8,7 +8,10 @@ import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import utils.Func;
 import utils.Hash;
 
@@ -20,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Func.InitialLib;
 
 @SuppressWarnings({"rawtypes", "SuspiciousNameCombination"})
-@Disabled
+//@Disabled
 public class BadCaseTest {
     @BeforeEach
     public void init() {
@@ -38,18 +41,25 @@ public class BadCaseTest {
             Group group = Group.GT;
 
             Pairing pairing = Func.PairingGen(curve);
-            Field G = Func.GetPBCField(pairing, group);
-            Element y = G.newRandomElement().getImmutable();
-            Element L1 = G.newRandomElement().getImmutable();
-            Element L2 = G.newRandomElement().getImmutable();
-            System.out.printf("L1 = %s\n\nL2 = %s\n\n", L1, L2);
-            System.out.printf("L1 == L2 ? %s\n\n", L1.isEqual(L2));
-            Element H_y_L1 = Hash.H_PBC_2_1(G, y, L1);
-            Element H_y_L2 = Hash.H_PBC_2_1(G, y, L2);
-            System.out.printf("H(y, L1) = %s\n\n", H_y_L1);
-            System.out.printf("H(y, L2) = %s\n\n", H_y_L2);
-            System.out.printf("H(y, L1) == H(y, L2) ? %s\n\n", H_y_L1.isEqual(H_y_L2));
-            assertFalse(H_y_L1.isEqual(H_y_L2));
+
+            Pairing pairing2 = Func.PairingGen(curve);
+            Pairing pairing3 = Func.PairingGen(curve);
+            Field Gg = Func.GetPBCField(pairing, group);
+            Field Ggg = Func.GetPBCField(pairing, group);
+            for (int i = 0;i < 10;++i) {
+                Field G = Func.GetPBCField(pairing, group);
+                Element y = G.newRandomElement().getImmutable();
+                Element L1 = G.newRandomElement().getImmutable();
+                Element L2 = G.newRandomElement().getImmutable();
+                System.out.printf("L1 = %s\n\nL2 = %s\n\n", L1, L2);
+                System.out.printf("L1 == L2 ? %s\n\n", L1.isEqual(L2));
+                Element H_y_L1 = Hash.H_PBC_2_1(G, y, L1);
+                Element H_y_L2 = Hash.H_PBC_2_1(G, y, L2);
+                System.out.printf("H(y, L1) = %s\n\n", H_y_L1);
+                System.out.printf("H(y, L2) = %s\n\n", H_y_L2);
+                System.out.printf("H(y, L1) == H(y, L2) ? %s\n\n", H_y_L1.isEqual(H_y_L2));
+                assertFalse(H_y_L1.isEqual(H_y_L2));
+            }
         }
 
         @DisplayName("case 2")
