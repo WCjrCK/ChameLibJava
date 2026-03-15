@@ -1,13 +1,12 @@
 package ChameleonHash.IBCH;
 
-import ChameleonHash.Components.Label;
-import ChameleonHash.Components.PublicKey;
 import ChameleonHash.Config;
 import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.LabelIBCH.Components.Label;
 import ChameleonHash.Scheme;
 
 public abstract class IBCH<
-        PP extends PublicParam<MSK, SK, ID, M, H, R>,
+        PP extends PublicParam<MSK, SK, M, ID, H, R>,
         MSK extends MasterSecretKey,
         SK extends SecretKey,
         ID extends Identity,
@@ -15,7 +14,7 @@ public abstract class IBCH<
         L extends Label,
         H extends HashValue<H>,
         R extends Randomness
-        > extends Scheme<PP, MSK, PublicKey, SK, ID, M, H, R> {
+        > extends Scheme<PP, SK, M, H, R> {
     public abstract PP createPublicParam(Config config);
 
     public abstract void Setup(PP pp, MSK msk);

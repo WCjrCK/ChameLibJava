@@ -2,6 +2,7 @@ package ChameleonHash.CH.BaseCH;
 
 import ChameleonHash.CH.CH;
 import ChameleonHash.CH.Components.*;
+import ChameleonHash.CH.LabelCH.Components.Label;
 import ChameleonHash.Interface.BaseCH;
 
 public abstract class Scheme<

@@ -6,7 +6,7 @@ import ChameleonHash.IBCH.IBCHFactory;
 public class SchemeFactory {
     private SchemeFactory() {}
 
-    public static Scheme<?,?,?,?,?,?,?,?> createScheme(Config config) {
+    public static Scheme createScheme(Config config) {
         switch (config.schemeName.schemeType) {
             case CH: return CHFactory.createScheme(config);
             case IBCH: return IBCHFactory.createScheme(config);

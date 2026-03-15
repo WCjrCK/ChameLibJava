@@ -3,11 +3,8 @@ package ChameleonHash;
 import ChameleonHash.Components.*;
 
 public abstract class Scheme<
-        PP extends PublicParam<MSK, PK, SK, ID, M, H, R>,
-        MSK extends MasterSecretKey,
-        PK extends PublicKey,
+        PP extends PublicParam<SK, M, H, R>,
         SK extends SecretKey,
-        ID extends Identity,
         M extends Message,
         H extends HashValue<H>,
         R extends Randomness

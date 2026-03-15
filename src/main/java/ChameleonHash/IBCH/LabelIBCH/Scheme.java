@@ -5,7 +5,7 @@ import ChameleonHash.IBCH.IBCH;
 import ChameleonHash.Interface.LabelIBCH;
 
 public abstract class Scheme<
-        PP extends ChameleonHash.IBCH.LabelIBCH.Components.PublicParam<MSK, SK, ID, M, L, H, R>,
+        PP extends ChameleonHash.IBCH.LabelIBCH.Components.PublicParam<MSK, SK, M, ID, L, H, R>,
         MSK extends MasterSecretKey,
         SK extends SecretKey,
         ID extends Identity,

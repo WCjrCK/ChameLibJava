@@ -1,12 +1,12 @@
 package ChameleonHash.IBCH.BaseIBCH;
 
-import ChameleonHash.Components.Label;
 import ChameleonHash.IBCH.Components.*;
 import ChameleonHash.IBCH.IBCH;
+import ChameleonHash.IBCH.LabelIBCH.Components.Label;
 import ChameleonHash.Interface.BaseIBCH;
 
 public abstract class Scheme<
-        PP extends ChameleonHash.IBCH.Components.PublicParam<MSK, SK, ID, M, H, R>,
+        PP extends ChameleonHash.IBCH.Components.PublicParam<MSK, SK, M, ID, H, R>,
         MSK extends MasterSecretKey,
         SK extends SecretKey,
         ID extends Identity,

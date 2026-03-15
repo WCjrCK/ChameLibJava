@@ -183,7 +183,6 @@ public class CHTest {
             curve_param.put("param_file_path", "./jpbc/params/a.properties");
             System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
         }
-        params.put("ID_Binary_Len", 64);
         Config curveConfig = new Config(curveName, curve_param);
         ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
         testFunction(schemeConfig);
@@ -200,7 +199,6 @@ public class CHTest {
             curve_param.put("param_file_path", "./jpbc/params/a.properties");
             System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
         }
-        params.put("ID_Binary_Len", 64);
         Config curveConfig = new Config(curveName, curve_param);
         ChameleonHash.Config schemeConfig = new ChameleonHash.Config(schemeName, curveConfig, params);
         testFunction(schemeConfig);

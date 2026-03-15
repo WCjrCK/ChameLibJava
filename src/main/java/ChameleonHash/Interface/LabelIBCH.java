@@ -4,7 +4,7 @@ import ChameleonHash.Config;
 import ChameleonHash.IBCH.Components.*;
 
 public interface LabelIBCH<
-        PP extends ChameleonHash.IBCH.LabelIBCH.Components.PublicParam<MSK, SK, ID, M, L, H, R>,
+        PP extends ChameleonHash.IBCH.LabelIBCH.Components.PublicParam<MSK, SK, M, ID, L, H, R>,
         MSK extends MasterSecretKey,
         SK extends SecretKey,
         ID extends Identity,

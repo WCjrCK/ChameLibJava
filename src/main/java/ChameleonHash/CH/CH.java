@@ -1,8 +1,7 @@
 package ChameleonHash.CH;
 
 import ChameleonHash.CH.Components.*;
-import ChameleonHash.Components.Identity;
-import ChameleonHash.Components.MasterSecretKey;
+import ChameleonHash.CH.LabelCH.Components.Label;
 import ChameleonHash.Config;
 import ChameleonHash.Scheme;
 
@@ -15,7 +14,7 @@ public abstract class CH<
         H extends HashValue<H>,
         R extends Randomness
         >
-        extends Scheme<PP, MasterSecretKey, PK, SK, Identity, M, H, R> {
+        extends Scheme<PP, SK, M, H, R> {
     public abstract PP createPublicParam(Config config);
 
     public abstract void Setup(PP pp);
