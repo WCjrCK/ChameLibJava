@@ -11,17 +11,17 @@ public class params {
 
     public static final String a1_param = base_path + "a1.properties";
 
-    public static final String d159_param = base_path + "d159.properties";
-    public static final String d201_param = base_path + "d201.properties";
-    public static final String d224_param = base_path + "d224.properties";
-    public static final String d105171_196_185_param = base_path + "d105171_196_185.properties";
-    public static final String d277699_175_167_param = base_path + "d277699_175_167.properties";
-    public static final String d278027_190_181_param = base_path + "d278027_190_181.properties";
+    public static final String d159_param = base_path + "d_159.properties";
+    public static final String d201_param = base_path + "d_201.properties";
+    public static final String d224_param = base_path + "d_224.properties";
+    public static final String d105171_196_185_param = base_path + "d_105171_196_185.properties";
+    public static final String d277699_175_167_param = base_path + "d_277699_175_167.properties";
+    public static final String d278027_190_181_param = base_path + "d_278027_190_181.properties";
 
     public static final String e_param = base_path + "e.properties";
 
     public static final String f_param = base_path + "f.properties";
-    public static final String sm9_param = base_path + "sm9.properties";
+    public static final String sm9_param = base_path + "sm_9.properties";
 
-    public static final String g149_param = base_path + "g149.properties";
+    public static final String g149_param = base_path + "g_149.properties";
 }

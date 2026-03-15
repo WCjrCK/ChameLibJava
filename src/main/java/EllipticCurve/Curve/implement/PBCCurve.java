@@ -12,17 +12,18 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
 @SuppressWarnings("rawtypes")
 public class PBCCurve extends Curve<Group, Group, Group, Zp> {
-    Pairing pairing;
-    public Field Zp, G1, G2, GT;
+    final Pairing pairing;
+    public final Field Zp, G1, G2, GT;
     public PBCCurve(Config config) {
         super(config);
+        PairingFactory.getInstance().setUsePBCWhenPossible(true);
         if (!config.curveName.checkLib(CurveImplementLib.PBC)) throw new IllegalArgumentException("曲线 " + config.curveName + " 不属于 PBC 库");
         final String base_path = "./jpbc/params/";
         String param_path;
         if(config.curveName == CurveName.PBC_CUSTOM) {
             if(!config.params.containsKey("param_file_path")) throw new IllegalArgumentException("自定义 PBC 曲线必须提供参数文件路径（param_file_path）");
             param_path = config.params.get("param_file_path").toString();
-        }else param_path = base_path + config.curveName.name().toLowerCase() + ".properties";
+        } else param_path = base_path + config.curveName.name().toLowerCase() + ".properties";
         try {
             pairing = PairingFactory.getPairing(param_path);
         } catch (Exception e) {

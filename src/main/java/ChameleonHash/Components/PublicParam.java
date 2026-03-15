@@ -14,7 +14,7 @@ public abstract class PublicParam<
         H extends HashValue<H>,
         R extends Randomness
         > {
-    public Curve curve;
+    public final Curve curve;
 
     protected PublicParam(Config config) {
         curve = CurveFactory.create(config);

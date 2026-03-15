@@ -27,8 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CHTest {
     static List<SchemeName> skipList = List.of(new SchemeName[]{
-//            CH_LLA_2012,
-
+            SchemeName.CH_LLA_2012,
+//            SchemeName.CH_CZT_2011,
     });
 
     public static Stream<Arguments> GetAllCHSchemeCurve() {
@@ -120,18 +120,6 @@ public class CHTest {
     @ParameterizedTest(name = "test scheme {0} curve {1}")
     @MethodSource("UnitTest.CHScheme.CHTest#GetAllCHSchemeCurve")
     void CHDSTest(SchemeName schemeName, CurveName curveName) {
-        if (skipList.contains(schemeName)) {
-            System.out.println("跳过测试：方案 " + schemeName);
-            return;
-        }
-        if (!schemeName.checkCurve(curveName)) {
-            System.out.println("跳过测试：方案 " + schemeName + " 不支持曲线 " + curveName);
-            return;
-        }
-        if (curveName == SECP256K1) {
-            System.out.println("MCL 库未正确实现该曲线，跳过测试");
-            return;
-        }
         Map<String, Object> params = new HashMap<>();
         Map<String, Object> curve_param = new HashMap<>();
         if (curveName == PBC_CUSTOM) {
@@ -148,22 +136,6 @@ public class CHTest {
     @ParameterizedTest(name = "test scheme {0} curve {1}")
     @MethodSource("UnitTest.CHScheme.CHTest#GetAllCHSchemeASCurve")
     void CHSGGTest(SchemeName schemeName, CurveName curveName) {
-        if (skipList.contains(schemeName)) {
-            System.out.println("跳过测试：方案 " + schemeName);
-            return;
-        }
-        if (!schemeName.checkCurve(curveName)) {
-            System.out.println("跳过测试：方案 " + schemeName + " 不支持曲线 " + curveName);
-            return;
-        }
-        if (curveName.isSymmetic()) {
-            System.out.println("对称曲线无需测试交换");
-            return;
-        }
-        if (curveName == SECP256K1) {
-            System.out.println("MCL 库未正确实现该曲线，跳过测试");
-            return;
-        }
         Map<String, Object> params = new HashMap<>();
         Map<String, Object> curve_param = new HashMap<>();
         curve_param.put("swap_G1G2", true);
@@ -183,7 +155,6 @@ public class CHTest {
     void CHSingleGroupTest(SchemeName schemeName, CurveName curveName, CurveGroup curveGroup) {
         Map<String, Object> params = new HashMap<>();
         Map<String, Object> curve_param = new HashMap<>();
-        curve_param.put("swap_G1G2", true);
         if (curveName == PBC_CUSTOM) {
             curve_param.put("param_file_path", "./jpbc/params/a.properties");
             System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");

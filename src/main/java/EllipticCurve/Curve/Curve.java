@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public abstract class Curve<G1 extends Point, G2 extends Point, GT extends Point, Zp extends Scalar> {
     private final Config config;
-    boolean swap_G1G2;
+    private final boolean swap_G1G2;
     protected Curve(Config config) {
         this.config = config;
         if (!config.params.containsKey("swap_G1G2")) this.swap_G1G2 = false;
