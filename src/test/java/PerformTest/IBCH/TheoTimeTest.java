@@ -1,25 +1,32 @@
 package PerformTest.IBCH;
 
+import ChameleonHash.IBCH.BaseIBCH.BaseIBCHFactory;
+import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.LabelIBCH.Components.Label;
+import ChameleonHash.IBCH.LabelIBCH.LabelIBCHFactory;
+import ChameleonHash.Interface.BaseIBCH;
+import ChameleonHash.Interface.LabelIBCH;
+import ChameleonHash.SchemeCurveRequire;
+import ChameleonHash.SchemeName;
+import ChameleonHash.SchemeType;
 import EllipticCurve.Curve.Config;
 import PerformTest.TraceScope;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import ChameleonHash.IBCH.Components.*;
-import ChameleonHash.IBCH.IBCH;
-import ChameleonHash.SchemeCurveRequire;
-import ChameleonHash.SchemeFactory;
-import ChameleonHash.SchemeName;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static EllipticCurve.Curve.CurveName.E;
 
@@ -35,16 +42,37 @@ public class TheoTimeTest {
 //            IBCH_LJF_2025,
     });
 
+    public static Stream<Arguments> GetAllIBCHScheme() {
+        return EnumSet.allOf(SchemeName.class).stream()
+                .filter(a -> !skipList.contains(a))
+                .filter(a -> a.schemeType == SchemeType.IBCH)
+                .flatMap(a -> Stream.of(Arguments.of(a)));
+    }
+
+    public static Stream<Arguments> GetAllIBCHSchemeASCurve() {
+        return EnumSet.allOf(SchemeName.class).stream()
+                .filter(a -> !skipList.contains(a))
+                .filter(a -> a.schemeType == SchemeType.IBCH)
+                .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SYMMETRIC)
+                .flatMap(a -> Stream.of(Arguments.of(a)));
+    }
+
     @BeforeAll
     static void initTest() {
-        for (SchemeName value : SchemeName.values()) new File(String.format("./data/IBCH/%s", value.name())).mkdirs();
+        for (SchemeName value : SchemeName.values())
+            if (value.schemeType == SchemeType.IBCH) new File(String.format("./data/IBCH/%s", value.name())).mkdirs();
     }
 
     @DisplayName("test IBCH theory storage cost")
     @Nested
     class IBCHTSCTest {
         private void testFunc(BufferedWriter theo_time_cost, ChameleonHash.Config schemeConfig) throws IOException {
-            IBCH scheme = (IBCH) SchemeFactory.createScheme(schemeConfig);
+            if (schemeConfig.schemeName.has_label) testLabelIBCH(theo_time_cost, schemeConfig);
+            else testBaseIBCH(theo_time_cost, schemeConfig);
+        }
+
+        private void testBaseIBCH(BufferedWriter theo_time_cost, ChameleonHash.Config schemeConfig) throws IOException {
+            BaseIBCH scheme = BaseIBCHFactory.createScheme(schemeConfig);
             PublicParam pp;
             MasterSecretKey msk;
 
@@ -105,11 +133,73 @@ public class TheoTimeTest {
             theo_time_cost.close();
         }
 
+        private void testLabelIBCH(BufferedWriter theo_time_cost, ChameleonHash.Config schemeConfig) throws IOException {
+            LabelIBCH scheme = LabelIBCHFactory.createScheme(schemeConfig);
+            ChameleonHash.IBCH.LabelIBCH.Components.PublicParam pp;
+            MasterSecretKey msk;
+
+            theo_time_cost.write("Setup, KeyGen, Hash, Ver, Col\n");
+
+            try (AutoCloseable ignored = TraceScope.begin()) {
+                pp = scheme.createPublicParam(schemeConfig);
+                msk = pp.createMasterSecretKey();
+                scheme.Setup(pp, msk);
+                theo_time_cost.write(TraceScope.getData() + ",");
+                TraceScope.getUnknownFunc();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            SecretKey sk = pp.createSecretKey();
+            Identity ID = pp.createIdentity("ID1");
+
+            try (AutoCloseable ignored = TraceScope.begin()) {
+                scheme.KeyGen(sk, pp, msk, ID);
+                theo_time_cost.write(TraceScope.getData() + ",");
+                TraceScope.getUnknownFunc();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            Message m = pp.createMessage("msg");
+            Label l = pp.createLabel("label");
+            HashValue h = pp.createHashValue();
+            Randomness r = pp.createRandomness();
+
+            try (AutoCloseable ignored = TraceScope.begin()) {
+                scheme.Hash(h, r, pp, ID, m, l);
+                theo_time_cost.write(TraceScope.getData() + ",");
+                TraceScope.getUnknownFunc();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            Message m1 = pp.createMessage("msg1");
+            Randomness r1 = pp.createRandomness();
+
+            try (AutoCloseable ignored = TraceScope.begin()) {
+                scheme.Verify(pp, ID, m, l, h, r);
+                theo_time_cost.write(TraceScope.getData() + ",");
+                TraceScope.getUnknownFunc();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+
+            try (AutoCloseable ignored = TraceScope.begin()) {
+                scheme.Collision(r1, pp, ID, sk, m, l, h, r, m1);
+                theo_time_cost.write(TraceScope.getData());
+                TraceScope.getUnknownFunc();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            theo_time_cost.close();
+        }
+
         @DisplayName("test direct scheme")
         @ParameterizedTest(name = "test scheme {0}")
-        @EnumSource
+        @MethodSource("PerformTest.IBCH.TheoTimeTest#GetAllIBCHScheme")
         public void DSTest(SchemeName schemeName) throws IOException {
-            if (skipList.contains(schemeName)) return;
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", false);
             Config curveConfig = new Config(E, curve_param);
@@ -122,13 +212,8 @@ public class TheoTimeTest {
 
         @DisplayName("swap G1 and G2")
         @ParameterizedTest(name = "test scheme {0}")
-        @EnumSource
+        @MethodSource("PerformTest.IBCH.TheoTimeTest#GetAllIBCHSchemeASCurve")
         public void SGGTest(SchemeName schemeName) throws IOException {
-            if (skipList.contains(schemeName)) return;
-            if (schemeName.schemeCurveRequire == SchemeCurveRequire.SYMMETRIC) {
-                System.out.println("对称方案，无需交换G1 G2");
-                return;
-            }
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", true);
             Config curveConfig = new Config(E, curve_param);

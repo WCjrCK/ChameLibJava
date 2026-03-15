@@ -1,5 +1,6 @@
 package ChameleonHash.IBCH;
 
+import ChameleonHash.Components.Label;
 import ChameleonHash.Components.PublicKey;
 import ChameleonHash.Config;
 import ChameleonHash.IBCH.Components.*;
@@ -11,6 +12,7 @@ public abstract class IBCH<
         SK extends SecretKey,
         ID extends Identity,
         M extends Message,
+        L extends Label,
         H extends HashValue<H>,
         R extends Randomness
         > extends Scheme<PP, MSK, PublicKey, SK, ID, M, H, R> {
@@ -22,7 +24,13 @@ public abstract class IBCH<
 
     public abstract void Hash(H h, R r, PP pp, ID ID, M m);
 
+    public abstract void Hash(H h, R r, PP pp, ID ID, M m, L l);
+
     public abstract boolean Verify(PP pp, ID ID, M m, H h, R r);
 
+    public abstract boolean Verify(PP pp, ID ID, M m, L l, H h, R r);
+
     public abstract void Collision(R r_p, PP pp, ID ID, SK sk, M m, H h, R r, M m_p);
+
+    public abstract void Collision(R r_p, PP pp, ID ID, SK sk, M m, L l, H h, R r, M m_p);
 }

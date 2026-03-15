@@ -1,9 +1,10 @@
 package UnitTest.CHScheme;
 
+import ChameleonHash.IBCH.BaseIBCH.BaseIBCHFactory;
 import ChameleonHash.IBCH.Components.*;
-import ChameleonHash.IBCH.IBCHFactory;
 import ChameleonHash.IBCH.LabelIBCH.Components.Label;
 import ChameleonHash.IBCH.LabelIBCH.LabelIBCHFactory;
+import ChameleonHash.Interface.BaseIBCH;
 import ChameleonHash.Interface.LabelIBCH;
 import ChameleonHash.SchemeName;
 import ChameleonHash.SchemeType;
@@ -66,7 +67,7 @@ public class IBCHTest {
     }
 
     private void testIBCH(ChameleonHash.Config schemeConfig) {
-        ChameleonHash.IBCH.IBCH scheme = IBCHFactory.createScheme(schemeConfig);
+        BaseIBCH scheme = BaseIBCHFactory.createScheme(schemeConfig);
         PublicParam pp = scheme.createPublicParam(schemeConfig);
         MasterSecretKey msk = pp.createMasterSecretKey();
         scheme.Setup(pp, msk);
