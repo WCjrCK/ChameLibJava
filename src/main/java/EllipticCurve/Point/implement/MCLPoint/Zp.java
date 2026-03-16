@@ -71,6 +71,11 @@ public class Zp extends Scalar<Zp> {
     }
 
     @Override
+    public byte[] toBytes() {
+        return p.serialize();
+    }
+
+    @Override
     public boolean isOne() {
         return p.isOne();
     }

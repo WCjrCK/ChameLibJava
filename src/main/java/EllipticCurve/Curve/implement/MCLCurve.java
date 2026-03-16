@@ -132,6 +132,27 @@ public class MCLCurve extends Curve<G1, G2, GT, Zp> {
     }
 
     @Override
+    protected G1 createG1FromBytes(byte[] data) {
+        com.herumi.mcl.G1 res = new com.herumi.mcl.G1();
+        res.deserialize(data);
+        return new G1(res, curveName(), CurveGroup.G1);
+    }
+
+    @Override
+    protected G2 createG2FromBytes(byte[] data) {
+        com.herumi.mcl.G2 res = new com.herumi.mcl.G2();
+        res.deserialize(data);
+        return new G2(res, curveName(), CurveGroup.G2);
+    }
+
+    @Override
+    protected GT createGTFromBytes(byte[] data) {
+        com.herumi.mcl.GT res = new com.herumi.mcl.GT();
+        res.deserialize(data);
+        return new GT(res, curveName(), CurveGroup.GT);
+    }
+
+    @Override
     public final G1 HashToG1Core(byte[] hash) {
         com.herumi.mcl.G1 res = new com.herumi.mcl.G1();
         Mcl.hashAndMapToG1(res, hash);

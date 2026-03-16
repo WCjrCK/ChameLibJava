@@ -2,8 +2,8 @@ package Encryption.ABE.FAME;
 
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
+import Encryption.ABE.ABEConfig;
 import Encryption.ABE.Components.Attributes;
-import Encryption.ABE.Config;
 import utils.ElementCounter;
 
 import java.nio.charset.StandardCharsets;
@@ -16,8 +16,8 @@ public class PublicParam extends Encryption.ABE.Components.PublicParam<
         SecretKey,
         PlainText,
         CipherText> {
-    protected PublicParam(Config config) {
-        super(config);
+    protected PublicParam(ABEConfig abeConfig) {
+        super(abeConfig);
     }
 
     @Override

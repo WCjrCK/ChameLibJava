@@ -2,7 +2,7 @@ package Encryption.ABE.Components;
 
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveFactory;
-import Encryption.ABE.Config;
+import Encryption.ABE.ABEConfig;
 import Encryption.ABE.utils.BooleanFormulaParser;
 import utils.ElementCounter;
 
@@ -15,8 +15,8 @@ public abstract class PublicParam<
         > {
     public final Curve curve;
 
-    protected PublicParam(Config config) {
-        curve = CurveFactory.create(config.curveConfig);
+    protected PublicParam(ABEConfig abeConfig) {
+        curve = CurveFactory.create(abeConfig.curveConfig);
     }
 
     public abstract Attributes createAttributes();

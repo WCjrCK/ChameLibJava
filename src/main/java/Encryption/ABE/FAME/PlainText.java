@@ -4,7 +4,7 @@ import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
 public class PlainText extends Encryption.ABE.Components.PlainText<PlainText> {
-    protected MultivePoint m;
+    public MultivePoint m;
 
     @Override
     public final boolean isEqual(PlainText o) {

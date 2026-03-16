@@ -1,16 +1,16 @@
 package Encryption.SE.AES;
 
 import Encryption.SE.SE;
+import Encryption.SE.SEConfig;
 
 import javax.crypto.Cipher;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Random;
 
 public class Scheme extends SE<PublicParam, SecretKey, PlainText, CipherText> {
     @Override
-    public final PublicParam createPublicParam(Map<String, Object> params) {
-        return new PublicParam(params);
+    public final PublicParam createPublicParam(SEConfig seConfig) {
+        return new PublicParam(seConfig);
     }
 
     @Override

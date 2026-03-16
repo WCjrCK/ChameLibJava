@@ -30,6 +30,8 @@ public abstract class Scalar<S extends Scalar<S>> {
 
     public abstract boolean isEqual(S other);
 
+    public abstract byte[] toBytes();
+
     public final S add(S other) {
         return addCore(other);
     }

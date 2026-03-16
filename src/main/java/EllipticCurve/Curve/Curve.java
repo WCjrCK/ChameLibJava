@@ -54,6 +54,12 @@ public abstract class Curve<G1 extends Point, G2 extends Point, GT extends Point
 
     protected abstract GT Pairing(G1 p1, G2 p2);
 
+    protected abstract G1 createG1FromBytes(byte[] data);
+
+    protected abstract G2 createG2FromBytes(byte[] data);
+
+    protected abstract GT createGTFromBytes(byte[] data);
+
     protected abstract G2 PowNdonrCore(G2 p);
 
     public final Point PowNdonr(Point p) {
@@ -181,4 +187,19 @@ public abstract class Curve<G1 extends Point, G2 extends Point, GT extends Point
     }
 
     public abstract Scalar createScalarFromString(String s);
+
+    public final Point createPointFromBytes(CurveGroup curveGroup, byte[] data) {
+        switch (curveGroup) {
+            case G1:
+                if(swap_G1G2) return createG2FromBytes(data);
+                else return createG1FromBytes(data);
+
+            case G2:
+                if(swap_G1G2) return createG1FromBytes(data);
+                else return createG2FromBytes(data);
+
+            case GT: return createGTFromBytes(data);
+        }
+        throw new IllegalArgumentException("不支持当前群： " + curveGroup);
+    }
 }

@@ -157,6 +157,21 @@ public class PBCCurve extends Curve<Group, Group, Group, Zp> {
     }
 
     @Override
+    protected Group createG1FromBytes(byte[] data) {
+        return new Group(G1.newElementFromBytes(data).getImmutable(), curveName(), CurveGroup.G1);
+    }
+
+    @Override
+    protected Group createG2FromBytes(byte[] data) {
+        return new Group(G2.newElementFromBytes(data).getImmutable(), curveName(), CurveGroup.G2);
+    }
+
+    @Override
+    protected Group createGTFromBytes(byte[] data) {
+        return new Group(GT.newElementFromBytes(data).getImmutable(), curveName(), CurveGroup.GT);
+    }
+
+    @Override
     public final Group HashToG1Core(byte[] hash) {
         return new Group(G1.newElementFromHash(hash, 0, hash.length).getImmutable(), curveName(), CurveGroup.G1);
     }

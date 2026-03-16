@@ -19,5 +19,5 @@ public abstract class ABE<
 
     public abstract void Decrypt(PT pt, PP pp, MPK mpk, SK sk, CT ct, Policy MSP);
 
-    public abstract PP createPublicParam(Config config);
+    public abstract PP createPublicParam(ABEConfig abeConfig);
 }

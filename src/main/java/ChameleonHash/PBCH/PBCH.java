@@ -1,38 +1,27 @@
 package ChameleonHash.PBCH;
 
-import ChameleonHash.CH.CHET.Components.ETrapdoor;
-import ChameleonHash.CH.Components.*;
-import ChameleonHash.CH.LabelCH.Components.Label;
+import ChameleonHash.PBCH.Components.*;
 
 public abstract class PBCH<
-        PP extends PublicParam<PK, SK, M, H, R>,
-        PK extends PublicKey,
+        PP extends PublicParam<MPK, MSK, SK, P, A, M, H, R>,
+        MPK extends MasterSecretKey,
+        MSK extends MasterSecretKey,
         SK extends SecretKey,
+        P extends Policy,
+        A extends Attributes,
         M extends Message,
-        L extends Label,
-        ET extends ETrapdoor,
         H extends HashValue<H>,
         R extends Randomness
         > {
     public abstract PP createPublicParam(PBCHConfig config);
 
-    public abstract void Setup(PP pp);
+    public abstract void Setup(PP pp, MPK mpk, MSK msk);
 
-    public abstract void KeyGen(PK pk, SK sk, PP pp);
+    public abstract void KeyGen(SK sk, PP pp, MPK mpk, MSK msk, A S);
 
-    public abstract void Hash(H h, R r, PP pp, PK pk, M m);
+    public abstract void Hash(H h, R r, PP pp, MPK mpk, M m, P P);
 
-    public abstract void Hash(H h, R r, PP pp, PK pk, M m, ET etd);
+    public abstract boolean Verify(PP pp, MPK mpk, M m, H h, R r);
 
-    public abstract void Hash(H h, R r, PP pp, PK pk, M m, L l);
-
-    public abstract boolean Verify(PP pp, PK pk, M m, H h, R r);
-
-    public abstract boolean Verify(PP pp, PK pk, M m, L l, H h, R r);
-
-    public abstract void Collision(R r_p, PP pp, PK pk, SK sk, M m, H h, R r, M m_p);
-
-    public abstract void Collision(R r_p, PP pp, PK pk, SK sk, M m, ET etd, H h, R r, M m_p);
-
-    public abstract void Collision(R r_p, PP pp, PK pk, SK sk, M m, L l, H h, R r, M m_p);
+    public abstract void Collision(R r_p, PP pp, MPK mpk, SK sk, M m, H h, R r, M m_p);
 }

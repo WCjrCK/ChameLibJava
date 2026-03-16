@@ -4,11 +4,13 @@ import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 import Encryption.ABE.ABE;
+import Encryption.ABE.ABEConfig;
 import Encryption.ABE.Components.Attributes;
 import Encryption.ABE.Components.Policy;
-import Encryption.ABE.Config;
 
 public class Scheme extends ABE<PublicParam, MasterPublicKey, MasterSecretKey, SecretKey, PlainText, CipherText> {
+    private FAMECore Core = new FAMECore();
+
     @Override
     public void Setup(MasterPublicKey mpk, MasterSecretKey msk, PublicParam pp) {
         Scalar d_1 = pp.curve.getRandomScalar();
@@ -60,7 +62,7 @@ public class Scheme extends ABE<PublicParam, MasterPublicKey, MasterSecretKey, S
     }
 
     @Override
-    public PublicParam createPublicParam(Config config) {
-        return new PublicParam(config);
+    public PublicParam createPublicParam(ABEConfig abeConfig) {
+        return Core.createPublicParam(abeConfig);
     }
 }

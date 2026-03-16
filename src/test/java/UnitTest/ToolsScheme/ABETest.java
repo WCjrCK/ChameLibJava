@@ -2,6 +2,7 @@ package UnitTest.ToolsScheme;
 
 import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveName;
+import Encryption.ABE.ABEConfig;
 import Encryption.ABE.ABEName;
 import Encryption.ABE.Components.Attributes;
 import Encryption.ABE.Components.Policy;
@@ -45,7 +46,7 @@ public class ABETest {
 //            System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
 //        }
         Config curveConfig = new Config(curve, curve_param);
-        Encryption.ABE.Config schemeConfig = new Encryption.ABE.Config(ABEName.FAME, curveConfig, params);
+        ABEConfig schemeConfig = new ABEConfig(ABEName.FAME, curveConfig, params);
 
         Scheme scheme = new Scheme();
         PublicParam pp = scheme.createPublicParam(schemeConfig);
@@ -53,18 +54,22 @@ public class ABETest {
         MasterSecretKey msk = pp.createMasterSecretKey();
         scheme.Setup(mpk, msk, pp);
 
-        Policy p = pp.createPolicy("(A1|(A2|A3))&(DDDD|(BB&CCC))");
+        Policy p = pp.createPolicy("((A1|(A2|A3))&(DDDD|(BB&CCC)))&(((T1&T2)|(T2&T3))|(T1&T3))");
 
         for (int i = 0;i < p.M.length; ++i) System.out.println(Arrays.toString(p.M[i]));
 
         Attributes S1 = pp.createAttributes();
         Attributes S2 = pp.createAttributes();
 
-        S1.attrs.add("A1");
-        S1.attrs.add("DDDD");
+        S1.addAttr("A1");
+        S1.addAttr("DDDD");
+        S1.addAttr("T2");
+        S1.addAttr("T3");
 
-        S2.attrs.add("BB");
-        S2.attrs.add("CCC");
+        S2.addAttr("BB");
+        S2.addAttr("CCC");
+        S2.addAttr("T1");
+        S2.addAttr("T3");
 
 
         SecretKey sk1 = pp.createSecretKey();

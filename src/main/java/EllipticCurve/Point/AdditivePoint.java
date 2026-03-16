@@ -23,4 +23,6 @@ public interface AdditivePoint<P extends Point<P, S>, S extends Scalar<S>> {
     boolean isEqual(AdditivePoint<P, S> other);
 
     AdditivePoint<P, S> copy();
+
+    public abstract byte[] toBytes();
 }

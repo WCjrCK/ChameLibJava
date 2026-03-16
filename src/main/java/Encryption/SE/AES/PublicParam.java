@@ -1,20 +1,20 @@
 package Encryption.SE.AES;
 
+import Encryption.SE.SEConfig;
 import utils.ElementCounter;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Map;
 
 public class PublicParam extends Encryption.Components.PublicParam<SecretKey, PlainText, CipherText> {
     String algorithm, transformation;
 
-    protected PublicParam(Map<String, Object> params) {
-        super(params);
-        if(!params.containsKey("algorithm")) throw new IllegalArgumentException("必须指定加密算法（algorithm）");
-        if(!params.containsKey("transformation")) throw new IllegalArgumentException("必须指定加密及编码格式（transformation）");
-        algorithm = params.get("algorithm").toString();
-        transformation = params.get("transformation").toString();
+    protected PublicParam(SEConfig seConfig) {
+        super();
+        if(!seConfig.params.containsKey("algorithm")) throw new IllegalArgumentException("必须指定加密算法（algorithm）");
+        if(!seConfig.params.containsKey("transformation")) throw new IllegalArgumentException("必须指定加密及编码格式（transformation）");
+        algorithm = seConfig.params.get("algorithm").toString();
+        transformation = seConfig.params.get("transformation").toString();
     }
 
     @Override

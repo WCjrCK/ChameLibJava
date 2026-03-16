@@ -23,4 +23,6 @@ public interface MultivePoint<P extends Point<P, S>, S extends Scalar<S>> {
     boolean isEqual(MultivePoint<P, S> other);
 
     MultivePoint<P, S> copy();
+
+    public abstract byte[] toBytes();
 }

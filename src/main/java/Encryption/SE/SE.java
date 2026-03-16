@@ -5,8 +5,6 @@ import Encryption.Components.PlainText;
 import Encryption.Components.PublicParam;
 import Encryption.Components.SecretKey;
 
-import java.util.Map;
-
 public abstract class SE<
         PP extends PublicParam<SK, PT, CT>,
         SK extends SecretKey,
@@ -19,5 +17,5 @@ public abstract class SE<
 
     public abstract void Decrypt(PT pt, PP pp, SK sk, CT ct);
 
-    public abstract PP createPublicParam(Map<String, Object> params);
+    public abstract PP createPublicParam(SEConfig seConfig);
 }

@@ -57,7 +57,7 @@ public class G1 extends Point<G1, Zp> {
 
     @Override
     public final byte[] toBytes() {
-        throw new UnsupportedOperationException("MCLPoint 不支持序列化");
+        return p.serialize();
     }
 
     @Override
