@@ -1,12 +1,12 @@
-package NIZK.REPRESENT;
+package Commitment.DL;
 
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class Relation extends NIZK.Components.Relation {
-    Scalar x_1, x_2;
-    MultivePoint g_1, g_2, y;
+public class Relation extends Commitment.Components.Relation {
+    public Scalar x;
+    public MultivePoint g, y;
 
     @Override
     public final ElementCounter TheoSize() {

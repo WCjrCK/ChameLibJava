@@ -11,10 +11,11 @@ import static ChameleonHash.SchemeCurveRequire.SINGLEGROUP;
 import static ChameleonHash.SchemeCurveRequire.SYMMETRIC;
 
 public enum CHName {
-    CH_LLA_2012(SINGLEGROUP, ChameleonHash.CH.LabelCH.LLA_2012.Scheme.class, true, false),
-    CH_CZT_2011(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZT_2011.Scheme.class, true, false),
-    CH_CZK_2004(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZK_2004.Scheme.class, true, false),
-    CH_CCT_2024(SINGLEGROUP, ChameleonHash.CH.BaseCH.CCT_2024.Scheme.class, false, false),
+    LLA_2012(SINGLEGROUP, ChameleonHash.CH.LabelCH.LLA_2012.Scheme.class, true, false),
+    CZT_2011(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZT_2011.Scheme.class, true, false),
+    CZK_2004(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZK_2004.Scheme.class, true, false),
+    CCT_2024(SINGLEGROUP, ChameleonHash.CH.BaseCH.CCT_2024.Scheme.class, false, false),
+    KOG_CDK_2017(SINGLEGROUP, ChameleonHash.CH.CHET.KOG_CDK_2017.Scheme.class, false, true),
     ;
 
     public final SchemeCurveRequire schemeCurveRequire;

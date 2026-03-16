@@ -179,4 +179,6 @@ public abstract class Curve<G1 extends Point, G2 extends Point, GT extends Point
         if(swap_G1G2) return Pairing((G1) p2, (G2) p1);
         else return Pairing((G1) p1, (G2) p2);
     }
+
+    public abstract Scalar createScalarFromString(String s);
 }

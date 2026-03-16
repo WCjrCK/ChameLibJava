@@ -1,6 +1,6 @@
-package NIZK.EQUAL_DL;
+package Commitment.EQUAL_DL;
 
-import NIZK.NIZKConfig;
+import Commitment.NIZKConfig;
 
 public class Scheme {
     public static Proof Commitment(NIZKConfig config, Relation data) {

@@ -9,7 +9,11 @@ public class PlainText extends Encryption.Components.PlainText<PlainText> {
     public BigInteger pt;
 
     PlainText(String m) {
-        pt = new BigInteger(1, m.getBytes(StandardCharsets.UTF_8));
+        try {
+            pt = new BigInteger(m);
+        } catch (Exception e) {
+            pt = new BigInteger(1, m.getBytes(StandardCharsets.UTF_8));
+        }
     }
 
     @Override
@@ -26,6 +30,6 @@ public class PlainText extends Encryption.Components.PlainText<PlainText> {
 
     @Override
     public final String toString() {
-        return "pt = " + new String(pt.toByteArray());
+        return pt.toString();
     }
 }

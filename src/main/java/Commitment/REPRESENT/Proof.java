@@ -1,4 +1,4 @@
-package NIZK.EQUAL_DL;
+package Commitment.REPRESENT;
 
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Point.MultivePoint;
@@ -9,10 +9,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Proof extends NIZK.Components.Proof<Relation> {
+public class Proof extends Commitment.Components.Proof<Proof, Relation> {
     protected Curve curve;
-    public Scalar gamma;
-    public MultivePoint alpha_1, alpha_2;
+    public MultivePoint alpha;
+    public Scalar gamma_1, gamma_2;
 
     protected Scalar H(String m) {
         byte[] hash;
@@ -32,9 +32,15 @@ public class Proof extends NIZK.Components.Proof<Relation> {
         return res;
     }
 
+    @Override
+    public void CopyFrom(Proof o) {
+        curve = o.curve;
+        alpha = o.alpha;
+        gamma_1 = o.gamma_1;
+        gamma_2 = o.gamma_2;
+    }
+
     public final boolean Check(Relation data) {
-        Scalar beta = H(String.format("%s|%s|%s|%s", data.y_1, data.y_2, alpha_1, alpha_2));
-        return data.g_1.pow(gamma).div(alpha_1).isEqual(data.y_1.pow(beta)) &&
-                data.g_2.pow(gamma).div(alpha_2).isEqual(data.y_2.pow(beta));
+        return data.g_1.pow(gamma_1).mul(data.g_2.pow(gamma_2)).div(alpha).isEqual(data.y.pow(H(String.format("%s|%s|%s|%s", data.y, data.g_1, data.g_2, alpha))));
     }
 }

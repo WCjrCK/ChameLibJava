@@ -1,4 +1,4 @@
-package NIZK.DH_PAIR;
+package Commitment.DH_PAIR;
 
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Point.MultivePoint;
@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Proof extends NIZK.Components.Proof<Relation> {
+public class Proof extends Commitment.Components.Proof<Proof, Relation> {
     protected Curve curve;
     public Scalar s, c;
 
@@ -30,6 +30,13 @@ public class Proof extends NIZK.Components.Proof<Relation> {
         ElementCounter res = new ElementCounter();
         res.count(this);
         return res;
+    }
+
+    @Override
+    public void CopyFrom(Proof o) {
+        curve = o.curve;
+        s = o.s;
+        c = o.c;
     }
 
     public final boolean Check(Relation data) {

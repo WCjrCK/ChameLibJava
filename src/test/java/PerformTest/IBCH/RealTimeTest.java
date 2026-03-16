@@ -36,12 +36,12 @@ public class RealTimeTest {
     static HashMap<IBCHName, Integer> SNToIdx = new HashMap<>();
 
     static List<IBCHName> skipList = List.of(new IBCHName[]{
-            IBCHName.IBCH_ZSS_2003_S1,
-            IBCHName.IBCH_ZSS_2003_S2,
-            IBCHName.IBCH_CZS_2014,
-            IBCHName.IBCH_LSX_2022,
-            IBCHName.IBCH_XSL_2021,
-            IBCHName.IBCH_LJF_2025,
+            IBCHName.ZSS_2003_S1,
+            IBCHName.ZSS_2003_S2,
+            IBCHName.CZS_2014,
+            IBCHName.LSX_2022,
+            IBCHName.XSL_2021,
+            IBCHName.LJF_2025,
     });
 
     public static Stream<Arguments> GetAllIBCHSchemeCurve() {

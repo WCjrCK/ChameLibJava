@@ -178,7 +178,12 @@ public class PBCCurve extends Curve<Group, Group, Group, Zp> {
 
     @Override
     public final Group PowNdonrCore(Group p) {
-        if (p.group() == CurveGroup.G2) return new Group(p.p.pow(G2_ndonr), curveName(), CurveGroup.G2);
+        if (p.group() == CurveGroup.G2) return new Group(p.p.pow(G2_ndonr).getImmutable(), curveName(), CurveGroup.G2);
         return p;
+    }
+
+    @Override
+    public Zp createScalarFromString(String s) {
+        return new Zp(Zp.newElement(new BigInteger(s)).getImmutable(), curveName());
     }
 }

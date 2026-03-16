@@ -1,10 +1,14 @@
 package ChameleonHash.CH.CHET.KOG_CDK_2017;
 
-import EllipticCurve.Point.Scalar;
+import Commitment.Components.Proof;
+import EllipticCurve.Point.MultivePoint;
+import Encryption.Components.CipherText;
 import utils.ElementCounter;
 
 public class Randomness extends ChameleonHash.CH.Components.Randomness {
-    protected Scalar z_1, z_2, c_1;
+    protected MultivePoint p;
+    protected CipherText C;
+    protected Proof pi_p;
 
     @Override
     public final ElementCounter TheoSize() {

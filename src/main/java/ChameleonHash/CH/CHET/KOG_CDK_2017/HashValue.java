@@ -1,14 +1,16 @@
 package ChameleonHash.CH.CHET.KOG_CDK_2017;
 
+import Commitment.Components.Proof;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
 public class HashValue extends ChameleonHash.CH.Components.HashValue<HashValue> {
-    protected MultivePoint h;
+    protected MultivePoint b, h_p;
+    protected Proof pi_t;
 
     @Override
     public final boolean isEqual(HashValue other) {
-        return h.isEqual(other.h);
+        return b.isEqual(other.b) && h_p.isEqual(other.h_p);
     }
 
     @Override

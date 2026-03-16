@@ -14,12 +14,12 @@ import static ChameleonHash.SchemeCurveRequire.ALL;
 import static ChameleonHash.SchemeCurveRequire.SYMMETRIC;
 
 public enum IBCHName {
-    IBCH_ZSS_2003_S1(ALL, S1.class, false),
-    IBCH_ZSS_2003_S2(SYMMETRIC, S2.class, false),
-    IBCH_CZS_2014(ALL, ChameleonHash.IBCH.BaseIBCH.CZS_2014.Scheme.class, false),
-    IBCH_LSX_2022(SYMMETRIC, ChameleonHash.IBCH.BaseIBCH.LSX_2022.Scheme.class, false),
-    IBCH_XSL_2021(ALL, ChameleonHash.IBCH.BaseIBCH.XSL_2021.Scheme.class, false),
-    IBCH_LJF_2025(SYMMETRIC, Scheme.class, true),
+    ZSS_2003_S1(ALL, S1.class, false),
+    ZSS_2003_S2(SYMMETRIC, S2.class, false),
+    CZS_2014(ALL, ChameleonHash.IBCH.BaseIBCH.CZS_2014.Scheme.class, false),
+    LSX_2022(SYMMETRIC, ChameleonHash.IBCH.BaseIBCH.LSX_2022.Scheme.class, false),
+    XSL_2021(ALL, ChameleonHash.IBCH.BaseIBCH.XSL_2021.Scheme.class, false),
+    LJF_2025(SYMMETRIC, Scheme.class, true),
     ;
 
     public final SchemeCurveRequire schemeCurveRequire;

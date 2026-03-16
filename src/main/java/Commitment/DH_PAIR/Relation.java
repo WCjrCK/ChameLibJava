@@ -1,10 +1,10 @@
-package NIZK.DH_PAIR;
+package Commitment.DH_PAIR;
 
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class Relation extends NIZK.Components.Relation {
+public class Relation extends Commitment.Components.Relation {
     Scalar x;
     MultivePoint u, g, v, h;
 

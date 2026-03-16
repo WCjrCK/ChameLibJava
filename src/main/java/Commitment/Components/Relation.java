@@ -1,7 +1,7 @@
-package ChameleonHash.CH.CHET.Comoponents;
+package Commitment.Components;
 
 import utils.ElementCounter;
 
-public abstract class ETrapdoor {
+public abstract class Relation {
     public abstract ElementCounter TheoSize();
 }

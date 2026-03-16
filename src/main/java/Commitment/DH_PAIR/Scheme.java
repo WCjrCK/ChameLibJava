@@ -1,8 +1,20 @@
-package NIZK.DH_PAIR;
+package Commitment.DH_PAIR;
 
-import NIZK.NIZKConfig;
+import Commitment.NIZKConfig;
+import EllipticCurve.Point.MultivePoint;
+import EllipticCurve.Point.Scalar;
 
 public class Scheme {
+    public static Relation createRelation(Scalar x, MultivePoint u, MultivePoint g, MultivePoint v, MultivePoint h) {
+        Relation res = new Relation();
+        res.x = x;
+        res.u = u;
+        res.g = g;
+        res.v = v;
+        res.h = h;
+        return res;
+    }
+
     public static Proof Commitment(NIZKConfig config, Relation data) {
         if(!data.u.isEqual(data.g.pow(data.x))) throw new RuntimeException("输入数据不满足 u != g^x");
         if(!data.v.isEqual(data.h.pow(data.x))) throw new RuntimeException("输入数据不满足 v != h^x");

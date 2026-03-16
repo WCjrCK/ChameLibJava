@@ -1,13 +1,14 @@
 package UnitTest.ToolsScheme;
 
-import Encryption.PKE.PKE;
-import Encryption.PKE.PKEFactory;
-import Encryption.PKE.PKEName;
-import Encryption.PKE.Components.PublicKey;
 import Encryption.Components.CipherText;
 import Encryption.Components.PlainText;
 import Encryption.Components.PublicParam;
 import Encryption.Components.SecretKey;
+import Encryption.PKE.Components.PublicKey;
+import Encryption.PKE.PKE;
+import Encryption.PKE.PKEConfig;
+import Encryption.PKE.PKEFactory;
+import Encryption.PKE.PKEName;
 import Encryption.SE.Config;
 import Encryption.SE.SE;
 import Encryption.SE.SEFactory;
@@ -67,8 +68,8 @@ public class EncryptionTest {
         Map<String, Object> params = new HashMap<>();
 //        params.put("algorithm", "AES");
 //        params.put("transformation", "AES/ECB/PKCS5Padding");
-        Encryption.PKE.Config aeConfig = new Encryption.PKE.Config(PKEName, params);
-        PKE scheme = PKEFactory.createAE(aeConfig);
+        PKEConfig pkeConfig = new PKEConfig(PKEName, params);
+        PKE scheme = PKEFactory.createPKE(pkeConfig);
         Encryption.PKE.Components.PublicParam pp = scheme.createPublicParam(params);
         PublicKey pk1 = pp.createPublicKey();
         SecretKey sk1 = pp.createSecretKey();

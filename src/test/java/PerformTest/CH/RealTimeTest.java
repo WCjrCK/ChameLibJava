@@ -40,7 +40,7 @@ public class RealTimeTest {
     static HashMap<CHName, Integer> SNToIdx = new HashMap<>();
 
     static List<CHName> skipList = List.of(new CHName[]{
-            CHName.CH_LLA_2012,
+            CHName.LLA_2012,
 //            CHScheme.CH_CZK_2004,
 //            CHScheme.CH_CZT_2011,
 //            CHScheme.CH_CCT_2024,

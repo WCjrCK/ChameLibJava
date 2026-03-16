@@ -2,15 +2,22 @@ package UnitTest.CHScheme;
 
 import ChameleonHash.CH.BaseCH.BaseCHFactory;
 import ChameleonHash.CH.CHConfig;
+import ChameleonHash.CH.CHET.CHETFactory;
+import ChameleonHash.CH.CHET.Components.ETrapdoor;
 import ChameleonHash.CH.CHName;
 import ChameleonHash.CH.Components.*;
 import ChameleonHash.CH.LabelCH.LabelCHFactory;
 import ChameleonHash.Interface.BaseCH;
+import ChameleonHash.Interface.CHET;
 import ChameleonHash.Interface.LabelCH;
 import ChameleonHash.SchemeCurveRequire;
+import Commitment.NIZKConfig;
+import Commitment.NIZKName;
 import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
+import Encryption.PKE.PKEConfig;
+import Encryption.PKE.PKEName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -29,10 +36,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CHTest {
     static List<CHName> skipList = List.of(new CHName[]{
-            CHName.CH_LLA_2012,
-            CHName.CH_CZT_2011,
-            CHName.CH_CZK_2004,
-//            CHScheme.CH_CCT_2024,
+            CHName.LLA_2012,
+            CHName.CZT_2011,
+            CHName.CZK_2004,
+            CHName.CCT_2024,
     });
 
     public static Stream<Arguments> GetAllCHSchemeCurve() {
@@ -81,6 +88,7 @@ public class CHTest {
 
     private void testFunction(CHConfig schemeConfig) {
         if (schemeConfig.schemeName.has_label) testLabelCH(schemeConfig);
+        else if (schemeConfig.schemeName.has_ET) testCHET(schemeConfig);
         else testBaseCH(schemeConfig);
     }
 
@@ -88,11 +96,11 @@ public class CHTest {
         BaseCH scheme = BaseCHFactory.createScheme(schemeConfig);
         PublicParam pp = scheme.createPublicParam(schemeConfig);
         scheme.Setup(pp);
-        PublicKey pk1 = (PublicKey) pp.createPublicKey();
+        PublicKey pk1 = pp.createPublicKey();
         SecretKey sk1 = pp.createSecretKey();
         scheme.KeyGen(pk1, sk1, pp);
 
-        PublicKey pk2 = (PublicKey) pp.createPublicKey();
+        PublicKey pk2 = pp.createPublicKey();
         SecretKey sk2 = pp.createSecretKey();
         scheme.KeyGen(pk2, sk2, pp);
 
@@ -127,15 +135,57 @@ public class CHTest {
         assertFalse(scheme.Verify(pp, pk1, m1, h1, r1_p), "Adapt(L1, m1) invalid");
     }
 
+    private void testCHET(CHConfig schemeConfig) {
+        CHET scheme = CHETFactory.createScheme(schemeConfig);
+        ChameleonHash.CH.CHET.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
+        scheme.Setup(pp);
+        PublicKey pk1 = pp.createPublicKey();
+        SecretKey sk1 = pp.createSecretKey();
+        scheme.KeyGen(pk1, sk1, pp);
+
+        PublicKey pk2 = pp.createPublicKey();
+        SecretKey sk2 = pp.createSecretKey();
+        scheme.KeyGen(pk2, sk2, pp);
+
+        Message m1 = pp.createMessage("msg1");
+        Message m2 = pp.createMessage("msg2");
+
+        HashValue h1 = pp.createHashValue();
+        Randomness r1 = pp.createRandomness();
+        ETrapdoor etd1 = pp.createETrapdoor();
+        scheme.Hash(h1, r1, pp, pk1, m1, etd1);
+
+        HashValue h2 = pp.createHashValue();
+        Randomness r2 = pp.createRandomness();
+        ETrapdoor etd2 = pp.createETrapdoor();
+        scheme.Hash(h2, r2, pp, pk2, m2, etd2);
+
+        assertTrue(scheme.Verify(pp, pk1, m1, h1, r1));
+//        assertFalse(scheme.Verify(pp, pk1, m2, h1, r1));
+//        assertFalse(scheme.Verify(pp, pk1, m1, h2, r1));
+//        assertFalse(scheme.Verify(pp, pk1, m1, h1, r2));
+
+        assertTrue(scheme.Verify(pp, pk2, m2, h2, r2));
+//        assertFalse(scheme.Verify(pp, pk2, m2, h1, r2));
+//        assertFalse(scheme.Verify(pp, pk2, m2, h2, r1));
+
+        Randomness r1_p = pp.createRandomness();
+
+        scheme.Collision(r1_p, pp, pk1, sk1, m1, etd1, h1, r1, m2);
+        assertTrue(scheme.Verify(pp, pk1, m1, h1, r1), "Adapt(L1, m2) valid");
+        assertTrue(scheme.Verify(pp, pk1, m2, h1, r1_p), "Adapt(L1, m2) valid");
+        assertFalse(scheme.Verify(pp, pk1, m1, h1, r1_p), "Adapt(L1, m1) invalid");
+    }
+
     private void testLabelCH(CHConfig schemeConfig) {
         LabelCH scheme = LabelCHFactory.createScheme(schemeConfig);
         ChameleonHash.CH.LabelCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
         scheme.Setup(pp);
-        PublicKey pk1 = (PublicKey) pp.createPublicKey();
+        PublicKey pk1 = pp.createPublicKey();
         SecretKey sk1 = pp.createSecretKey();
         scheme.KeyGen(pk1, sk1, pp);
 
-        PublicKey pk2 = (PublicKey) pp.createPublicKey();
+        PublicKey pk2 = pp.createPublicKey();
         SecretKey sk2 = pp.createSecretKey();
         scheme.KeyGen(pk2, sk2, pp);
 
@@ -215,6 +265,8 @@ public class CHTest {
             System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
         }
         params.put("curve_group", curveGroup);
+        params.put("nizk_config", new NIZKConfig(NIZKName.DL));
+        params.put("pke_config", new PKEConfig(PKEName.RSA));
         Config curveConfig = new Config(curveName, curve_param);
         CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
         testFunction(schemeConfig);

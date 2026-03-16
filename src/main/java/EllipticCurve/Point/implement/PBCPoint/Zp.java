@@ -29,7 +29,7 @@ public class Zp extends Scalar<Zp> {
 
     @Override
     protected final Zp divCore(Zp scalar) {
-        return new Zp(p.mulZn(scalar.p.invert()), curve());
+        return new Zp(p.div(scalar.p), curve());
     }
     
     @Override

@@ -1,7 +1,7 @@
 package ChameleonHash.CH.BaseCH;
 
 import ChameleonHash.CH.CH;
-import ChameleonHash.CH.CHET.Comoponents.ETrapdoor;
+import ChameleonHash.CH.CHET.Components.ETrapdoor;
 import ChameleonHash.CH.Components.*;
 import ChameleonHash.CH.LabelCH.Components.Label;
 import ChameleonHash.Interface.BaseCH;

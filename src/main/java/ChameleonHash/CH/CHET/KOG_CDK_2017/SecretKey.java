@@ -5,6 +5,7 @@ import utils.ElementCounter;
 
 public class SecretKey extends ChameleonHash.CH.Components.SecretKey {
     protected Scalar x;
+    protected Encryption.Components.SecretKey pke_sk;
 
     @Override
     public final ElementCounter TheoSize() {

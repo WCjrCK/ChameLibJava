@@ -1,7 +1,8 @@
-package NIZK;
+package Commitment;
 
 import EllipticCurve.Curve.Curve;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class NIZKConfig {
@@ -13,5 +14,13 @@ public class NIZKConfig {
         this.scheme = scheme;
         this.curve = curve;
         this.params = params;
+    }
+
+    public NIZKConfig(NIZKName scheme, Curve curve) {
+        this(scheme, curve, new HashMap<>());
+    }
+
+    public NIZKConfig(NIZKName scheme) {
+        this(scheme, null, new HashMap<>());
     }
 }

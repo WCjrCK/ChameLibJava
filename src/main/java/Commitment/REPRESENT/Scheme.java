@@ -1,7 +1,7 @@
-package NIZK.REPRESENT;
+package Commitment.REPRESENT;
 
+import Commitment.NIZKConfig;
 import EllipticCurve.Point.Scalar;
-import NIZK.NIZKConfig;
 
 public class Scheme {
     public static Proof Commitment(NIZKConfig config, Relation data) {
