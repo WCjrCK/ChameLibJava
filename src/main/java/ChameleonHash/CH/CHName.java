@@ -16,6 +16,7 @@ public enum CHName {
     CZK_2004(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZK_2004.Scheme.class, true, false),
     CCT_2024(SINGLEGROUP, ChameleonHash.CH.BaseCH.CCT_2024.Scheme.class, false, false),
     KOG_CDK_2017(SINGLEGROUP, ChameleonHash.CH.CHET.KOG_CDK_2017.Scheme.class, false, true),
+    BC_CDK_2017(SINGLEGROUP, ChameleonHash.CH.CHET.BC_CDK_2017.Scheme.class, false, true),
     ;
 
     public final SchemeCurveRequire schemeCurveRequire;

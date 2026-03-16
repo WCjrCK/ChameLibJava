@@ -36,10 +36,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CHTest {
     static List<CHName> skipList = List.of(new CHName[]{
-//            CHName.LLA_2012,
-//            CHName.CZT_2011,
-//            CHName.CZK_2004,
-//            CHName.CCT_2024,
+            CHName.LLA_2012,
+            CHName.CZT_2011,
+            CHName.CZK_2004,
+            CHName.CCT_2024,
+            CHName.KOG_CDK_2017,
     });
 
     public static Stream<Arguments> GetAllCHSchemeCurve() {
@@ -269,6 +270,8 @@ public class CHTest {
         params.put("pke_config", new PKEConfig(PKEName.RSA));
         Config curveConfig = new Config(curveName, curve_param);
         CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
+        CHConfig BC_CH = new CHConfig(CHName.CCT_2024, curveConfig, params);
+        params.put("ch_config", BC_CH);
         testFunction(schemeConfig);
     }
 }

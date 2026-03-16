@@ -205,6 +205,8 @@ public class TheoStorageTest {
             params.put("nizk_config", new NIZKConfig(NIZKName.DL));
             params.put("pke_config", new PKEConfig(PKEName.RSA));
             CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
+            CHConfig BC_CH = new CHConfig(CHName.CCT_2024, curveConfig, params);
+            params.put("ch_config", BC_CH);
             BufferedWriter theo_storage_cost = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/%s.csv", schemeName.name(), file_base_name)));
             testFunc(theo_storage_cost, schemeConfig);
         }

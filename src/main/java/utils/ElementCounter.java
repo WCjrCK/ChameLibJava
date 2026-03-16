@@ -1,5 +1,6 @@
 package utils;
 
+import ChameleonHash.Interface.BaseCH;
 import Commitment.DL.NIZK_DL.Proof;
 import Commitment.NIZK;
 import EllipticCurve.Curve.CurveGroup;
@@ -29,17 +30,33 @@ public class ElementCounter {
         countName.add("GT");
         type_id.put(Zp, i++);
         countName.add("Zp");
+        {
+            type_id.put(PublicParam.class, i++);
+            countName.add("PKE_pp");
+            type_id.put(PublicKey.class, i++);
+            countName.add("PKE_pk");
+            type_id.put(SecretKey.class, i++);
+            countName.add("PKE_sk");
+            type_id.put(CipherText.class, i++);
+            countName.add("PKE_ct");
+            type_id.put(PlainText.class, i++);
+            countName.add("PKE_pt");
+        }
 
-        type_id.put(PublicParam.class, i++);
-        countName.add("PKE_pp");
-        type_id.put(PublicKey.class, i++);
-        countName.add("PKE_pk");
-        type_id.put(SecretKey.class, i++);
-        countName.add("PKE_sk");
-        type_id.put(CipherText.class, i++);
-        countName.add("PKE_ct");
-        type_id.put(PlainText.class, i++);
-        countName.add("PKE_pt");
+        {
+            type_id.put(ChameleonHash.CH.Components.PublicParam.class, i++);
+            countName.add("CH_pp");
+            type_id.put(ChameleonHash.CH.Components.PublicKey.class, i++);
+            countName.add("CH_pk");
+            type_id.put(ChameleonHash.CH.Components.SecretKey.class, i++);
+            countName.add("CH_sk");
+            type_id.put(ChameleonHash.CH.Components.Message.class, i++);
+            countName.add("CH_m");
+            type_id.put(ChameleonHash.CH.Components.HashValue.class, i++);
+            countName.add("CH_h");
+            type_id.put(ChameleonHash.CH.Components.Randomness.class, i++);
+            countName.add("CH_r");
+        }
 
         type_id.put(Proof.class, i++);
         countName.add("NIZK_DL");
@@ -50,6 +67,7 @@ public class ElementCounter {
         skip_class.add(CurveGroup.class);
         skip_class.add(NIZK.class);
         skip_class.add(PKE.class);
+        skip_class.add(BaseCH.class);
 
         count = new int[countName.size()];
     }
@@ -98,7 +116,7 @@ public class ElementCounter {
     }
 
     public void count(Object c) {
-        if(tryCountObject(c)) return;
+//        if(tryCountObject(c)) return;
         for (java.lang.reflect.Field f : c.getClass().getDeclaredFields()) {
             f.setAccessible(true);
             Class<?> t = f.getType();

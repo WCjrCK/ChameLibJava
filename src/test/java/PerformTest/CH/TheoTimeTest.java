@@ -313,6 +313,8 @@ public class TheoTimeTest {
             params.put("pke_config", new PKEConfig(PKEName.RSA));
             Config curveConfig = new Config(E, curve_param);
             CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
+            CHConfig BC_CH = new CHConfig(CHName.CCT_2024, curveConfig, params);
+            params.put("ch_config", BC_CH);
             BufferedWriter theo_time_cost = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/%s.csv", schemeName.name(), file_base_name)));
             testFunc(theo_time_cost, schemeConfig);
         }
