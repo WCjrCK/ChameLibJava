@@ -6,8 +6,8 @@ import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 
 /*
- * Reconstructing Chameleon Hash: Full Security and the Multi-Party Setting
- * P6. 3.2 ECC-based Construction
+ * On the Key Exposure Problem in Chameleon Hashes
+ * P12. Scheme based on SDH and DL
  */
 
 public class Scheme

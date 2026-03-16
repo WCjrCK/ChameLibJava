@@ -1,5 +1,7 @@
 package MCLTest.PBCHTest;
 
+import ChameleonHash.PBCH.DEPRECATED.RPCH_XNM_2021.MCL;
+import ChameleonHash.PBCH.DEPRECATED.RPCH_XNM_2021.MCL_swap;
 import MCLTest.BasicParam;
 import com.herumi.mcl.G1;
 import com.herumi.mcl.G2;
@@ -9,8 +11,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import ChameleonHash.PBCH.RPCH_XNM_2021.MCL;
-import ChameleonHash.PBCH.RPCH_XNM_2021.MCL_swap;
 import utils.BooleanFormulaParser;
 import utils.Func;
 

@@ -1,5 +1,6 @@
 package PBCTest.PBCHTest;
 
+import ChameleonHash.PBCH.DEPRECATED.PCH_DSS_2019.PBC;
 import PBCTest.BasicParam;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -7,7 +8,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import ChameleonHash.PBCH.PCH_DSS_2019.PBC;
 import utils.BooleanFormulaParser;
 
 import java.io.BufferedWriter;

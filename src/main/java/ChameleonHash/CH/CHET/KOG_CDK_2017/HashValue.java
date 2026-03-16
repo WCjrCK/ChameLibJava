@@ -1,6 +1,6 @@
 package ChameleonHash.CH.CHET.KOG_CDK_2017;
 
-import Commitment.Components.Proof;
+import Commitment.NIZK_DL.Proof;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 

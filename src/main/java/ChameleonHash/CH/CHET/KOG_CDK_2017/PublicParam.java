@@ -1,9 +1,7 @@
 package ChameleonHash.CH.CHET.KOG_CDK_2017;
 
 import ChameleonHash.CH.CHConfig;
-import Commitment.NIZK;
-import Commitment.NIZKConfig;
-import Commitment.NIZKFactory;
+import Commitment.NIZK_DL.Scheme;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
@@ -20,7 +18,7 @@ import java.util.Objects;
 public class PublicParam extends ChameleonHash.CH.CHET.Components.PublicParam<PublicKey, SecretKey, Message, ETrapdoor, HashValue, Randomness> {
     protected CurveGroup curveGroup;
     protected MultivePoint g;
-    protected NIZK NIZK_DL;
+    protected Scheme NIZK_DL;
     protected PKE PKEScheme;
     protected Encryption.PKE.Components.PublicParam pke_pp;
 
@@ -29,9 +27,7 @@ public class PublicParam extends ChameleonHash.CH.CHET.Components.PublicParam<Pu
         if (!config.params.containsKey("curve_group")) throw new IllegalArgumentException("未设置方案所在群（curve_group）");
         curveGroup = (CurveGroup) config.params.get("curve_group");
         if (curveGroup == CurveGroup.Zp) throw new IllegalArgumentException("方案未适配指定群： " + curveGroup);
-        NIZKConfig nizkConfig = (NIZKConfig) Objects.requireNonNull(config.params.get("nizk_config"), "未设置方案的黑盒NIZK方案（nizk_config）");
-        nizkConfig.curve = curve;
-        NIZK_DL = NIZKFactory.createScheme(nizkConfig);
+        NIZK_DL = new Scheme(curve);
         PKEScheme = PKEFactory.createPKE((PKEConfig) Objects.requireNonNull(config.params.get("pke_config"), "未设置方案的黑盒公钥加密方案（pke_config）"));
         pke_pp = PKEScheme.createPublicParam(config.params);
     }

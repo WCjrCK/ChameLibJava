@@ -18,6 +18,7 @@ public enum CHName {
     LLA_2012(SINGLEGROUP, ChameleonHash.CH.LabelCH.LLA_2012.Scheme.class, true, false),
     CZT_2011(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZT_2011.Scheme.class, true, false),
     CZK_2004(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZK_2004.Scheme.class, true, false),
+    AM_2004(SINGLEGROUP, ChameleonHash.CH.LabelCH.AM_2004.Scheme.class, true, false),
 
     KOG_CDK_2017(SINGLEGROUP, ChameleonHash.CH.CHET.KOG_CDK_2017.Scheme.class, false, true),
     BC_CDK_2017(SINGLEGROUP, ChameleonHash.CH.CHET.BC_CDK_2017.Scheme.class, false, true),

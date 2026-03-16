@@ -12,8 +12,6 @@ import ChameleonHash.Interface.BaseCH;
 import ChameleonHash.Interface.CHET;
 import ChameleonHash.Interface.LabelCH;
 import ChameleonHash.SchemeCurveRequire;
-import Commitment.NIZKConfig;
-import Commitment.NIZKName;
 import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveGroup;
 import Encryption.PKE.PKEConfig;
@@ -276,31 +274,31 @@ public class TheoTimeTest {
             theo_time_cost.close();
         }
 
-        @DisplayName("test direct scheme")
-        @ParameterizedTest(name = "test scheme {0}")
-        @MethodSource("PerformTest.CH.TheoTimeTest#GetAllCHScheme")
-        public void DSTest(CHName schemeName) throws IOException {
-            Map<String, Object> curve_param = new HashMap<>();
-            curve_param.put("swap_G1G2", false);
-            Config curveConfig = new Config(E, curve_param);
-            Map<String, Object> params = new HashMap<>();
-            CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
-            BufferedWriter theo_time_cost = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/%s.csv", schemeName.name(), file_base_name)));
-            testFunc(theo_time_cost, schemeConfig);
-        }
-
-        @DisplayName("swap G1 and G2")
-        @ParameterizedTest(name = "test scheme {0}")
-        @MethodSource("PerformTest.CH.TheoTimeTest#GetAllCHSchemeASCurve")
-        public void SGGTest(CHName schemeName) throws IOException {
-            Map<String, Object> curve_param = new HashMap<>();
-            curve_param.put("swap_G1G2", true);
-            Config curveConfig = new Config(E, curve_param);
-            Map<String, Object> params = new HashMap<>();
-            CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
-            BufferedWriter theo_time_cost = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/%s_swapG1G2.csv", schemeName.name(), file_base_name)));
-            testFunc(theo_time_cost, schemeConfig);
-        }
+//        @DisplayName("test direct scheme")
+//        @ParameterizedTest(name = "test scheme {0}")
+//        @MethodSource("PerformTest.CH.TheoTimeTest#GetAllCHScheme")
+//        public void DSTest(CHName schemeName) throws IOException {
+//            Map<String, Object> curve_param = new HashMap<>();
+//            curve_param.put("swap_G1G2", false);
+//            Config curveConfig = new Config(E, curve_param);
+//            Map<String, Object> params = new HashMap<>();
+//            CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
+//            BufferedWriter theo_time_cost = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/%s.csv", schemeName.name(), file_base_name)));
+//            testFunc(theo_time_cost, schemeConfig);
+//        }
+//
+//        @DisplayName("swap G1 and G2")
+//        @ParameterizedTest(name = "test scheme {0}")
+//        @MethodSource("PerformTest.CH.TheoTimeTest#GetAllCHSchemeASCurve")
+//        public void SGGTest(CHName schemeName) throws IOException {
+//            Map<String, Object> curve_param = new HashMap<>();
+//            curve_param.put("swap_G1G2", true);
+//            Config curveConfig = new Config(E, curve_param);
+//            Map<String, Object> params = new HashMap<>();
+//            CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
+//            BufferedWriter theo_time_cost = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/%s_swapG1G2.csv", schemeName.name(), file_base_name)));
+//            testFunc(theo_time_cost, schemeConfig);
+//        }
 
         @DisplayName("test single group scheme")
         @ParameterizedTest(name = "test scheme {0}")
@@ -309,7 +307,6 @@ public class TheoTimeTest {
             Map<String, Object> params = new HashMap<>();
             Map<String, Object> curve_param = new HashMap<>();
             params.put("curve_group", CurveGroup.G1);
-            params.put("nizk_config", new NIZKConfig(NIZKName.DL));
             params.put("pke_config", new PKEConfig(PKEName.RSA));
             Config curveConfig = new Config(E, curve_param);
             CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);

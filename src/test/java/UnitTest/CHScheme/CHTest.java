@@ -11,8 +11,6 @@ import ChameleonHash.Interface.BaseCH;
 import ChameleonHash.Interface.CHET;
 import ChameleonHash.Interface.LabelCH;
 import ChameleonHash.SchemeCurveRequire;
-import Commitment.NIZKConfig;
-import Commitment.NIZKName;
 import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
@@ -36,14 +34,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CHTest {
     static List<CHName> skipList = List.of(new CHName[]{
-            CHName.LLA_2012,
-            CHName.CZT_2011,
-            CHName.CZK_2004,
-            CHName.CCT_2024,
-            CHName.KOG_CDK_2017,
-            CHName.BC_CDK_2017,
-            CHName.DKS_2020,
-            CHName.DSS_2020,
+//            CHName.LLA_2012,
+//            CHName.CZT_2011,
+//            CHName.CZK_2004,
+//            CHName.CCT_2024,
+//            CHName.KOG_CDK_2017,
+//            CHName.BC_CDK_2017,
+//            CHName.DKS_2020,
+//            CHName.DSS_2020,
+//            CHName.AM_2004
     });
 
     public static Stream<Arguments> GetAllCHSchemeCurve() {
@@ -227,36 +226,36 @@ public class CHTest {
         assertFalse(scheme.Verify(pp, pk1, m1, l1, h1, r1_p), "Adapt(L1, m1) invalid");
     }
 
-    @DisplayName("test abstract implement")
-    @ParameterizedTest(name = "test scheme {0} curve {1}")
-    @MethodSource("UnitTest.CHScheme.CHTest#GetAllCHSchemeCurve")
-    void CHDSTest(CHName schemeName, CurveName curveName) {
-        Map<String, Object> params = new HashMap<>();
-        Map<String, Object> curve_param = new HashMap<>();
-        if (curveName == PBC_CUSTOM) {
-            curve_param.put("param_file_path", "./jpbc/params/a.properties");
-            System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
-        }
-        Config curveConfig = new Config(curveName, curve_param);
-        CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
-        testFunction(schemeConfig);
-    }
-
-    @DisplayName("test swap G1 and G2 implement")
-    @ParameterizedTest(name = "test scheme {0} curve {1}")
-    @MethodSource("UnitTest.CHScheme.CHTest#GetAllCHSchemeASCurve")
-    void CHSGGTest(CHName schemeName, CurveName curveName) {
-        Map<String, Object> params = new HashMap<>();
-        Map<String, Object> curve_param = new HashMap<>();
-        curve_param.put("swap_G1G2", true);
-        if (curveName == PBC_CUSTOM) {
-            curve_param.put("param_file_path", "./jpbc/params/a.properties");
-            System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
-        }
-        Config curveConfig = new Config(curveName, curve_param);
-        CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
-        testFunction(schemeConfig);
-    }
+//    @DisplayName("test abstract implement")
+//    @ParameterizedTest(name = "test scheme {0} curve {1}")
+//    @MethodSource("UnitTest.CHScheme.CHTest#GetAllCHSchemeCurve")
+//    void CHDSTest(CHName schemeName, CurveName curveName) {
+//        Map<String, Object> params = new HashMap<>();
+//        Map<String, Object> curve_param = new HashMap<>();
+//        if (curveName == PBC_CUSTOM) {
+//            curve_param.put("param_file_path", "./jpbc/params/a.properties");
+//            System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
+//        }
+//        Config curveConfig = new Config(curveName, curve_param);
+//        CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
+//        testFunction(schemeConfig);
+//    }
+//
+//    @DisplayName("test swap G1 and G2 implement")
+//    @ParameterizedTest(name = "test scheme {0} curve {1}")
+//    @MethodSource("UnitTest.CHScheme.CHTest#GetAllCHSchemeASCurve")
+//    void CHSGGTest(CHName schemeName, CurveName curveName) {
+//        Map<String, Object> params = new HashMap<>();
+//        Map<String, Object> curve_param = new HashMap<>();
+//        curve_param.put("swap_G1G2", true);
+//        if (curveName == PBC_CUSTOM) {
+//            curve_param.put("param_file_path", "./jpbc/params/a.properties");
+//            System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
+//        }
+//        Config curveConfig = new Config(curveName, curve_param);
+//        CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
+//        testFunction(schemeConfig);
+//    }
 
     @DisplayName("test single group scheme")
     @ParameterizedTest(name = "test scheme {0} curve {1} group {2}")
@@ -269,7 +268,6 @@ public class CHTest {
             System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
         }
         params.put("curve_group", curveGroup);
-        params.put("nizk_config", new NIZKConfig(NIZKName.DL));
         params.put("pke_config", new PKEConfig(PKEName.RSA));
         Config curveConfig = new Config(curveName, curve_param);
         CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);

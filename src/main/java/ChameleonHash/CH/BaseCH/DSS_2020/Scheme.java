@@ -5,8 +5,8 @@ import ChameleonHash.Interface.BaseCH;
 import EllipticCurve.Point.Scalar;
 
 /*
- * Reconstructing Chameleon Hash: Full Security and the Multi-Party Setting
- * P6. 3.2 ECC-based Construction
+ * Bringing Order to Chaos：The Case of Collision-Resistant Chameleon-Hashes
+ * P25. Construction 3. Concrete instantiation of a Fully Collision-Resistant CH
  */
 
 public class Scheme

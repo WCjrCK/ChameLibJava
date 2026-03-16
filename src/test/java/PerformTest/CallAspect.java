@@ -85,6 +85,9 @@ public class CallAspect {
         if (funcName.contains("NIZK_DL")) {
             if (funcName.contains(".Commitment(")) TraceScope.hit("make DL commitment with BlackBox NIZK scheme");
             if (funcName.contains(".Check(")) TraceScope.hit("check DL commitment with BlackBox NIZK scheme");
+        } else if (funcName.contains("NIZK_DH_PAIR")) {
+            if (funcName.contains(".Commitment(")) TraceScope.hit("make DH_PAIR commitment with BlackBox NIZK scheme");
+            if (funcName.contains(".Check(")) TraceScope.hit("check DH_PAIR commitment with BlackBox NIZK scheme");
         } else {
             if (TraceScope.CountFunc()) TraceScope.hit(funcName);
         }

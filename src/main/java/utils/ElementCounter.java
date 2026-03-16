@@ -1,8 +1,8 @@
 package utils;
 
 import ChameleonHash.Interface.BaseCH;
-import Commitment.DL.NIZK_DL.Proof;
-import Commitment.NIZK;
+import Commitment.NIZK_DL.Proof;
+import Commitment.NIZK_DL.Scheme;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.Point;
 import EllipticCurve.Point.Scalar;
@@ -61,11 +61,15 @@ public class ElementCounter {
         type_id.put(Proof.class, i++);
         countName.add("NIZK_DL");
 
+        type_id.put(Commitment.NIZK_DH_PAIR.Proof.class, i++);
+        countName.add("NIZK_DL_PAIR");
+
         skip_class.add(String.class);
         skip_class.add(Integer.class);
         skip_class.add(BitSet.class);
         skip_class.add(CurveGroup.class);
-        skip_class.add(NIZK.class);
+        skip_class.add(Scheme.class);
+        skip_class.add(Commitment.NIZK_DH_PAIR.Scheme.class);
         skip_class.add(PKE.class);
         skip_class.add(BaseCH.class);
 

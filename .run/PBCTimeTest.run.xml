@@ -2,13 +2,6 @@
   <configuration default="false" name="PBCTimeTest" type="JUnit" factoryName="JUnit">
     <module name="lib" />
     <projectPathOnTarget name="projectPathOnTarget" value="{exitCode=0, timeout=false, cancelled=false, stdout=/tmp/tmp.ZInmy2mDIi&#13; , stderr=}/ChameLibJavaTest" />
-    <extension name="coverage">
-      <pattern>
-        <option name="PATTERN" value="PBCTest.CHTest.*" />
-        <option name="ENABLED" value="true" />
-      </pattern>
-    </extension>
-    <option name="PACKAGE_NAME" value="PBCTest.CHTest" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="directory" />
