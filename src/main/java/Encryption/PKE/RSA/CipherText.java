@@ -4,7 +4,7 @@ import utils.ElementCounter;
 
 import java.math.BigInteger;
 
-public class CipherText extends Encryption.Components.CipherText<CipherText> {
+public class CipherText extends Encryption.PKE.Components.CipherText<CipherText> {
     public BigInteger ct;
     @Override
     public final boolean isEqual(CipherText o) {

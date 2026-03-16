@@ -36,10 +36,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CHTest {
     static List<CHName> skipList = List.of(new CHName[]{
-            CHName.LLA_2012,
-            CHName.CZT_2011,
-            CHName.CZK_2004,
-            CHName.CCT_2024,
+//            CHName.LLA_2012,
+//            CHName.CZT_2011,
+//            CHName.CZK_2004,
+//            CHName.CCT_2024,
     });
 
     public static Stream<Arguments> GetAllCHSchemeCurve() {

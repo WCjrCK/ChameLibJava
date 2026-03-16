@@ -1,9 +1,9 @@
 package Commitment;
 
-import Commitment.DL.NIZK_DL;
+import Commitment.DL.NIZK_DL.Scheme;
 
 public enum NIZKName {
-    DL(NIZK_DL.class),
+    DL(Scheme.class),
 //    EQUAL_DL,
 //    REPRESENT,
 //    DH_PAIR,

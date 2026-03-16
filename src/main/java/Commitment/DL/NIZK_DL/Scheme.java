@@ -1,9 +1,9 @@
-package Commitment.DL;
+package Commitment.DL.NIZK_DL;
 
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 
-public class NIZK_DL extends Commitment.NIZK<Proof, Relation> implements Commitment.Interface.NIZK_DL<Proof, Relation> {
+public class Scheme extends Commitment.NIZK<Proof, Relation> implements Commitment.Interface.NIZK_DL<Proof, Relation> {
     @Override
     public final Relation createRelation(MultivePoint g, MultivePoint y) {
         Relation res = new Relation();

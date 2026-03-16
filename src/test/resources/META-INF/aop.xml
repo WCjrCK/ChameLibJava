@@ -3,9 +3,11 @@
         <aspect name="PerformTest.CallAspect"/>
     </aspects>
     <weaver options="-verbose">
-        <include within="EllipticCurve.Point..*"/>
-        <include within="EllipticCurve.Curve..*"/>
+        <include within="EllipticCurve..*"/>
         <include within="ChameleonHash..*"/>
+        <include within="Encryption..*"/>
+        <include within="Signature..*"/>
+        <include within="Commitment..*"/>
         <include within="PerformTest..*"/>
     </weaver>
 </aspectj>

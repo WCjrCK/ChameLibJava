@@ -4,7 +4,7 @@ import utils.ElementCounter;
 
 import java.math.BigInteger;
 
-public class SecretKey extends Encryption.Components.SecretKey {
+public class SecretKey extends Encryption.PKE.Components.SecretKey {
     public BigInteger p, q, d;
 
     @Override

@@ -1,8 +1,12 @@
 package utils;
 
+import Commitment.DL.NIZK_DL.Proof;
+import Commitment.NIZK;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.Point;
 import EllipticCurve.Point.Scalar;
+import Encryption.PKE.Components.*;
+import Encryption.PKE.PKE;
 
 import java.util.*;
 
@@ -13,6 +17,7 @@ public class ElementCounter {
     int[] count;
     List<String> countName = new ArrayList<>();
     HashMap<Object, Integer> type_id = new HashMap<>();
+    Set<Class<?>> skip_class = new HashSet<>();
 
     public ElementCounter () {
         int i = 0;
@@ -24,6 +29,27 @@ public class ElementCounter {
         countName.add("GT");
         type_id.put(Zp, i++);
         countName.add("Zp");
+
+        type_id.put(PublicParam.class, i++);
+        countName.add("PKE_pp");
+        type_id.put(PublicKey.class, i++);
+        countName.add("PKE_pk");
+        type_id.put(SecretKey.class, i++);
+        countName.add("PKE_sk");
+        type_id.put(CipherText.class, i++);
+        countName.add("PKE_ct");
+        type_id.put(PlainText.class, i++);
+        countName.add("PKE_pt");
+
+        type_id.put(Proof.class, i++);
+        countName.add("NIZK_DL");
+
+        skip_class.add(String.class);
+        skip_class.add(Integer.class);
+        skip_class.add(BitSet.class);
+        skip_class.add(CurveGroup.class);
+        skip_class.add(NIZK.class);
+        skip_class.add(PKE.class);
 
         count = new int[countName.size()];
     }
@@ -37,11 +63,11 @@ public class ElementCounter {
     }
 
     private boolean isPoint(Class<?> c) {
-        return c.isAssignableFrom(Point.class) || Point.class.isAssignableFrom(c);
+        return Point.class.isAssignableFrom(c);
     }
 
     private boolean isScalar(Class<?> c) {
-        return c.isAssignableFrom(Scalar.class) || Scalar.class.isAssignableFrom(c);
+        return Scalar.class.isAssignableFrom(c);
     }
 
     private boolean isCollection(Class<?> c) {
@@ -54,13 +80,19 @@ public class ElementCounter {
         } else if(isScalar(c.getClass())) {
             count[type_id.get(Zp)]++;
             return true;
-        } else if(type_id.containsKey(c.getClass())) {
-            count[type_id.get(c.getClass())]++;
-            return true;
         } else {
-            if (c.getClass() == String.class) return true;
-            if (c.getClass() == Integer.class) return true;
-            if (c.getClass() == BitSet.class) return true;
+            for(Map.Entry<Object, Integer> e : type_id.entrySet()) {
+                if (e.getKey().getClass() != CurveGroup.class) {
+                    if (((Class<?>) e.getKey()).isAssignableFrom(c.getClass())) {
+                        count[e.getValue()]++;
+                        return true;
+                    }
+                }
+            }
+
+            for(Class<?> C : skip_class) {
+                if(C.isAssignableFrom(c.getClass())) return true;
+            }
         }
         return false;
     }
@@ -91,7 +123,7 @@ public class ElementCounter {
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
-        for (int i = 0;i < idxgroup.length;++i) {
+        for (int i = 0;i < count.length;++i) {
             if (count[i] > 0) {
                 if (res.length() > 0) res.append(" + ");
                 if (count[i] > 1) res.append(count[i]);

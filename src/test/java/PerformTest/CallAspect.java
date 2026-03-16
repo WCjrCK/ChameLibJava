@@ -11,18 +11,86 @@ import org.aspectj.lang.annotation.Aspect;
 public class CallAspect {
     @Around(
             "(" +
-                    "execution(* ChameleonHash.*CH..*.Setup(..))" +
-                    " || execution(* ChameleonHash.*CH..*.KeyGen(..))" +
-                    " || execution(* ChameleonHash.*CH..*.Hash(..))" +
-                    " || execution(* ChameleonHash.*CH..*.Verify(..))" +
-                    " || execution(* ChameleonHash.*CH..*.Collision(..))" +
-            ")" +
-            " && !execution(* EllipticCurve..*(..))" +
-            " && !within(PerformTest..*)"
+                    "execution(* ChameleonHash.CH..*.Setup(..))" +
+                    " || execution(* ChameleonHash.CH..*.KeyGen(..))" +
+                    " || execution(* ChameleonHash.CH..*.Hash(..))" +
+                    " || execution(* ChameleonHash.CH..*.Verify(..))" +
+                    " || execution(* ChameleonHash.CH..*.Collision(..))" +
+                    ")" +
+                    " && !execution(* EllipticCurve..*(..))" +
+                    " && !within(PerformTest..*)"
     )
     public Object aroundAllCHStage(ProceedingJoinPoint pjp) throws Throwable {
-//        System.out.println(pjp.getSignature().toString());
-        TraceScope.enter(pjp.getSignature().toString());
+//        System.out.println("CH running: " + pjp.getSignature().toString());
+        if (TraceScope.CountFunc()) TraceScope.hit("use " + pjp.getSignature().getName() + " of BlackBox CH scheme");
+        TraceScope.enter();
+        Object ret_val = pjp.proceed();
+        TraceScope.exit();
+        return ret_val;
+    }
+
+    @Around(
+            "(" +
+                    "execution(* ChameleonHash.IBCH..*.Setup(..))" +
+                    " || execution(* ChameleonHash.IBCH..*.KeyGen(..))" +
+                    " || execution(* ChameleonHash.IBCH..*.Hash(..))" +
+                    " || execution(* ChameleonHash.IBCH..*.Verify(..))" +
+                    " || execution(* ChameleonHash.IBCH..*.Collision(..))" +
+                    ")" +
+                    " && !execution(* EllipticCurve..*(..))" +
+                    " && !within(PerformTest..*)"
+    )
+    public Object aroundAllIBCHStage(ProceedingJoinPoint pjp) throws Throwable {
+//        System.out.println("IBCH running: " + pjp.getSignature().toString());
+        if (TraceScope.CountFunc()) TraceScope.hit("use " + pjp.getSignature().getName() + " of BlackBox IBCH scheme");
+        TraceScope.enter();
+        Object ret_val = pjp.proceed();
+        TraceScope.exit();
+        return ret_val;
+    }
+
+    @Around(
+            "(" +
+                    "execution(* Encryption.PKE..Setup(..))" +
+                    " || execution(* Encryption.PKE..KeyGen(..))" +
+                    " || execution(* Encryption.PKE..Encrypt(..))" +
+                    " || execution(* Encryption.PKE..Decrypt(..))" +
+                    ")" +
+                    " && !execution(* ChameleonHash..*(..))" +
+                    " && !execution(* EllipticCurve..*(..))" +
+                    " && !within(PerformTest..*)"
+    )
+    public Object aroundAllPKEStage(ProceedingJoinPoint pjp) throws Throwable {
+//        System.out.println("PKE running: " + pjp.getSignature().toString());
+        if (TraceScope.CountFunc()) TraceScope.hit("use " + pjp.getSignature().getName() + " of BlackBox PKE scheme");
+        TraceScope.enter();
+//        TraceScope.hit();
+        Object ret_val = pjp.proceed();
+        TraceScope.exit();
+        return ret_val;
+    }
+
+    @Around(
+            "(" +
+                    "execution(* Commitment..NIZK*..Commitment(..))" +
+                    " || execution(* Commitment..Proof..Check(..))" +
+                    ")" +
+                    " && !execution(* ChameleonHash..*(..))" +
+                    " && !execution(* EllipticCurve..*(..))" +
+                    " && !within(PerformTest..*)"
+    )
+    public Object aroundAllNIZKStage(ProceedingJoinPoint pjp) throws Throwable {
+//        System.out.println("NIZK running: " + pjp.getSignature().toString());
+        String funcName = pjp.getSignature().toString();
+        if (funcName.contains("NIZK_DL")) {
+            if (funcName.contains(".Commitment(")) TraceScope.hit("make DL commitment with BlackBox NIZK scheme");
+            if (funcName.contains(".Check(")) TraceScope.hit("check DL commitment with BlackBox NIZK scheme");
+        } else {
+            if (TraceScope.CountFunc()) TraceScope.hit(funcName);
+        }
+//        TraceScope.hit("use " + pjp.getSignature().getName() + " of BlackBox PKE scheme");
+        TraceScope.enter();
+//        TraceScope.hit();
         Object ret_val = pjp.proceed();
         TraceScope.exit();
         return ret_val;

@@ -21,6 +21,7 @@ public class Scheme
     @Override
     public final void Setup(PublicParam pp) {
         pp.g = pp.curve.getRandomPoint(pp.curveGroup);
+        pp.PKEScheme.Setup(pp.pke_pp);
     }
 
     @Override

@@ -5,7 +5,7 @@ import utils.ElementCounter;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 
-public class PlainText extends Encryption.Components.PlainText<PlainText> {
+public class PlainText extends Encryption.PKE.Components.PlainText<PlainText> {
     public BigInteger pt;
 
     PlainText(String m) {

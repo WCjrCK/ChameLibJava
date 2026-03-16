@@ -76,6 +76,7 @@ public class TraceScope {
             i++;
             key_alias.add("H_Zp");
             key_list.put("Hash to Zp", i);
+            i++;
         } // RandomOracle Hash Function
 
         {
@@ -94,8 +95,49 @@ public class TraceScope {
             key_alias.add("CH_Col");
             key_list.put("use Collision of BlackBox CH scheme", i);
             i++;
-
         } // Black Box CH function
+
+        {
+            key_alias.add("PKE_Setup");
+            key_list.put("use Setup of BlackBox PKE scheme", i);
+            i++;
+            key_alias.add("PKE_KeyGen");
+            key_list.put("use KeyGen of BlackBox PKE scheme", i);
+            i++;
+            key_alias.add("PKE_Enc");
+            key_list.put("use Encrypt of BlackBox PKE scheme", i);
+            i++;
+            key_alias.add("PKE_Dec");
+            key_list.put("use Decrypt of BlackBox PKE scheme", i);
+            i++;
+        } // Black Box PKE function
+
+        {
+            key_alias.add("NIZK_DL_C");
+            key_list.put("make DL commitment with BlackBox NIZK scheme", i);
+            i++;
+            key_alias.add("NIZK_DL_V");
+            key_list.put("check DL commitment with BlackBox NIZK scheme", i);
+            i++;
+            key_alias.add("NIZK_DH_PAIR_C");
+            key_list.put("make DH_PAIR commitment with BlackBox NIZK scheme", i);
+            i++;
+            key_alias.add("NIZK_DH_PAIR_V");
+            key_list.put("check DH_PAIR commitment with BlackBox NIZK scheme", i);
+            i++;
+            key_alias.add("PKE_EQUAL_DL_C");
+            key_list.put("make EQUAL_DL commitment with BlackBox NIZK scheme", i);
+            i++;
+            key_alias.add("PKE_EQUAL_DL_V");
+            key_list.put("check EQUAL_DL commitment with BlackBox NIZK scheme", i);
+            i++;
+            key_alias.add("PKE_REPRESENT_C");
+            key_list.put("make REPRESENT commitment with BlackBox NIZK scheme", i);
+            i++;
+            key_alias.add("PKE_REPRESENT_V");
+            key_list.put("check REPRESENT commitment with BlackBox NIZK scheme", i);
+            i++;
+        } // Black Box NIZK function
     }
 
     private TraceScope() {}
@@ -107,10 +149,11 @@ public class TraceScope {
         return () -> {
             COUNTER.remove();
             COUNTTAG.remove();
+            count.remove();
         };
     }
 
-    public static void enter(String method) {
+    public static void enter() {
         COUNTTAG.set(COUNTTAG.get() + 1);
     }
 
@@ -119,10 +162,9 @@ public class TraceScope {
     }
 
     static void hit(String key) {
-        if (COUNTTAG.get() != 0) return;
         if (key_list.containsKey(key)) {
             int[] c = count.get();
-            c[key_list.get(key)]++;
+            if (COUNTTAG.get() == 0) c[key_list.get(key)]++;
         } else {
             Map<String, Integer> m = COUNTER.get();
             if (m != null) m.merge(key, 1, Integer::sum);
@@ -145,9 +187,13 @@ public class TraceScope {
     public static void getUnknownFunc() {
         Map<String, Integer> m = COUNTER.get();
         if(m != null && m.size() != 0) {
-            System.out.println("Point未知调用统计: ");
+            System.out.println("未知调用统计: ");
             for(Map.Entry<String, Integer> v : m.entrySet()) System.out.println("    " + v.getKey() + " : " + v.getValue() + " 次");
         }
+    }
+
+    public static boolean CountFunc() {
+        return COUNTTAG.get() == 0;
     }
 
     public static boolean active() {

@@ -1,4 +1,4 @@
-package Commitment.DL;
+package Commitment.DL.NIZK_DL;
 
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;

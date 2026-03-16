@@ -64,6 +64,7 @@ public class TheoTimeTest {
     @Nested
     class IBCHTSCTest {
         private void testFunc(BufferedWriter theo_time_cost, IBCHConfig schemeConfig) throws IOException {
+            System.out.println("\n\nRunning " + schemeConfig.schemeName);
             if (schemeConfig.schemeName.has_label) testLabelIBCH(theo_time_cost, schemeConfig);
             else testBaseIBCH(theo_time_cost, schemeConfig);
         }
@@ -80,6 +81,7 @@ public class TheoTimeTest {
                 msk = pp.createMasterSecretKey();
                 scheme.Setup(pp, msk);
                 theo_time_cost.write(TraceScope.getData() + ",");
+                System.out.println("Setup cost:" + TraceScope.getData());
                 TraceScope.getUnknownFunc();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -90,6 +92,7 @@ public class TheoTimeTest {
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.KeyGen(sk, pp, msk, ID);
                 theo_time_cost.write(TraceScope.getData() + ",");
+                System.out.println("KeyGen cost:" + TraceScope.getData());
                 TraceScope.getUnknownFunc();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -102,6 +105,7 @@ public class TheoTimeTest {
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Hash(h, r, pp, ID, m);
                 theo_time_cost.write(TraceScope.getData() + ",");
+                System.out.println("Hash cost:" + TraceScope.getData());
                 TraceScope.getUnknownFunc();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -113,6 +117,7 @@ public class TheoTimeTest {
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Verify(pp, ID, m, h, r);
                 theo_time_cost.write(TraceScope.getData() + ",");
+                System.out.println("Ver cost:" + TraceScope.getData());
                 TraceScope.getUnknownFunc();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -122,6 +127,7 @@ public class TheoTimeTest {
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Collision(r1, pp, ID, sk, m, h, r, m1);
                 theo_time_cost.write(TraceScope.getData());
+                System.out.println("Col cost:" + TraceScope.getData());
                 TraceScope.getUnknownFunc();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -142,6 +148,7 @@ public class TheoTimeTest {
                 msk = pp.createMasterSecretKey();
                 scheme.Setup(pp, msk);
                 theo_time_cost.write(TraceScope.getData() + ",");
+                System.out.println("Setup cost:" + TraceScope.getData());
                 TraceScope.getUnknownFunc();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -152,6 +159,7 @@ public class TheoTimeTest {
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.KeyGen(sk, pp, msk, ID);
                 theo_time_cost.write(TraceScope.getData() + ",");
+                System.out.println("KeyGen cost:" + TraceScope.getData());
                 TraceScope.getUnknownFunc();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -165,6 +173,7 @@ public class TheoTimeTest {
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Hash(h, r, pp, ID, m, l);
                 theo_time_cost.write(TraceScope.getData() + ",");
+                System.out.println("Hash cost:" + TraceScope.getData());
                 TraceScope.getUnknownFunc();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -176,6 +185,7 @@ public class TheoTimeTest {
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Verify(pp, ID, m, l, h, r);
                 theo_time_cost.write(TraceScope.getData() + ",");
+                System.out.println("Ver cost:" + TraceScope.getData());
                 TraceScope.getUnknownFunc();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -185,6 +195,7 @@ public class TheoTimeTest {
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Collision(r1, pp, ID, sk, m, l, h, r, m1);
                 theo_time_cost.write(TraceScope.getData());
+                System.out.println("Col cost:" + TraceScope.getData());
                 TraceScope.getUnknownFunc();
             } catch (Exception e) {
                 throw new RuntimeException(e);

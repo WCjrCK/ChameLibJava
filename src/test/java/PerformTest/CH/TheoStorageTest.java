@@ -2,15 +2,22 @@ package PerformTest.CH;
 
 import ChameleonHash.CH.BaseCH.BaseCHFactory;
 import ChameleonHash.CH.CHConfig;
+import ChameleonHash.CH.CHET.CHETFactory;
+import ChameleonHash.CH.CHET.Components.ETrapdoor;
 import ChameleonHash.CH.CHName;
 import ChameleonHash.CH.Components.*;
 import ChameleonHash.CH.LabelCH.Components.Label;
 import ChameleonHash.CH.LabelCH.LabelCHFactory;
 import ChameleonHash.Interface.BaseCH;
+import ChameleonHash.Interface.CHET;
 import ChameleonHash.Interface.LabelCH;
 import ChameleonHash.SchemeCurveRequire;
+import Commitment.NIZKConfig;
+import Commitment.NIZKName;
 import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveGroup;
+import Encryption.PKE.PKEConfig;
+import Encryption.PKE.PKEName;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -67,7 +74,9 @@ public class TheoStorageTest {
     @Nested
     class CHTSCTest {
         private void testFunc(BufferedWriter theo_storage_cost, CHConfig schemeConfig) throws IOException {
+            System.out.println("\n\nRunning " + schemeConfig.schemeName);
             if (schemeConfig.schemeName.has_label) testLabelCH(theo_storage_cost, schemeConfig);
+            else if (schemeConfig.schemeName.has_ET) testCHET(theo_storage_cost, schemeConfig);
             else testBaseCH(theo_storage_cost, schemeConfig);
         }
 
@@ -83,10 +92,48 @@ public class TheoStorageTest {
             Randomness r = pp.createRandomness();
             scheme.Hash(h, r, pp, pk, m);
 
+            System.out.println("PublicParam: " + pp.TheoSize());
+            System.out.println("PublicKey: " + pk.TheoSize());
+            System.out.println("SecretKey: " + sk.TheoSize());
+            System.out.println("Message: " + m.TheoSize());
+            System.out.println("HashValue: " + h.TheoSize());
+            System.out.println("Randomness: " + r.TheoSize());
+            System.out.println();
+
             theo_storage_cost.write("PublicParam, PublicKey, SecretKey, Message, HashValue, Randomness\n");
             theo_storage_cost.write(
                     pp.TheoSize() + "," + pk.TheoSize() + "," + sk.TheoSize() + "," +
                             m.TheoSize() + "," + h.TheoSize() + "," + r.TheoSize() + "\n"
+            );
+            theo_storage_cost.close();
+        }
+
+        private void testCHET(BufferedWriter theo_storage_cost, CHConfig schemeConfig) throws IOException {
+            CHET scheme = CHETFactory.createScheme(schemeConfig);
+            ChameleonHash.CH.CHET.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
+            scheme.Setup(pp);
+            PublicKey pk = pp.createPublicKey();
+            SecretKey sk = pp.createSecretKey();
+            scheme.KeyGen(pk, sk, pp);
+            Message m = pp.createMessage("msg");
+            HashValue h = pp.createHashValue();
+            Randomness r = pp.createRandomness();
+            ETrapdoor etd = pp.createETrapdoor();
+            scheme.Hash(h, r, pp, pk, m, etd);
+
+            System.out.println("PublicParam: " + pp.TheoSize());
+            System.out.println("PublicKey: " + pk.TheoSize());
+            System.out.println("SecretKey: " + sk.TheoSize());
+            System.out.println("Message: " + m.TheoSize());
+            System.out.println("ETrapdoor: " + etd.TheoSize());
+            System.out.println("HashValue: " + h.TheoSize());
+            System.out.println("Randomness: " + r.TheoSize());
+            System.out.println();
+
+            theo_storage_cost.write("PublicParam, PublicKey, SecretKey, Message, ETrapdoor, HashValue, Randomness\n");
+            theo_storage_cost.write(
+                    pp.TheoSize() + "," + pk.TheoSize() + "," + sk.TheoSize() + "," +
+                            m.TheoSize() + "," + etd.TheoSize() + "," + h.TheoSize() + "," + r.TheoSize() + "\n"
             );
             theo_storage_cost.close();
         }
@@ -103,6 +150,15 @@ public class TheoStorageTest {
             HashValue h = pp.createHashValue();
             Randomness r = pp.createRandomness();
             scheme.Hash(h, r, pp, pk, m, l);
+
+            System.out.println("PublicParam: " + pp.TheoSize());
+            System.out.println("PublicKey: " + pk.TheoSize());
+            System.out.println("SecretKey: " + sk.TheoSize());
+            System.out.println("Message: " + m.TheoSize());
+            System.out.println("Label: " + l.TheoSize());
+            System.out.println("HashValue: " + h.TheoSize());
+            System.out.println("Randomness: " + r.TheoSize());
+            System.out.println();
 
             theo_storage_cost.write("PublicParam, PublicKey, SecretKey, Message, Label, HashValue, Randomness\n");
             theo_storage_cost.write(
@@ -146,6 +202,8 @@ public class TheoStorageTest {
             Map<String, Object> curve_param = new HashMap<>();
             params.put("curve_group", CurveGroup.G1);
             Config curveConfig = new Config(E, curve_param);
+            params.put("nizk_config", new NIZKConfig(NIZKName.DL));
+            params.put("pke_config", new PKEConfig(PKEName.RSA));
             CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
             BufferedWriter theo_storage_cost = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/%s.csv", schemeName.name(), file_base_name)));
             testFunc(theo_storage_cost, schemeConfig);

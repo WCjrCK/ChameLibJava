@@ -63,6 +63,7 @@ public class TheoStorageTest {
     @Nested
     class IBCHTSCTest {
         private void testFunc(BufferedWriter theo_storage_cost, IBCHConfig schemeConfig) throws IOException {
+            System.out.println("\n\nRunning " + schemeConfig.schemeName);
             if (schemeConfig.schemeName.has_label) testLabelIBCH(theo_storage_cost, schemeConfig);
             else testBaseIBCH(theo_storage_cost, schemeConfig);
         }
@@ -79,6 +80,16 @@ public class TheoStorageTest {
             HashValue h = pp.createHashValue();
             Randomness r = pp.createRandomness();
             scheme.Hash(h, r, pp, ID, m);
+
+            System.out.println("PublicParam: " + pp.TheoSize());
+            System.out.println("MasterSecretKey: " + msk.TheoSize());
+            System.out.println("SecretKey: " + sk.TheoSize());
+            System.out.println("Identity: " + ID.TheoSize());
+            System.out.println("Message: " + m.TheoSize());
+            System.out.println("HashValue: " + h.TheoSize());
+            System.out.println("Randomness: " + r.TheoSize());
+            System.out.println();
+
             theo_storage_cost.write("PublicParam, MasterSecretKey, SecretKey, Identity, Message, HashValue, Randomness\n");
             theo_storage_cost.write(
                     pp.TheoSize() + "," + msk.TheoSize() + "," + sk.TheoSize() + "," + ID.TheoSize() + "," +
@@ -100,6 +111,17 @@ public class TheoStorageTest {
             HashValue h = pp.createHashValue();
             Randomness r = pp.createRandomness();
             scheme.Hash(h, r, pp, ID, m, l);
+
+            System.out.println("PublicParam: " + pp.TheoSize());
+            System.out.println("MasterSecretKey: " + msk.TheoSize());
+            System.out.println("SecretKey: " + sk.TheoSize());
+            System.out.println("Identity: " + ID.TheoSize());
+            System.out.println("Message: " + m.TheoSize());
+            System.out.println("Label: " + l.TheoSize());
+            System.out.println("HashValue: " + h.TheoSize());
+            System.out.println("Randomness: " + r.TheoSize());
+            System.out.println();
+
             theo_storage_cost.write("PublicParam, MasterSecretKey, SecretKey, Identity, Message, Label, HashValue, Randomness\n");
             theo_storage_cost.write(
                     pp.TheoSize() + "," + msk.TheoSize() + "," + sk.TheoSize() + "," + ID.TheoSize() + "," +

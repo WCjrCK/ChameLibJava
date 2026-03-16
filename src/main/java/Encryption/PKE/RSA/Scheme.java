@@ -15,6 +15,9 @@ public class Scheme extends PKE<PublicParam, PublicKey, SecretKey, PlainText, Ci
     }
 
     @Override
+    public void Setup(PublicParam publicParam) {}
+
+    @Override
     public final void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp) {
         Random rand = new Random();
         if (pp.e_bit < 0) pk.e = new BigInteger("65537");
