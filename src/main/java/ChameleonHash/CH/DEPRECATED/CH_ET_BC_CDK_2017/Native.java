@@ -1,4 +1,4 @@
-package ChameleonHash.CH.CH_ET_BC_CDK_2017;
+package ChameleonHash.CH.DEPRECATED.CH_ET_BC_CDK_2017;
 
 /*
  * Chameleon-Hashes with Ephemeral Trapdoors And Applications to Invisible Sanitizable Signatures
@@ -6,7 +6,7 @@ package ChameleonHash.CH.CH_ET_BC_CDK_2017;
  */
 
 public class Native {
-    public static class CH_RSA extends ChameleonHash.CH.MCH_CDK_2017.Native {
+    public static class CH_RSA extends ChameleonHash.CH.DEPRECATED.MCH_CDK_2017.Native {
         public CH_RSA(int lambda) {
             super(lambda);
         }

@@ -1,5 +1,6 @@
 package ChameleonHash.PBCH.MAPCH_ZLW_2021;
 
+import ChameleonHash.CH.DEPRECATED.CH_ET_BC_CDK_2017.Native;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 
@@ -15,8 +16,8 @@ public class PBC {
     public static class PublicParam {
         public base.GroupParam.PBC.Symmetry GP;
         public ABE.MA_ABE.PBC.PublicParam pp_ABE;
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.PublicKey hk = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey tk = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+        Native.PublicKey hk = new Native.PublicKey();
+        Native.SecretKey tk = new Native.SecretKey();
 
         public PublicParam(curve.PBC curve) {
             GP = new base.GroupParam.PBC.Symmetry(curve);
@@ -38,7 +39,7 @@ public class PBC {
 
     public static class PublicKey {
         ABE.MA_ABE.PBC.PublicParam pp_ABE;
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.PublicKey hk;
+        Native.PublicKey hk;
 
         public PublicKey(PublicParam SP) {
             pp_ABE = SP.pp_ABE;
@@ -47,17 +48,17 @@ public class PBC {
     }
 
     public static class MasterSecretKey {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey tk = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+        Native.SecretKey tk = new Native.SecretKey();
     }
 
     public static class SecretKey {
         ABE.MA_ABE.PBC.SecretKey MA_ABE_SK = new ABE.MA_ABE.PBC.SecretKey();
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey tk = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+        Native.SecretKey tk = new Native.SecretKey();
     }
 
     public static class PublicKeyGroup {
         ABE.MA_ABE.PBC.PublicKeyGroup MA_ABE_PKG = new ABE.MA_ABE.PBC.PublicKeyGroup();
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.PublicKey hk;
+        Native.PublicKey hk;
         ABE.MA_ABE.PBC.PublicParam pp_ABE;
 
         public PublicKeyGroup(PublicParam SP) {
@@ -72,7 +73,7 @@ public class PBC {
 
     public static class SecretKeyGroup {
         ABE.MA_ABE.PBC.SecretKeyGroup MA_ABE_SKG = new ABE.MA_ABE.PBC.SecretKeyGroup();
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey tk = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+        Native.SecretKey tk = new Native.SecretKey();
 
         public void AddSK(SecretKey SK) {
             MA_ABE_SKG.AddSK(SK.MA_ABE_SK);
@@ -81,15 +82,15 @@ public class PBC {
     }
 
     public static class HashValue {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.HashValue CHET_H = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.HashValue();
+        Native.HashValue CHET_H = new Native.HashValue();
         ABE.MA_ABE.PBC.CipherText MA_ABE_C = new ABE.MA_ABE.PBC.CipherText();
     }
 
     public static class Randomness {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness CHET_R = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness();
+        Native.Randomness CHET_R = new Native.Randomness();
     }
 
-    ChameleonHash.CH.CH_ET_BC_CDK_2017.Native CHET;
+    Native CHET;
     ABE.MA_ABE.PBC MA_ABE = new ABE.MA_ABE.PBC();
 
 //    private Element BigInteger2G(Field G, BigInteger m) {
@@ -132,7 +133,7 @@ public class PBC {
     }
 
     public PBC(int lambda) {
-        CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native(lambda);
+        CHET = new Native(lambda);
     }
 
     public void SetUp(PublicParam SP) {
@@ -149,7 +150,7 @@ public class PBC {
     }
 
     public void Hash(HashValue H, Randomness R, PublicKeyGroup MHKS, base.LSSS.PBC.Matrix MSP, String m) {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
+        Native.ETrapdoor etd = new Native.ETrapdoor();
         CHET.Hash(H.CHET_H, R.CHET_R, etd, MHKS.hk, m);
         ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(BigInteger2G(MHKS.pp_ABE.GP.GT, etd.sk_ch_2.d).getImmutable());
         MA_ABE.Encrypt(H.MA_ABE_C, MHKS.pp_ABE, MHKS.MA_ABE_PKG, MSP, MA_ABE_PT);
@@ -163,7 +164,7 @@ public class PBC {
         if(!Check(H, R, MHKS, m)) throw new RuntimeException("Wrong Hash Value");
         ABE.MA_ABE.PBC.PlainText MA_ABE_PT = new ABE.MA_ABE.PBC.PlainText(MHKS.pp_ABE.GP.GetGTElement());
         MA_ABE.Decrypt(MA_ABE_PT, MHKS.pp_ABE, MSKS.MA_ABE_SKG, MSP, H.MA_ABE_C);
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
+        Native.ETrapdoor etd = new Native.ETrapdoor();
         etd.sk_ch_2.d = G2BigInteger(MA_ABE_PT.m);
         CHET.Adapt(R_p.CHET_R, H.CHET_H, R.CHET_R, etd, MHKS.hk, MSKS.tk, m, m_p);
     }

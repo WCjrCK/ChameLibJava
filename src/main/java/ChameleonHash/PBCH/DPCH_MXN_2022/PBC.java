@@ -1,5 +1,6 @@
 package ChameleonHash.PBCH.DPCH_MXN_2022;
 
+import ChameleonHash.CH.DEPRECATED.CH_ET_BC_CDK_2017.Native;
 import Encryption.AES_RAW;
 import it.unisa.dia.gas.jpbc.Element;
 import utils.Hash;
@@ -25,12 +26,12 @@ public class PBC {
     }
 
     public static class MasterPublicKey {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.PublicKey pk_CH = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
+        Native.PublicKey pk_CH = new Native.PublicKey();
         Signature.BLS_RAW.PBC.PublicKey pk_DS = new Signature.BLS_RAW.PBC.PublicKey();
     }
 
     public static class MasterSecretKey {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey sk_CH = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+        Native.SecretKey sk_CH = new Native.SecretKey();
         Signature.BLS_RAW.PBC.SecretKey sk_DS = new Signature.BLS_RAW.PBC.SecretKey();
     }
 
@@ -44,7 +45,7 @@ public class PBC {
 
     public static class Modifier {
         String gid;
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey sk_gid = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+        Native.SecretKey sk_gid = new Native.SecretKey();
         Signature.BLS_RAW.PBC.Signature sigma_gid = new Signature.BLS_RAW.PBC.Signature();
         ABE.MA_ABE.PBC.SecretKey sk_gid_A = new ABE.MA_ABE.PBC.SecretKey();
 
@@ -70,22 +71,22 @@ public class PBC {
     }
 
     public static class HashValue {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.HashValue h = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.HashValue();
+        Native.HashValue h = new Native.HashValue();
         AES_RAW.CipherText c_SE = new AES_RAW.CipherText();
         ABE.MA_ABE.PBC.CipherText c_MA_ABE = new ABE.MA_ABE.PBC.CipherText();
     }
 
     public static class Randomness {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness r = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness();
+        Native.Randomness r = new Native.Randomness();
     }
 
     Random rand = new Random();
     ABE.MA_ABE.PBC MA_ABE = new ABE.MA_ABE.PBC();
-    ChameleonHash.CH.CH_ET_BC_CDK_2017.Native CH_ET;
+    Native CH_ET;
     Signature.BLS_RAW.PBC DS = new Signature.BLS_RAW.PBC();
 
     public PBC(int lambda) {
-        CH_ET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native(lambda);
+        CH_ET = new Native(lambda);
     }
 
     private void genEncMAABE(ABE.MA_ABE.PBC.CipherText c_MA_ABE, ABE.MA_ABE.PBC.PlainText pt_MA_ABE, PublicKeyGroup PKG, base.LSSS.PBC.Matrix MSP, PublicParam pp, byte[] r_t) {
@@ -129,7 +130,7 @@ public class PBC {
     }
 
     public void Hash(HashValue H, Randomness R, PublicKeyGroup PKG, base.LSSS.PBC.Matrix MSP, PublicParam pp, MasterPublicKey pk, String m) {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
+        Native.ETrapdoor etd = new Native.ETrapdoor();
         CH_ET.Hash(H.h, R.r, etd, pk.pk_CH, m);
         byte[] r_t = new byte[16];
         rand.nextBytes(r_t);
@@ -163,7 +164,7 @@ public class PBC {
         genEncMAABE(ct_MA_ABE, pt_MA_ABE, PKG, MSP, pp, pla.r);
         if(!ct_MA_ABE.isEqual(H.c_MA_ABE)) throw new RuntimeException("illegal decrypt");
 
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
+        Native.ETrapdoor etd = new Native.ETrapdoor();
 
         AES_RAW.PlainText pt_SE = new AES_RAW.PlainText();
         AES_RAW.Decrypt(pt_SE, H.c_SE, pla.k);

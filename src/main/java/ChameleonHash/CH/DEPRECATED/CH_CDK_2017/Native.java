@@ -1,4 +1,4 @@
-package ChameleonHash.CH.CH_CDK_2017;
+package ChameleonHash.CH.DEPRECATED.CH_CDK_2017;
 
 /*
  * Chameleon-Hashes with Ephemeral Trapdoors And Applications to Invisible Sanitizable Signatures

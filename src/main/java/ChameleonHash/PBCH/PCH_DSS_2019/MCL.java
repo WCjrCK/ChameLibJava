@@ -1,5 +1,6 @@
 package ChameleonHash.PBCH.PCH_DSS_2019;
 
+import ChameleonHash.CH.DEPRECATED.CH_ET_BC_CDK_2017.Native;
 import Encryption.AES_RAW;
 import utils.BooleanFormulaParser;
 import utils.Hash;
@@ -19,36 +20,36 @@ public class MCL {
     }
 
     public static class MasterPublicKey {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.PublicKey pk_CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
+        Native.PublicKey pk_CHET = new Native.PublicKey();
         ABE.FAME.MCL.MasterPublicKey mpk_ABE = new ABE.FAME.MCL.MasterPublicKey();
     }
 
     public static class MasterSecretKey {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey sk_CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+        Native.SecretKey sk_CHET = new Native.SecretKey();
         ABE.FAME.MCL.MasterSecretKey msk_ABE = new ABE.FAME.MCL.MasterSecretKey();
     }
 
     public static class SecretKey {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey sk_CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+        Native.SecretKey sk_CHET = new Native.SecretKey();
         ABE.FAME.MCL.SecretKey sk_ABE = new ABE.FAME.MCL.SecretKey();
     }
 
     public static class HashValue {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.HashValue h_CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.HashValue();
+        Native.HashValue h_CHET = new Native.HashValue();
         ABE.FAME.MCL.CipherText ct_ABE = new ABE.FAME.MCL.CipherText();
         AES_RAW.CipherText ct_SE = new AES_RAW.CipherText();
     }
 
     public static class Randomness {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness r_CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness();
+        Native.Randomness r_CHET = new Native.Randomness();
     }
 
-    ChameleonHash.CH.CH_ET_BC_CDK_2017.Native CHET;
+    Native CHET;
     ABE.FAME.MCL ABE;
     Random rand = new Random();
 
     public MCL(int k) {
-        CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native(k);
+        CHET = new Native(k);
         ABE = new ABE.FAME.MCL();
     }
 
@@ -63,7 +64,7 @@ public class MCL {
     }
 
     public void Hash(HashValue H, Randomness R, PublicParam pp_PCH, MasterPublicKey pk_PCH, base.LSSS.MCL.Matrix MSP, String m) {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
+        Native.ETrapdoor etd = new Native.ETrapdoor();
         CHET.Hash(H.h_CHET, R.r_CHET, etd, pk_PCH.pk_CHET, m);
         byte[] r = new byte[16];
         rand.nextBytes(r);
@@ -99,7 +100,7 @@ public class MCL {
         ABE.Encrypt(ct_p, pp_PCH.pp_ABE, pk_PCH.mpk_ABE, MSP,pt_ABE, u.u_1, u.u_2);
 
         if(!ct_p.isEqual(H.ct_ABE)) throw new RuntimeException("wrong abe ciphertext");
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
+        Native.ETrapdoor etd = new Native.ETrapdoor();
         AES_RAW.PlainText se_pt = new AES_RAW.PlainText();
         AES_RAW.Decrypt(se_pt, H.ct_SE, pla.k);
         etd.sk_ch_2.d = new BigInteger(se_pt.pt);

@@ -1,4 +1,4 @@
-package ChameleonHash.CH.CHET_RSA_CDK_2017;
+package ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017;
 
 import utils.Func;
 import utils.Hash;

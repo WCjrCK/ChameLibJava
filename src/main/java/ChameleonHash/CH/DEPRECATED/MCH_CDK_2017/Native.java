@@ -1,4 +1,4 @@
-package ChameleonHash.CH.MCH_CDK_2017;
+package ChameleonHash.CH.DEPRECATED.MCH_CDK_2017;
 
 import utils.Func;
 import utils.Hash;

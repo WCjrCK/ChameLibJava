@@ -1,4 +1,4 @@
-package ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004;
+package ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004;
 
 import utils.Func;
 import utils.Hash;

@@ -1,3 +1,4 @@
+import ChameleonHash.CH.DEPRECATED.MCH_CDK_2017.Native;
 import com.herumi.mcl.*;
 import curve.Group;
 import curve.MCL;
@@ -249,18 +250,18 @@ public class CHTest {
             @Test
             void NativeTest() {
                 Random rand = new Random();
-                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native scheme = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native();
-                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.PublicKey pk = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.PublicKey();
-                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.SecretKey sk = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.SecretKey();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native scheme = new ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.PublicKey pk = new ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.PublicKey();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.SecretKey sk = new ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.SecretKey();
                 scheme.KeyGen(pk, sk, 512);
                 BigInteger m1 = new BigInteger(256, rand);
                 BigInteger m2 = new BigInteger(256, rand);
                 assertTrue(m1.compareTo(m2) != 0, "m1 != m2");
-                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.HashValue h1 = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.HashValue();
-                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.HashValue h2 = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.HashValue();
-                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.Randomness r1 = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.Randomness();
-                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.Randomness r2 = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.Randomness();
-                ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.Randomness r1_p = new ChameleonHash.CH.CH_KEF_NoMH_AM_2004.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.HashValue h1 = new ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.HashValue();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.HashValue h2 = new ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.HashValue();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.Randomness r1 = new ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.Randomness r2 = new ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.Randomness r1_p = new ChameleonHash.CH.DEPRECATED.CH_KEF_NoMH_AM_2004.Native.Randomness();
                 scheme.Hash(h1, r1, pk, m1);
                 assertTrue(scheme.Check(h1, r1, pk, m1), "H(m1) valid");
                 scheme.Hash(h2, r2, pk, m2);
@@ -281,22 +282,22 @@ public class CHTest {
             @Test
             void NativeTest() {
                 Random rand = new Random();
-                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native scheme = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native();
-                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicParam pp = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicParam();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native scheme = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.PublicParam pp = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.PublicParam();
                 scheme.SetUp(pp, 512, 1024);
-                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicKey pk = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.PublicKey();
-                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.SecretKey sk = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.SecretKey();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.PublicKey pk = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.PublicKey();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.SecretKey sk = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.SecretKey();
                 scheme.KeyGen(pk, sk, pp);
                 BigInteger m1 = new BigInteger(256, rand);
                 BigInteger m2 = new BigInteger(256, rand);
                 BigInteger L1 = new BigInteger(512, rand);
                 BigInteger L2 = new BigInteger(512, rand);
                 assertTrue(m1.compareTo(m2) != 0, "m1 != m2");
-                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue h1 = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue();
-                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue h2 = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue();
-                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r1 = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
-                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r2 = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
-                ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r1_p = new ChameleonHash.CH.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue h1 = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue h2 = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.HashValue();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r1 = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r2 = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness r1_p = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSA_F_AM_2004.Native.Randomness();
                 scheme.Hash(h1, r1, pk, L1, m1, pp);
                 assertTrue(scheme.Check(h1, r1, pk, L1, m1, pp), "H(L1, m1) valid");
                 assertFalse(scheme.Check(h1, r1, pk, L2, m1, pp), "not H(L2, m1)");
@@ -322,20 +323,20 @@ public class CHTest {
             @Test
             void NativeTest() {
                 Random rand = new Random();
-                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native scheme = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native();
-                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.PublicKey pk = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.PublicKey();
-                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.SecretKey sk = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.SecretKey();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native scheme = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.PublicKey pk = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.PublicKey();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.SecretKey sk = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.SecretKey();
                 scheme.KeyGen(pk, sk, 512);
                 BigInteger m1 = new BigInteger(256, rand);
                 BigInteger m2 = new BigInteger(256, rand);
                 BigInteger L1 = new BigInteger(512, rand);
                 BigInteger L2 = new BigInteger(512, rand);
                 assertTrue(m1.compareTo(m2) != 0, "m1 != m2");
-                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue h1 = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue();
-                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue h2 = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue();
-                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r1 = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
-                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r2 = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
-                ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r1_p = new ChameleonHash.CH.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue h1 = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue h2 = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.HashValue();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r1 = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r2 = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness r1_p = new ChameleonHash.CH.DEPRECATED.CH_KEF_MH_RSANN_F_AM_2004.Native.Randomness();
                 scheme.Hash(h1, r1, pk, L1, m1);
                 assertTrue(scheme.Check(h1, r1, pk, L1, m1), "H(L1, m1) valid");
                 assertFalse(scheme.Check(h1, r1, pk, L2, m1), "not H(L2, m1)");
@@ -575,19 +576,19 @@ public class CHTest {
             @ValueSource(ints = {256, 512, 1024, 2048})
             void NativeTest(int lambda) {
                 Random rand = new Random();
-                ChameleonHash.CH.CH_CDK_2017.Native scheme = new ChameleonHash.CH.CH_CDK_2017.Native(lambda);
-                ChameleonHash.CH.CH_CDK_2017.Native.PublicKey pk = new ChameleonHash.CH.CH_CDK_2017.Native.PublicKey();
-                ChameleonHash.CH.CH_CDK_2017.Native.SecretKey sk = new ChameleonHash.CH.CH_CDK_2017.Native.SecretKey();
+                ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native scheme = new ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native(lambda);
+                ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.PublicKey pk = new ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.PublicKey();
+                ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.SecretKey sk = new ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.SecretKey();
                 scheme.KeyGen(pk, sk);
                 BigInteger m1 = new BigInteger(lambda, rand);
                 BigInteger m2 = new BigInteger(lambda, rand);
                 BigInteger l1 = new BigInteger(lambda, rand);
                 BigInteger l2 = new BigInteger(lambda, rand);
-                ChameleonHash.CH.CH_CDK_2017.Native.HashValue h1 = new ChameleonHash.CH.CH_CDK_2017.Native.HashValue();
-                ChameleonHash.CH.CH_CDK_2017.Native.HashValue h2 = new ChameleonHash.CH.CH_CDK_2017.Native.HashValue();
-                ChameleonHash.CH.CH_CDK_2017.Native.Randomness r1 = new ChameleonHash.CH.CH_CDK_2017.Native.Randomness();
-                ChameleonHash.CH.CH_CDK_2017.Native.Randomness r1_p = new ChameleonHash.CH.CH_CDK_2017.Native.Randomness();
-                ChameleonHash.CH.CH_CDK_2017.Native.Randomness r2 = new ChameleonHash.CH.CH_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.HashValue h1 = new ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.HashValue();
+                ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.HashValue h2 = new ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.HashValue();
+                ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.Randomness r1 = new ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.Randomness r1_p = new ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.Randomness r2 = new ChameleonHash.CH.DEPRECATED.CH_CDK_2017.Native.Randomness();
                 scheme.Hash(h1, r1, pk, l1, m1);
                 assertTrue(scheme.Check(h1, r1, pk, l1, m1), "H(l1, m1) valid");
                 assertFalse(scheme.Check(h1, r1, pk, l2, m1), "not H(l2, m1)");
@@ -613,17 +614,17 @@ public class CHTest {
             @ParameterizedTest(name = "test lambda = {0}")
             @ValueSource(ints = {256, 512, 1024, 2048})
             void NativeTest(int lambda) {
-                ChameleonHash.CH.MCH_CDK_2017.Native scheme = new ChameleonHash.CH.MCH_CDK_2017.Native(lambda);
-                ChameleonHash.CH.MCH_CDK_2017.Native.PublicKey pk = new ChameleonHash.CH.MCH_CDK_2017.Native.PublicKey();
-                ChameleonHash.CH.MCH_CDK_2017.Native.SecretKey sk = new ChameleonHash.CH.MCH_CDK_2017.Native.SecretKey();
+                Native scheme = new Native(lambda);
+                Native.PublicKey pk = new Native.PublicKey();
+                Native.SecretKey sk = new Native.SecretKey();
                 scheme.KeyGen(pk, sk);
                 String m1 = "WCjrCK";
                 String m2 = "123";
-                ChameleonHash.CH.MCH_CDK_2017.Native.HashValue h1 = new ChameleonHash.CH.MCH_CDK_2017.Native.HashValue();
-                ChameleonHash.CH.MCH_CDK_2017.Native.HashValue h2 = new ChameleonHash.CH.MCH_CDK_2017.Native.HashValue();
-                ChameleonHash.CH.MCH_CDK_2017.Native.Randomness r1 = new ChameleonHash.CH.MCH_CDK_2017.Native.Randomness();
-                ChameleonHash.CH.MCH_CDK_2017.Native.Randomness r1_p = new ChameleonHash.CH.MCH_CDK_2017.Native.Randomness();
-                ChameleonHash.CH.MCH_CDK_2017.Native.Randomness r2 = new ChameleonHash.CH.MCH_CDK_2017.Native.Randomness();
+                Native.HashValue h1 = new Native.HashValue();
+                Native.HashValue h2 = new Native.HashValue();
+                Native.Randomness r1 = new Native.Randomness();
+                Native.Randomness r1_p = new Native.Randomness();
+                Native.Randomness r2 = new Native.Randomness();
                 scheme.Hash(h1, r1, pk, m1);
                 assertTrue(scheme.Check(h1, r1, pk, m1), "H(m1) valid");
                 scheme.Hash(h2, r2, pk, m2);
@@ -646,20 +647,20 @@ public class CHTest {
             @ValueSource(ints = {128, 256, 512})
             void NativeTest(int lambda) {
                 Random rand = new Random();
-                ChameleonHash.CH.CHET_RSA_CDK_2017.Native scheme = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native(lambda);
-                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.PublicKey pk = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.PublicKey();
-                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.SecretKey sk = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.SecretKey();
+                ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native scheme = new ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native(lambda);
+                ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.PublicKey pk = new ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.PublicKey();
+                ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.SecretKey sk = new ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.SecretKey();
                 scheme.KeyGen(pk, sk);
                 BigInteger m1 = new BigInteger(lambda, rand);
                 BigInteger m2 = new BigInteger(lambda, rand);
                 assertTrue(m1.compareTo(m2) != 0, "m1 != m2");
-                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.HashValue h1 = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.HashValue();
-                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.HashValue h2 = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.HashValue();
-                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.Randomness r1 = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.Randomness();
-                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.Randomness r1_p = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.Randomness();
-                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.Randomness r2 = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.Randomness();
-                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.ETrapdoor etd1 = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.ETrapdoor();
-                ChameleonHash.CH.CHET_RSA_CDK_2017.Native.ETrapdoor etd2 = new ChameleonHash.CH.CHET_RSA_CDK_2017.Native.ETrapdoor();
+                ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.HashValue h1 = new ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.HashValue();
+                ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.HashValue h2 = new ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.HashValue();
+                ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.Randomness r1 = new ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.Randomness r1_p = new ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.Randomness r2 = new ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.Randomness();
+                ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.ETrapdoor etd1 = new ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.ETrapdoor();
+                ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.ETrapdoor etd2 = new ChameleonHash.CH.DEPRECATED.CHET_RSA_CDK_2017.Native.ETrapdoor();
                 scheme.Hash(h1, r1, etd1, pk, m1);
                 assertTrue(scheme.Check(h1, r1, pk, m1), "H(m1) valid");
                 scheme.Hash(h2, r2, etd2, pk, m2);
@@ -671,136 +672,6 @@ public class CHTest {
                 scheme.Adapt(r1_p, h1, r1, etd1, pk, sk, m1, m2);
                 assertTrue(scheme.Check(h1, r1_p, pk, m2), "adapt m2 valid");
                 assertFalse(scheme.Check(h1, r1_p, pk, m1), "not adapt m1");
-            }
-        }
-    }
-
-    @DisplayName("test paper 《Fully Collision-Resistant Chameleon-Hashes from Simpler and Post-Quantum Assumptions》")
-    @Nested
-    class FullyCollisionResistantChameleonHashesFromSimplerAndPostQuantumAssumptionsTest {
-        @DisplayName("test FCR_CH_PreQA_DKS_2020")
-        @Nested
-        class FCR_CH_PreQA_DKS_2020_Test {
-            @DisplayName("test PBC impl")
-            @ParameterizedTest(name = "test curve {0} group {1}")
-            @MethodSource("CHTest#GetPBCCartesianProduct")
-            void JPBCTest(curve.PBC curve, Group group) {
-                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC();
-                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
-                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey pk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey();
-                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey sk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey();
-                scheme.KeyGen(pk, sk, pp);
-                Element m1 = pp.GP.GetZrElement();
-                Element m2 = pp.GP.GetZrElement();
-                assertFalse(m1.isEqual(m2), "m1 != m2");
-
-                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue h1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
-                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue h2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
-                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
-                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
-                ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1_p = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
-                scheme.Hash(h1, r1, pp, pk, m1);
-                assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
-                assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
-                scheme.Hash(h2, r2, pp, pk, m2);
-                assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
-                assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
-
-                scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
-                assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
-                assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
-            }
-
-            @DisplayName("test MCL impl")
-            @ParameterizedTest(name = "test curve {0}")
-            // UnitTest.CurveLib.BadCaseTest#MCL_Bad_Case#Case2
-            @EnumSource(names = {"BN254", "BLS12_381"})
-            void MCLTest(MCL curve) {
-                Func.MCLInit(curve);
-                {
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1 scheme = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.PublicParam();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.PublicKey pk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.PublicKey();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.SecretKey sk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.SecretKey();
-                    scheme.KeyGen(pk, sk, pp);
-                    Fr m1 = new Fr();
-                    pp.GP.GetZrElement(m1);
-                    Fr m2 = new Fr();
-                    pp.GP.GetZrElement(m2);
-                    assertFalse(m1.equals(m2), "m1 != m2");
-
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.HashValue h1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.HashValue();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.HashValue h2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.HashValue();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness r1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness r2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness r1_p = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G1.Randomness();
-                    scheme.Hash(h1, r1, pp, pk, m1);
-                    assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
-                    assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
-                    scheme.Hash(h2, r2, pp, pk, m2);
-                    assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
-                    assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
-
-                    scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
-                    assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
-                    assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
-                }
-                {
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2 scheme = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.PublicParam();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.PublicKey pk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.PublicKey();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.SecretKey sk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.SecretKey();
-                    scheme.KeyGen(pk, sk, pp);
-                    Fr m1 = new Fr();
-                    pp.GP.GetZrElement(m1);
-                    Fr m2 = new Fr();
-                    pp.GP.GetZrElement(m2);
-                    assertFalse(m1.equals(m2), "m1 != m2");
-
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.HashValue h1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.HashValue();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.HashValue h2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.HashValue();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness r1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness r2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness r1_p = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_G2.Randomness();
-                    scheme.Hash(h1, r1, pp, pk, m1);
-                    assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
-                    assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
-                    scheme.Hash(h2, r2, pp, pk, m2);
-                    assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
-                    assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
-
-                    scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
-                    assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
-                    assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
-                }
-                {
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT scheme = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicParam();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicKey pk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.PublicKey();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.SecretKey sk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.SecretKey();
-                    scheme.KeyGen(pk, sk, pp);
-                    Fr m1 = new Fr();
-                    pp.GP.GetZrElement(m1);
-                    Fr m2 = new Fr();
-                    pp.GP.GetZrElement(m2);
-                    assertFalse(m1.equals(m2), "m1 != m2");
-
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue h1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue h2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.HashValue();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness r1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness r2 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness();
-                    ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness r1_p = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.MCL_GT.Randomness();
-                    scheme.Hash(h1, r1, pp, pk, m1);
-                    assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
-                    assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
-                    scheme.Hash(h2, r2, pp, pk, m2);
-                    assertTrue(scheme.Check(h2, r2, pp, pk, m2), "H(m2) valid");
-                    assertFalse(scheme.Check(h2, r2, pp, pk, m1), "not H(m2)");
-
-                    scheme.Adapt(r1_p, h1, r1, pp, pk, sk, m1, m2);
-                    assertTrue(scheme.Check(h1, r1_p, pp, pk, m2), "Adapt(m2) valid");
-                    assertFalse(scheme.Check(h1, r1_p, pp, pk, m1), "not Adapt(m1)");
-                }
             }
         }
     }

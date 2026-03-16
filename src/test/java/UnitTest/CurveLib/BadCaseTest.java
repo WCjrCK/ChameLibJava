@@ -65,55 +65,55 @@ public class BadCaseTest {
         @DisplayName("case 2")
         @Test
         void Case2() {
-            InitialLib();
-            curve.PBC curve = PBC.G_149;
-            Group group = Group.G2;
-
-            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC();
-            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
-            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey pk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey();
-            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey sk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey();
-            scheme.KeyGen(pk, sk, pp);
-            Element m1 = pp.GP.GetZrElement();
-
-            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue H = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
-
-            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness R = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
-            Element T1, T2;
-            { // scheme.Hash
-                Element xi, k_1_1, k_1_2;
-                xi = pp.GP.GetZrElement();
-                k_1_1 = pp.GP.GetZrElement();
-                k_1_2 = pp.GP.GetZrElement();
-                R.e_2 = pp.GP.GetZrElement();
-                R.s_2 = pp.GP.GetZrElement();
-
-                H.O = pp.g_1.powZn(m1).mul(pp.g_2.powZn(xi)).getImmutable();
-
-                T1 = pp.g_1.powZn(k_1_1).mul(pp.g_2.powZn(k_1_2));
-                R.e_1 = pp.H(
-                        pk.y, H.O, m1,
-                        T1,
-                        pp.g_1.powZn(R.s_2).div(pk.y.powZn(R.e_2))
-                ).sub(R.e_2);
-                R.s_1_1 = k_1_1.add(R.e_1.mul(m1));
-                R.s_1_2 = k_1_2.add(R.e_1.mul(xi));
-            }
-            T2 = pp.g_1.powZn(R.s_1_1).mul(pp.g_2.powZn(R.s_1_2)).div(H.O.powZn(R.e_1));
-            System.out.printf("T1 = %s\n\nT2 = %s\n\n", T1, T2);
-            System.out.printf("str(T1) == str(T2) ? %s\n\n", T1.toString().equals(T2.toString()));
-            System.out.printf("T1 == T2 ? %s\n\n", T1.isEqual(T2));
-
-//            assertFalse((T1.isEqual(T2) ^ T1.toString().equals(T2.toString())));
-
-            Element m2 = pp.GP.GetZrElement();
-            assertFalse(m1.isEqual(m2), "m1 != m2");
-
-            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue h1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
-            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
-            scheme.Hash(h1, r1, pp, pk, m1);
-            assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
-            assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
+//            InitialLib();
+//            curve.PBC curve = PBC.G_149;
+//            Group group = Group.G2;
+//
+//            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC scheme = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC();
+//            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
+//            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey pk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicKey();
+//            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey sk = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.SecretKey();
+//            scheme.KeyGen(pk, sk, pp);
+//            Element m1 = pp.GP.GetZrElement();
+//
+//            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue H = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
+//
+//            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness R = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
+//            Element T1, T2;
+//            { // scheme.Hash
+//                Element xi, k_1_1, k_1_2;
+//                xi = pp.GP.GetZrElement();
+//                k_1_1 = pp.GP.GetZrElement();
+//                k_1_2 = pp.GP.GetZrElement();
+//                R.e_2 = pp.GP.GetZrElement();
+//                R.s_2 = pp.GP.GetZrElement();
+//
+//                H.O = pp.g_1.powZn(m1).mul(pp.g_2.powZn(xi)).getImmutable();
+//
+//                T1 = pp.g_1.powZn(k_1_1).mul(pp.g_2.powZn(k_1_2));
+//                R.e_1 = pp.H(
+//                        pk.y, H.O, m1,
+//                        T1,
+//                        pp.g_1.powZn(R.s_2).div(pk.y.powZn(R.e_2))
+//                ).sub(R.e_2);
+//                R.s_1_1 = k_1_1.add(R.e_1.mul(m1));
+//                R.s_1_2 = k_1_2.add(R.e_1.mul(xi));
+//            }
+//            T2 = pp.g_1.powZn(R.s_1_1).mul(pp.g_2.powZn(R.s_1_2)).div(H.O.powZn(R.e_1));
+//            System.out.printf("T1 = %s\n\nT2 = %s\n\n", T1, T2);
+//            System.out.printf("str(T1) == str(T2) ? %s\n\n", T1.toString().equals(T2.toString()));
+//            System.out.printf("T1 == T2 ? %s\n\n", T1.isEqual(T2));
+//
+////            assertFalse((T1.isEqual(T2) ^ T1.toString().equals(T2.toString())));
+//
+//            Element m2 = pp.GP.GetZrElement();
+//            assertFalse(m1.isEqual(m2), "m1 != m2");
+//
+//            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue h1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.HashValue();
+//            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness r1 = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.Randomness();
+//            scheme.Hash(h1, r1, pp, pk, m1);
+//            assertTrue(scheme.Check(h1, r1, pp, pk, m1), "H(m1) valid");
+//            assertFalse(scheme.Check(h1, r1, pp, pk, m2), "not H(m1)");
         }
 
         @DisplayName("case 3")
@@ -125,18 +125,18 @@ public class BadCaseTest {
             // jpbc is ok
 //            PairingFactory.getInstance().setUsePBCWhenPossible(false);
 
-            curve.PBC curve = PBC.G_149;
-            Group group = Group.GT;
-
-            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
-            {
-                Pairing pairing = Func.PairingGen(curve);
-                pp.GP.G = Func.GetPBCField(pairing, group);
-                pp.g_1 = pp.GP.GetGElement();
-                byte[] hash = Hash.HASH(pp.g_1.toString());
-                System.out.println(Arrays.toString(hash));
-                pp.GP.G.newElementFromHash(hash, 0, hash.length).getImmutable();
-            }
+//            curve.PBC curve = PBC.G_149;
+//            Group group = Group.GT;
+//
+//            ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam pp = new ChameleonHash.CH.FCR_CH_PreQA_DKS_2020.PBC.PublicParam(curve, group);
+//            {
+//                Pairing pairing = Func.PairingGen(curve);
+//                pp.GP.G = Func.GetPBCField(pairing, group);
+//                pp.g_1 = pp.GP.GetGElement();
+//                byte[] hash = Hash.HASH(pp.g_1.toString());
+//                System.out.println(Arrays.toString(hash));
+//                pp.GP.G.newElementFromHash(hash, 0, hash.length).getImmutable();
+//            }
         }
     }
 

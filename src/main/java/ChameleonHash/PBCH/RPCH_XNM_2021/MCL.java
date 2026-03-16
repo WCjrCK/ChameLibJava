@@ -1,5 +1,6 @@
 package ChameleonHash.PBCH.RPCH_XNM_2021;
 
+import ChameleonHash.CH.DEPRECATED.CH_ET_BC_CDK_2017.Native;
 import Encryption.AES_RAW;
 import com.herumi.mcl.G1;
 import utils.BooleanFormulaParser;
@@ -24,17 +25,17 @@ public class MCL {
     }
 
     public static class MasterPublicKey {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.PublicKey pk_CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.PublicKey();
+        Native.PublicKey pk_CHET = new Native.PublicKey();
         public ABE.RABE.MCL.MasterPublicKey mpk_RABE = new ABE.RABE.MCL.MasterPublicKey();
     }
 
     public static class MasterSecretKey {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey sk_CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+        Native.SecretKey sk_CHET = new Native.SecretKey();
         public ABE.RABE.MCL.MasterSecretKey msk_RABE = new ABE.RABE.MCL.MasterSecretKey();
     }
 
     public static class SecretKey {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey sk_CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+        Native.SecretKey sk_CHET = new Native.SecretKey();
         public ABE.RABE.MCL.SecretKey sk_RABE = new ABE.RABE.MCL.SecretKey();
     }
 
@@ -43,26 +44,26 @@ public class MCL {
     }
 
     public static class DecryptKey {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey sk_CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.SecretKey();
+        Native.SecretKey sk_CHET = new Native.SecretKey();
         public ABE.RABE.MCL.DecryptKey dk_RABE = new ABE.RABE.MCL.DecryptKey();
     }
 
     public static class HashValue {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.HashValue h_CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.HashValue();
+        Native.HashValue h_CHET = new Native.HashValue();
         ABE.RABE.MCL.CipherText ct_RABE = new ABE.RABE.MCL.CipherText();
         AES_RAW.CipherText ct_SE = new AES_RAW.CipherText();
     }
 
     public static class Randomness {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness r_CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.Randomness();
+        Native.Randomness r_CHET = new Native.Randomness();
     }
 
     ABE.RABE.MCL RABE;
-    ChameleonHash.CH.CH_ET_BC_CDK_2017.Native CHET;
+    Native CHET;
     Random rand = new Random();
 
     public MCL(int k) {
-        CHET = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native(k);
+        CHET = new Native(k);
         RABE = new ABE.RABE.MCL();
     }
 
@@ -90,7 +91,7 @@ public class MCL {
     }
 
     public void Hash(HashValue H, Randomness R, PublicParam SP, MasterPublicKey mpk, base.LSSS.MCL.Matrix MSP, String m, int t) {
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
+        Native.ETrapdoor etd = new Native.ETrapdoor();
         CHET.Hash(H.h_CHET, R.r_CHET, etd, mpk.pk_CHET, m);
         byte[] r = new byte[16];
         rand.nextBytes(r);
@@ -126,7 +127,7 @@ public class MCL {
 
         if(!ct_RABE.isEqual(H.ct_RABE)) throw new RuntimeException("wrong rabe ciphertext");
 
-        ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor etd = new ChameleonHash.CH.CH_ET_BC_CDK_2017.Native.ETrapdoor();
+        Native.ETrapdoor etd = new Native.ETrapdoor();
         AES_RAW.PlainText se_pt = new AES_RAW.PlainText();
         AES_RAW.Decrypt(se_pt, H.ct_SE, pla.k);
         etd.sk_ch_2.d = new BigInteger(se_pt.pt);
