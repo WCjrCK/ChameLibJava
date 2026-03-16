@@ -13,6 +13,7 @@ import static ChameleonHash.SchemeCurveRequire.SYMMETRIC;
 public enum CHName {
     CCT_2024(SINGLEGROUP, ChameleonHash.CH.BaseCH.CCT_2024.Scheme.class, false, false),
     DKS_2020(SINGLEGROUP, ChameleonHash.CH.BaseCH.DKS_2020.Scheme.class, false, false),
+    DSS_2020(SINGLEGROUP, ChameleonHash.CH.BaseCH.DSS_2020.Scheme.class, false, false),
 
     LLA_2012(SINGLEGROUP, ChameleonHash.CH.LabelCH.LLA_2012.Scheme.class, true, false),
     CZT_2011(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZT_2011.Scheme.class, true, false),

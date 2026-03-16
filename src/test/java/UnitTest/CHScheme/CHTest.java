@@ -42,6 +42,8 @@ public class CHTest {
             CHName.CCT_2024,
             CHName.KOG_CDK_2017,
             CHName.BC_CDK_2017,
+            CHName.DKS_2020,
+            CHName.DSS_2020,
     });
 
     public static Stream<Arguments> GetAllCHSchemeCurve() {
