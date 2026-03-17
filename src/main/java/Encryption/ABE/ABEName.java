@@ -3,7 +3,8 @@ package Encryption.ABE;
 import Encryption.ABE.BaseABE.FAME.Scheme;
 
 public enum ABEName {
-    FAME(Scheme.class, false),
+    ABE_FAME(Scheme.class, false),
+    RABE_XNM_2021(Encryption.ABE.RevocableABE.XNM_2021.Scheme.class, true),
     ;
 
     public Class<?> schemeClass;

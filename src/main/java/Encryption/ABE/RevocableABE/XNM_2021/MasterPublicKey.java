@@ -1,15 +1,9 @@
-package Encryption.ABE.BaseABE.FAME;
+package Encryption.ABE.RevocableABE.XNM_2021;
 
-import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
 public class MasterPublicKey extends Encryption.ABE.Components.MasterPublicKey {
-    protected MultivePoint g;
-    public MultivePoint h;
-    protected MultivePoint H_1;
-    protected MultivePoint H_2;
-    protected MultivePoint T_1;
-    protected MultivePoint T_2;
+    protected Encryption.ABE.BaseABE.FAME.MasterPublicKey FAME_mpk;
 
     @Override
     public final ElementCounter TheoSize() {

@@ -192,7 +192,6 @@ public class PBC {
             byte[] tmp = PT.m.toBytes();
             for(int i = 0;i < tmp.length;++i) CT.ct_TMM_2022[i] ^= tmp[i];
         }
-
     }
 
     public void Decrypt(PlainText PT, PublicParam SP, DecryptKey dk, base.LSSS.PBC.Matrix MSP, CipherText CT) {

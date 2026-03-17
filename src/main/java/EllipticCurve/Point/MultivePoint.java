@@ -24,5 +24,5 @@ public interface MultivePoint<P extends Point<P, S>, S extends Scalar<S>> {
 
     MultivePoint<P, S> copy();
 
-    public abstract byte[] toBytes();
+    byte[] toBytes();
 }

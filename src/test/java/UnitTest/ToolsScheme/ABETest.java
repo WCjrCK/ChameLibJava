@@ -6,6 +6,11 @@ import Encryption.ABE.ABEConfig;
 import Encryption.ABE.ABEName;
 import Encryption.ABE.BaseABE.FAME.*;
 import Encryption.ABE.Components.Attributes;
+import Encryption.ABE.Interface.RevocableABE;
+import Encryption.ABE.RevocableABE.Components.Authority;
+import Encryption.ABE.RevocableABE.Components.Info;
+import Encryption.ABE.RevocableABE.Components.User;
+import Encryption.ABE.RevocableABE.RevocableABEFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -32,6 +37,21 @@ public class ABETest {
                 );
     }
 
+    public static Stream<Arguments> GetAllRABECurveSwapTag() {
+        return EnumSet.allOf(CurveName.class).stream()
+                .filter(a -> a != SECP256K1)
+                .filter(a -> a != PBC_CUSTOM)
+                .flatMap(
+                        a -> Stream.of(false, true)
+                                .flatMap(b -> EnumSet.allOf(ABEName.class).stream()
+                                        .filter(c -> c.revokable)
+                                        .flatMap(
+                                                c -> Stream.of(Arguments.of(c, a, b))
+                                        )
+                                )
+                );
+    }
+
     @DisplayName("test ABE")
     @ParameterizedTest(name = "test curve {0} swap_G1G2 {1}")
     @MethodSource("UnitTest.ToolsScheme.ABETest#GetAllCurveSwapTag")
@@ -44,7 +64,7 @@ public class ABETest {
 //            System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
 //        }
         Config curveConfig = new Config(curve, curve_param);
-        ABEConfig schemeConfig = new ABEConfig(ABEName.FAME, curveConfig, params);
+        ABEConfig schemeConfig = new ABEConfig(ABEName.ABE_FAME, curveConfig, params);
 
         Scheme scheme = new Scheme();
         PublicParam pp = scheme.createPublicParam(schemeConfig);
@@ -92,5 +112,116 @@ public class ABETest {
         scheme.Decrypt(m3, pp, mpk, sk2, ct1, p);
         assertFalse(m3.isEqual(m1), "decrypt(sk2, ct1) invalid");
         assertFalse(m3.isEqual(m2), "decrypt(sk2, ct1) invalid");
+    }
+
+    @DisplayName("test RABE")
+    @ParameterizedTest(name = "test scheme {0} curve {1} swap_G1G2 {2}")
+    @MethodSource("UnitTest.ToolsScheme.ABETest#GetAllRABECurveSwapTag")
+    void RABE(ABEName abeName, CurveName curve, boolean swap_G1G2) {
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> curve_param = new HashMap<>();
+        curve_param.put("swap_G1G2", swap_G1G2);
+//        if (curveName == PBC_CUSTOM) {
+//            curve_param.put("param_file_path", "./jpbc/params/a.properties");
+//            System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
+//        }
+        Config curveConfig = new Config(curve, curve_param);
+
+        params.put("max_user", 1024);
+
+        ABEConfig schemeConfig = new ABEConfig(abeName, curveConfig, params);
+        {
+            RevocableABE scheme = RevocableABEFactory.createRevocableABE(schemeConfig);
+            Encryption.ABE.RevocableABE.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
+            Encryption.ABE.Components.MasterPublicKey mpk = pp.createMasterPublicKey();
+            Authority Auth = pp.createAuthority();
+            Auth.Setup(mpk, pp);
+
+            User u1 = pp.createUser("user1");
+            u1.S.addAttr("A");
+            u1.S.addAttr("DDDD");
+
+            User u2 = pp.createUser("user2");
+            u2.S.addAttr("BB");
+            u2.S.addAttr("CCC");
+
+            User u3 = pp.createUser("user3");
+            u3.S.addAttr("A");
+            u3.S.addAttr("BB");
+            u3.S.addAttr("CCC");
+
+            Auth.KeyGen(u1, pp, mpk);
+            Auth.KeyGen(u2, pp, mpk);
+            Auth.KeyGen(u3, pp, mpk);
+
+            Encryption.ABE.Components.PlainText pt1 = pp.createPlainText("msg1");
+            Encryption.ABE.Components.PlainText pt2 = pp.createPlainText("msg2");
+            Encryption.ABE.Components.PlainText pt3 = pp.createPlainText("msg3");
+
+            Encryption.ABE.Components.CipherText ct1 = pp.createCipherText();
+            Encryption.ABE.Components.CipherText ct2 = pp.createCipherText();
+
+            Encryption.ABE.Components.Policy P = pp.createPolicy("A&(DDDD|(BB&CCC))");
+
+            Info i = pp.createInfo();
+            i.setValue(new HashMap<>(){{put("timestamp", 5);}});
+            u1.Encrypt(ct1, pp, mpk, P, pt1, i);
+
+            Auth.KeyUpdate(pp, mpk, i);
+
+            Auth.DecryptKeyGen(u1, pp, mpk);
+            Auth.DecryptKeyGen(u2, pp, mpk);
+            Auth.DecryptKeyGen(u3, pp, mpk);
+
+            u1.Decrypt(pt3, pp, mpk, P, ct1);
+            assertTrue(pt3.isEqual(pt1), "decrypt(dk_1_1, ct1) == m1");
+
+            u2.Decrypt(pt3, pp, mpk, P, ct1);
+            assertFalse(pt3.isEqual(pt1), "policy false");
+
+            u3.Decrypt(pt3, pp, mpk, P, ct1);
+            assertTrue(pt3.isEqual(pt1), "decrypt(dk_3_1, ct1) == m1");
+
+
+            i.setValue(new HashMap<>(){{put("timestamp", 10);}});
+            Auth.Revoke(pp, mpk, u1, i);
+
+            i.setValue(new HashMap<>(){{put("timestamp", 50);}});
+            u2.Encrypt(ct2, pp, mpk, P, pt2, i);
+
+            Auth.KeyUpdate(pp, mpk, i);
+
+            Auth.DecryptKeyGen(u1, pp, mpk);
+            Auth.DecryptKeyGen(u2, pp, mpk);
+            Auth.DecryptKeyGen(u3, pp, mpk);
+
+            u1.Decrypt(pt3, pp, mpk, P, ct2);
+            assertFalse(pt3.isEqual(pt2), "banned id1");
+
+            u2.Decrypt(pt3, pp, mpk, P, ct2);
+            assertFalse(pt3.isEqual(pt2), "policy false");
+
+            u3.Decrypt(pt3, pp, mpk, P, ct2);
+            assertTrue(pt3.isEqual(pt2), "decrypt(dk_3_1, ct1) == m1");
+
+
+            i.setValue(new HashMap<>(){{put("timestamp", 100);}});
+            Auth.Revoke(pp, mpk, u2, i);
+
+            Auth.KeyUpdate(pp, mpk, i);
+
+            Auth.DecryptKeyGen(u1, pp, mpk);
+            Auth.DecryptKeyGen(u2, pp, mpk);
+            Auth.DecryptKeyGen(u3, pp, mpk);
+
+            u1.Decrypt(pt3, pp, mpk, P, ct2);
+            assertFalse(pt3.isEqual(pt2), "different time");
+
+            u2.Decrypt(pt3, pp, mpk, P, ct2);
+            assertFalse(pt3.isEqual(pt2), "different time");
+
+            u3.Decrypt(pt3, pp, mpk, P, ct2);
+            assertFalse(pt3.isEqual(pt2), "different time");
+        }
     }
 }

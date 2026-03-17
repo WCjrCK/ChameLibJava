@@ -65,7 +65,7 @@ public class Scheme
     @Override
     public void Collision(Randomness r_p, PublicParam pp, MasterPublicKey mpk, SecretKey sk, Message m, Policy P, HashValue h, Randomness r, Message m_p) {
         PlainText FAME_pt = pp.FAME_pp.createPlainText("");
-        pp.FAME.Decrypt(FAME_pt, pp.FAME_pp, mpk.FAME_mpk, sk.FAME_sk, h.FAME_ct, P.P);
+        pp.FAME.Decrypt(FAME_pt, pp.FAME_pp, sk.FAME_sk, h.FAME_ct, P.P);
         byte[] tmp = FAME_pt.m.toBytes();
         int l1 = tmp[1];
         if(l1 < 0 || l1 + 2 >= tmp.length) throw new RuntimeException("解码失败");

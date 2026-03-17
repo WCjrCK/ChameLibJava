@@ -1,3 +1,7 @@
 package Encryption.ABE.Components;
 
-public class Policy {}
+import utils.ElementCounter;
+
+public abstract class Policy {
+    public abstract ElementCounter TheoSize();
+}

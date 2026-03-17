@@ -157,7 +157,7 @@ public class FAMECore {
         ct.ct_0[2] = mpk.h.pow(s_1.add(s_2));
 
         ct.ct_p = mpk.T_1.pow(s_1).mul(mpk.T_2.pow(s_2)).mul(pt.m);
-        
+
         int n1 = P.MSP.M.length, n2 = P.MSP.M[0].length;
         ct.ct = new MultivePoint[n1][3];
 
@@ -174,7 +174,7 @@ public class FAMECore {
         }
     }
 
-    public void Decrypt(PlainText pt, PublicParam pp, MasterPublicKey mpk, SecretKey sk, CipherText ct, Policy P) {
+    public void Decrypt(PlainText pt, PublicParam pp, SecretKey sk, CipherText ct, Policy P) {
         Scalar[] gamma = P.MSP.Solve(pp.curve, sk.S);
         MultivePoint num = ct.ct_p, tmp = pp.curve.createPoint(CurveGroup.G1);
         for(int t = 0;t < 3;++t) {

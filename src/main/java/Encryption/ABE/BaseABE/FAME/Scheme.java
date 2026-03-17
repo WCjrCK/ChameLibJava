@@ -34,7 +34,7 @@ public class Scheme
 
     @Override
     public void Decrypt(PlainText pt, PublicParam pp, MasterPublicKey mpk, SecretKey sk, CipherText ct, Policy P) {
-        Core.Decrypt(pt, pp, mpk, sk, ct, P);
+        Core.Decrypt(pt, pp, sk, ct, P);
     }
 
     @Override

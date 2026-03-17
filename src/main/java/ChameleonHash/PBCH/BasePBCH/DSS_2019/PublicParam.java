@@ -34,7 +34,7 @@ public class PublicParam
         CHConfig chetConfig = (CHConfig) Objects.requireNonNull(config.params.get("chet_config"), "未设置方案的黑盒临时陷门变色龙哈希方案（chet_config）");
         CHETScheme = CHETFactory.createScheme(chetConfig);
         CHET_pp = CHETScheme.createPublicParam(chetConfig);
-        ABEConfig FAMEConfig = new ABEConfig(ABEName.FAME, config.curveConfig);
+        ABEConfig FAMEConfig = new ABEConfig(ABEName.ABE_FAME, config.curveConfig);
         FAME_pp = FAME.createPublicParam(FAMEConfig);
         SEConfig seConfig = (SEConfig) Objects.requireNonNull(config.params.get("se_config"), "未设置方案的黑盒对称加密方案（se_config）");
         SEScheme = SEFactory.createSE(seConfig);

@@ -12,6 +12,10 @@ public class Attributes {
         attrs.add(attr);
     }
 
+    public void CopyFrom(Attributes o) {
+        attrs = new HashSet<>(o.attrs);
+    }
+
     public ElementCounter TheoSize() {
         ElementCounter res = new ElementCounter();
         res.count(this);

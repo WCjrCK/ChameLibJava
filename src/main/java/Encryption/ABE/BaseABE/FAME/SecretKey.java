@@ -11,7 +11,20 @@ public class SecretKey extends Encryption.ABE.Components.SecretKey {
     Attributes S;
 
     protected MultivePoint[][] sk_y;
-    protected MultivePoint[] sk_p, sk_0;
+    public MultivePoint[] sk_p;
+    protected MultivePoint[] sk_0;
+
+    public final void CopyFrom(SecretKey o) {
+        Attr2id = new HashMap<>(o.Attr2id);
+        S.CopyFrom(o.S);
+        sk_y = new MultivePoint[o.sk_y.length][o.sk_y[0].length];
+        for (int i = 0; i < o.sk_y.length; i++) for (int j = 0;j < o.sk_y[i].length; ++j) sk_y[i][j] = o.sk_y[i][j].copy();
+
+        sk_0 = new MultivePoint[o.sk_0.length];
+        for (int i = 0; i < o.sk_0.length; i++) sk_0[i] = o.sk_0[i].copy();
+        sk_p = new MultivePoint[o.sk_p.length];
+        for (int i = 0; i < o.sk_p.length; i++) sk_p[i] = o.sk_p[i].copy();
+    }
 
     @Override
     public final ElementCounter TheoSize() {

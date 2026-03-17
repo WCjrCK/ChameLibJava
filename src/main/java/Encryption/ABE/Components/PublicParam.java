@@ -18,7 +18,9 @@ public abstract class PublicParam<
         curve = CurveFactory.create(abeConfig.curveConfig);
     }
 
-    public abstract Attributes createAttributes();
+    public Attributes createAttributes() {
+        return new Attributes();
+    }
 
     public abstract Policy createPolicy(String BooleanFormulas);
 

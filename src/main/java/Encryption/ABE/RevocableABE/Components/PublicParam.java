@@ -2,30 +2,35 @@ package Encryption.ABE.RevocableABE.Components;
 
 import Encryption.ABE.ABEConfig;
 import Encryption.ABE.Components.*;
-import utils.ElementCounter;
 
 public abstract class PublicParam<
         MPK extends MasterPublicKey,
         MSK extends MasterSecretKey,
+        S extends State,
+        R extends Revocated,
+        A extends Authority,
+        U extends User,
+        I extends Info,
+        KU extends UpdateKey<I>,
         SK extends SecretKey,
+        DK extends DecryptKey<I>,
         PT extends PlainText<PT>,
         CT extends CipherText<CT>
         > extends Encryption.ABE.Components.PublicParam<MPK, MSK, SK, PT, CT> {
     protected PublicParam(ABEConfig abeConfig) {
         super(abeConfig);
     }
+    public abstract A createAuthority();
 
-    public abstract Attributes createAttributes();
+    public abstract S createState();
 
-    public abstract MPK createMasterPublicKey();
+    public abstract R createRevocated();
 
-    public abstract MSK createMasterSecretKey();
+    public abstract U createUser(String ID);
 
-    public abstract SK createSecretKey();
+    public abstract I createInfo();
 
-    public abstract PT createPlainText(String msg);
+    public abstract KU createKeyUpdater();
 
-    public abstract CT createCipherText();
-
-    public abstract ElementCounter TheoSize();
+    public abstract DK createDecryptKey();
 }

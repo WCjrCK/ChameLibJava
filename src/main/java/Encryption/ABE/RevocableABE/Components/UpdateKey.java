@@ -2,6 +2,8 @@ package Encryption.ABE.RevocableABE.Components;
 
 import utils.ElementCounter;
 
-public abstract class Revocated {
+public abstract class UpdateKey<I extends Info> {
+    public I info;
+
     public abstract ElementCounter TheoSize();
 }

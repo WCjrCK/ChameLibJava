@@ -24,5 +24,5 @@ public interface AdditivePoint<P extends Point<P, S>, S extends Scalar<S>> {
 
     AdditivePoint<P, S> copy();
 
-    public abstract byte[] toBytes();
+    byte[] toBytes();
 }

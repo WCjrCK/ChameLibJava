@@ -92,6 +92,10 @@ public class EllipticCurveTest {
 
             g1_t = g1.add(g1_t);
             gt = curve.Pairing(g1, g2);
+
+            System.out.println(gt.toString().hashCode());
+            gt = curve.Pairing(g1, g2);
+            System.out.println(gt.toString().hashCode());
         }
 
         // @DisplayName("示例3: 等号赋值 vs copy()")
