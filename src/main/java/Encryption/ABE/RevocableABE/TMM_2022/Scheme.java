@@ -1,12 +1,12 @@
-package Encryption.ABE.RevocableABE.XNM_2021;
+package Encryption.ABE.RevocableABE.TMM_2022;
 
 import Encryption.ABE.ABEConfig;
 import Encryption.ABE.Components.Attributes;
 import Encryption.ABE.Interface.RevocableABE;
 
 /*
- * Revocable Policy-Based Chameleon Hash
- * P12. 5.1 Proposed RABE
+ * Revocable Policy-Based ChameleonHash for Blockchain Rewriting
+ * P7. 4.1. The proposed RABE scheme
  */
 
 public class Scheme

@@ -80,7 +80,8 @@ public class MCLCurve extends Curve<G1, G2, GT, Zp> {
 
     @Override
     protected GT getOneGT() {
-        throw new RuntimeException("暂未实现MCL的GT群单位元获取");
+        GT res = createGT();
+        return (GT) res.div(res);
     }
 
     @Override

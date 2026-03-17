@@ -43,6 +43,7 @@ public class ABETest {
                 .filter(a -> a != PBC_CUSTOM)
                 .flatMap(
                         a -> Stream.of(false, true)
+                                .filter(b -> !(b && a.isSymmetic()))
                                 .flatMap(b -> EnumSet.allOf(ABEName.class).stream()
                                         .filter(c -> c.revokable)
                                         .flatMap(

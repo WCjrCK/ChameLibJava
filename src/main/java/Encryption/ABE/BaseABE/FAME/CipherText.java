@@ -6,7 +6,7 @@ import utils.ElementCounter;
 public class CipherText extends Encryption.ABE.Components.CipherText<CipherText> {
     protected MultivePoint[][] ct;
     protected MultivePoint[] ct_0;
-    protected MultivePoint ct_p;
+    public MultivePoint ct_p;
 
     @Override
     public final boolean isEqual(CipherText o) {
