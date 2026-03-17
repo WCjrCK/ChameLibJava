@@ -4,15 +4,13 @@ import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveName;
 import Encryption.ABE.ABEConfig;
 import Encryption.ABE.ABEName;
+import Encryption.ABE.BaseABE.FAME.*;
 import Encryption.ABE.Components.Attributes;
-import Encryption.ABE.Components.Policy;
-import Encryption.ABE.FAME.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +54,7 @@ public class ABETest {
 
         Policy p = pp.createPolicy("((A1|(A2|A3))&(DDDD|(BB&CCC)))&(((T1&T2)|(T2&T3))|(T1&T3))");
 
-        for (int i = 0;i < p.M.length; ++i) System.out.println(Arrays.toString(p.M[i]));
+//        for (int i = 0;i < p.MSP.M.length; ++i) System.out.println(Arrays.toString(p.MSP.M[i]));
 
         Attributes S1 = pp.createAttributes();
         Attributes S2 = pp.createAttributes();
@@ -70,7 +68,6 @@ public class ABETest {
         S2.addAttr("CCC");
         S2.addAttr("T1");
         S2.addAttr("T3");
-
 
         SecretKey sk1 = pp.createSecretKey();
         scheme.KeyGen(sk1, pp, mpk, msk, S1);
@@ -86,8 +83,6 @@ public class ABETest {
 
         scheme.Encrypt(ct1, pp, mpk, p, m1);
         scheme.Decrypt(m3, pp, mpk, sk1, ct1, p);
-        System.out.println(m1);
-        System.out.println(m3);
         assertTrue(m3.isEqual(m1), "decrypt(sk1, ct1) != m1");
 
         scheme.Encrypt(ct2, pp, mpk, p, m2);

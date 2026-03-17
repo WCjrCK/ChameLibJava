@@ -2,7 +2,7 @@ package Encryption.ABE.utils;
 
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Point.Scalar;
-import Encryption.ABE.Components.Policy;
+import MathStructure.LSSS;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class BooleanFormulaParser {
         }
     }
 
-    public static void parse(Policy pi, Curve curve, String BooleanFormulas) {
+    public static void parse(LSSS pi, Curve curve, String BooleanFormulas) {
         TokenType[] tokens;
         int[][] range;
         int n, m, x = 0;

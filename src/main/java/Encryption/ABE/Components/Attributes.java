@@ -12,7 +12,7 @@ public class Attributes {
         attrs.add(attr);
     }
 
-    public final ElementCounter TheoSize() {
+    public ElementCounter TheoSize() {
         ElementCounter res = new ElementCounter();
         res.count(this);
         return res;

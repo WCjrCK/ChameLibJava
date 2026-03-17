@@ -16,9 +16,18 @@ public class PlainText extends Encryption.PKE.Components.PlainText<PlainText> {
         }
     }
 
+    PlainText(byte[] m) {
+        pt = new BigInteger(m);
+    }
+
     @Override
     public final boolean isEqual(PlainText o) {
         return pt.equals(o.pt);
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return pt.toByteArray();
     }
 
     @Override

@@ -1,9 +1,10 @@
-package Encryption.ABE.FAME;
+package Encryption.ABE.BaseABE.FAME;
 
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
 import Encryption.ABE.ABEConfig;
 import Encryption.ABE.Components.Attributes;
+import Encryption.ABE.utils.BooleanFormulaParser;
 import utils.ElementCounter;
 
 import java.nio.charset.StandardCharsets;
@@ -23,6 +24,13 @@ public class PublicParam extends Encryption.ABE.Components.PublicParam<
     @Override
     public Attributes createAttributes() {
         return new Attributes();
+    }
+
+    @Override
+    public Policy createPolicy(String BooleanFormulas) {
+        Policy res = new Policy();
+        BooleanFormulaParser.parse(res.MSP, curve, BooleanFormulas);
+        return res;
     }
 
     @Override

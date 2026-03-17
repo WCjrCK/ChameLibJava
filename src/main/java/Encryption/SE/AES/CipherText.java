@@ -4,7 +4,7 @@ import utils.ElementCounter;
 
 import java.util.Arrays;
 
-public class CipherText extends Encryption.Components.CipherText<CipherText> {
+public class CipherText extends Encryption.SE.Components.CipherText<CipherText> {
     public byte[] ct;
     @Override
     public final boolean isEqual(CipherText o) {

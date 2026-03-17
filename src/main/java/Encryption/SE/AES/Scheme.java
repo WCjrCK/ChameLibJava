@@ -14,6 +14,9 @@ public class Scheme extends SE<PublicParam, SecretKey, PlainText, CipherText> {
     }
 
     @Override
+    public void Setup(PublicParam publicParam) {}
+
+    @Override
     public final void KeyGen(SecretKey sk, PublicParam pp) {
         sk.key = new byte[32];
         Random rand = new Random();

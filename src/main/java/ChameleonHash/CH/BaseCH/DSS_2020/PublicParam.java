@@ -6,10 +6,12 @@ import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Point;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
+import utils.Serializer;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 
 public class PublicParam extends ChameleonHash.CH.Components.PublicParam<PublicKey, SecretKey, Message, HashValue, Randomness> {
     protected CurveGroup curveGroup;
@@ -70,6 +72,88 @@ public class PublicParam extends ChameleonHash.CH.Components.PublicParam<PublicK
     }
 
     @Override
+    public byte[] serializePublicKey(PublicKey target) {
+        Objects.requireNonNull(target, "PublicKey 不能为空");
+        return Serializer.pack(pointBytes(target.y));
+    }
+
+    @Override
+    public void deserializePublicKey(PublicKey target, byte[] data) {
+        Objects.requireNonNull(target, "PublicKey 不能为空");
+        Serializer.Reader reader = new Serializer.Reader(data);
+        target.y = point(reader.readBytes(), curveGroup);
+        reader.ensureFullyConsumed();
+    }
+
+    @Override
+    public byte[] serializeSecretKey(SecretKey target) {
+        Objects.requireNonNull(target, "SecretKey 不能为空");
+        return Serializer.pack(scalarBytes(target.x));
+    }
+
+    @Override
+    public void deserializeSecretKey(SecretKey target, byte[] data) {
+        Objects.requireNonNull(target, "SecretKey 不能为空");
+        Serializer.Reader reader = new Serializer.Reader(data);
+        target.x = scalar(reader.readBytes());
+        reader.ensureFullyConsumed();
+    }
+
+    @Override
+    public byte[] serializeMessage(Message target) {
+        Objects.requireNonNull(target, "Message 不能为空");
+        return Serializer.pack(pointBytes(target.m));
+    }
+
+    @Override
+    public void deserializeMessage(Message target, byte[] data) {
+        Objects.requireNonNull(target, "Message 不能为空");
+        Serializer.Reader reader = new Serializer.Reader(data);
+        target.m = point(reader.readBytes(), curveGroup);
+        reader.ensureFullyConsumed();
+    }
+
+    @Override
+    public byte[] serializeHashValue(HashValue target) {
+        Objects.requireNonNull(target, "HashValue 不能为空");
+        return Serializer.pack(
+                pointBytes(target.c_1),
+                pointBytes(target.c_2)
+        );
+    }
+
+    @Override
+    public void deserializeHashValue(HashValue target, byte[] data) {
+        Objects.requireNonNull(target, "HashValue 不能为空");
+        Serializer.Reader reader = new Serializer.Reader(data);
+        target.c_1 = point(reader.readBytes(), curveGroup);
+        target.c_2 = point(reader.readBytes(), curveGroup);
+        reader.ensureFullyConsumed();
+    }
+
+    @Override
+    public byte[] serializeRandomness(Randomness target) {
+        Objects.requireNonNull(target, "Randomness 不能为空");
+        return Serializer.pack(
+                scalarBytes(target.e_1),
+                scalarBytes(target.e_2),
+                scalarBytes(target.s_1),
+                scalarBytes(target.s_2)
+        );
+    }
+
+    @Override
+    public void deserializeRandomness(Randomness target, byte[] data) {
+        Objects.requireNonNull(target, "Randomness 不能为空");
+        Serializer.Reader reader = new Serializer.Reader(data);
+        target.e_1 = scalar(reader.readBytes());
+        target.e_2 = scalar(reader.readBytes());
+        target.s_1 = scalar(reader.readBytes());
+        target.s_2 = scalar(reader.readBytes());
+        reader.ensureFullyConsumed();
+    }
+
+    @Override
     public final String toString() {
         return "";
     }
@@ -89,5 +173,20 @@ public class PublicParam extends ChameleonHash.CH.Components.PublicParam<PublicK
             throw new RuntimeException(e);
         }
     }
-}
 
+    private byte[] pointBytes(MultivePoint point) {
+        return Objects.requireNonNull(point, "点字段不能为空").toBytes();
+    }
+
+    private byte[] scalarBytes(Scalar scalar) {
+        return Objects.requireNonNull(scalar, "标量字段不能为空").toBytes();
+    }
+
+    private MultivePoint point(byte[] data, CurveGroup group) {
+        return (MultivePoint) curve.createPointFromBytes(group, data);
+    }
+
+    private Scalar scalar(byte[] data) {
+        return curve.createScalarFromBytes(data);
+    }
+}

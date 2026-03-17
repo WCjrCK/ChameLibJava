@@ -6,7 +6,7 @@ import EllipticCurve.Curve.CurveFactory;
 import utils.ElementCounter;
 
 public abstract class PublicParam<
-        MPK extends MasterSecretKey,
+        MPK extends MasterPublicKey,
         MSK extends MasterSecretKey,
         SK extends SecretKey,
         P extends Policy,

@@ -7,7 +7,7 @@ import ChameleonHash.PBCH.PBCHConfig;
 import EllipticCurve.Point.Scalar;
 import Encryption.ABE.ABEConfig;
 import Encryption.ABE.ABEName;
-import Encryption.ABE.FAME.FAMECore;
+import Encryption.ABE.BaseABE.FAME.FAMECore;
 import Encryption.SE.SE;
 import Encryption.SE.SEConfig;
 import Encryption.SE.SEFactory;
@@ -24,9 +24,9 @@ public class PublicParam
     protected CHET CHETScheme;
     protected ChameleonHash.CH.CHET.Components.PublicParam CHET_pp;
     protected FAMECore FAME = new FAMECore();
-    protected Encryption.ABE.FAME.PublicParam FAME_pp;
+    protected Encryption.ABE.BaseABE.FAME.PublicParam FAME_pp;
     protected SE SEScheme;
-    protected Encryption.Components.PublicParam SE_pp;
+    protected Encryption.SE.Components.PublicParam SE_pp;
     protected Random rand = new Random();
 
     protected PublicParam(PBCHConfig config) {
@@ -101,13 +101,15 @@ public class PublicParam
         HashValue res = new HashValue();
         res.CHET_h = CHET_pp.createHashValue();
         res.FAME_ct = FAME_pp.createCipherText();
-
-        return null;
+        res.SE_ct = SE_pp.createCipherText();
+        return res;
     }
 
     @Override
     public Randomness createRandomness() {
-        return null;
+        Randomness res = new Randomness();
+        res.CHET_r = CHET_pp.createRandomness();
+        return res;
     }
 
     @Override

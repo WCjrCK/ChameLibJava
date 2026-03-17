@@ -51,6 +51,45 @@ public class CallAspect {
 
     @Around(
             "(" +
+                    "execution(* ChameleonHash.PBCH..*.Setup(..))" +
+                    " || execution(* ChameleonHash.PBCH..*.KeyGen(..))" +
+                    " || execution(* ChameleonHash.PBCH..*.Hash(..))" +
+                    " || execution(* ChameleonHash.PBCH..*.Verify(..))" +
+                    " || execution(* ChameleonHash.PBCH..*.Collision(..))" +
+                    ")" +
+                    " && !execution(* EllipticCurve..*(..))" +
+                    " && !within(PerformTest..*)"
+    )
+    public Object aroundAllPBCHStage(ProceedingJoinPoint pjp) throws Throwable {
+//        System.out.println("PBCH running: " + pjp.getSignature().toString());
+        if (TraceScope.CountFunc()) TraceScope.hit("use " + pjp.getSignature().getName() + " of BlackBox PBCH scheme");
+        TraceScope.enter();
+        Object ret_val = pjp.proceed();
+        TraceScope.exit();
+        return ret_val;
+    }
+
+    @Around(
+            "(" +
+                    "execution(* Encryption.ABE.FAME..*.Setup(..))" +
+                    " || execution(* Encryption.ABE.FAME..*.KeyGen(..))" +
+                    " || execution(* Encryption.ABE.FAME..*.Encrypt(..))" +
+                    " || execution(* Encryption.ABE.FAME..*.Decrypt(..))" +
+                    ")" +
+                    " && !execution(* EllipticCurve..*(..))" +
+                    " && !within(PerformTest..*)"
+    )
+    public Object aroundAllFAMEStage(ProceedingJoinPoint pjp) throws Throwable {
+//        System.out.println("FAME running: " + pjp.getSignature().toString());
+        if (TraceScope.CountFunc()) TraceScope.hit("use " + pjp.getSignature().getName() + " of BlackBox FAME scheme");
+        TraceScope.enter();
+        Object ret_val = pjp.proceed();
+        TraceScope.exit();
+        return ret_val;
+    }
+
+    @Around(
+            "(" +
                     "execution(* Encryption.PKE..Setup(..))" +
                     " || execution(* Encryption.PKE..KeyGen(..))" +
                     " || execution(* Encryption.PKE..Encrypt(..))" +
@@ -102,8 +141,8 @@ public class CallAspect {
     @Around(
             "(" +
                     "execution(* EllipticCurve.Point..*.*Core(..))" +
-                    " || execution(* EllipticCurve.Curve..*.createPoint(..))" +
-                    " || execution(* EllipticCurve.Curve..*.createScalar(..))" +
+//                    " || execution(* EllipticCurve.Curve..*.createPoint(..))" +
+//                    " || execution(* EllipticCurve.Curve..*.createScalar(..))" +
                     " || execution(protected * EllipticCurve.Curve..*.Pairing(..))" +
                     " || execution(* EllipticCurve.Curve..*.getRandom*(..))" +
                     " || execution(* ChameleonHash..PublicParam+.H*(..))" +
@@ -129,7 +168,7 @@ public class CallAspect {
             if (ret_val instanceof Point<?, ?>) key = "Hash to " + ((Point<?, ?>) ret_val).group();
             else if (ret_val instanceof Scalar<?>) key = "Hash to Zp";
         } else if (method.contains("Pairing")) key = "Pairing";
-        else if (method.contains("addCore") || method.contains("subCore")) {
+        else if (method.contains("addCore") || method.contains("subCore") || method.contains("negCore")) {
             if (target instanceof Point<?, ?>) key = "Mul in " + ((Point<?, ?>) target).group();
             else if (ret_val instanceof Scalar<?>) key = "Mul in Zp";
         }

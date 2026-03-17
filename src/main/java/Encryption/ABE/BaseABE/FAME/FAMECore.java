@@ -1,11 +1,10 @@
-package Encryption.ABE.FAME;
+package Encryption.ABE.BaseABE.FAME;
 
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 import Encryption.ABE.ABEConfig;
 import Encryption.ABE.Components.Attributes;
-import Encryption.ABE.Components.Policy;
 
 import java.util.HashMap;
 
@@ -158,8 +157,8 @@ public class FAMECore {
         ct.ct_0[2] = mpk.h.pow(s_1.add(s_2));
 
         ct.ct_p = mpk.T_1.pow(s_1).mul(mpk.T_2.pow(s_2)).mul(pt.m);
-
-        int n1 = P.M.length, n2 = P.M[0].length;
+        
+        int n1 = P.MSP.M.length, n2 = P.MSP.M[0].length;
         ct.ct = new MultivePoint[n1][3];
 
         MultivePoint[][] Hjl = new MultivePoint[n2][3];
@@ -169,9 +168,35 @@ public class FAMECore {
 
         for(int i = 0; i < n1; ++i) {
             for(int l = 1;l <= 3;++l) {
-                ct.ct[i][l - 1] = pp.H(String.format("%s%d1", P.policy[i], l)).pow(s_1).mul(pp.H(String.format("%s%d2", P.policy[i], l)).pow(s_2));
-                for(int j = 1; j <= n2; ++j) ct.ct[i][l - 1] = ct.ct[i][l - 1].mul(Hjl[j - 1][l - 1].pow(P.M[i][j - 1]));
+                ct.ct[i][l - 1] = pp.H(String.format("%s%d1", P.MSP.policy[i], l)).pow(s_1).mul(pp.H(String.format("%s%d2", P.MSP.policy[i], l)).pow(s_2));
+                for(int j = 1; j <= n2; ++j) ct.ct[i][l - 1] = ct.ct[i][l - 1].mul(Hjl[j - 1][l - 1].pow(P.MSP.M[i][j - 1]));
             }
         }
+    }
+
+    public void Decrypt(PlainText pt, PublicParam pp, MasterPublicKey mpk, SecretKey sk, CipherText ct, Policy P) {
+        Scalar[] gamma = P.MSP.Solve(pp.curve, sk.S);
+        MultivePoint num = ct.ct_p, tmp = pp.curve.createPoint(CurveGroup.G1);
+        for(int t = 0;t < 3;++t) {
+            boolean fir = true;
+            for(int i = 0;i < ct.ct.length;++i) {
+                if (fir) {
+                    fir = false;
+                    tmp = ct.ct[i][t].pow(gamma[i]);
+                } else tmp = tmp.mul(ct.ct[i][t].pow(gamma[i]));
+            }
+            num = num.mul(pp.curve.Pairing(tmp, sk.sk_0[t]));
+        }
+        MultivePoint den = pp.curve.createPoint(CurveGroup.GT);
+        for(int t = 0;t < 3;++t) {
+            tmp = sk.sk_p[t];
+            for(int i = 0;i < ct.ct.length;++i) {
+                if(sk.Attr2id.get(P.MSP.policy[i]) == null) continue;
+                tmp = tmp.mul(sk.sk_y[sk.Attr2id.get(P.MSP.policy[i])][t].pow(gamma[i]));
+            }
+            if(t == 0) den = pp.curve.Pairing(tmp, ct.ct_0[t]);
+            else den = den.mul(pp.curve.Pairing(tmp, ct.ct_0[t]));
+        }
+        pt.m = num.div(den);
     }
 }

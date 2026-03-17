@@ -5,16 +5,25 @@ import utils.ElementCounter;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-public class PlainText extends Encryption.Components.PlainText<PlainText> {
+public class PlainText extends Encryption.SE.Components.PlainText<PlainText> {
     public byte[] pt;
 
     PlainText(String m) {
         pt = m.getBytes(StandardCharsets.UTF_8);
     }
 
+    PlainText(byte[] m) {
+        pt = m;
+    }
+
     @Override
     public final boolean isEqual(PlainText o) {
         return Arrays.equals(pt, o.pt);
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return pt;
     }
 
     @Override

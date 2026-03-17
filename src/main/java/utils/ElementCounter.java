@@ -1,13 +1,18 @@
 package utils;
 
+import ChameleonHash.CH.CH;
 import ChameleonHash.Interface.BaseCH;
 import Commitment.NIZK_DL.Proof;
 import Commitment.NIZK_DL.Scheme;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.Point;
 import EllipticCurve.Point.Scalar;
+import Encryption.ABE.BaseABE.FAME.FAMECore;
+import Encryption.ABE.BaseABE.FAME.MasterPublicKey;
+import Encryption.ABE.BaseABE.FAME.MasterSecretKey;
 import Encryption.PKE.Components.*;
 import Encryption.PKE.PKE;
+import Encryption.SE.SE;
 
 import java.util.*;
 
@@ -58,6 +63,34 @@ public class ElementCounter {
             countName.add("CH_r");
         }
 
+        {
+            type_id.put(Encryption.ABE.BaseABE.FAME.PublicParam.class, i++);
+            countName.add("FAME_pp");
+            type_id.put(MasterPublicKey.class, i++);
+            countName.add("FAME_mpk");
+            type_id.put(MasterSecretKey.class, i++);
+            countName.add("FAME_msk");
+            type_id.put(Encryption.ABE.BaseABE.FAME.SecretKey.class, i++);
+            countName.add("FAME_sk");
+            type_id.put(Encryption.ABE.BaseABE.FAME.CipherText.class, i++);
+            countName.add("FAME_ct");
+            type_id.put(Encryption.ABE.BaseABE.FAME.PlainText.class, i++);
+            countName.add("FAME_pt");
+            type_id.put(Encryption.ABE.BaseABE.FAME.PlainText.class, i++);
+            countName.add("FAME_pt");
+        }
+
+        {
+            type_id.put(Encryption.SE.Components.PublicParam.class, i++);
+            countName.add("SE_pp");
+            type_id.put(Encryption.SE.Components.SecretKey.class, i++);
+            countName.add("SE_sk");
+            type_id.put(Encryption.SE.Components.CipherText.class, i++);
+            countName.add("SE_ct");
+            type_id.put(Encryption.SE.Components.PlainText.class, i++);
+            countName.add("SE_pt");
+        }
+
         type_id.put(Proof.class, i++);
         countName.add("NIZK_DL");
 
@@ -72,6 +105,10 @@ public class ElementCounter {
         skip_class.add(Commitment.NIZK_DH_PAIR.Scheme.class);
         skip_class.add(PKE.class);
         skip_class.add(BaseCH.class);
+        skip_class.add(FAMECore.class);
+        skip_class.add(CH.class);
+        skip_class.add(Random.class);
+        skip_class.add(SE.class);
 
         count = new int[countName.size()];
     }

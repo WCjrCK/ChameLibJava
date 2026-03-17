@@ -1,14 +1,14 @@
 package UnitTest.ToolsScheme;
 
-import Encryption.Components.CipherText;
-import Encryption.Components.PlainText;
-import Encryption.Components.PublicParam;
-import Encryption.Components.SecretKey;
 import Encryption.PKE.Components.PublicKey;
 import Encryption.PKE.PKE;
 import Encryption.PKE.PKEConfig;
 import Encryption.PKE.PKEFactory;
 import Encryption.PKE.PKEName;
+import Encryption.SE.Components.CipherText;
+import Encryption.SE.Components.PlainText;
+import Encryption.SE.Components.PublicParam;
+import Encryption.SE.Components.SecretKey;
 import Encryption.SE.SE;
 import Encryption.SE.SEConfig;
 import Encryption.SE.SEFactory;
@@ -72,27 +72,27 @@ public class EncryptionTest {
         PKE scheme = PKEFactory.createPKE(pkeConfig);
         Encryption.PKE.Components.PublicParam pp = scheme.createPublicParam(params);
         PublicKey pk1 = pp.createPublicKey();
-        SecretKey sk1 = pp.createSecretKey();
+        Encryption.Components.SecretKey sk1 = pp.createSecretKey();
 
         scheme.KeyGen(pk1, sk1, pp);
 
         PublicKey pk2 = pp.createPublicKey();
-        SecretKey sk2 = pp.createSecretKey();
+        Encryption.Components.SecretKey sk2 = pp.createSecretKey();
 
         scheme.KeyGen(pk2, sk2, pp);
 
-        PlainText pt1 = pp.createPlainText("msg1");
-        PlainText pt2 = pp.createPlainText("msg2");
+        Encryption.Components.PlainText pt1 = pp.createPlainText("msg1");
+        Encryption.Components.PlainText pt2 = pp.createPlainText("msg2");
 
-        CipherText ct1 = pp.createCipherText();
-        CipherText ct2 = pp.createCipherText();
+        Encryption.Components.CipherText ct1 = pp.createCipherText();
+        Encryption.Components.CipherText ct2 = pp.createCipherText();
 
         scheme.Encrypt(ct1, pp, pk1, pt1);
         scheme.Encrypt(ct2, pp, pk2, pt2);
 
         assertNotSame(ct1, ct2);
 
-        PlainText pt = pp.createPlainText("");
+        Encryption.Components.PlainText pt = pp.createPlainText("");
         scheme.Decrypt(pt, pp, pk1, sk1, ct1);
         assertTrue(pt.isEqual(pt1));
         assertFalse(pt.isEqual(pt2));

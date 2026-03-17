@@ -16,4 +16,12 @@ public abstract class PublicParam<
     }
 
     public abstract E createETrapdoor();
+
+    public byte[] serializeETrapdoor(E target) {
+        throw new UnsupportedOperationException("当前方案未实现 ETrapdoor 序列化");
+    }
+
+    public void deserializeETrapdoor(E target, byte[] data) {
+        throw new UnsupportedOperationException("当前方案未实现 ETrapdoor 反序列化");
+    }
 }

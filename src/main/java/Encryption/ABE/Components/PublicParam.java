@@ -3,7 +3,6 @@ package Encryption.ABE.Components;
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveFactory;
 import Encryption.ABE.ABEConfig;
-import Encryption.ABE.utils.BooleanFormulaParser;
 import utils.ElementCounter;
 
 public abstract class PublicParam<
@@ -21,12 +20,7 @@ public abstract class PublicParam<
 
     public abstract Attributes createAttributes();
 
-    public final Policy createPolicy(String BooleanFormulas) {
-        Policy res = new Policy();
-        res.formula = BooleanFormulas;
-        BooleanFormulaParser.parse(res, curve, BooleanFormulas);
-        return res;
-    }
+    public abstract Policy createPolicy(String BooleanFormulas);
 
     public abstract MPK createMasterPublicKey();
 

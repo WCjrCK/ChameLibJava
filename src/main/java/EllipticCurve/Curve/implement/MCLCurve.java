@@ -153,6 +153,13 @@ public class MCLCurve extends Curve<G1, G2, GT, Zp> {
     }
 
     @Override
+    protected Zp createZpFromBytes(byte[] data) {
+        Fr res = new Fr();
+        res.deserialize(data);
+        return new Zp(res, curveName());
+    }
+
+    @Override
     public final G1 HashToG1Core(byte[] hash) {
         com.herumi.mcl.G1 res = new com.herumi.mcl.G1();
         Mcl.hashAndMapToG1(res, hash);

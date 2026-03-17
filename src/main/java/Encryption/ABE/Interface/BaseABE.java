@@ -1,0 +1,24 @@
+package Encryption.ABE.Interface;
+
+import Encryption.ABE.ABEConfig;
+import Encryption.ABE.Components.*;
+
+public interface BaseABE<
+        PP extends PublicParam<MPK, MSK, SK, PT, CT>,
+        MPK extends MasterPublicKey,
+        MSK extends MasterSecretKey,
+        SK extends SecretKey,
+        P extends Policy,
+        PT extends PlainText<PT>,
+        CT extends CipherText<CT>
+        > {
+    void Setup(MPK mpk, MSK msk, PP pp);
+
+    void KeyGen(SK sk, PP pp, MPK mpk, MSK msk, Attributes S);
+
+    void Encrypt(CT ct, PP pp, MPK mpk, P P, PT pt);
+
+    void Decrypt(PT pt, PP pp, MPK mpk, SK sk, CT ct, P P);
+
+    PP createPublicParam(ABEConfig abeConfig);
+}

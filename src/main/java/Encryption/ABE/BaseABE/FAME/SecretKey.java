@@ -1,4 +1,4 @@
-package Encryption.ABE.FAME;
+package Encryption.ABE.BaseABE.FAME;
 
 import EllipticCurve.Point.MultivePoint;
 import Encryption.ABE.Components.Attributes;

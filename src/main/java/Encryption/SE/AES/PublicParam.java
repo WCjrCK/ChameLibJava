@@ -6,7 +6,7 @@ import utils.ElementCounter;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-public class PublicParam extends Encryption.Components.PublicParam<SecretKey, PlainText, CipherText> {
+public class PublicParam extends Encryption.SE.Components.PublicParam<SecretKey, PlainText, CipherText> {
     String algorithm, transformation;
 
     protected PublicParam(SEConfig seConfig) {
@@ -23,7 +23,17 @@ public class PublicParam extends Encryption.Components.PublicParam<SecretKey, Pl
     }
 
     @Override
+    public SecretKey createSecretKey(byte[] sk) {
+        return new SecretKey(sk);
+    }
+
+    @Override
     public final PlainText createPlainText(String m) {
+        return new PlainText(m);
+    }
+
+    @Override
+    public PlainText createPlainText(byte[] m) {
         return new PlainText(m);
     }
 

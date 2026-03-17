@@ -1,9 +1,9 @@
 package Encryption.SE;
 
-import Encryption.Components.CipherText;
-import Encryption.Components.PlainText;
-import Encryption.Components.PublicParam;
-import Encryption.Components.SecretKey;
+import Encryption.SE.Components.CipherText;
+import Encryption.SE.Components.PlainText;
+import Encryption.SE.Components.PublicParam;
+import Encryption.SE.Components.SecretKey;
 
 public abstract class SE<
         PP extends PublicParam<SK, PT, CT>,
@@ -11,6 +11,8 @@ public abstract class SE<
         PT extends PlainText<PT>,
         CT extends CipherText<CT>
         > {
+    public abstract void Setup(PP pp);
+
     public abstract void KeyGen(SK sk, PP pp);
 
     public abstract void Encrypt(CT ct, PP pp, SK sk, PT pt);

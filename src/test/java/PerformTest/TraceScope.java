@@ -138,6 +138,21 @@ public class TraceScope {
             key_list.put("check REPRESENT commitment with BlackBox NIZK scheme", i);
             i++;
         } // Black Box NIZK function
+
+        {
+            key_alias.add("FAME_Setup");
+            key_list.put("use Setup of BlackBox FAME scheme", i);
+            i++;
+            key_alias.add("FAME_KeyGen");
+            key_list.put("use KeyGen of BlackBox FAME scheme", i);
+            i++;
+            key_alias.add("FAME_Enc");
+            key_list.put("use Encrypt of BlackBox FAME scheme", i);
+            i++;
+            key_alias.add("FAME_Dec");
+            key_list.put("use Decrypt of BlackBox FAME scheme", i);
+            i++;
+        } // Black Box PKE function
     }
 
     private TraceScope() {}

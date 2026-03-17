@@ -39,6 +39,10 @@ public class Proof extends Commitment.Components.Proof<Proof, Relation> {
         gamma = o.gamma;
     }
 
+    public void bindCurve(Curve curve) {
+        this.curve = curve;
+    }
+
     public final boolean Check(Relation data) {
         return data.g.pow(gamma).div(alpha).isEqual(data.y.pow(H(String.format("%s|%s", data.y, alpha))));
     }

@@ -168,7 +168,7 @@ public class TheoStorageTest {
 
 //        @DisplayName("test direct scheme")
 //        @ParameterizedTest(name = "test scheme {0}")
-//        @MethodSource("PerformTest.CH.TheoTimeTest#GetAllCHScheme")
+//        @MethodSource("PerformTest.CH.TheoStorageTest#GetAllCHScheme")
 //        public void DSTest(CHName schemeName) throws IOException {
 //            Map<String, Object> curve_param = new HashMap<>();
 //            curve_param.put("swap_G1G2", false);
@@ -181,7 +181,7 @@ public class TheoStorageTest {
 //
 //        @DisplayName("swap G1 and G2")
 //        @ParameterizedTest(name = "test scheme {0}")
-//        @MethodSource("PerformTest.CH.TheoTimeTest#GetAllCHSchemeASCurve")
+//        @MethodSource("PerformTest.CH.TheoStorageTest#GetAllCHSchemeASCurve")
 //        public void SGGTest(CHName schemeName) throws IOException {
 //            Map<String, Object> curve_param = new HashMap<>();
 //            curve_param.put("swap_G1G2", true);
@@ -194,7 +194,7 @@ public class TheoStorageTest {
 
         @DisplayName("test single group scheme")
         @ParameterizedTest(name = "test scheme {0}")
-        @MethodSource("PerformTest.CH.TheoTimeTest#GetAllCHSchemeSingleGroup")
+        @MethodSource("PerformTest.CH.TheoStorageTest#GetAllCHSchemeSingleGroup")
         void CHSingleGroupTest(CHName schemeName) throws IOException {
             Map<String, Object> params = new HashMap<>();
             Map<String, Object> curve_param = new HashMap<>();

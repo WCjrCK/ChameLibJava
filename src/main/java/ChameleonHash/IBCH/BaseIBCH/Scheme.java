@@ -2,7 +2,7 @@ package ChameleonHash.IBCH.BaseIBCH;
 
 import ChameleonHash.IBCH.Components.*;
 import ChameleonHash.IBCH.IBCH;
-import ChameleonHash.IBCH.LabelIBCH.Components.Label;
+import ChameleonHash.IBCH.IBCHConfig;
 import ChameleonHash.Interface.BaseIBCH;
 
 public abstract class Scheme<
@@ -13,19 +13,16 @@ public abstract class Scheme<
         M extends Message,
         H extends HashValue<H>,
         R extends Randomness
-        > extends IBCH<PP, MSK, SK, ID, M, Label, H, R> implements BaseIBCH<PP, MSK, SK, ID, M, H, R> {
-    @Override
-    public final void Hash(H h, R r, PP pp, ID ID, M m, Label l) {
-        throw new RuntimeException("该方案不包含 Label 组件");
-    }
+        > extends IBCH implements BaseIBCH<PP, MSK, SK, ID, M, H, R> {
+    public abstract PP createPublicParam(IBCHConfig config);
 
-    @Override
-    public final boolean Verify(PP pp, ID ID, M m, Label l, H h, R r) {
-        throw new RuntimeException("该方案不包含 Label 组件");
-    }
+    public abstract void Setup(PP pp, MSK msk);
 
-    @Override
-    public final void Collision(R r_p, PP pp, ID ID, SK sk, M m, Label l, H h, R r, M m_p) {
-        throw new RuntimeException("该方案不包含 Label 组件");
-    }
+    public abstract void KeyGen(SK sk, PP pp, MSK msk, ID ID);
+
+    public abstract void Hash(H h, R r, PP pp, ID ID, M m);
+
+    public abstract boolean Verify(PP pp, ID ID, M m, H h, R r);
+
+    public abstract void Collision(R r_p, PP pp, ID ID, SK sk, M m, H h, R r, M m_p);
 }

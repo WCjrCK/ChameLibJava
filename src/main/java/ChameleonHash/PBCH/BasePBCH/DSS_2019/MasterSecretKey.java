@@ -5,7 +5,7 @@ import utils.ElementCounter;
 
 public class MasterSecretKey extends ChameleonHash.PBCH.Components.MasterSecretKey {
     protected SecretKey CHET_sk;
-    protected Encryption.ABE.FAME.MasterSecretKey FAME_msk;
+    protected Encryption.ABE.BaseABE.FAME.MasterSecretKey FAME_msk;
 
     @Override
     public final ElementCounter TheoSize() {

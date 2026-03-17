@@ -5,7 +5,7 @@ import ChameleonHash.PBCH.PBCHConfig;
 
 public interface BasePBCH<
         PP extends PublicParam<MPK, MSK, SK, P, A, M, H, R>,
-        MPK extends MasterSecretKey,
+        MPK extends MasterPublicKey,
         MSK extends MasterSecretKey,
         SK extends SecretKey,
         P extends Policy,
@@ -24,5 +24,5 @@ public interface BasePBCH<
 
     boolean Verify(PP pp, MPK mpk, M m, H h, R r);
 
-    void Collision(R r_p, PP pp, MPK mpk, SK sk, M m, H h, R r, M m_p);
+    void Collision(R r_p, PP pp, MPK mpk, SK sk, M m, P P, H h, R r, M m_p);
 }

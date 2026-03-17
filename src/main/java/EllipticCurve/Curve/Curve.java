@@ -60,6 +60,8 @@ public abstract class Curve<G1 extends Point, G2 extends Point, GT extends Point
 
     protected abstract GT createGTFromBytes(byte[] data);
 
+    protected abstract Zp createZpFromBytes(byte[] data);
+
     protected abstract G2 PowNdonrCore(G2 p);
 
     public final Point PowNdonr(Point p) {
@@ -187,6 +189,10 @@ public abstract class Curve<G1 extends Point, G2 extends Point, GT extends Point
     }
 
     public abstract Scalar createScalarFromString(String s);
+
+    public final Scalar createScalarFromBytes(byte[] data) {
+        return createZpFromBytes(data);
+    }
 
     public final Point createPointFromBytes(CurveGroup curveGroup, byte[] data) {
         switch (curveGroup) {

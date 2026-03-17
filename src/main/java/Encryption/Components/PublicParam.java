@@ -7,7 +7,11 @@ public abstract class PublicParam<SK extends SecretKey, PT extends PlainText<PT>
 
     public abstract SK createSecretKey();
 
+    public abstract SK createSecretKey(byte[] sk);
+
     public abstract PT createPlainText(String m);
+
+    public abstract PT createPlainText(byte[] m);
 
     public abstract CT createCipherText();
 

@@ -12,9 +12,27 @@ public abstract class PublicParam<
         > extends Encryption.Components.PublicParam<SK, PT, CT> {
     public abstract PK createPublicKey();
 
-    public abstract SK createSecretKey();
+    public byte[] serializePublicKey(PK target) {
+        throw new UnsupportedOperationException("当前方案未实现 PublicKey 序列化");
+    }
 
-    public abstract PT createPlainText(String m);
+    public void deserializePublicKey(PK target, byte[] data) {
+        throw new UnsupportedOperationException("当前方案未实现 PublicKey 反序列化");
+    }
 
-    public abstract CT createCipherText();
+    public byte[] serializeSecretKey(SK target) {
+        throw new UnsupportedOperationException("当前方案未实现 SecretKey 序列化");
+    }
+
+    public void deserializeSecretKey(SK target, byte[] data) {
+        throw new UnsupportedOperationException("当前方案未实现 SecretKey 反序列化");
+    }
+
+    public byte[] serializeCipherText(CT target) {
+        throw new UnsupportedOperationException("当前方案未实现 CipherText 序列化");
+    }
+
+    public void deserializeCipherText(CT target, byte[] data) {
+        throw new UnsupportedOperationException("当前方案未实现 CipherText 反序列化");
+    }
 }

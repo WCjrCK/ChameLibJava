@@ -7,21 +7,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static ChameleonHash.SchemeCurveRequire.SINGLEGROUP;
+import static ChameleonHash.SchemeCurveRequire.ALL;
 import static ChameleonHash.SchemeCurveRequire.SYMMETRIC;
 
 public enum PBCHName {
-    CCT_2024(SINGLEGROUP, ChameleonHash.CH.BaseCH.CCT_2024.Scheme.class),
-    DKS_2020(SINGLEGROUP, ChameleonHash.CH.BaseCH.DKS_2020.Scheme.class),
-    DSS_2020(SINGLEGROUP, ChameleonHash.CH.BaseCH.DSS_2020.Scheme.class),
-
-    LLA_2012(SINGLEGROUP, ChameleonHash.CH.LabelCH.LLA_2012.Scheme.class),
-    CZT_2011(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZT_2011.Scheme.class),
-    CZK_2004(SINGLEGROUP, ChameleonHash.CH.LabelCH.CZK_2004.Scheme.class),
-    AM_2004(SINGLEGROUP, ChameleonHash.CH.LabelCH.AM_2004.Scheme.class),
-
-    KOG_CDK_2017(SINGLEGROUP, ChameleonHash.CH.CHET.KOG_CDK_2017.Scheme.class),
-    BC_CDK_2017(SINGLEGROUP, ChameleonHash.CH.CHET.BC_CDK_2017.Scheme.class),
+    DSS_2019(ALL, ChameleonHash.PBCH.BasePBCH.DSS_2019.Scheme.class),
     ;
 
     public final SchemeCurveRequire schemeCurveRequire;
