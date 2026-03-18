@@ -4,7 +4,7 @@ import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class HashValue extends ChameleonHash.PBCH.Components.HashValue<HashValue> {
+public class HashValue extends ChameleonHash.PBCH.BasePBCH.Components.HashValue<HashValue> {
     MultivePoint b, h_p;
     Scalar[] owner_ID;
 

@@ -1,6 +1,6 @@
 package ChameleonHash.CH.CHET.BC_CDK_2017;
 
-import ChameleonHash.CH.Components.SecretKey;
+import ChameleonHash.CH.BaseCH.Components.SecretKey;
 import utils.ElementCounter;
 
 public class ETrapdoor extends ChameleonHash.CH.CHET.Components.ETrapdoor {

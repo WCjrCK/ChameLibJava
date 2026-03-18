@@ -4,7 +4,7 @@ import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class SecretKey extends ChameleonHash.IBCH.Components.SecretKey {
+public class SecretKey extends ChameleonHash.IBCH.BaseIBCH.Components.SecretKey {
     protected Scalar td_1;
     protected MultivePoint td_2;
 

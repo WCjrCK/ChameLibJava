@@ -1,7 +1,5 @@
 package Encryption.ABE.RevocableABE.Components;
 
-import Encryption.ABE.Components.MasterPublicKey;
-import Encryption.ABE.Components.MasterSecretKey;
 import utils.ElementCounter;
 
 public abstract class Authority<

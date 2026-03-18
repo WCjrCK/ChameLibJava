@@ -3,7 +3,7 @@ package ChameleonHash.IBCH.LabelIBCH.LJF_2025;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class Message extends ChameleonHash.IBCH.Components.Message {
+public class Message extends ChameleonHash.IBCH.LabelIBCH.Components.Message {
     protected Scalar m;
 
     public Message() {}

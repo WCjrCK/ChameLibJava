@@ -2,7 +2,7 @@ package ChameleonHash.IBCH.BaseIBCH.ZSS_2003;
 
 import utils.ElementCounter;
 
-public class Message extends ChameleonHash.IBCH.Components.Message {
+public class Message extends ChameleonHash.IBCH.BaseIBCH.Components.Message {
     protected String m;
 
     public Message() {}

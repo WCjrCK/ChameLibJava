@@ -3,7 +3,7 @@ package Encryption.ABE.BaseABE.FAME;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class PlainText extends Encryption.ABE.Components.PlainText<PlainText> {
+public class PlainText extends Encryption.ABE.BaseABE.Components.PlainText<PlainText> {
     public MultivePoint m;
 
     @Override

@@ -2,6 +2,7 @@ package ChameleonHash.PBCH.BasePBCH.DSS_2019;
 
 import ChameleonHash.CH.CHET.Components.ETrapdoor;
 import ChameleonHash.Interface.BasePBCH;
+import ChameleonHash.PBCH.PBCH;
 import ChameleonHash.PBCH.PBCHConfig;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.Scalar;
@@ -10,8 +11,7 @@ import Encryption.ABE.BaseABE.FAME.PlainText;
 
 import java.util.Arrays;
 
-public class Scheme
-        extends ChameleonHash.PBCH.BasePBCH.Scheme<PublicParam, MasterPublicKey, MasterSecretKey, SecretKey, Policy, Attributes, Message, HashValue, Randomness>
+public class Scheme extends PBCH
         implements BasePBCH<PublicParam, MasterPublicKey, MasterSecretKey, SecretKey, Policy, Attributes, Message, HashValue, Randomness> {
     @Override
     public PublicParam createPublicParam(PBCHConfig config) {
@@ -44,7 +44,7 @@ public class Scheme
         Scalar u_1 = pp.H(Arrays.toString(rb) + "|" + P.P.MSP.formula);
         Scalar u_2 = pp.H(P.P.MSP.formula + "|" + Arrays.toString(rb));
 
-        PlainText FAME_pt = new PlainText();
+        PlainText FAME_pt = pp.FAME_pp.createPlainText("");
         FAME_pt.m = pp.curve.createPoint(CurveGroup.GT);
         byte[] tmp = FAME_pt.m.toBytes();
         tmp[1] = (byte) kb.length;

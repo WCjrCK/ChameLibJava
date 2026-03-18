@@ -1,5 +1,6 @@
 package ChameleonHash.CH.BaseCH.DSS_2020;
 
+import ChameleonHash.CH.CH;
 import ChameleonHash.CH.CHConfig;
 import ChameleonHash.Interface.BaseCH;
 import EllipticCurve.Point.Scalar;
@@ -9,8 +10,7 @@ import EllipticCurve.Point.Scalar;
  * P25. Construction 3. Concrete instantiation of a Fully Collision-Resistant CH
  */
 
-public class Scheme
-        extends ChameleonHash.CH.BaseCH.Scheme<PublicParam, PublicKey, SecretKey, Message, HashValue, Randomness>
+public class Scheme extends CH
         implements BaseCH<PublicParam, PublicKey, SecretKey, Message, HashValue, Randomness> {
     @Override
     public final PublicParam createPublicParam(CHConfig config) {

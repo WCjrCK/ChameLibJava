@@ -5,7 +5,7 @@ import EllipticCurve.Point.Scalar;
 import Encryption.ABE.BaseABE.FAME.CipherText;
 import utils.ElementCounter;
 
-public class Randomness extends ChameleonHash.PBCH.Components.Randomness {
+public class Randomness extends ChameleonHash.PBCH.BasePBCH.Components.Randomness {
     protected CipherText FAME_ct;
     protected Scalar sigma;
     public MultivePoint epk, p, c, ct_0_4, ct_1, ct_2, ct_3;

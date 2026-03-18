@@ -4,7 +4,7 @@ import utils.ElementCounter;
 
 import java.util.BitSet;
 
-public class Identity extends ChameleonHash.IBCH.Components.Identity {
+public class Identity extends ChameleonHash.IBCH.BaseIBCH.Components.Identity {
     protected BitSet I;
 
     public Identity() {}

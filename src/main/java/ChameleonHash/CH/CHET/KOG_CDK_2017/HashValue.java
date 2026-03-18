@@ -4,7 +4,7 @@ import Commitment.NIZK_DL.Proof;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class HashValue extends ChameleonHash.CH.Components.HashValue<HashValue> {
+public class HashValue extends ChameleonHash.CH.CHET.Components.HashValue<HashValue> {
     protected MultivePoint b, h_p;
     protected Proof pi_t;
 

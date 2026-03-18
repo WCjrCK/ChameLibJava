@@ -1,4 +1,9 @@
 package Encryption.PKE.Components;
 
-public abstract class SecretKey extends Encryption.Components.SecretKey {
+import utils.ElementCounter;
+
+public abstract class SecretKey<SK extends SecretKey<SK>> {
+    public abstract void CopyFrom(SK o);
+
+    public abstract ElementCounter TheoSize();
 }

@@ -3,14 +3,19 @@ package Encryption.ABE.RevocableABE.TMM_2022;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
+import Encryption.ABE.ABEConfig;
 
 public class Core {
+    public PublicParam createPublicParam(ABEConfig abeConfig) {
+    return new PublicParam(abeConfig);
+}
+
     public void Setup(MasterPublicKey mpk, MasterSecretKey msk, PublicParam pp) {
         pp.FAME.Setup(mpk.FAME_mpk, msk.FAME_msk, pp.FAME_pp);
     }
 
     public void KeyGen(User user, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st) {
-        pp.FAME.KeyGen(user.sk.FAME_sk, pp.FAME_pp, mpk.FAME_mpk, msk.FAME_msk, user.S);
+        pp.FAME.KeyGen(user.sk.FAME_sk, pp.FAME_pp, mpk.FAME_mpk, msk.FAME_msk, user.S.toBaseABEAttr());
 
         int theta = st.Pick(user);
         user.sk.node_id = theta;

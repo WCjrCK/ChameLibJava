@@ -1,8 +1,11 @@
 package utils;
 
+import ChameleonHash.CH.BaseCH.Components.HashValue;
+import ChameleonHash.CH.BaseCH.Components.Message;
+import ChameleonHash.CH.BaseCH.Components.Randomness;
 import ChameleonHash.CH.CH;
 import ChameleonHash.Interface.BaseCH;
-import ChameleonHash.PBCH.Components.Attributes;
+import ChameleonHash.PBCH.BasePBCH.Components.Attributes;
 import Commitment.NIZK_DL.Proof;
 import Commitment.NIZK_DL.Scheme;
 import EllipticCurve.Curve.Curve;
@@ -54,18 +57,35 @@ public class ElementCounter {
         }
 
         {
-            type_id.put(ChameleonHash.CH.Components.PublicParam.class, i++);
+            type_id.put(ChameleonHash.CH.BaseCH.Components.PublicParam.class, i++);
             countName.add("CH_pp");
-            type_id.put(ChameleonHash.CH.Components.PublicKey.class, i++);
+            type_id.put(ChameleonHash.CH.BaseCH.Components.PublicKey.class, i++);
             countName.add("CH_pk");
-            type_id.put(ChameleonHash.CH.Components.SecretKey.class, i++);
+            type_id.put(ChameleonHash.CH.BaseCH.Components.SecretKey.class, i++);
             countName.add("CH_sk");
-            type_id.put(ChameleonHash.CH.Components.Message.class, i++);
+            type_id.put(Message.class, i++);
             countName.add("CH_m");
-            type_id.put(ChameleonHash.CH.Components.HashValue.class, i++);
+            type_id.put(HashValue.class, i++);
             countName.add("CH_h");
-            type_id.put(ChameleonHash.CH.Components.Randomness.class, i++);
+            type_id.put(Randomness.class, i++);
             countName.add("CH_r");
+        }
+
+        {
+            type_id.put(ChameleonHash.CH.CHET.Components.PublicParam.class, i++);
+            countName.add("CHET_pp");
+            type_id.put(ChameleonHash.CH.CHET.Components.PublicKey.class, i++);
+            countName.add("CHET_pk");
+            type_id.put(ChameleonHash.CH.CHET.Components.SecretKey.class, i++);
+            countName.add("CHET_sk");
+            type_id.put(ChameleonHash.CH.CHET.Components.ETrapdoor.class, i++);
+            countName.add("CHET_etd");
+            type_id.put(ChameleonHash.CH.CHET.Components.Message.class, i++);
+            countName.add("CHET_m");
+            type_id.put(ChameleonHash.CH.CHET.Components.HashValue.class, i++);
+            countName.add("CHET_h");
+            type_id.put(ChameleonHash.CH.CHET.Components.Randomness.class, i++);
+            countName.add("CHET_r");
         }
 
         {
@@ -116,7 +136,7 @@ public class ElementCounter {
         skip_class.add(SE.class);
         skip_class.add(Curve.class);
         skip_class.add(Attributes.class);
-        skip_class.add(ChameleonHash.PBCH.Components.SecretKey.class);
+        skip_class.add(ChameleonHash.PBCH.BasePBCH.Components.SecretKey.class);
 
         count = new int[countName.size()];
     }

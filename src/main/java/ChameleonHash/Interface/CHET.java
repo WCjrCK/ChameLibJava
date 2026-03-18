@@ -1,9 +1,7 @@
 package ChameleonHash.Interface;
 
 import ChameleonHash.CH.CHConfig;
-import ChameleonHash.CH.CHET.Components.ETrapdoor;
-import ChameleonHash.CH.CHET.Components.PublicParam;
-import ChameleonHash.CH.Components.*;
+import ChameleonHash.CH.CHET.Components.*;
 
 public interface CHET<
         PP extends PublicParam<PK, SK, M, ET, H, R>,

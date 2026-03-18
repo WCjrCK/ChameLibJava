@@ -3,7 +3,7 @@ package ChameleonHash.IBCH.BaseIBCH.ZSS_2003;
 import EllipticCurve.Point.AdditivePoint;
 import utils.ElementCounter;
 
-public class Randomness extends ChameleonHash.IBCH.Components.Randomness {
+public class Randomness extends ChameleonHash.IBCH.BaseIBCH.Components.Randomness {
     protected AdditivePoint R;
 
     @Override

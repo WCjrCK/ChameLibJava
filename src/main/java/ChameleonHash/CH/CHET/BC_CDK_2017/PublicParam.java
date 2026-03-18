@@ -9,7 +9,7 @@ import utils.Serializer;
 import java.util.Objects;
 
 public class PublicParam extends ChameleonHash.CH.CHET.Components.PublicParam<PublicKey, SecretKey, Message, ETrapdoor, HashValue, Randomness> {
-    protected ChameleonHash.CH.Components.PublicParam ch_pp;
+    protected ChameleonHash.CH.BaseCH.Components.PublicParam ch_pp;
     protected BaseCH CHScheme;
 
     public PublicParam(CHConfig config) {

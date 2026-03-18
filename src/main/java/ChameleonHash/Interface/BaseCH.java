@@ -1,7 +1,7 @@
 package ChameleonHash.Interface;
 
+import ChameleonHash.CH.BaseCH.Components.*;
 import ChameleonHash.CH.CHConfig;
-import ChameleonHash.CH.Components.*;
 
 public interface BaseCH<
         PP extends PublicParam<PK, SK, M, H, R>,

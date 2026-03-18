@@ -1,5 +1,6 @@
 package ChameleonHash.CH.LabelCH.LLA_2012;
 
+import ChameleonHash.CH.CH;
 import ChameleonHash.CH.CHConfig;
 import ChameleonHash.Interface.LabelCH;
 import EllipticCurve.Point.MultivePoint;
@@ -10,8 +11,7 @@ import EllipticCurve.Point.Scalar;
  * P4. CH_inf: a key exposure free chameleon hash scheme
  */
 
-public class Scheme
-        extends ChameleonHash.CH.LabelCH.Scheme<PublicParam, PublicKey, SecretKey, Message, Label, HashValue, Randomness>
+public class Scheme extends CH
         implements LabelCH<PublicParam, PublicKey, SecretKey, Message, Label, HashValue, Randomness> {
     @Override
     public final PublicParam createPublicParam(CHConfig config) {

@@ -2,8 +2,8 @@ package ChameleonHash.PBCH.BasePBCH.DSS_2019;
 
 import utils.ElementCounter;
 
-public class Message extends ChameleonHash.PBCH.Components.Message {
-    ChameleonHash.CH.Components.Message CHET_m;
+public class Message extends ChameleonHash.PBCH.BasePBCH.Components.Message {
+    ChameleonHash.CH.CHET.Components.Message CHET_m;
 
     @Override
     public final ElementCounter TheoSize() {

@@ -1,7 +1,7 @@
 package ChameleonHash.PBCH.BAPBCH.Components;
 
-import ChameleonHash.PBCH.Components.Attributes;
-import ChameleonHash.PBCH.Components.SecretKey;
+import ChameleonHash.PBCH.BasePBCH.Components.Attributes;
+import ChameleonHash.PBCH.BasePBCH.Components.SecretKey;
 import utils.ElementCounter;
 
 public abstract class User<A extends Attributes, SK extends SecretKey> {

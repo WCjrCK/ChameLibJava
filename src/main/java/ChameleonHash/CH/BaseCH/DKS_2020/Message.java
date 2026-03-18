@@ -3,7 +3,7 @@ package ChameleonHash.CH.BaseCH.DKS_2020;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class Message extends ChameleonHash.CH.Components.Message {
+public class Message extends ChameleonHash.CH.BaseCH.Components.Message {
     protected Scalar m;
 
     @Override

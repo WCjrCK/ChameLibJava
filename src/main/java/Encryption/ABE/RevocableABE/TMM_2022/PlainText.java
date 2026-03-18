@@ -3,7 +3,7 @@ package Encryption.ABE.RevocableABE.TMM_2022;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class PlainText extends Encryption.ABE.Components.PlainText<PlainText> {
+public class PlainText extends Encryption.ABE.RevocableABE.Components.PlainText<PlainText> {
     Scalar m;
 
     public boolean isEqual(PlainText o) {

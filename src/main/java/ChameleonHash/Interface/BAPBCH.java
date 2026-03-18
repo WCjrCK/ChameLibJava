@@ -2,7 +2,7 @@ package ChameleonHash.Interface;
 
 import ChameleonHash.PBCH.BAPBCH.Components.PublicParam;
 import ChameleonHash.PBCH.BAPBCH.Components.User;
-import ChameleonHash.PBCH.Components.*;
+import ChameleonHash.PBCH.BasePBCH.Components.*;
 import ChameleonHash.PBCH.PBCHConfig;
 
 public interface BAPBCH<

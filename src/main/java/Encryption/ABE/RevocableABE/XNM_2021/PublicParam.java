@@ -4,7 +4,9 @@ import EllipticCurve.Point.MultivePoint;
 import Encryption.ABE.ABEConfig;
 import Encryption.ABE.BaseABE.FAME.FAMECore;
 import utils.ElementCounter;
+import utils.Serializer;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -121,6 +123,21 @@ public class PublicParam
         CipherText res = new CipherText();
         res.FAME_ct = FAME_pp.createCipherText();
         return res;
+    }
+
+    public byte[] serializeInfo(Info target) {
+        Objects.requireNonNull(target, "Info 不能为空");
+        ByteBuffer buffer = ByteBuffer.allocate(4); // Allocate 4 bytes for an int
+        buffer.putInt(target.timestamp); // Write the int into the buffer
+        return Serializer.pack(buffer.array());
+    }
+
+    public void deserializeInfo(Info target, byte[] data) {
+        Objects.requireNonNull(target, "Info 不能为空");
+        Serializer.Reader reader = new Serializer.Reader(data);
+        ByteBuffer buffer = ByteBuffer.wrap(reader.readBytes());
+        reader.ensureFullyConsumed();
+        target.timestamp = buffer.getInt();
     }
 
     @Override

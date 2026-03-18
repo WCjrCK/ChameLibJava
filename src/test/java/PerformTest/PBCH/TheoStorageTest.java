@@ -7,7 +7,7 @@ import ChameleonHash.Interface.BasePBCH;
 import ChameleonHash.PBCH.BAPBCH.BAPBCHFactory;
 import ChameleonHash.PBCH.BAPBCH.Components.User;
 import ChameleonHash.PBCH.BasePBCH.BasePBCHFactory;
-import ChameleonHash.PBCH.Components.*;
+import ChameleonHash.PBCH.BasePBCH.Components.*;
 import ChameleonHash.PBCH.PBCHConfig;
 import ChameleonHash.PBCH.PBCHName;
 import ChameleonHash.SchemeCurveRequire;

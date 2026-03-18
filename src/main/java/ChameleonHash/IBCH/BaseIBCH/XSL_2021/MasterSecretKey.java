@@ -3,7 +3,7 @@ package ChameleonHash.IBCH.BaseIBCH.XSL_2021;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class MasterSecretKey extends ChameleonHash.IBCH.Components.MasterSecretKey {
+public class MasterSecretKey extends ChameleonHash.IBCH.BaseIBCH.Components.MasterSecretKey {
     protected MultivePoint g_2_alpha;
 
     @Override

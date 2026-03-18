@@ -1,7 +1,7 @@
 package PerformTest.IBCH;
 
 import ChameleonHash.IBCH.BaseIBCH.BaseIBCHFactory;
-import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.BaseIBCH.Components.*;
 import ChameleonHash.IBCH.IBCHConfig;
 import ChameleonHash.IBCH.IBCHName;
 import ChameleonHash.IBCH.LabelIBCH.Components.Label;
@@ -101,15 +101,15 @@ public class TheoStorageTest {
         private void testLabelIBCH(BufferedWriter theo_storage_cost, IBCHConfig schemeConfig) throws IOException {
             LabelIBCH scheme = LabelIBCHFactory.createScheme(schemeConfig);
             ChameleonHash.IBCH.LabelIBCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
-            MasterSecretKey msk = pp.createMasterSecretKey();
+            ChameleonHash.IBCH.LabelIBCH.Components.MasterSecretKey msk = pp.createMasterSecretKey();
             scheme.Setup(pp, msk);
-            SecretKey sk = pp.createSecretKey();
-            Identity ID = pp.createIdentity("ID1");
+            ChameleonHash.IBCH.LabelIBCH.Components.SecretKey sk = pp.createSecretKey();
+            ChameleonHash.IBCH.LabelIBCH.Components.Identity ID = pp.createIdentity("ID1");
             scheme.KeyGen(sk, pp, msk, ID);
-            Message m = pp.createMessage("msg");
+            ChameleonHash.IBCH.LabelIBCH.Components.Message m = pp.createMessage("msg");
             Label l = pp.createLabel("label");
-            HashValue h = pp.createHashValue();
-            Randomness r = pp.createRandomness();
+            ChameleonHash.IBCH.LabelIBCH.Components.HashValue h = pp.createHashValue();
+            ChameleonHash.IBCH.LabelIBCH.Components.Randomness r = pp.createRandomness();
             scheme.Hash(h, r, pp, ID, m, l);
 
             System.out.println("PublicParam: " + pp.TheoSize());

@@ -2,7 +2,7 @@ package ChameleonHash.IBCH.BaseIBCH.ZSS_2003;
 
 import utils.ElementCounter;
 
-public class Identity extends ChameleonHash.IBCH.Components.Identity {
+public class Identity extends ChameleonHash.IBCH.BaseIBCH.Components.Identity {
     protected String ID;
 
     public Identity() {}

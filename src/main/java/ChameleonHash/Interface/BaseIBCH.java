@@ -1,10 +1,10 @@
 package ChameleonHash.Interface;
 
-import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.BaseIBCH.Components.*;
 import ChameleonHash.IBCH.IBCHConfig;
 
 public interface BaseIBCH<
-        PP extends ChameleonHash.IBCH.Components.PublicParam<MSK, SK, M, ID, H, R>,
+        PP extends PublicParam<MSK, SK, M, ID, H, R>,
         MSK extends MasterSecretKey,
         SK extends SecretKey,
         ID extends Identity,

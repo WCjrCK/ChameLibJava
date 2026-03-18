@@ -3,7 +3,7 @@ package ChameleonHash.CH.LabelCH.LLA_2012;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class SecretKey extends ChameleonHash.CH.Components.SecretKey {
+public class SecretKey extends ChameleonHash.CH.LabelCH.Components.SecretKey {
     protected Scalar alpha, x_1, x_2;
 
     @Override

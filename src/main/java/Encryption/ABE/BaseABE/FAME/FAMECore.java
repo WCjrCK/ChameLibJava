@@ -4,7 +4,7 @@ import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 import Encryption.ABE.ABEConfig;
-import Encryption.ABE.Components.Attributes;
+import Encryption.ABE.BaseABE.Components.Attributes;
 
 import java.util.HashMap;
 

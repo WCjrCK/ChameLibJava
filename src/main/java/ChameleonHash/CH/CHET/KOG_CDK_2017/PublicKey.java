@@ -4,7 +4,7 @@ import Commitment.NIZK_DL.Proof;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class PublicKey extends ChameleonHash.CH.Components.PublicKey {
+public class PublicKey extends ChameleonHash.CH.CHET.Components.PublicKey {
     protected MultivePoint h;
     protected Proof pi_pk;
     protected Encryption.PKE.Components.PublicKey pke_pk;

@@ -3,7 +3,7 @@ package ChameleonHash.CH.BaseCH.CCT_2024;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class HashValue extends ChameleonHash.CH.Components.HashValue<HashValue> {
+public class HashValue extends ChameleonHash.CH.BaseCH.Components.HashValue<HashValue> {
     protected MultivePoint h;
 
     @Override

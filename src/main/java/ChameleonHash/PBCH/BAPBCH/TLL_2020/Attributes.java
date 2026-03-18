@@ -2,8 +2,8 @@ package ChameleonHash.PBCH.BAPBCH.TLL_2020;
 
 import utils.ElementCounter;
 
-public class Attributes extends ChameleonHash.PBCH.Components.Attributes {
-    protected Encryption.ABE.Components.Attributes A;
+public class Attributes extends ChameleonHash.PBCH.BasePBCH.Components.Attributes {
+    protected Encryption.ABE.BaseABE.Components.Attributes A;
 
     @Override
     public final void addAttr(String attr) {

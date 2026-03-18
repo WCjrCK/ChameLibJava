@@ -1,12 +1,12 @@
 package Encryption.ABE.BaseABE.FAME;
 
 import EllipticCurve.Point.MultivePoint;
-import Encryption.ABE.Components.Attributes;
+import Encryption.ABE.BaseABE.Components.Attributes;
 import utils.ElementCounter;
 
 import java.util.HashMap;
 
-public class SecretKey extends Encryption.ABE.Components.SecretKey {
+public class SecretKey extends Encryption.ABE.BaseABE.Components.SecretKey {
     public HashMap<String, Integer> Attr2id;
     Attributes S;
 

@@ -4,7 +4,7 @@ import Commitment.NIZK_DH_PAIR.Proof;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class Randomness extends ChameleonHash.CH.Components.Randomness {
+public class Randomness extends ChameleonHash.CH.LabelCH.Components.Randomness {
     protected MultivePoint g_r;
     protected Proof pi;
 

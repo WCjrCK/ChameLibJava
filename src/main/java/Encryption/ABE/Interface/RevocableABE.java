@@ -1,9 +1,7 @@
 package Encryption.ABE.Interface;
 
 import Encryption.ABE.ABEConfig;
-import Encryption.ABE.Components.*;
 import Encryption.ABE.RevocableABE.Components.*;
-import Encryption.ABE.RevocableABE.Components.PublicParam;
 
 public interface RevocableABE<
         PP extends PublicParam,

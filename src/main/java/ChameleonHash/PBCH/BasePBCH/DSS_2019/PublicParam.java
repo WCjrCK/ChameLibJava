@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Random;
 
 public class PublicParam
-        extends ChameleonHash.PBCH.Components.PublicParam<MasterPublicKey, MasterSecretKey, SecretKey, Policy, Attributes, Message, HashValue, Randomness> {
+        extends ChameleonHash.PBCH.BasePBCH.Components.PublicParam<MasterPublicKey, MasterSecretKey, SecretKey, Policy, Attributes, Message, HashValue, Randomness> {
     protected CHET CHETScheme;
     protected ChameleonHash.CH.CHET.Components.PublicParam CHET_pp;
     protected FAMECore FAME = new FAMECore();

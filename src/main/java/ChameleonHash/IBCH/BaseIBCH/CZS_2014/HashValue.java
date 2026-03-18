@@ -3,7 +3,7 @@ package ChameleonHash.IBCH.BaseIBCH.CZS_2014;
 import EllipticCurve.Point.AdditivePoint;
 import utils.ElementCounter;
 
-public class HashValue extends ChameleonHash.IBCH.Components.HashValue<HashValue> {
+public class HashValue extends ChameleonHash.IBCH.BaseIBCH.Components.HashValue<HashValue> {
     protected AdditivePoint h;
 
     @Override

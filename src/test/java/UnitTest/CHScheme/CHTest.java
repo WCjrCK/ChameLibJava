@@ -1,11 +1,11 @@
 package UnitTest.CHScheme;
 
 import ChameleonHash.CH.BaseCH.BaseCHFactory;
+import ChameleonHash.CH.BaseCH.Components.*;
 import ChameleonHash.CH.CHConfig;
 import ChameleonHash.CH.CHET.CHETFactory;
 import ChameleonHash.CH.CHET.Components.ETrapdoor;
 import ChameleonHash.CH.CHName;
-import ChameleonHash.CH.Components.*;
 import ChameleonHash.CH.LabelCH.LabelCHFactory;
 import ChameleonHash.Interface.BaseCH;
 import ChameleonHash.Interface.CHET;
@@ -142,24 +142,24 @@ public class CHTest {
         CHET scheme = CHETFactory.createScheme(schemeConfig);
         ChameleonHash.CH.CHET.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
         scheme.Setup(pp);
-        PublicKey pk1 = pp.createPublicKey();
-        SecretKey sk1 = pp.createSecretKey();
+        ChameleonHash.CH.CHET.Components.PublicKey pk1 = pp.createPublicKey();
+        ChameleonHash.CH.CHET.Components.SecretKey sk1 = pp.createSecretKey();
         scheme.KeyGen(pk1, sk1, pp);
 
-        PublicKey pk2 = pp.createPublicKey();
-        SecretKey sk2 = pp.createSecretKey();
+        ChameleonHash.CH.CHET.Components.PublicKey pk2 = pp.createPublicKey();
+        ChameleonHash.CH.CHET.Components.SecretKey sk2 = pp.createSecretKey();
         scheme.KeyGen(pk2, sk2, pp);
 
-        Message m1 = pp.createMessage("msg1");
-        Message m2 = pp.createMessage("msg2");
+        ChameleonHash.CH.CHET.Components.Message m1 = pp.createMessage("msg1");
+        ChameleonHash.CH.CHET.Components.Message m2 = pp.createMessage("msg2");
 
-        HashValue h1 = pp.createHashValue();
-        Randomness r1 = pp.createRandomness();
+        ChameleonHash.CH.CHET.Components.HashValue h1 = pp.createHashValue();
+        ChameleonHash.CH.CHET.Components.Randomness r1 = pp.createRandomness();
         ETrapdoor etd1 = pp.createETrapdoor();
         scheme.Hash(h1, r1, pp, pk1, m1, etd1);
 
-        HashValue h2 = pp.createHashValue();
-        Randomness r2 = pp.createRandomness();
+        ChameleonHash.CH.CHET.Components.HashValue h2 = pp.createHashValue();
+        ChameleonHash.CH.CHET.Components.Randomness r2 = pp.createRandomness();
         ETrapdoor etd2 = pp.createETrapdoor();
         scheme.Hash(h2, r2, pp, pk2, m2, etd2);
 
@@ -172,7 +172,7 @@ public class CHTest {
 //        assertFalse(scheme.Verify(pp, pk2, m2, h1, r2));
 //        assertFalse(scheme.Verify(pp, pk2, m2, h2, r1));
 
-        Randomness r1_p = pp.createRandomness();
+        ChameleonHash.CH.CHET.Components.Randomness r1_p = pp.createRandomness();
 
         scheme.Collision(r1_p, pp, pk1, sk1, m1, etd1, h1, r1, m2);
         assertTrue(scheme.Verify(pp, pk1, m1, h1, r1), "Adapt(L1, m2) valid");
@@ -184,26 +184,26 @@ public class CHTest {
         LabelCH scheme = LabelCHFactory.createScheme(schemeConfig);
         ChameleonHash.CH.LabelCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
         scheme.Setup(pp);
-        PublicKey pk1 = pp.createPublicKey();
-        SecretKey sk1 = pp.createSecretKey();
+        ChameleonHash.CH.LabelCH.Components.PublicKey pk1 = pp.createPublicKey();
+        ChameleonHash.CH.LabelCH.Components.SecretKey sk1 = pp.createSecretKey();
         scheme.KeyGen(pk1, sk1, pp);
 
-        PublicKey pk2 = pp.createPublicKey();
-        SecretKey sk2 = pp.createSecretKey();
+        ChameleonHash.CH.LabelCH.Components.PublicKey pk2 = pp.createPublicKey();
+        ChameleonHash.CH.LabelCH.Components.SecretKey sk2 = pp.createSecretKey();
         scheme.KeyGen(pk2, sk2, pp);
 
-        Message m1 = pp.createMessage("msg1");
-        Message m2 = pp.createMessage("msg2");
+        ChameleonHash.CH.LabelCH.Components.Message m1 = pp.createMessage("msg1");
+        ChameleonHash.CH.LabelCH.Components.Message m2 = pp.createMessage("msg2");
 
         ChameleonHash.CH.LabelCH.Components.Label l1 = pp.createLabel("label1");
         ChameleonHash.CH.LabelCH.Components.Label l2 = pp.createLabel("label2");
 
-        HashValue h1 = pp.createHashValue();
-        Randomness r1 = pp.createRandomness();
+        ChameleonHash.CH.LabelCH.Components.HashValue h1 = pp.createHashValue();
+        ChameleonHash.CH.LabelCH.Components.Randomness r1 = pp.createRandomness();
         scheme.Hash(h1, r1, pp, pk1, m1, l1);
 
-        HashValue h2 = pp.createHashValue();
-        Randomness r2 = pp.createRandomness();
+        ChameleonHash.CH.LabelCH.Components.HashValue h2 = pp.createHashValue();
+        ChameleonHash.CH.LabelCH.Components.Randomness r2 = pp.createRandomness();
         scheme.Hash(h2, r2, pp, pk2, m2, l2);
 
         assertTrue(scheme.Verify(pp, pk1, m1, l1, h1, r1));
@@ -218,7 +218,7 @@ public class CHTest {
         assertFalse(scheme.Verify(pp, pk2, m2, l2, h1, r2));
         assertFalse(scheme.Verify(pp, pk2, m2, l2, h2, r1));
 
-        Randomness r1_p = pp.createRandomness();
+        ChameleonHash.CH.LabelCH.Components.Randomness r1_p = pp.createRandomness();
 
         scheme.Collision(r1_p, pp, pk1, sk1, m1, l1, h1, r1, m2);
         assertTrue(scheme.Verify(pp, pk1, m1, l1, h1, r1), "Adapt(L1, m2) valid");

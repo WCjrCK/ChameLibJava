@@ -3,7 +3,7 @@ package ChameleonHash.IBCH.BaseIBCH.CZS_2014;
 import EllipticCurve.Point.AdditivePoint;
 import utils.ElementCounter;
 
-public class SecretKey extends ChameleonHash.IBCH.Components.SecretKey {
+public class SecretKey extends ChameleonHash.IBCH.BaseIBCH.Components.SecretKey {
     protected AdditivePoint S_ID;
 
     @Override

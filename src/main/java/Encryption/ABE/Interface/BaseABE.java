@@ -1,7 +1,7 @@
 package Encryption.ABE.Interface;
 
 import Encryption.ABE.ABEConfig;
-import Encryption.ABE.Components.*;
+import Encryption.ABE.BaseABE.Components.*;
 
 public interface BaseABE<
         PP extends PublicParam<MPK, MSK, SK, PT, CT>,

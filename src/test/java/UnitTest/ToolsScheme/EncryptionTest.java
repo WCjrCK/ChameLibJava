@@ -72,27 +72,27 @@ public class EncryptionTest {
         PKE scheme = PKEFactory.createPKE(pkeConfig);
         Encryption.PKE.Components.PublicParam pp = scheme.createPublicParam(params);
         PublicKey pk1 = pp.createPublicKey();
-        Encryption.Components.SecretKey sk1 = pp.createSecretKey();
+        Encryption.PKE.Components.SecretKey sk1 = pp.createSecretKey();
 
         scheme.KeyGen(pk1, sk1, pp);
 
         PublicKey pk2 = pp.createPublicKey();
-        Encryption.Components.SecretKey sk2 = pp.createSecretKey();
+        Encryption.PKE.Components.SecretKey sk2 = pp.createSecretKey();
 
         scheme.KeyGen(pk2, sk2, pp);
 
-        Encryption.Components.PlainText pt1 = pp.createPlainText("msg1");
-        Encryption.Components.PlainText pt2 = pp.createPlainText("msg2");
+        Encryption.PKE.Components.PlainText pt1 = pp.createPlainText("msg1");
+        Encryption.PKE.Components.PlainText pt2 = pp.createPlainText("msg2");
 
-        Encryption.Components.CipherText ct1 = pp.createCipherText();
-        Encryption.Components.CipherText ct2 = pp.createCipherText();
+        Encryption.PKE.Components.CipherText ct1 = pp.createCipherText();
+        Encryption.PKE.Components.CipherText ct2 = pp.createCipherText();
 
         scheme.Encrypt(ct1, pp, pk1, pt1);
         scheme.Encrypt(ct2, pp, pk2, pt2);
 
         assertNotSame(ct1, ct2);
 
-        Encryption.Components.PlainText pt = pp.createPlainText("");
+        Encryption.PKE.Components.PlainText pt = pp.createPlainText("");
         scheme.Decrypt(pt, pp, pk1, sk1, ct1);
         assertTrue(pt.isEqual(pt1));
         assertFalse(pt.isEqual(pt2));

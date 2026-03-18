@@ -1,6 +1,6 @@
 package ChameleonHash.Interface;
 
-import ChameleonHash.PBCH.Components.*;
+import ChameleonHash.PBCH.BasePBCH.Components.*;
 import ChameleonHash.PBCH.PBCHConfig;
 
 public interface BasePBCH<

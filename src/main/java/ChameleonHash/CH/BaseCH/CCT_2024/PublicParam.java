@@ -13,7 +13,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
-public class PublicParam extends ChameleonHash.CH.Components.PublicParam<PublicKey, SecretKey, Message, HashValue, Randomness> {
+public class PublicParam extends ChameleonHash.CH.BaseCH.Components.PublicParam<PublicKey, SecretKey, Message, HashValue, Randomness> {
     protected CurveGroup curveGroup;
     protected MultivePoint g;
 
@@ -175,7 +175,7 @@ public class PublicParam extends ChameleonHash.CH.Components.PublicParam<PublicK
     }
 
     private MultivePoint point(byte[] data, CurveGroup group) {
-        return (MultivePoint) curve.createPointFromBytes(group, data);
+        return curve.createPointFromBytes(group, data);
     }
 
     private Scalar scalar(byte[] data) {

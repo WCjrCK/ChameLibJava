@@ -1,11 +1,6 @@
 package Encryption.PKE;
 
-
-import Encryption.Components.CipherText;
-import Encryption.Components.PlainText;
-import Encryption.Components.SecretKey;
-import Encryption.PKE.Components.PublicKey;
-import Encryption.PKE.Components.PublicParam;
+import Encryption.PKE.Components.*;
 
 import java.util.Map;
 

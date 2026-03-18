@@ -2,7 +2,7 @@ package MathStructure;
 
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Point.Scalar;
-import Encryption.ABE.Components.Attributes;
+import Encryption.ABE.BaseABE.Components.Attributes;
 import utils.ElementCounter;
 
 import java.util.BitSet;

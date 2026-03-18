@@ -1,17 +1,17 @@
 package ChameleonHash.CH.CHET.KOG_CDK_2017;
 
+import ChameleonHash.CH.CH;
 import ChameleonHash.CH.CHConfig;
 import ChameleonHash.Interface.CHET;
 import EllipticCurve.Point.Scalar;
-import Encryption.Components.PlainText;
+import Encryption.PKE.Components.PlainText;
 
 /*
  * Chameleon-Hashes with Ephemeral Trapdoors And Applications to Invisible Sanitizable Signatures
  * P12. Construction 2 (CHET in Known-Order Groups)
  */
 
-public class Scheme
-        extends ChameleonHash.CH.CHET.Scheme<PublicParam, PublicKey, SecretKey, Message, ETrapdoor, HashValue, Randomness>
+public class Scheme extends CH
         implements CHET<PublicParam, PublicKey, SecretKey, Message, ETrapdoor, HashValue, Randomness> {
     @Override
     public final PublicParam createPublicParam(CHConfig config) {

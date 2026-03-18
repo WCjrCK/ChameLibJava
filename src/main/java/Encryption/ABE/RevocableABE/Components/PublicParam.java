@@ -1,7 +1,9 @@
 package Encryption.ABE.RevocableABE.Components;
 
+import EllipticCurve.Curve.Curve;
+import EllipticCurve.Curve.CurveFactory;
 import Encryption.ABE.ABEConfig;
-import Encryption.ABE.Components.*;
+import utils.ElementCounter;
 
 public abstract class PublicParam<
         MPK extends MasterPublicKey,
@@ -16,11 +18,22 @@ public abstract class PublicParam<
         DK extends DecryptKey<I>,
         PT extends PlainText<PT>,
         CT extends CipherText<CT>
-        > extends Encryption.ABE.Components.PublicParam<MPK, MSK, SK, PT, CT> {
+        > {
+    public final Curve curve;
+
     protected PublicParam(ABEConfig abeConfig) {
-        super(abeConfig);
+        curve = CurveFactory.create(abeConfig.curveConfig);
     }
-    public abstract A createAuthority();
+
+    public Attributes createAttributes() {
+        return new Attributes();
+    }
+
+    public abstract Policy createPolicy(String BooleanFormulas);
+
+    public abstract MPK createMasterPublicKey();
+
+    public abstract MSK createMasterSecretKey();
 
     public abstract S createState();
 
@@ -28,9 +41,19 @@ public abstract class PublicParam<
 
     public abstract U createUser(String ID);
 
+    public abstract SK createSecretKey();
+
+    public abstract A createAuthority();
+
     public abstract I createInfo();
 
     public abstract KU createKeyUpdater();
 
     public abstract DK createDecryptKey();
+
+    public abstract PT createPlainText(String msg);
+
+    public abstract CT createCipherText();
+
+    public abstract ElementCounter TheoSize();
 }

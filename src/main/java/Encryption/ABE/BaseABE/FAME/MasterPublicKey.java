@@ -3,7 +3,7 @@ package Encryption.ABE.BaseABE.FAME;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class MasterPublicKey extends Encryption.ABE.Components.MasterPublicKey {
+public class MasterPublicKey extends Encryption.ABE.BaseABE.Components.MasterPublicKey {
     public MultivePoint g;
     public MultivePoint h;
     protected MultivePoint H_1;

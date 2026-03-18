@@ -1,5 +1,6 @@
 package ChameleonHash.IBCH.BaseIBCH.ZSS_2003;
 
+import ChameleonHash.IBCH.IBCH;
 import ChameleonHash.IBCH.IBCHConfig;
 import ChameleonHash.Interface.BaseIBCH;
 import EllipticCurve.Curve.CurveGroup;
@@ -9,8 +10,7 @@ import EllipticCurve.Curve.CurveGroup;
  * P4. 4.1 Scheme 1
  */
 
-public class S1
-        extends ChameleonHash.IBCH.BaseIBCH.Scheme<PublicParam, MasterSecretKey, SecretKey, Identity, Message, HashValue, Randomness>
+public class S1 extends IBCH
         implements BaseIBCH<PublicParam, MasterSecretKey, SecretKey, Identity, Message, HashValue, Randomness> {
     @Override
     public final PublicParam createPublicParam(IBCHConfig config) {

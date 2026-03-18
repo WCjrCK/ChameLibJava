@@ -7,7 +7,7 @@ import utils.ElementCounter;
 import java.util.Arrays;
 import java.util.Map;
 
-public class SecretKey extends ChameleonHash.PBCH.Components.SecretKey {
+public class SecretKey extends ChameleonHash.PBCH.BasePBCH.Components.SecretKey {
     protected Encryption.ABE.BaseABE.FAME.SecretKey FAME_sk;
     public MultivePoint[] sk_0_g;
     public MultivePoint sk_1;

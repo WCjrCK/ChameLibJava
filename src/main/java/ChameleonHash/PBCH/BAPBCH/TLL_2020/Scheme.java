@@ -1,6 +1,7 @@
 package ChameleonHash.PBCH.BAPBCH.TLL_2020;
 
 import ChameleonHash.Interface.BAPBCH;
+import ChameleonHash.PBCH.PBCH;
 import ChameleonHash.PBCH.PBCHConfig;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
@@ -9,8 +10,7 @@ import Encryption.ABE.BaseABE.FAME.PlainText;
 
 import java.util.Arrays;
 
-public class Scheme
-        extends ChameleonHash.PBCH.BAPBCH.Scheme<PublicParam, MasterPublicKey, MasterSecretKey, Policy, User, Message, HashValue, Randomness>
+public class Scheme extends PBCH
         implements BAPBCH<PublicParam, MasterPublicKey, MasterSecretKey, Policy, User, Message, HashValue, Randomness> {
     @Override
     public PublicParam createPublicParam(PBCHConfig config) {

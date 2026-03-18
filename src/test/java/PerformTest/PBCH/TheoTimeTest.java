@@ -7,7 +7,7 @@ import ChameleonHash.Interface.BasePBCH;
 import ChameleonHash.PBCH.BAPBCH.BAPBCHFactory;
 import ChameleonHash.PBCH.BAPBCH.Components.User;
 import ChameleonHash.PBCH.BasePBCH.BasePBCHFactory;
-import ChameleonHash.PBCH.Components.*;
+import ChameleonHash.PBCH.BasePBCH.Components.*;
 import ChameleonHash.PBCH.PBCHConfig;
 import ChameleonHash.PBCH.PBCHName;
 import ChameleonHash.SchemeCurveRequire;
@@ -78,7 +78,7 @@ public class TheoTimeTest {
 
         private void testBasePBCH(BufferedWriter theo_time_cost, PBCHConfig schemeConfig) throws IOException {
             BasePBCH scheme = BasePBCHFactory.createScheme(schemeConfig);
-            ChameleonHash.PBCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
+            PublicParam pp = scheme.createPublicParam(schemeConfig);
             MasterPublicKey mpk = pp.createMasterPublicKey();
             MasterSecretKey msk = pp.createMasterSecretKey();
 
@@ -99,7 +99,7 @@ public class TheoTimeTest {
             S.addAttr("A");
             S.addAttr("DDDD");
 
-            ChameleonHash.PBCH.Components.SecretKey sk = pp.createSecretKey();
+            SecretKey sk = pp.createSecretKey();
 
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.KeyGen(sk, pp, mpk, msk, S);
@@ -110,9 +110,9 @@ public class TheoTimeTest {
                 throw new RuntimeException(e);
             }
 
-            ChameleonHash.PBCH.Components.Message m = pp.createMessage("msg1");
-            ChameleonHash.PBCH.Components.HashValue h = pp.createHashValue();
-            ChameleonHash.PBCH.Components.Randomness r = pp.createRandomness();
+            Message m = pp.createMessage("msg1");
+            HashValue h = pp.createHashValue();
+            Randomness r = pp.createRandomness();
 
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Hash(h, r, pp, mpk, m, P);
@@ -123,8 +123,8 @@ public class TheoTimeTest {
                 throw new RuntimeException(e);
             }
 
-            ChameleonHash.PBCH.Components.Message m_p = pp.createMessage("msg2");
-            ChameleonHash.PBCH.Components.Randomness r_p = pp.createRandomness();
+            Message m_p = pp.createMessage("msg2");
+            Randomness r_p = pp.createRandomness();
 
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Verify(pp, mpk, m, h, r);

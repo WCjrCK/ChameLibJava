@@ -3,7 +3,7 @@ package ChameleonHash.CH.LabelCH.CZK_2004;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class PublicKey extends ChameleonHash.CH.Components.PublicKey {
+public class PublicKey extends ChameleonHash.CH.LabelCH.Components.PublicKey {
     protected MultivePoint y;
 
     @Override

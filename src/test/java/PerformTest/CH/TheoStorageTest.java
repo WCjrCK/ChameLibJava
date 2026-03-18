@@ -1,11 +1,11 @@
 package PerformTest.CH;
 
 import ChameleonHash.CH.BaseCH.BaseCHFactory;
+import ChameleonHash.CH.BaseCH.Components.*;
 import ChameleonHash.CH.CHConfig;
 import ChameleonHash.CH.CHET.CHETFactory;
 import ChameleonHash.CH.CHET.Components.ETrapdoor;
 import ChameleonHash.CH.CHName;
-import ChameleonHash.CH.Components.*;
 import ChameleonHash.CH.LabelCH.Components.Label;
 import ChameleonHash.CH.LabelCH.LabelCHFactory;
 import ChameleonHash.Interface.BaseCH;
@@ -110,12 +110,12 @@ public class TheoStorageTest {
             CHET scheme = CHETFactory.createScheme(schemeConfig);
             ChameleonHash.CH.CHET.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
             scheme.Setup(pp);
-            PublicKey pk = pp.createPublicKey();
-            SecretKey sk = pp.createSecretKey();
+            ChameleonHash.CH.CHET.Components.PublicKey pk = pp.createPublicKey();
+            ChameleonHash.CH.CHET.Components.SecretKey sk = pp.createSecretKey();
             scheme.KeyGen(pk, sk, pp);
-            Message m = pp.createMessage("msg");
-            HashValue h = pp.createHashValue();
-            Randomness r = pp.createRandomness();
+            ChameleonHash.CH.CHET.Components.Message m = pp.createMessage("msg");
+            ChameleonHash.CH.CHET.Components.HashValue h = pp.createHashValue();
+            ChameleonHash.CH.CHET.Components.Randomness r = pp.createRandomness();
             ETrapdoor etd = pp.createETrapdoor();
             scheme.Hash(h, r, pp, pk, m, etd);
 
@@ -140,13 +140,13 @@ public class TheoStorageTest {
             LabelCH scheme = LabelCHFactory.createScheme(schemeConfig);
             ChameleonHash.CH.LabelCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
             scheme.Setup(pp);
-            PublicKey pk = pp.createPublicKey();
-            SecretKey sk = pp.createSecretKey();
+            ChameleonHash.CH.LabelCH.Components.PublicKey pk = pp.createPublicKey();
+            ChameleonHash.CH.LabelCH.Components.SecretKey sk = pp.createSecretKey();
             scheme.KeyGen(pk, sk, pp);
-            Message m = pp.createMessage("msg");
+            ChameleonHash.CH.LabelCH.Components.Message m = pp.createMessage("msg");
             Label l = pp.createLabel("label");
-            HashValue h = pp.createHashValue();
-            Randomness r = pp.createRandomness();
+            ChameleonHash.CH.LabelCH.Components.HashValue h = pp.createHashValue();
+            ChameleonHash.CH.LabelCH.Components.Randomness r = pp.createRandomness();
             scheme.Hash(h, r, pp, pk, m, l);
 
             System.out.println("PublicParam: " + pp.TheoSize());

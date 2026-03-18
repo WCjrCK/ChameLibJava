@@ -1,15 +1,15 @@
 package ChameleonHash.Interface;
 
-import ChameleonHash.IBCH.Components.*;
 import ChameleonHash.IBCH.IBCHConfig;
+import ChameleonHash.IBCH.LabelIBCH.Components.*;
 
 public interface LabelIBCH<
-        PP extends ChameleonHash.IBCH.LabelIBCH.Components.PublicParam<MSK, SK, M, ID, L, H, R>,
+        PP extends PublicParam<MSK, SK, M, ID, L, H, R>,
         MSK extends MasterSecretKey,
         SK extends SecretKey,
         ID extends Identity,
         M extends Message,
-        L extends ChameleonHash.IBCH.LabelIBCH.Components.Label,
+        L extends Label,
         H extends HashValue<H>,
         R extends Randomness
         > {

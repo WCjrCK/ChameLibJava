@@ -2,10 +2,10 @@ package ChameleonHash.CH.CHET.KOG_CDK_2017;
 
 import Commitment.Components.Proof;
 import EllipticCurve.Point.MultivePoint;
-import Encryption.Components.CipherText;
+import Encryption.PKE.Components.CipherText;
 import utils.ElementCounter;
 
-public class Randomness extends ChameleonHash.CH.Components.Randomness {
+public class Randomness extends ChameleonHash.CH.CHET.Components.Randomness {
     protected MultivePoint p;
     protected CipherText C;
     protected Proof pi_p;

@@ -3,7 +3,7 @@ package ChameleonHash.IBCH.BaseIBCH.XSL_2021;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class Randomness extends ChameleonHash.IBCH.Components.Randomness {
+public class Randomness extends ChameleonHash.IBCH.BaseIBCH.Components.Randomness {
     protected MultivePoint r_1, r_2;
 
     @Override

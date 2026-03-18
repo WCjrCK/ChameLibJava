@@ -4,7 +4,7 @@ import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class Randomness extends ChameleonHash.IBCH.Components.Randomness {
+public class Randomness extends ChameleonHash.IBCH.BaseIBCH.Components.Randomness {
     protected AdditivePoint r_1;
     protected MultivePoint r_2; // G_1
 

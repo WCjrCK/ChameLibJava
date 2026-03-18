@@ -1,19 +1,20 @@
 package ChameleonHash.PBCH.BAPBCH.Components;
 
+import ChameleonHash.PBCH.BasePBCH.Components.*;
 import EllipticCurve.Curve.Config;
 
 public abstract class PublicParam<
-        MPK extends ChameleonHash.PBCH.Components.MasterPublicKey,
-        MSK extends ChameleonHash.PBCH.Components.MasterSecretKey,
-        SK extends ChameleonHash.PBCH.Components.SecretKey,
-        P extends ChameleonHash.PBCH.Components.Policy,
-        A extends ChameleonHash.PBCH.Components.Attributes,
+        MPK extends MasterPublicKey,
+        MSK extends MasterSecretKey,
+        SK extends SecretKey,
+        P extends Policy,
+        A extends Attributes,
         U extends User,
-        M extends ChameleonHash.PBCH.Components.Message,
-        H extends ChameleonHash.PBCH.Components.HashValue<H>,
-        R extends ChameleonHash.PBCH.Components.Randomness
+        M extends Message,
+        H extends HashValue<H>,
+        R extends Randomness
         >
-        extends ChameleonHash.PBCH.Components.PublicParam<MPK, MSK, SK, P, A, M, H, R> {
+        extends ChameleonHash.PBCH.BasePBCH.Components.PublicParam<MPK, MSK, SK, P, A, M, H, R> {
     protected PublicParam(Config config) {
         super(config);
     }

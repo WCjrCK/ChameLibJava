@@ -1,17 +1,16 @@
 package Encryption.ABE.RevocableABE.TMM_2022;
 
+import Encryption.ABE.ABE;
 import Encryption.ABE.ABEConfig;
-import Encryption.ABE.Components.Attributes;
 import Encryption.ABE.Interface.RevocableABE;
+import Encryption.ABE.RevocableABE.Components.Attributes;
 
 /*
  * Revocable Policy-Based ChameleonHash for Blockchain Rewriting
  * P7. 4.1. The proposed RABE scheme
  */
 
-public class Scheme
-        extends Encryption.ABE.RevocableABE.Scheme<PublicParam, MasterPublicKey, MasterSecretKey,
-        State, Revocated, User, UpdateKey, Info, SecretKey, DecryptKey, Policy, PlainText, CipherText>
+public class Scheme extends ABE
         implements RevocableABE<PublicParam, MasterPublicKey, MasterSecretKey,
         State, Revocated, User, UpdateKey, Info, SecretKey, DecryptKey, Policy, PlainText, CipherText>  {
     Core core = new Core();

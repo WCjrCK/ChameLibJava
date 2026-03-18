@@ -3,7 +3,7 @@ package ChameleonHash.IBCH.BaseIBCH.LSX_2022;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class Identity extends ChameleonHash.IBCH.Components.Identity {
+public class Identity extends ChameleonHash.IBCH.BaseIBCH.Components.Identity {
     protected Scalar ID;
 
     public Identity() {}

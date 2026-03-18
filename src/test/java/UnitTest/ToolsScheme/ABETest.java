@@ -4,8 +4,8 @@ import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveName;
 import Encryption.ABE.ABEConfig;
 import Encryption.ABE.ABEName;
+import Encryption.ABE.BaseABE.Components.Attributes;
 import Encryption.ABE.BaseABE.FAME.*;
-import Encryption.ABE.Components.Attributes;
 import Encryption.ABE.Interface.RevocableABE;
 import Encryption.ABE.RevocableABE.Components.Authority;
 import Encryption.ABE.RevocableABE.Components.Info;
@@ -134,7 +134,7 @@ public class ABETest {
         {
             RevocableABE scheme = RevocableABEFactory.createRevocableABE(schemeConfig);
             Encryption.ABE.RevocableABE.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
-            Encryption.ABE.Components.MasterPublicKey mpk = pp.createMasterPublicKey();
+            Encryption.ABE.RevocableABE.Components.MasterPublicKey mpk = pp.createMasterPublicKey();
             Authority Auth = pp.createAuthority();
             Auth.Setup(mpk, pp);
 
@@ -155,14 +155,14 @@ public class ABETest {
             Auth.KeyGen(u2, pp, mpk);
             Auth.KeyGen(u3, pp, mpk);
 
-            Encryption.ABE.Components.PlainText pt1 = pp.createPlainText("msg1");
-            Encryption.ABE.Components.PlainText pt2 = pp.createPlainText("msg2");
-            Encryption.ABE.Components.PlainText pt3 = pp.createPlainText("msg3");
+            Encryption.ABE.RevocableABE.Components.PlainText pt1 = pp.createPlainText("msg1");
+            Encryption.ABE.RevocableABE.Components.PlainText pt2 = pp.createPlainText("msg2");
+            Encryption.ABE.RevocableABE.Components.PlainText pt3 = pp.createPlainText("msg3");
 
-            Encryption.ABE.Components.CipherText ct1 = pp.createCipherText();
-            Encryption.ABE.Components.CipherText ct2 = pp.createCipherText();
+            Encryption.ABE.RevocableABE.Components.CipherText ct1 = pp.createCipherText();
+            Encryption.ABE.RevocableABE.Components.CipherText ct2 = pp.createCipherText();
 
-            Encryption.ABE.Components.Policy P = pp.createPolicy("A&(DDDD|(BB&CCC))");
+            Encryption.ABE.RevocableABE.Components.Policy P = pp.createPolicy("A&(DDDD|(BB&CCC))");
 
             Info i = pp.createInfo();
             i.setValue(new HashMap<>(){{put("timestamp", 5);}});

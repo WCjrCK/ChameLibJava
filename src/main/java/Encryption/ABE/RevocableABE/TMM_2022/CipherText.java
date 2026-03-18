@@ -3,7 +3,7 @@ package Encryption.ABE.RevocableABE.TMM_2022;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class CipherText extends Encryption.ABE.Components.CipherText<CipherText> {
+public class CipherText extends Encryption.ABE.RevocableABE.Components.CipherText<CipherText> {
     protected Encryption.ABE.BaseABE.FAME.CipherText FAME_ct;
     MultivePoint ct_0_4;
     byte[] ct;

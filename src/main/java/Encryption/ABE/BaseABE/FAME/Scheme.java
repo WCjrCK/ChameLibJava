@@ -1,12 +1,12 @@
 package Encryption.ABE.BaseABE.FAME;
 
 import EllipticCurve.Point.Scalar;
+import Encryption.ABE.ABE;
 import Encryption.ABE.ABEConfig;
-import Encryption.ABE.Components.Attributes;
+import Encryption.ABE.BaseABE.Components.Attributes;
 import Encryption.ABE.Interface.BaseABE;
 
-public class Scheme
-        extends Encryption.ABE.BaseABE.Scheme<PublicParam, MasterPublicKey, MasterSecretKey, SecretKey, Policy, PlainText, CipherText>
+public class Scheme extends ABE
         implements BaseABE<PublicParam, MasterPublicKey, MasterSecretKey, SecretKey, Policy, PlainText, CipherText> {
     private FAMECore Core = new FAMECore();
 

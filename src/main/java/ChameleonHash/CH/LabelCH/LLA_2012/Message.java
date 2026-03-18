@@ -3,7 +3,7 @@ package ChameleonHash.CH.LabelCH.LLA_2012;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class Message extends ChameleonHash.CH.Components.Message {
+public class Message extends ChameleonHash.CH.LabelCH.Components.Message {
     protected Scalar m;
 
     public Message() {}

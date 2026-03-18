@@ -2,8 +2,8 @@ package Encryption.ABE.RevocableABE.XNM_2021;
 
 import utils.ElementCounter;
 
-public class PlainText extends Encryption.ABE.Components.PlainText<PlainText> {
-    protected Encryption.ABE.BaseABE.FAME.PlainText FAME_pt;
+public class PlainText extends Encryption.ABE.RevocableABE.Components.PlainText<PlainText> {
+    public Encryption.ABE.BaseABE.FAME.PlainText FAME_pt;
 
     public boolean isEqual(PlainText o) {
         return FAME_pt.isEqual(o.FAME_pt);

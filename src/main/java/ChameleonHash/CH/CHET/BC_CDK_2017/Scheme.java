@@ -1,5 +1,6 @@
 package ChameleonHash.CH.CHET.BC_CDK_2017;
 
+import ChameleonHash.CH.CH;
 import ChameleonHash.CH.CHConfig;
 import ChameleonHash.Interface.CHET;
 
@@ -8,8 +9,7 @@ import ChameleonHash.Interface.CHET;
  * P12. Construction 2 (CHET in Known-Order Groups)
  */
 
-public class Scheme
-        extends ChameleonHash.CH.CHET.Scheme<PublicParam, PublicKey, SecretKey, Message, ETrapdoor, HashValue, Randomness>
+public class Scheme extends CH
         implements CHET<PublicParam, PublicKey, SecretKey, Message, ETrapdoor, HashValue, Randomness> {
     @Override
     public final PublicParam createPublicParam(CHConfig config) {

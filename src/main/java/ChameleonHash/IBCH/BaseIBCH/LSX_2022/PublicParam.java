@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class PublicParam extends ChameleonHash.IBCH.Components.PublicParam<MasterSecretKey, SecretKey, Message, Identity, HashValue, Randomness> {
+public class PublicParam extends ChameleonHash.IBCH.BaseIBCH.Components.PublicParam<MasterSecretKey, SecretKey, Message, Identity, HashValue, Randomness> {
     protected MultivePoint g, g_1, g_2, egg, eg_2g;
 
     public PublicParam(IBCHConfig config) {

@@ -1,7 +1,7 @@
 package PerformTest.IBCH;
 
 import ChameleonHash.IBCH.BaseIBCH.BaseIBCHFactory;
-import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.BaseIBCH.Components.*;
 import ChameleonHash.IBCH.IBCHConfig;
 import ChameleonHash.IBCH.IBCHName;
 import ChameleonHash.IBCH.LabelIBCH.Components.Label;
@@ -139,7 +139,7 @@ public class TheoTimeTest {
         private void testLabelIBCH(BufferedWriter theo_time_cost, IBCHConfig schemeConfig) throws IOException {
             LabelIBCH scheme = LabelIBCHFactory.createScheme(schemeConfig);
             ChameleonHash.IBCH.LabelIBCH.Components.PublicParam pp;
-            MasterSecretKey msk;
+            ChameleonHash.IBCH.LabelIBCH.Components.MasterSecretKey msk;
 
             theo_time_cost.write("Setup, KeyGen, Hash, Ver, Col\n");
 
@@ -153,8 +153,8 @@ public class TheoTimeTest {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            SecretKey sk = pp.createSecretKey();
-            Identity ID = pp.createIdentity("ID1");
+            ChameleonHash.IBCH.LabelIBCH.Components.SecretKey sk = pp.createSecretKey();
+            ChameleonHash.IBCH.LabelIBCH.Components.Identity ID = pp.createIdentity("ID1");
 
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.KeyGen(sk, pp, msk, ID);
@@ -165,10 +165,10 @@ public class TheoTimeTest {
                 throw new RuntimeException(e);
             }
 
-            Message m = pp.createMessage("msg");
+            ChameleonHash.IBCH.LabelIBCH.Components.Message m = pp.createMessage("msg");
             Label l = pp.createLabel("label");
-            HashValue h = pp.createHashValue();
-            Randomness r = pp.createRandomness();
+            ChameleonHash.IBCH.LabelIBCH.Components.HashValue h = pp.createHashValue();
+            ChameleonHash.IBCH.LabelIBCH.Components.Randomness r = pp.createRandomness();
 
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Hash(h, r, pp, ID, m, l);
@@ -179,8 +179,8 @@ public class TheoTimeTest {
                 throw new RuntimeException(e);
             }
 
-            Message m1 = pp.createMessage("msg1");
-            Randomness r1 = pp.createRandomness();
+            ChameleonHash.IBCH.LabelIBCH.Components.Message m1 = pp.createMessage("msg1");
+            ChameleonHash.IBCH.LabelIBCH.Components.Randomness r1 = pp.createRandomness();
 
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Verify(pp, ID, m, l, h, r);

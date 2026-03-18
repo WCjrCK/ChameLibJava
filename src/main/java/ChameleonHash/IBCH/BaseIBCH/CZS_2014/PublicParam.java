@@ -9,7 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class PublicParam
-        extends ChameleonHash.IBCH.Components.PublicParam<MasterSecretKey, SecretKey, Message, Identity, HashValue, Randomness> {
+        extends ChameleonHash.IBCH.BaseIBCH.Components.PublicParam<MasterSecretKey, SecretKey, Message, Identity, HashValue, Randomness> {
     protected AdditivePoint P, P_pub;
 
     public PublicParam(IBCHConfig config) {

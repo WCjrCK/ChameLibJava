@@ -3,7 +3,7 @@ package ChameleonHash.CH.BaseCH.DSS_2020;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class Message extends ChameleonHash.CH.Components.Message {
+public class Message extends ChameleonHash.CH.BaseCH.Components.Message {
     protected MultivePoint m;
 
     @Override

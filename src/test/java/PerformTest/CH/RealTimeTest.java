@@ -1,10 +1,9 @@
 package PerformTest.CH;
 
 import ChameleonHash.CH.BaseCH.BaseCHFactory;
+import ChameleonHash.CH.BaseCH.Components.*;
 import ChameleonHash.CH.CHConfig;
 import ChameleonHash.CH.CHName;
-import ChameleonHash.CH.Components.*;
-import ChameleonHash.CH.LabelCH.Components.Label;
 import ChameleonHash.CH.LabelCH.LabelCHFactory;
 import ChameleonHash.Interface.BaseCH;
 import ChameleonHash.Interface.LabelCH;
@@ -243,14 +242,14 @@ public class RealTimeTest {
                 time_cost[++stage_id] = duration / repeat_cnt;
             }
 
-            PublicKey[] pk = new PublicKey[repeat_cnt];
-            SecretKey[] sk = new SecretKey[repeat_cnt];
-            HashValue[] h = new HashValue[repeat_cnt];
-            Randomness[] r = new Randomness[repeat_cnt];
-            Randomness[] r_p = new Randomness[repeat_cnt];
-            Message[] m = new Message[repeat_cnt];
-            Label[] l = new Label[repeat_cnt];
-            Message[] m_p = new Message[repeat_cnt];
+            ChameleonHash.CH.LabelCH.Components.PublicKey[] pk = new ChameleonHash.CH.LabelCH.Components.PublicKey[repeat_cnt];
+            ChameleonHash.CH.LabelCH.Components.SecretKey[] sk = new ChameleonHash.CH.LabelCH.Components.SecretKey[repeat_cnt];
+            ChameleonHash.CH.LabelCH.Components.HashValue[] h = new ChameleonHash.CH.LabelCH.Components.HashValue[repeat_cnt];
+            ChameleonHash.CH.LabelCH.Components.Randomness[] r = new ChameleonHash.CH.LabelCH.Components.Randomness[repeat_cnt];
+            ChameleonHash.CH.LabelCH.Components.Randomness[] r_p = new ChameleonHash.CH.LabelCH.Components.Randomness[repeat_cnt];
+            ChameleonHash.CH.LabelCH.Components.Message[] m = new ChameleonHash.CH.LabelCH.Components.Message[repeat_cnt];
+            ChameleonHash.CH.LabelCH.Components.Label[] l = new ChameleonHash.CH.LabelCH.Components.Label[repeat_cnt];
+            ChameleonHash.CH.LabelCH.Components.Message[] m_p = new ChameleonHash.CH.LabelCH.Components.Message[repeat_cnt];
             for (int i = 0; i < repeat_cnt; i++) {
                 sk[i] = pp.createSecretKey();
                 h[i] = pp.createHashValue();

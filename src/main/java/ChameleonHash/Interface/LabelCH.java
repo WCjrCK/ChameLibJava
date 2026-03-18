@@ -1,14 +1,14 @@
 package ChameleonHash.Interface;
 
 import ChameleonHash.CH.CHConfig;
-import ChameleonHash.CH.Components.*;
+import ChameleonHash.CH.LabelCH.Components.*;
 
 public interface LabelCH<
-        PP extends ChameleonHash.CH.LabelCH.Components.PublicParam<PK, SK, M, L, H, R>,
+        PP extends PublicParam<PK, SK, M, L, H, R>,
         PK extends PublicKey,
         SK extends SecretKey,
         M extends Message,
-        L extends ChameleonHash.CH.LabelCH.Components.Label,
+        L extends Label,
         H extends HashValue<H>,
         R extends Randomness
         > {

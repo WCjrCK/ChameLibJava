@@ -1,5 +1,6 @@
 package ChameleonHash.IBCH.LabelIBCH.LJF_2025;
 
+import ChameleonHash.IBCH.IBCH;
 import ChameleonHash.IBCH.IBCHConfig;
 import ChameleonHash.Interface.LabelIBCH;
 import EllipticCurve.Curve.CurveGroup;
@@ -11,8 +12,7 @@ import EllipticCurve.Point.Scalar;
  * P6. V. PROPOSED IB-CH SCHEME WITHOUT KEY EXPOSURE
  */
 
-public class Scheme
-        extends ChameleonHash.IBCH.LabelIBCH.Scheme<PublicParam, MasterSecretKey, SecretKey, Identity, Message, Label, HashValue, Randomness>
+public class Scheme extends IBCH
         implements LabelIBCH<PublicParam, MasterSecretKey, SecretKey, Identity, Message, Label, HashValue, Randomness> {
     @Override
     public final PublicParam createPublicParam(IBCHConfig config) {

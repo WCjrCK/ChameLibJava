@@ -4,7 +4,7 @@ import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class MasterSecretKey extends Encryption.ABE.Components.MasterSecretKey {
+public class MasterSecretKey extends Encryption.ABE.BaseABE.Components.MasterSecretKey {
     public MultivePoint g_d1;
     public MultivePoint g_d2;
     public MultivePoint g_d3;

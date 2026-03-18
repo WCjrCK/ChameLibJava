@@ -1,11 +1,11 @@
 package PerformTest.CH;
 
 import ChameleonHash.CH.BaseCH.BaseCHFactory;
+import ChameleonHash.CH.BaseCH.Components.*;
 import ChameleonHash.CH.CHConfig;
 import ChameleonHash.CH.CHET.CHETFactory;
 import ChameleonHash.CH.CHET.Components.ETrapdoor;
 import ChameleonHash.CH.CHName;
-import ChameleonHash.CH.Components.*;
 import ChameleonHash.CH.LabelCH.Components.Label;
 import ChameleonHash.CH.LabelCH.LabelCHFactory;
 import ChameleonHash.Interface.BaseCH;
@@ -158,8 +158,8 @@ public class TheoTimeTest {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            PublicKey pk = pp.createPublicKey();
-            SecretKey sk = pp.createSecretKey();
+            ChameleonHash.CH.CHET.Components.PublicKey pk = pp.createPublicKey();
+            ChameleonHash.CH.CHET.Components.SecretKey sk = pp.createSecretKey();
 
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.KeyGen(pk, sk, pp);
@@ -170,10 +170,10 @@ public class TheoTimeTest {
                 throw new RuntimeException(e);
             }
 
-            Message m = pp.createMessage("msg");
+            ChameleonHash.CH.CHET.Components.Message m = pp.createMessage("msg");
             ETrapdoor etd = pp.createETrapdoor();
-            HashValue h = pp.createHashValue();
-            Randomness r = pp.createRandomness();
+            ChameleonHash.CH.CHET.Components.HashValue h = pp.createHashValue();
+            ChameleonHash.CH.CHET.Components.Randomness r = pp.createRandomness();
 
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Hash(h, r, pp, pk, m, etd);
@@ -184,8 +184,8 @@ public class TheoTimeTest {
                 throw new RuntimeException(e);
             }
 
-            Message m1 = pp.createMessage("msg1");
-            Randomness r1 = pp.createRandomness();
+            ChameleonHash.CH.CHET.Components.Message m1 = pp.createMessage("msg1");
+            ChameleonHash.CH.CHET.Components.Randomness r1 = pp.createRandomness();
 
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Verify(pp, pk, m, h, r);
@@ -223,8 +223,8 @@ public class TheoTimeTest {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            PublicKey pk = pp.createPublicKey();
-            SecretKey sk = pp.createSecretKey();
+            ChameleonHash.CH.LabelCH.Components.PublicKey pk = pp.createPublicKey();
+            ChameleonHash.CH.LabelCH.Components.SecretKey sk = pp.createSecretKey();
 
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.KeyGen(pk, sk, pp);
@@ -235,10 +235,10 @@ public class TheoTimeTest {
                 throw new RuntimeException(e);
             }
 
-            Message m = pp.createMessage("msg");
+            ChameleonHash.CH.LabelCH.Components.Message m = pp.createMessage("msg");
             Label l = pp.createLabel("label");
-            HashValue h = pp.createHashValue();
-            Randomness r = pp.createRandomness();
+            ChameleonHash.CH.LabelCH.Components.HashValue h = pp.createHashValue();
+            ChameleonHash.CH.LabelCH.Components.Randomness r = pp.createRandomness();
 
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Hash(h, r, pp, pk, m, l);
@@ -249,8 +249,8 @@ public class TheoTimeTest {
                 throw new RuntimeException(e);
             }
 
-            Message m1 = pp.createMessage("msg1");
-            Randomness r1 = pp.createRandomness();
+            ChameleonHash.CH.LabelCH.Components.Message m1 = pp.createMessage("msg1");
+            ChameleonHash.CH.LabelCH.Components.Randomness r1 = pp.createRandomness();
 
             try (AutoCloseable ignored = TraceScope.begin()) {
                 scheme.Verify(pp, pk, m, l, h, r);

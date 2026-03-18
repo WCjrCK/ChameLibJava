@@ -3,7 +3,7 @@ package ChameleonHash.CH.LabelCH.CZK_2004;
 import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class Randomness extends ChameleonHash.CH.Components.Randomness {
+public class Randomness extends ChameleonHash.CH.LabelCH.Components.Randomness {
     protected MultivePoint g_a, y_a;
 
     @Override

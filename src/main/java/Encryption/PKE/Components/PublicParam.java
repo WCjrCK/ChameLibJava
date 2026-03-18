@@ -1,15 +1,13 @@
 package Encryption.PKE.Components;
 
-import Encryption.Components.CipherText;
-import Encryption.Components.PlainText;
-import Encryption.Components.SecretKey;
+import utils.ElementCounter;
 
 public abstract class PublicParam<
         PK extends PublicKey,
         SK extends SecretKey,
         PT extends PlainText<PT>,
         CT extends CipherText<CT>
-        > extends Encryption.Components.PublicParam<SK, PT, CT> {
+        > {
     public abstract PK createPublicKey();
 
     public byte[] serializePublicKey(PK target) {
@@ -35,4 +33,16 @@ public abstract class PublicParam<
     public void deserializeCipherText(CT target, byte[] data) {
         throw new UnsupportedOperationException("当前方案未实现 CipherText 反序列化");
     }
+
+    public abstract SK createSecretKey();
+
+    public abstract SK createSecretKey(byte[] sk);
+
+    public abstract PT createPlainText(String m);
+
+    public abstract PT createPlainText(byte[] m);
+
+    public abstract CT createCipherText();
+
+    public abstract ElementCounter TheoSize();
 }

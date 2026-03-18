@@ -2,7 +2,7 @@ package Encryption.ABE.RevocableABE.TMM_2022;
 
 import utils.ElementCounter;
 
-public class Policy extends Encryption.ABE.Components.Policy {
+public class Policy extends Encryption.ABE.RevocableABE.Components.Policy {
     protected Encryption.ABE.BaseABE.FAME.Policy FAME_p;
 
     @Override

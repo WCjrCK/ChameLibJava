@@ -1,10 +1,9 @@
 package PerformTest.IBCH;
 
 import ChameleonHash.IBCH.BaseIBCH.BaseIBCHFactory;
-import ChameleonHash.IBCH.Components.*;
+import ChameleonHash.IBCH.BaseIBCH.Components.*;
 import ChameleonHash.IBCH.IBCHConfig;
 import ChameleonHash.IBCH.IBCHName;
-import ChameleonHash.IBCH.LabelIBCH.Components.Label;
 import ChameleonHash.IBCH.LabelIBCH.LabelIBCHFactory;
 import ChameleonHash.Interface.BaseIBCH;
 import ChameleonHash.Interface.LabelIBCH;
@@ -195,7 +194,7 @@ public class RealTimeTest {
 
             LabelIBCH scheme = LabelIBCHFactory.createScheme(config);
             ChameleonHash.IBCH.LabelIBCH.Components.PublicParam pp = scheme.createPublicParam(config);
-            MasterSecretKey msk = pp.createMasterSecretKey();
+            ChameleonHash.IBCH.LabelIBCH.Components.MasterSecretKey msk = pp.createMasterSecretKey();
 
             int stage_id = -1;
             {
@@ -206,14 +205,14 @@ public class RealTimeTest {
                 time_cost[++stage_id] = duration / repeat_cnt;
             }
 
-            SecretKey[] sk = new SecretKey[repeat_cnt];
-            HashValue[] h = new HashValue[repeat_cnt];
-            Randomness[] r = new Randomness[repeat_cnt];
-            Randomness[] r_p = new Randomness[repeat_cnt];
-            Identity[] ID = new Identity[repeat_cnt];
-            Message[] m = new Message[repeat_cnt];
-            Label[] l = new Label[repeat_cnt];
-            Message[] m_p = new Message[repeat_cnt];
+            ChameleonHash.IBCH.LabelIBCH.Components.SecretKey[] sk = new ChameleonHash.IBCH.LabelIBCH.Components.SecretKey[repeat_cnt];
+            ChameleonHash.IBCH.LabelIBCH.Components.HashValue[] h = new ChameleonHash.IBCH.LabelIBCH.Components.HashValue[repeat_cnt];
+            ChameleonHash.IBCH.LabelIBCH.Components.Randomness[] r = new ChameleonHash.IBCH.LabelIBCH.Components.Randomness[repeat_cnt];
+            ChameleonHash.IBCH.LabelIBCH.Components.Randomness[] r_p = new ChameleonHash.IBCH.LabelIBCH.Components.Randomness[repeat_cnt];
+            ChameleonHash.IBCH.LabelIBCH.Components.Identity[] ID = new ChameleonHash.IBCH.LabelIBCH.Components.Identity[repeat_cnt];
+            ChameleonHash.IBCH.LabelIBCH.Components.Message[] m = new ChameleonHash.IBCH.LabelIBCH.Components.Message[repeat_cnt];
+            ChameleonHash.IBCH.LabelIBCH.Components.Label[] l = new ChameleonHash.IBCH.LabelIBCH.Components.Label[repeat_cnt];
+            ChameleonHash.IBCH.LabelIBCH.Components.Message[] m_p = new ChameleonHash.IBCH.LabelIBCH.Components.Message[repeat_cnt];
             for (int i = 0; i < repeat_cnt; i++) {
                 sk[i] = pp.createSecretKey();
                 h[i] = pp.createHashValue();

@@ -3,7 +3,7 @@ package Encryption.ABE.BaseABE.FAME;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
 import Encryption.ABE.ABEConfig;
-import Encryption.ABE.Components.Attributes;
+import Encryption.ABE.BaseABE.Components.Attributes;
 import Encryption.ABE.utils.BooleanFormulaParser;
 import utils.ElementCounter;
 
@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class PublicParam extends Encryption.ABE.Components.PublicParam<
+public class PublicParam extends Encryption.ABE.BaseABE.Components.PublicParam<
         MasterPublicKey,
         MasterSecretKey,
         SecretKey,

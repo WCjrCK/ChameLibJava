@@ -1,5 +1,6 @@
 package ChameleonHash.IBCH.BaseIBCH.LSX_2022;
 
+import ChameleonHash.IBCH.IBCH;
 import ChameleonHash.IBCH.IBCHConfig;
 import ChameleonHash.Interface.BaseIBCH;
 import EllipticCurve.Curve.CurveGroup;
@@ -10,8 +11,7 @@ import EllipticCurve.Point.Scalar;
  * P2. 3. PROPOSED EFFICIENT IB-CH
  */
 
-public class Scheme
-        extends ChameleonHash.IBCH.BaseIBCH.Scheme<PublicParam, MasterSecretKey, SecretKey, Identity, Message, HashValue, Randomness>
+public class Scheme extends IBCH
         implements BaseIBCH<PublicParam, MasterSecretKey, SecretKey, Identity, Message, HashValue, Randomness> {
     @Override
     public final PublicParam createPublicParam(IBCHConfig config) {

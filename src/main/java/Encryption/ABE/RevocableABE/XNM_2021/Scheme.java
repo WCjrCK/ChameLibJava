@@ -1,17 +1,16 @@
 package Encryption.ABE.RevocableABE.XNM_2021;
 
+import Encryption.ABE.ABE;
 import Encryption.ABE.ABEConfig;
-import Encryption.ABE.Components.Attributes;
 import Encryption.ABE.Interface.RevocableABE;
+import Encryption.ABE.RevocableABE.Components.Attributes;
 
 /*
  * Revocable Policy-Based Chameleon Hash
  * P12. 5.1 Proposed RABE
  */
 
-public class Scheme
-        extends Encryption.ABE.RevocableABE.Scheme<PublicParam, MasterPublicKey, MasterSecretKey,
-        State, Revocated, User, UpdateKey, Info, SecretKey, DecryptKey, Policy, PlainText, CipherText>
+public class Scheme extends ABE
         implements RevocableABE<PublicParam, MasterPublicKey, MasterSecretKey,
         State, Revocated, User, UpdateKey, Info, SecretKey, DecryptKey, Policy, PlainText, CipherText>  {
     Core core = new Core();

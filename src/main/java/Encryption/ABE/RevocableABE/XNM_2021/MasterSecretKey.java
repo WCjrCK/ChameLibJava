@@ -2,7 +2,7 @@ package Encryption.ABE.RevocableABE.XNM_2021;
 
 import utils.ElementCounter;
 
-public class MasterSecretKey extends Encryption.ABE.Components.MasterSecretKey {
+public class MasterSecretKey extends Encryption.ABE.RevocableABE.Components.MasterSecretKey {
     protected Encryption.ABE.BaseABE.FAME.MasterSecretKey FAME_msk;
 
     @Override

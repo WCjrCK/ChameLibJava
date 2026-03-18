@@ -10,7 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.BitSet;
 
 public class PublicParam
-        extends ChameleonHash.IBCH.Components.PublicParam<MasterSecretKey, SecretKey, Message, Identity, HashValue, Randomness> {
+        extends ChameleonHash.IBCH.BaseIBCH.Components.PublicParam<MasterSecretKey, SecretKey, Message, Identity, HashValue, Randomness> {
     protected MultivePoint g, g_1, g_2;
     protected MultivePoint[] u;
     int n;

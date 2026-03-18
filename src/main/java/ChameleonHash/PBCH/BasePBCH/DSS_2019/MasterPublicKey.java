@@ -1,9 +1,9 @@
 package ChameleonHash.PBCH.BasePBCH.DSS_2019;
 
-import ChameleonHash.CH.Components.PublicKey;
+import ChameleonHash.CH.CHET.Components.PublicKey;
 import utils.ElementCounter;
 
-public class MasterPublicKey extends ChameleonHash.PBCH.Components.MasterPublicKey {
+public class MasterPublicKey extends ChameleonHash.PBCH.BasePBCH.Components.MasterPublicKey {
     protected PublicKey CHET_pk;
     protected Encryption.ABE.BaseABE.FAME.MasterPublicKey FAME_mpk;
 

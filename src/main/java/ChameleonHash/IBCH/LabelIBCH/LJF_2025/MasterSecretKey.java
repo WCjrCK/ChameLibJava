@@ -3,7 +3,7 @@ package ChameleonHash.IBCH.LabelIBCH.LJF_2025;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class MasterSecretKey extends ChameleonHash.IBCH.Components.MasterSecretKey {
+public class MasterSecretKey extends ChameleonHash.IBCH.LabelIBCH.Components.MasterSecretKey {
     protected Scalar alpha, beta;
 
     @Override
