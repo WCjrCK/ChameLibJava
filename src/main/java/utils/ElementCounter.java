@@ -2,8 +2,10 @@ package utils;
 
 import ChameleonHash.CH.CH;
 import ChameleonHash.Interface.BaseCH;
+import ChameleonHash.PBCH.Components.Attributes;
 import Commitment.NIZK_DL.Proof;
 import Commitment.NIZK_DL.Scheme;
+import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.Point;
 import EllipticCurve.Point.Scalar;
@@ -14,6 +16,9 @@ import Encryption.PKE.Components.*;
 import Encryption.PKE.PKE;
 import Encryption.SE.SE;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 import static EllipticCurve.Curve.CurveGroup.*;
@@ -109,6 +114,9 @@ public class ElementCounter {
         skip_class.add(CH.class);
         skip_class.add(Random.class);
         skip_class.add(SE.class);
+        skip_class.add(Curve.class);
+        skip_class.add(Attributes.class);
+        skip_class.add(ChameleonHash.PBCH.Components.SecretKey.class);
 
         count = new int[countName.size()];
     }
@@ -157,19 +165,33 @@ public class ElementCounter {
     }
 
     public void count(Object c) {
-//        if(tryCountObject(c)) return;
-        for (java.lang.reflect.Field f : c.getClass().getDeclaredFields()) {
+        if (c == null) return;
+        countClassFields(c, c.getClass());
+    }
+
+    private void countClassFields(Object target, Class<?> currentClass) {
+        if (currentClass == null || currentClass == Object.class || currentClass.isPrimitive()) return;
+        countClassFields(target, currentClass.getSuperclass());
+
+        for (Field f : currentClass.getDeclaredFields()) {
+            if (Modifier.isStatic(f.getModifiers()) || f.isSynthetic()) continue;
             f.setAccessible(true);
             Class<?> t = f.getType();
+            if (t.isPrimitive()) return;
             try {
+                Object value = f.get(target);
+                if (value == null) continue;
                 if(t.isArray()) {
-                    Object[] v = (Object[]) f.get(c);
-                    for (Object o : v) if(!tryCountObject(o)) count(o);
+                    int length = Array.getLength(value);
+                    for (int i = 0; i < length; ++i) {
+                        Object element = Array.get(value, i);
+                        if (element != null && !tryCountObject(element)) count(element);
+                    }
                 } else if(isCollection(t)) {
-                    Collection<?> v = (Collection<?>) f.get(c);
-                    for (Object o : v) if(!tryCountObject(o)) count(o);
+                    Collection<?> v = (Collection<?>) value;
+                    for (Object o : v) if(o != null && !tryCountObject(o)) count(o);
                 } else {
-                    if(!tryCountObject(f.get(c))) System.out.println("未知类型： " + t + " ,可能出现统计错误");
+                    if(!tryCountObject(value)) System.out.println("未知类型： " + t + " ,可能出现统计错误");
                 }
             } catch (Exception ignored) {}
         }

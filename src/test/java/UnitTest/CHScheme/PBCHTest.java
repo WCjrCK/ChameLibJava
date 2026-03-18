@@ -2,7 +2,10 @@ package UnitTest.CHScheme;
 
 import ChameleonHash.CH.CHConfig;
 import ChameleonHash.CH.CHName;
+import ChameleonHash.Interface.BAPBCH;
 import ChameleonHash.Interface.BasePBCH;
+import ChameleonHash.PBCH.BAPBCH.BAPBCHFactory;
+import ChameleonHash.PBCH.BAPBCH.Components.User;
 import ChameleonHash.PBCH.BasePBCH.BasePBCHFactory;
 import ChameleonHash.PBCH.Components.*;
 import ChameleonHash.PBCH.PBCHConfig;
@@ -30,6 +33,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PBCHTest {
+    static List<PBCHName> skipList = List.of(new PBCHName[]{
+            PBCHName.DSS_2019
+    });
+
     public static Stream<Arguments> GetAllPBCHSchemeCurve() {
         return EnumSet.allOf(PBCHName.class).stream()
                 .filter(a -> !skipList.contains(a))
@@ -43,11 +50,24 @@ public class PBCHTest {
                 );
     }
 
+    public static Stream<Arguments> GetAllPBCHSchemeASCurve() {
+        return EnumSet.allOf(PBCHName.class).stream()
+                .filter(a -> !skipList.contains(a))
+                .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP)
+                .flatMap(
+                        a -> EnumSet.allOf(CurveName.class).stream()
+                                .filter(b -> b != SECP256K1)
+                                .filter(b -> b != PBC_CUSTOM)
+                                .filter(b -> !b.isSymmetic())
+                                .filter(a::checkCurve)
+                                .flatMap(b -> Stream.of(Arguments.of(a, b)))
+                );
+    }
+
     private void testFunction(PBCHConfig schemeConfig) {
-//        if (schemeConfig.schemeName.has_label) testLabelCH(schemeConfig);
+        if (schemeConfig.schemeName.has_blackbox_accountability) testBAPBCH(schemeConfig);
 //        else if (schemeConfig.schemeName.has_ET) testCHET(schemeConfig);
-//        else testBaseCH(schemeConfig);
-        testBasePBCH(schemeConfig);
+        else testBasePBCH(schemeConfig);
     }
 
     private void testBasePBCH(PBCHConfig schemeConfig) {
@@ -97,19 +117,89 @@ public class PBCHTest {
         assertFalse(scheme.Verify(pp, mpk, m1, h1, r_p), "Adapt(m1) invalid");
     }
 
-    static List<PBCHName> skipList = List.of(new PBCHName[]{
-    });
+    private void testBAPBCH(PBCHConfig schemeConfig) {
+        BAPBCH scheme = BAPBCHFactory.createScheme(schemeConfig);
+        ChameleonHash.PBCH.BAPBCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
+        MasterPublicKey mpk = pp.createMasterPublicKey();
+        MasterSecretKey msk = pp.createMasterSecretKey();
+
+        scheme.Setup(pp, mpk, msk);
+
+        Policy P = pp.createPolicy("A&(DDDD|(BB&CCC))");
+
+        User u1 = pp.createUser(((int) schemeConfig.params.get("id_len")) / 3);
+        scheme.AssignUser(u1, mpk, msk);
+        u1.S.addAttr("A");
+        u1.S.addAttr("DDDD");
+        scheme.KeyGen(u1, pp, mpk, msk);
+
+        User u2 = pp.createUser(u1, ((int) schemeConfig.params.get("id_len")) / 2);
+        scheme.AssignUser(u2, mpk, msk);
+        u2.S.addAttr("BB");
+        u2.S.addAttr("CCC");
+        scheme.KeyGen(u2, pp, mpk, msk);
+
+        HashValue h1 = pp.createHashValue();
+        Randomness r1 = pp.createRandomness();
+
+        Message m1 = pp.createMessage("msg1");
+        Message m2 = pp.createMessage("msg2");
+
+        scheme.Hash(h1, r1, pp, mpk, u1, m1, P);
+        assertTrue(scheme.Verify(pp, mpk, m1, h1, r1), "H(m1) valid");
+        assertFalse(scheme.Verify(pp, mpk, m2, h1, r1), "H(m2) invalid");
+
+        HashValue h2 = pp.createHashValue();
+        Randomness r2 = pp.createRandomness();
+
+        scheme.Hash(h2, r2, pp, mpk, u2, m2, P);
+        assertTrue(scheme.Verify(pp, mpk, m2, h2, r2), "H(m2) valid");
+        assertFalse(scheme.Verify(pp, mpk, m1, h2, r2), "H(m1) invalid");
+        assertFalse(scheme.Verify(pp, mpk, m2, h1, r2), "H(m1) invalid");
+        assertFalse(scheme.Verify(pp, mpk, m2, h2, r1), "H(m1) invalid");
+
+        Randomness r_p = pp.createRandomness();
+
+        scheme.Collision(r_p, pp, mpk, msk, u1, m1, P, h1, r1, m2);
+        assertTrue(scheme.Verify(pp, mpk, m2, h1, r_p), "Adapt(m2) valid");
+        assertFalse(scheme.Verify(pp, mpk, m1, h1, r_p), "Adapt(m1) invalid");
+
+        scheme.Collision(r_p, pp, mpk, msk, u1, m2, P, h2, r2, m1);
+        assertTrue(scheme.Verify(pp, mpk, m1, h2, r_p), "Adapt(m1) valid");
+        assertFalse(scheme.Verify(pp, mpk, m2, h2, r_p), "Adapt(m2) invalid");
+//
+//        scheme.Adapt(r1_p, h1, r1, SP, mpk, msk, u1, MSP, m1, m2);
+//        assertTrue(scheme.Check(h1, r1_p, SP, mpk, m2), "Adapt(m2) valid");
+//        assertFalse(scheme.Check(h1, r1_p, SP, mpk, m1), "Adapt(m1) invalid");
+//
+//        scheme.Adapt(r1_p, h2, r2, SP, mpk, msk, u1, MSP, m2, m1);
+//        assertTrue(scheme.Check(h2, r1_p, SP, mpk, m1), "Adapt(m1) valid");
+//        assertFalse(scheme.Check(h2, r1_p, SP, mpk, m2), "Adapt(m2) invalid");
+//
+//        scheme.Adapt(r1_p, h2, r2, SP, mpk, msk, u2, MSP, m2, m1);
+//        assertFalse(scheme.Check(h2, r1_p, SP, mpk, m1), "policy false");
+//        assertFalse(scheme.Check(h2, r1_p, SP, mpk, m2), "policy false");
+//
+//        scheme.Hash(h1, r1, pp, mpk, m1, P);
+//
+//        assertTrue(scheme.Verify(pp, mpk, m1, h1, r1), "H(m1) valid");
+//        assertFalse(scheme.Verify(pp, mpk, m2, h1, r1), "H(m2) invalid");
+//
+//        scheme.Hash(h2, r2, pp, mpk, m2, P);
+//        assertTrue(scheme.Verify(pp, mpk, m2, h2, r2), "H(m2) valid");
+//        assertFalse(scheme.Verify(pp, mpk, m1, h2, r2), "H(m1) invalid");
+//
+//        scheme.Collision(r_p, pp, mpk, sk1, m1, P, h1, r1, m2);
+//        assertTrue(scheme.Verify(pp, mpk, m2, h1, r_p), "Adapt(m2) valid");
+//        assertFalse(scheme.Verify(pp, mpk, m1, h1, r_p), "Adapt(m1) invalid");
+    }
 
     @DisplayName("test abstract implement")
     @ParameterizedTest(name = "test scheme {0} curve {1}")
     @MethodSource("UnitTest.CHScheme.PBCHTest#GetAllPBCHSchemeCurve")
-    void CHDSTest(PBCHName schemeName, CurveName curveName) {
+    void PBCHDSTest(PBCHName schemeName, CurveName curveName) {
         Map<String, Object> params = new HashMap<>();
         Map<String, Object> curve_param = new HashMap<>();
-        if (curveName == PBC_CUSTOM) {
-            curve_param.put("param_file_path", "./jpbc/params/a.properties");
-            System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
-        }
         Config curveConfig = new Config(curveName, curve_param);
         Map<String, Object> chetParam = new HashMap<>();
         Map<String, Object> chParam = new HashMap<>();
@@ -120,6 +210,30 @@ public class PBCHTest {
         seParam.put("algorithm", "AES");
         seParam.put("transformation", "AES/ECB/PKCS5Padding");
         params.put("se_config", new SEConfig(SEName.AES, seParam));
+        params.put("id_len", 32);
+
+        PBCHConfig schemeConfig = new PBCHConfig(schemeName, curveConfig, params);
+        testFunction(schemeConfig);
+    }
+
+    @DisplayName("test swap G1 and G2 implement")
+    @ParameterizedTest(name = "test scheme {0} curve {1}")
+    @MethodSource("UnitTest.CHScheme.PBCHTest#GetAllPBCHSchemeASCurve")
+    void PBCHSGGTest(PBCHName schemeName, CurveName curveName) {
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> curve_param = new HashMap<>();
+        curve_param.put("swap_G1G2", true);
+        Config curveConfig = new Config(curveName, curve_param);
+        Map<String, Object> chetParam = new HashMap<>();
+        Map<String, Object> chParam = new HashMap<>();
+        chParam.put("curve_group", CurveGroup.G1);
+        chetParam.put("ch_config", new CHConfig(CHName.DSS_2020, curveConfig, chParam));
+        params.put("chet_config", new CHConfig(CHName.BC_CDK_2017, curveConfig, chetParam));
+        Map<String, Object> seParam = new HashMap<>();
+        seParam.put("algorithm", "AES");
+        seParam.put("transformation", "AES/ECB/PKCS5Padding");
+        params.put("se_config", new SEConfig(SEName.AES, seParam));
+        params.put("id_len", 32);
 
         PBCHConfig schemeConfig = new PBCHConfig(schemeName, curveConfig, params);
         testFunction(schemeConfig);

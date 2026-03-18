@@ -9,7 +9,7 @@ public class Zp extends Scalar<Zp> {
 
     public Zp(Element p, CurveName curve) {
         super(curve);
-        this.p = p;
+        this.p = p.getImmutable();
     }
     
     @Override

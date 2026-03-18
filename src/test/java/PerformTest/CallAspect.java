@@ -71,10 +71,10 @@ public class CallAspect {
 
     @Around(
             "(" +
-                    "execution(* Encryption.ABE.FAME..*.Setup(..))" +
-                    " || execution(* Encryption.ABE.FAME..*.KeyGen(..))" +
-                    " || execution(* Encryption.ABE.FAME..*.Encrypt(..))" +
-                    " || execution(* Encryption.ABE.FAME..*.Decrypt(..))" +
+                    "execution(* Encryption.ABE.BaseABE.FAME.*.Setup(..))" +
+                    " || execution(* Encryption.ABE.BaseABE.FAME..*.KeyGen(..))" +
+                    " || execution(* Encryption.ABE.BaseABE.FAME..*.Encrypt(..))" +
+                    " || execution(* Encryption.ABE.BaseABE.FAME..*.Decrypt(..))" +
                     ")" +
                     " && !execution(* EllipticCurve..*(..))" +
                     " && !within(PerformTest..*)"

@@ -7,12 +7,12 @@ import utils.ElementCounter;
 import java.util.HashMap;
 
 public class SecretKey extends Encryption.ABE.Components.SecretKey {
-    protected HashMap<String, Integer> Attr2id;
+    public HashMap<String, Integer> Attr2id;
     Attributes S;
 
-    protected MultivePoint[][] sk_y;
+    public MultivePoint[][] sk_y;
     public MultivePoint[] sk_p;
-    protected MultivePoint[] sk_0;
+    public MultivePoint[] sk_0;
 
     public final void CopyFrom(SecretKey o) {
         Attr2id = new HashMap<>(o.Attr2id);

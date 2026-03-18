@@ -12,7 +12,7 @@ public class Group extends Point<Group, Zp> {
 
     public Group(Element p, CurveName curve, CurveGroup group) {
         super(curve, group);
-        this.p = p;
+        this.p = p.getImmutable();
     }
     
     @Override

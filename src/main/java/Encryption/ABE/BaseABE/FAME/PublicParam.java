@@ -23,7 +23,7 @@ public class PublicParam extends Encryption.ABE.Components.PublicParam<
 
     @Override
     public Attributes createAttributes() {
-        return new Attributes();
+        return super.createAttributes();
     }
 
     @Override
