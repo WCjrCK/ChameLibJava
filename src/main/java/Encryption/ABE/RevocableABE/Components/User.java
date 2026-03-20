@@ -8,6 +8,7 @@ public abstract class User<
         SK extends SecretKey,
         DK extends DecryptKey,
         I extends Info,
+        ID extends Identity,
         P extends Policy,
         PT extends PlainText<PT>,
         CT extends CipherText<CT>
@@ -15,6 +16,11 @@ public abstract class User<
     public SK sk;
     public DK dk;
     public Attributes S;
+    public final ID id;
+
+    protected User(ID id) {
+        this.id = id;
+    }
 
     public abstract void Encrypt(CT ct, PP pp, MPK mpk, P P, PT pt, I info);
 

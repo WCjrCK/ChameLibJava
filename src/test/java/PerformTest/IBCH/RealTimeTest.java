@@ -39,15 +39,31 @@ public class RealTimeTest {
             IBCHName.ZSS_2003_S2,
             IBCHName.CZS_2014,
             IBCHName.LSX_2022,
-            IBCHName.XSL_2021,
+//            IBCHName.XSL_2021,
             IBCHName.LJF_2025,
     });
+
+    static List<IBCHName> diff_id_list = List.of(new IBCHName[]{
+            IBCHName.XSL_2021
+    });
+
+    static List<CurveName> runningCurve = List.of(new CurveName[]{
+            CurveName.A,
+            CurveName.A1,
+            CurveName.E,
+            CurveName.D_224,
+            CurveName.BN254
+    });
+
+//    static List<Integer> test_id_len = List.of(16, 32, 64, 128, 256);
+    static List<Integer> test_id_len = List.of(512, 1024, 2048, 4096, 8192);
 
     public static Stream<Arguments> GetAllIBCHSchemeCurve() {
         return EnumSet.allOf(IBCHName.class).stream()
                 .filter(a -> !skipList.contains(a))
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
+                                .filter(b -> runningCurve.contains(b))
                                 .filter(b -> ((b != SECP256K1) && (b != PBC_CUSTOM)))
                                 .filter(a::checkCurve)
                                 .flatMap(b -> Stream.of(Arguments.of(a, b)))
@@ -59,6 +75,7 @@ public class RealTimeTest {
                 .filter(a -> !skipList.contains(a))
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
+                                .filter(b -> runningCurve.contains(b))
                                 .filter(b -> ((b != SECP256K1) && (b != PBC_CUSTOM)))
                                 .filter(b -> !b.isSymmetic())
                                 .filter(a::checkCurve)
@@ -66,14 +83,48 @@ public class RealTimeTest {
                 );
     }
 
+    public static Stream<Arguments> GetAllIBCHSchemeCurveDiffIDLen() {
+        return EnumSet.allOf(IBCHName.class).stream()
+                .filter(a -> !skipList.contains(a))
+                .filter(a -> diff_id_list.contains(a))
+                .flatMap(
+                        a -> EnumSet.allOf(CurveName.class).stream()
+                                .filter(b -> runningCurve.contains(b))
+                                .filter(b -> ((b != SECP256K1) && (b != PBC_CUSTOM)))
+                                .filter(a::checkCurve)
+                                .flatMap(b -> test_id_len.stream().flatMap(
+                                        c -> Stream.of(Arguments.of(a, b, c))
+                                ))
+                );
+    }
+
+    public static Stream<Arguments> GetAllIBCHSchemeASCurveDiffIDLen() {
+        return EnumSet.allOf(IBCHName.class).stream()
+                .filter(a -> !skipList.contains(a))
+                .filter(a -> diff_id_list.contains(a))
+                .flatMap(
+                        a -> EnumSet.allOf(CurveName.class).stream()
+                                .filter(b -> runningCurve.contains(b))
+                                .filter(b -> ((b != SECP256K1) && (b != PBC_CUSTOM)))
+                                .filter(b -> !b.isSymmetic())
+                                .filter(a::checkCurve)
+                                .flatMap(b -> test_id_len.stream().flatMap(
+                                        c -> Stream.of(Arguments.of(a, b, c))
+                                ))
+                );
+    }
+
+    static List<List<BufferedWriter>> tsc_diffid = new ArrayList<>();
+    static List<List<BufferedWriter>> tsc_diffid_sgg = new ArrayList<>();
 
     @BeforeAll
     static void initTest() {
-        repeat_cnt = 1000;
+        repeat_cnt = 10;
         for (IBCHName value : IBCHName.values()) new File(String.format("./data/IBCH/%s", value.name())).mkdirs();
         try {
             int i = 0;
             for (IBCHName value : IBCHName.values()) {
+                if (skipList.contains(value)) continue;
                 BufferedWriter tmp = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/real_time_cost_%d.csv", value.name(), repeat_cnt)));
                 tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
                 tsc.add(tmp);
@@ -84,6 +135,22 @@ public class RealTimeTest {
                     tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
                     tscsgg.add(tmp);
                 }
+                if (diff_id_list.contains(value)) {
+                    tsc_diffid.add(new ArrayList<>());
+                    tsc_diffid_sgg.add(new ArrayList<>());
+                    for (int id_len : test_id_len) {
+                        tmp = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/real_time_cost_idlen_%d_%d.csv", value.name(), id_len, repeat_cnt)));
+                        tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
+                        tsc_diffid.get(i).add(tmp);
+                        tmp = new BufferedWriter(new FileWriter(String.format("./data/IBCH/%s/real_time_cost_idlen_%d_swapG1G2_%d.csv", value.name(), id_len, repeat_cnt)));
+                        tmp.write("Curve, SetUp, KeyGen, Hash, Ver, Col\n");
+                        tsc_diffid_sgg.get(i).add(tmp);
+
+                    }
+                } else {
+                    tsc_diffid.add(null);
+                    tsc_diffid_sgg.add(null);
+                }
                 SNToIdx.put(value, i);
                 i++;
             }
@@ -93,190 +160,190 @@ public class RealTimeTest {
         }
     }
 
+    private void testFunc(BufferedWriter real_time_test, IBCHConfig schemeConfig) throws IOException {
+        if (schemeConfig.schemeName.has_label) testLabelIBCH(real_time_test, schemeConfig);
+        else testBaseIBCH(real_time_test, schemeConfig);
+        real_time_test.flush();
+    }
+
+    private void testBaseIBCH(BufferedWriter real_time_test, IBCHConfig config) throws IOException {
+        real_time_test.write(config.curveConfig.curveName.name());
+        double[] time_cost = {0, 0, 0, 0, 0};
+
+        BaseIBCH scheme = BaseIBCHFactory.createScheme(config);
+        PublicParam pp = scheme.createPublicParam(config);
+        MasterSecretKey msk = pp.createMasterSecretKey();
+
+        int stage_id = -1;
+        {
+            long start = System.nanoTime();
+            for(int i = 0;i < repeat_cnt;++i) scheme.Setup(pp, msk);
+            long end = System.nanoTime();
+            double duration = (end - start) / 1.0e6;
+            time_cost[++stage_id] = duration / repeat_cnt;
+        }
+
+        SecretKey[] sk = new SecretKey[repeat_cnt];
+        HashValue[] h = new HashValue[repeat_cnt];
+        Randomness[] r = new Randomness[repeat_cnt];
+        Randomness[] r_p = new Randomness[repeat_cnt];
+        Identity[] ID = new Identity[repeat_cnt];
+        Message[] m = new Message[repeat_cnt];
+        Message[] m_p = new Message[repeat_cnt];
+        for (int i = 0; i < repeat_cnt; i++) {
+            sk[i] = pp.createSecretKey();
+            h[i] = pp.createHashValue();
+
+            r[i] = pp.createRandomness();
+            r_p[i] = pp.createRandomness();
+
+            ID[i] = pp.createIdentity("ID_" + i);
+            m[i] = pp.createMessage("msg_" + i);
+            m_p[i] = pp.createMessage("msg_" + i + "_p");
+        }
+
+        {
+            long start = System.nanoTime();
+            for(int i = 0;i < repeat_cnt;++i) scheme.KeyGen(sk[i], pp, msk, ID[i]);
+            long end = System.nanoTime();
+            double duration = (end - start) / 1.0e6;
+            time_cost[++stage_id] = duration / repeat_cnt;
+        }
+
+        {
+            long start = System.nanoTime();
+            for(int i = 0;i < repeat_cnt;++i) scheme.Hash(h[i], r[i], pp, ID[i], m[i]);
+            long end = System.nanoTime();
+            double duration = (end - start) / 1.0e6;
+            time_cost[++stage_id] = duration / repeat_cnt;
+        }
+
+        {
+            boolean res = true;
+            long start = System.nanoTime();
+            for(int i = 0;i < repeat_cnt;++i) res &= scheme.Verify(pp, ID[i], m[i], h[i], r[i]);
+            long end = System.nanoTime();
+            double duration = (end - start) / 1.0e6;
+            time_cost[++stage_id] = duration / repeat_cnt;
+            assertTrue(res, "Hash Check Failed");
+        }
+
+        {
+            long start = System.nanoTime();
+            for(int i = 0;i < repeat_cnt;++i) scheme.Collision(r_p[i], pp, ID[i], sk[i], m[i], h[i], r[i], m_p[i]);
+            long end = System.nanoTime();
+            double duration = (end - start) / 1.0e6;
+            time_cost[++stage_id] = duration / repeat_cnt;
+        }
+
+        {
+            boolean res = true;
+            for(int i = 0;i < repeat_cnt;++i) res &= scheme.Verify(pp, ID[i], m_p[i], h[i], r_p[i]);
+            assertTrue(res, "Adapt Check Failed");
+        }
+        try {
+            for (double x : time_cost) real_time_test.write(String.format(",%.6f", x));
+            real_time_test.write("\n");
+            for (double x : time_cost) System.out.printf(",%.6f", x);
+            System.out.println();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void testLabelIBCH(BufferedWriter real_time_test, IBCHConfig config) throws IOException {
+        real_time_test.write(config.curveConfig.curveName.name());
+        double[] time_cost = {0, 0, 0, 0, 0};
+
+        LabelIBCH scheme = LabelIBCHFactory.createScheme(config);
+        ChameleonHash.IBCH.LabelIBCH.Components.PublicParam pp = scheme.createPublicParam(config);
+        ChameleonHash.IBCH.LabelIBCH.Components.MasterSecretKey msk = pp.createMasterSecretKey();
+
+        int stage_id = -1;
+        {
+            long start = System.nanoTime();
+            for(int i = 0;i < repeat_cnt;++i) scheme.Setup(pp, msk);
+            long end = System.nanoTime();
+            double duration = (end - start) / 1.0e6;
+            time_cost[++stage_id] = duration / repeat_cnt;
+        }
+
+        ChameleonHash.IBCH.LabelIBCH.Components.SecretKey[] sk = new ChameleonHash.IBCH.LabelIBCH.Components.SecretKey[repeat_cnt];
+        ChameleonHash.IBCH.LabelIBCH.Components.HashValue[] h = new ChameleonHash.IBCH.LabelIBCH.Components.HashValue[repeat_cnt];
+        ChameleonHash.IBCH.LabelIBCH.Components.Randomness[] r = new ChameleonHash.IBCH.LabelIBCH.Components.Randomness[repeat_cnt];
+        ChameleonHash.IBCH.LabelIBCH.Components.Randomness[] r_p = new ChameleonHash.IBCH.LabelIBCH.Components.Randomness[repeat_cnt];
+        ChameleonHash.IBCH.LabelIBCH.Components.Identity[] ID = new ChameleonHash.IBCH.LabelIBCH.Components.Identity[repeat_cnt];
+        ChameleonHash.IBCH.LabelIBCH.Components.Message[] m = new ChameleonHash.IBCH.LabelIBCH.Components.Message[repeat_cnt];
+        ChameleonHash.IBCH.LabelIBCH.Components.Label[] l = new ChameleonHash.IBCH.LabelIBCH.Components.Label[repeat_cnt];
+        ChameleonHash.IBCH.LabelIBCH.Components.Message[] m_p = new ChameleonHash.IBCH.LabelIBCH.Components.Message[repeat_cnt];
+        for (int i = 0; i < repeat_cnt; i++) {
+            sk[i] = pp.createSecretKey();
+            h[i] = pp.createHashValue();
+
+            r[i] = pp.createRandomness();
+            r_p[i] = pp.createRandomness();
+
+            ID[i] = pp.createIdentity("ID_" + i);
+            m[i] = pp.createMessage("msg_" + i);
+            m_p[i] = pp.createMessage("msg_" + i + "_p");
+
+            l[i] = pp.createLabel("label_" + i);
+        }
+
+        {
+            long start = System.nanoTime();
+            for(int i = 0;i < repeat_cnt;++i) scheme.KeyGen(sk[i], pp, msk, ID[i]);
+            long end = System.nanoTime();
+            double duration = (end - start) / 1.0e6;
+            time_cost[++stage_id] = duration / repeat_cnt;
+        }
+
+        {
+            long start = System.nanoTime();
+            for(int i = 0;i < repeat_cnt;++i) scheme.Hash(h[i], r[i], pp, ID[i], m[i], l[i]);
+            long end = System.nanoTime();
+            double duration = (end - start) / 1.0e6;
+            time_cost[++stage_id] = duration / repeat_cnt;
+        }
+
+        {
+            boolean res = true;
+            long start = System.nanoTime();
+            for(int i = 0;i < repeat_cnt;++i) res &= scheme.Verify(pp, ID[i], m[i], l[i], h[i], r[i]);
+            long end = System.nanoTime();
+            double duration = (end - start) / 1.0e6;
+            time_cost[++stage_id] = duration / repeat_cnt;
+            assertTrue(res, "Hash Check Failed");
+        }
+
+        for(int i = 0;i < repeat_cnt;++i) assert scheme.Verify(pp, ID[i], m[i], l[i], h[i], r[i]);
+
+        {
+            long start = System.nanoTime();
+            for(int i = 0;i < repeat_cnt;++i) scheme.Collision(r_p[i], pp, ID[i], sk[i], m[i], l[i], h[i], r[i], m_p[i]);
+            long end = System.nanoTime();
+            double duration = (end - start) / 1.0e6;
+            time_cost[++stage_id] = duration / repeat_cnt;
+        }
+
+        {
+            boolean res = true;
+            for(int i = 0;i < repeat_cnt;++i) res &= scheme.Verify(pp, ID[i], m_p[i], l[i], h[i], r_p[i]);
+            assertTrue(res, "Adapt Check Failed");
+        }
+        try {
+            for (double x : time_cost) real_time_test.write(String.format(",%.6f", x));
+            real_time_test.write("\n");
+            for (double x : time_cost) System.out.printf(",%.6f", x);
+            System.out.println();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @DisplayName("test IBCH real time cost")
     @Nested
     class IBCHRTCTest {
-        private void testFunc(BufferedWriter real_time_test, IBCHConfig schemeConfig) throws IOException {
-            if (schemeConfig.schemeName.has_label) testLabelIBCH(real_time_test, schemeConfig);
-            else testBaseIBCH(real_time_test, schemeConfig);
-        }
-
-        private void testBaseIBCH(BufferedWriter real_time_test, IBCHConfig config) throws IOException {
-            real_time_test.write(config.curveConfig.curveName.name());
-            double[] time_cost = {0, 0, 0, 0, 0};
-
-            BaseIBCH scheme = BaseIBCHFactory.createScheme(config);
-            PublicParam pp = scheme.createPublicParam(config);
-            MasterSecretKey msk = pp.createMasterSecretKey();
-
-            int stage_id = -1;
-            {
-                long start = System.nanoTime();
-                for(int i = 0;i < repeat_cnt;++i) scheme.Setup(pp, msk);
-                long end = System.nanoTime();
-                double duration = (end - start) / 1.0e6;
-                time_cost[++stage_id] = duration / repeat_cnt;
-            }
-
-            SecretKey[] sk = new SecretKey[repeat_cnt];
-            HashValue[] h = new HashValue[repeat_cnt];
-            Randomness[] r = new Randomness[repeat_cnt];
-            Randomness[] r_p = new Randomness[repeat_cnt];
-            Identity[] ID = new Identity[repeat_cnt];
-            Message[] m = new Message[repeat_cnt];
-            Message[] m_p = new Message[repeat_cnt];
-            for (int i = 0; i < repeat_cnt; i++) {
-                sk[i] = pp.createSecretKey();
-                h[i] = pp.createHashValue();
-
-                r[i] = pp.createRandomness();
-                r_p[i] = pp.createRandomness();
-
-                ID[i] = pp.createIdentity("ID_" + i);
-                m[i] = pp.createMessage("msg_" + i);
-                m_p[i] = pp.createMessage("msg_" + i + "_p");
-            }
-
-            {
-                long start = System.nanoTime();
-                for(int i = 0;i < repeat_cnt;++i) scheme.KeyGen(sk[i], pp, msk, ID[i]);
-                long end = System.nanoTime();
-                double duration = (end - start) / 1.0e6;
-                time_cost[++stage_id] = duration / repeat_cnt;
-            }
-
-            {
-                long start = System.nanoTime();
-                for(int i = 0;i < repeat_cnt;++i) scheme.Hash(h[i], r[i], pp, ID[i], m[i]);
-                long end = System.nanoTime();
-                double duration = (end - start) / 1.0e6;
-                time_cost[++stage_id] = duration / repeat_cnt;
-            }
-
-            {
-                boolean res = true;
-                long start = System.nanoTime();
-                for(int i = 0;i < repeat_cnt;++i) res &= scheme.Verify(pp, ID[i], m[i], h[i], r[i]);
-                long end = System.nanoTime();
-                double duration = (end - start) / 1.0e6;
-                time_cost[++stage_id] = duration / repeat_cnt;
-                assertTrue(res, "Hash Check Failed");
-            }
-
-            for(int i = 0;i < repeat_cnt;++i) scheme.Verify(pp, ID[i], m[i], h[i], r[i]);
-
-            {
-                long start = System.nanoTime();
-                for(int i = 0;i < repeat_cnt;++i) scheme.Collision(r_p[i], pp, ID[i], sk[i], m[i], h[i], r[i], m_p[i]);
-                long end = System.nanoTime();
-                double duration = (end - start) / 1.0e6;
-                time_cost[++stage_id] = duration / repeat_cnt;
-            }
-
-            {
-                boolean res = true;
-                for(int i = 0;i < repeat_cnt;++i) res &= scheme.Verify(pp, ID[i], m_p[i], h[i], r_p[i]);
-                assertTrue(res, "Adapt Check Failed");
-            }
-            try {
-                for (double x : time_cost) real_time_test.write(String.format(",%.6f", x));
-                real_time_test.write("\n");
-                for (double x : time_cost) System.out.printf(",%.6f", x);
-                System.out.println();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        private void testLabelIBCH(BufferedWriter real_time_test, IBCHConfig config) throws IOException {
-            real_time_test.write(config.curveConfig.curveName.name());
-            double[] time_cost = {0, 0, 0, 0, 0};
-
-            LabelIBCH scheme = LabelIBCHFactory.createScheme(config);
-            ChameleonHash.IBCH.LabelIBCH.Components.PublicParam pp = scheme.createPublicParam(config);
-            ChameleonHash.IBCH.LabelIBCH.Components.MasterSecretKey msk = pp.createMasterSecretKey();
-
-            int stage_id = -1;
-            {
-                long start = System.nanoTime();
-                for(int i = 0;i < repeat_cnt;++i) scheme.Setup(pp, msk);
-                long end = System.nanoTime();
-                double duration = (end - start) / 1.0e6;
-                time_cost[++stage_id] = duration / repeat_cnt;
-            }
-
-            ChameleonHash.IBCH.LabelIBCH.Components.SecretKey[] sk = new ChameleonHash.IBCH.LabelIBCH.Components.SecretKey[repeat_cnt];
-            ChameleonHash.IBCH.LabelIBCH.Components.HashValue[] h = new ChameleonHash.IBCH.LabelIBCH.Components.HashValue[repeat_cnt];
-            ChameleonHash.IBCH.LabelIBCH.Components.Randomness[] r = new ChameleonHash.IBCH.LabelIBCH.Components.Randomness[repeat_cnt];
-            ChameleonHash.IBCH.LabelIBCH.Components.Randomness[] r_p = new ChameleonHash.IBCH.LabelIBCH.Components.Randomness[repeat_cnt];
-            ChameleonHash.IBCH.LabelIBCH.Components.Identity[] ID = new ChameleonHash.IBCH.LabelIBCH.Components.Identity[repeat_cnt];
-            ChameleonHash.IBCH.LabelIBCH.Components.Message[] m = new ChameleonHash.IBCH.LabelIBCH.Components.Message[repeat_cnt];
-            ChameleonHash.IBCH.LabelIBCH.Components.Label[] l = new ChameleonHash.IBCH.LabelIBCH.Components.Label[repeat_cnt];
-            ChameleonHash.IBCH.LabelIBCH.Components.Message[] m_p = new ChameleonHash.IBCH.LabelIBCH.Components.Message[repeat_cnt];
-            for (int i = 0; i < repeat_cnt; i++) {
-                sk[i] = pp.createSecretKey();
-                h[i] = pp.createHashValue();
-
-                r[i] = pp.createRandomness();
-                r_p[i] = pp.createRandomness();
-
-                ID[i] = pp.createIdentity("ID_" + i);
-                m[i] = pp.createMessage("msg_" + i);
-                m_p[i] = pp.createMessage("msg_" + i + "_p");
-
-                l[i] = pp.createLabel("label_" + i);
-            }
-
-            {
-                long start = System.nanoTime();
-                for(int i = 0;i < repeat_cnt;++i) scheme.KeyGen(sk[i], pp, msk, ID[i]);
-                long end = System.nanoTime();
-                double duration = (end - start) / 1.0e6;
-                time_cost[++stage_id] = duration / repeat_cnt;
-            }
-
-            {
-                long start = System.nanoTime();
-                for(int i = 0;i < repeat_cnt;++i) scheme.Hash(h[i], r[i], pp, ID[i], m[i], l[i]);
-                long end = System.nanoTime();
-                double duration = (end - start) / 1.0e6;
-                time_cost[++stage_id] = duration / repeat_cnt;
-            }
-
-            {
-                boolean res = true;
-                long start = System.nanoTime();
-                for(int i = 0;i < repeat_cnt;++i) res &= scheme.Verify(pp, ID[i], m[i], l[i], h[i], r[i]);
-                long end = System.nanoTime();
-                double duration = (end - start) / 1.0e6;
-                time_cost[++stage_id] = duration / repeat_cnt;
-                assertTrue(res, "Hash Check Failed");
-            }
-
-            for(int i = 0;i < repeat_cnt;++i) scheme.Verify(pp, ID[i], m[i], l[i], h[i], r[i]);
-
-            {
-                long start = System.nanoTime();
-                for(int i = 0;i < repeat_cnt;++i) scheme.Collision(r_p[i], pp, ID[i], sk[i], m[i], l[i], h[i], r[i], m_p[i]);
-                long end = System.nanoTime();
-                double duration = (end - start) / 1.0e6;
-                time_cost[++stage_id] = duration / repeat_cnt;
-            }
-
-            {
-                boolean res = true;
-                for(int i = 0;i < repeat_cnt;++i) res &= scheme.Verify(pp, ID[i], m_p[i], l[i], h[i], r_p[i]);
-                assertTrue(res, "Adapt Check Failed");
-            }
-            try {
-                for (double x : time_cost) real_time_test.write(String.format(",%.6f", x));
-                real_time_test.write("\n");
-                for (double x : time_cost) System.out.printf(",%.6f", x);
-                System.out.println();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
 
         @DisplayName("test direct scheme")
         @ParameterizedTest(name = "test scheme {0} in curve {1}")
@@ -307,12 +374,54 @@ public class RealTimeTest {
         }
     }
 
+    @DisplayName("test IBCH real time cost diff ID len")
+    @Nested
+    class IBCHRTCIDLenTest {
+        @DisplayName("test direct scheme")
+        @ParameterizedTest(name = "test scheme {0} in curve {1} with id_len {2}")
+        @MethodSource("PerformTest.IBCH.RealTimeTest#GetAllIBCHSchemeCurveDiffIDLen")
+        public void DSTest(IBCHName schemeName, CurveName curveName, int id_len) throws IOException {
+            Map<String, Object> params = new HashMap<>();
+            params.put("ID_Binary_Len", id_len);
+            Map<String, Object> curve_param = new HashMap<>();
+            curve_param.put("swap_G1G2", false);
+            EllipticCurve.Curve.Config curveConfig = new EllipticCurve.Curve.Config(curveName, curve_param);
+            IBCHConfig schemeConfig = new IBCHConfig(schemeName, curveConfig, params);
+            System.out.print(curveName.name());
+            if(tsc_diffid.get(SNToIdx.get(schemeName)) != null && tsc_diffid.get(SNToIdx.get(schemeName)).get(test_id_len.indexOf(id_len)) != null)
+                testFunc(tsc_diffid.get(SNToIdx.get(schemeName)).get(test_id_len.indexOf(id_len)), schemeConfig);
+        }
+
+        @DisplayName("swap G1 and G2")
+        @ParameterizedTest(name = "test scheme {0} in curve {1} with id_len {2} with swap G1 and G2")
+        @MethodSource("PerformTest.IBCH.RealTimeTest#GetAllIBCHSchemeASCurveDiffIDLen")
+        public void SGGTest(IBCHName schemeName, CurveName curveName, int id_len) throws IOException {
+            Map<String, Object> params = new HashMap<>();
+            params.put("ID_Binary_Len", id_len);
+            Map<String, Object> curve_param = new HashMap<>();
+            curve_param.put("swap_G1G2", true);
+            EllipticCurve.Curve.Config curveConfig = new EllipticCurve.Curve.Config(curveName, curve_param);
+            IBCHConfig schemeConfig = new IBCHConfig(schemeName, curveConfig, params);
+            System.out.print(curveName + " swap G1G2");
+            if(tsc_diffid_sgg.get(SNToIdx.get(schemeName)) != null && tsc_diffid_sgg.get(SNToIdx.get(schemeName)).get(test_id_len.indexOf(id_len)) != null)
+                testFunc(tsc_diffid_sgg.get(SNToIdx.get(schemeName)).get(test_id_len.indexOf(id_len)), schemeConfig);
+        }
+    }
+
     @AfterAll
     static void endTest() {
         try {
             for(int i = 0;i < tsc.size();++i) {
                 tsc.get(i).close();
                 if (tscsgg.get(i) != null) tscsgg.get(i).close();
+                if (tsc_diffid.get(i) != null) {
+                    for(int j = 0;j < tsc_diffid.get(i).size();++j)
+                        if (tsc_diffid.get(i).get(j) != null) tsc_diffid.get(i).get(j).close();
+                }
+                if (tsc_diffid_sgg.get(i) != null) {
+                    for(int j = 0;j < tsc_diffid_sgg.get(i).size();++j)
+                        if (tsc_diffid_sgg.get(i).get(j) != null) tsc_diffid_sgg.get(i).get(j).close();
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

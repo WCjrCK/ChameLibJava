@@ -7,7 +7,7 @@
         <include within="ChameleonHash..*"/>
         <include within="Encryption..*"/>
         <include within="Signature..*"/>
-        <include within="Commitment..*"/>
+        <include within="Proof..*"/>
         <include within="PerformTest..*"/>
     </weaver>
 </aspectj>

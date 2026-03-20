@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Proof extends Commitment.Components.Proof<Proof, Relation> {
+public class Proof extends Commitment.Components.Proof<Proof, Witness> {
     protected Curve curve;
     public Scalar s, c;
 
@@ -39,7 +39,7 @@ public class Proof extends Commitment.Components.Proof<Proof, Relation> {
         c = o.c;
     }
 
-    public final boolean Check(Relation data) {
+    public final boolean Check(Witness data) {
         return c.isEqual(H(data.g, data.h, data.u, data.v, data.g.pow(s).mul(data.u.pow(c)), data.h.pow(s).mul(data.v.pow(c))));
     }
 }

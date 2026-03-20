@@ -11,20 +11,23 @@ import static ChameleonHash.SchemeCurveRequire.ALL;
 import static ChameleonHash.SchemeCurveRequire.SYMMETRIC;
 
 public enum PBCHName {
-    DSS_2019(ALL, ChameleonHash.PBCH.BasePBCH.DSS_2019.Scheme.class, false),
-    TLL_2020(ALL, ChameleonHash.PBCH.BAPBCH.TLL_2020.Scheme.class, true),
+    DSS_2019(ALL, ChameleonHash.PBCH.BasePBCH.DSS_2019.Scheme.class, false, false),
+    TLL_2020(ALL, ChameleonHash.PBCH.BAPBCH.TLL_2020.Scheme.class, true, false),
+    XNM_2021(ALL, ChameleonHash.PBCH.RevocablePBCH.XNM_2021.Scheme.class, false, true),
     ;
 
     public final SchemeCurveRequire schemeCurveRequire;
     public final Class<?> schemeClass;
     public final boolean has_blackbox_accountability;
+    public final boolean revocable;
 
     private static final Map<String, PBCHName> LOOKUP = new ConcurrentHashMap<>();
 
-    PBCHName(SchemeCurveRequire scr, Class<?> schemeClass, boolean hba) {
+    PBCHName(SchemeCurveRequire scr, Class<?> schemeClass, boolean hba, boolean revocable) {
         schemeCurveRequire = scr;
         this.schemeClass = schemeClass;
         this.has_blackbox_accountability = hba;
+        this.revocable = revocable;
     }
 
     static {

@@ -8,6 +8,12 @@ import java.util.Set;
 public class Attributes extends ChameleonHash.PBCH.RevocablePBCH.Components.Attributes {
     public Set<String> attrs = new HashSet<>();
 
+    public Encryption.ABE.RevocableABE.Components.Attributes toRABEAttr() {
+        Encryption.ABE.RevocableABE.Components.Attributes res = new Encryption.ABE.RevocableABE.Components.Attributes();
+        res.attrs = new HashSet<>(attrs);
+        return res;
+    }
+
     public void addAttr(String attr) {
         attrs.add(attr);
     }

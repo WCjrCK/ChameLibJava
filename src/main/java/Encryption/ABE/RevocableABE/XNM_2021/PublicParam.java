@@ -13,7 +13,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 public class PublicParam
-        extends Encryption.ABE.RevocableABE.Components.PublicParam<MasterPublicKey, MasterSecretKey, State, Revocated, Authority, User, Info, UpdateKey, SecretKey, DecryptKey, PlainText, CipherText> {
+        extends Encryption.ABE.RevocableABE.Components.PublicParam<
+        MasterPublicKey, MasterSecretKey, State, Revocated, Authority, User, Identity,
+        Info, UpdateKey, SecretKey, DecryptKey, PlainText, CipherText> {
     protected FAMECore FAME = new FAMECore();
     protected Encryption.ABE.BaseABE.FAME.PublicParam FAME_pp;
     protected int MAX_USER;
@@ -50,6 +52,15 @@ public class PublicParam
 
     @Override
     public User createUser(String ID) {
+        User res = new User(createIdentity(ID));
+        res.sk = createSecretKey();
+        res.dk = createDecryptKey();
+        res.S = createAttributes();
+        return res;
+    }
+
+    @Override
+    public Identity createIdentity(String ID) {
         MessageDigest messageDigest;
         byte[] hash;
         try {
@@ -59,10 +70,8 @@ public class PublicParam
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        User res = new User(curve.HashToG1(hash));
-        res.sk = createSecretKey();
-        res.dk = createDecryptKey();
-        res.S = createAttributes();
+        Identity res = new Identity();
+        res.id = curve.HashToG1(hash);
         return res;
     }
 

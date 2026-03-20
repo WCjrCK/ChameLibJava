@@ -35,14 +35,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CHTest {
     static List<CHName> skipList = List.of(new CHName[]{
 //            CHName.LLA_2012,
-//            CHName.CZT_2011,
-//            CHName.CZK_2004,
-//            CHName.CCT_2024,
-//            CHName.KOG_CDK_2017,
-//            CHName.BC_CDK_2017,
-//            CHName.DKS_2020,
-//            CHName.DSS_2020,
-//            CHName.AM_2004
+            CHName.CZT_2011,
+            CHName.CZK_2004,
+            CHName.CCT_2024,
+            CHName.KOG_CDK_2017,
+            CHName.BC_CDK_2017,
+            CHName.DKS_2020,
+            CHName.DSS_2020,
+            CHName.AM_2004
     });
 
     public static Stream<Arguments> GetAllCHSchemeCurve() {
@@ -156,12 +156,12 @@ public class CHTest {
         ChameleonHash.CH.CHET.Components.HashValue h1 = pp.createHashValue();
         ChameleonHash.CH.CHET.Components.Randomness r1 = pp.createRandomness();
         ETrapdoor etd1 = pp.createETrapdoor();
-        scheme.Hash(h1, r1, pp, pk1, m1, etd1);
+        scheme.Hash(h1, r1, etd1, pp, pk1, m1);
 
         ChameleonHash.CH.CHET.Components.HashValue h2 = pp.createHashValue();
         ChameleonHash.CH.CHET.Components.Randomness r2 = pp.createRandomness();
         ETrapdoor etd2 = pp.createETrapdoor();
-        scheme.Hash(h2, r2, pp, pk2, m2, etd2);
+        scheme.Hash(h2, r2, etd2, pp, pk2, m2);
 
         assertTrue(scheme.Verify(pp, pk1, m1, h1, r1));
 //        assertFalse(scheme.Verify(pp, pk1, m2, h1, r1));
@@ -226,20 +226,20 @@ public class CHTest {
         assertFalse(scheme.Verify(pp, pk1, m1, l1, h1, r1_p), "Adapt(L1, m1) invalid");
     }
 
-//    @DisplayName("test abstract implement")
-//    @ParameterizedTest(name = "test scheme {0} curve {1}")
-//    @MethodSource("UnitTest.CHScheme.CHTest#GetAllCHSchemeCurve")
-//    void CHDSTest(CHName schemeName, CurveName curveName) {
-//        Map<String, Object> params = new HashMap<>();
-//        Map<String, Object> curve_param = new HashMap<>();
-//        if (curveName == PBC_CUSTOM) {
-//            curve_param.put("param_file_path", "./jpbc/params/a.properties");
-//            System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
-//        }
-//        Config curveConfig = new Config(curveName, curve_param);
-//        CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
-//        testFunction(schemeConfig);
-//    }
+    @DisplayName("test abstract implement")
+    @ParameterizedTest(name = "test scheme {0} curve {1}")
+    @MethodSource("UnitTest.CHScheme.CHTest#GetAllCHSchemeCurve")
+    void CHDSTest(CHName schemeName, CurveName curveName) {
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> curve_param = new HashMap<>();
+        if (curveName == PBC_CUSTOM) {
+            curve_param.put("param_file_path", "./jpbc/params/a.properties");
+            System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
+        }
+        Config curveConfig = new Config(curveName, curve_param);
+        CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
+        testFunction(schemeConfig);
+    }
 //
 //    @DisplayName("test swap G1 and G2 implement")
 //    @ParameterizedTest(name = "test scheme {0} curve {1}")

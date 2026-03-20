@@ -18,7 +18,7 @@ public interface CHET<
 
     void KeyGen(PK pk, SK sk, PP pp);
 
-    void Hash(H h, R r, PP pp, PK pk, M m, ET etd);
+    void Hash(H h, R r, ET etd, PP pp, PK pk, M m);
 
     boolean Verify(PP pp, PK pk, M m, H h, R r);
 

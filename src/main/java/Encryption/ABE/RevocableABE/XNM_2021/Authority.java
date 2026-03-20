@@ -10,7 +10,7 @@ public class Authority extends Encryption.ABE.RevocableABE.Components.Authority<
 
     @Override
     public void KeyGen(User user, PublicParam pp, MasterPublicKey mpk) {
-        (new Core()).KeyGen(user, pp, mpk, msk, st);
+        (new Core()).KeyGen(user.sk, pp, mpk, msk, st, user.id, user.S);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class Authority extends Encryption.ABE.RevocableABE.Components.Authority<
 
     @Override
     public void Revoke(PublicParam pp, MasterPublicKey mpk, User user, Info info) {
-        (new Core()).Revoke(rl, user, info);
+        (new Core()).Revoke(rl, user.id, info);
     }
 
     @Override

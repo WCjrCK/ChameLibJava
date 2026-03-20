@@ -13,7 +13,7 @@ public interface RevocablePBCH<
         PK extends PublicKey,
         SK extends SecretKey,
         DK extends DecryptKey,
-        U extends User,
+        ID extends Identity,
         A extends Attributes,
         I extends Info,
         P extends Policy,
@@ -25,17 +25,17 @@ public interface RevocablePBCH<
 
     void Setup(PP pp, MPK mpk, MSK msk);
 
-    void AssignUser(U user, PP pp, MPK mpk, MSK msk);
+//    void AssignUser(U user, PP pp, MPK mpk, MSK msk);
 
-    void KeyGen(SK sk, PP pp, MPK mpk, MSK msk, S st, RL rl, U user, UK uk, DK dk, A S);
+    void KeyGen(SK sk, PP pp, MPK mpk, MSK msk, S st, RL rl, ID id, UK uk, DK dk, A S);
 
     void KeyUpdate(UK uk, PP pp, MPK mpk, MSK msk, S st, RL rl, I info);
 
     void DecryptKeyGen(DK dk, PP pp, MPK mpk, MSK msk, S st, RL rl, UK uk, SK sk, A S);
 
-    void Revoke(RL rl, PP pp, MPK mpk, MSK msk, S st, U user, I info);
+    void Revoke(RL rl, PP pp, MPK mpk, MSK msk, S st, ID id, I info);
 
-    void Hash(H h, R r, PP pp, MPK mpk, U user, PK pk, M m, P P, I info);
+    void Hash(H h, R r, PP pp, MPK mpk, ID id, PK pk, M m, P P, I info);
 
     boolean Verify(PP pp, MPK mpk, PK pk, M m, H h, R r);
 

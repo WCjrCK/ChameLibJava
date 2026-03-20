@@ -111,8 +111,8 @@ public class CallAspect {
 
     @Around(
             "(" +
-                    "execution(* Commitment..NIZK*..Commitment(..))" +
-                    " || execution(* Commitment..Proof..Check(..))" +
+                    "execution(* Proof..NIZK*..Commitment(..))" +
+                    " || execution(* Proof..Proof..Check(..))" +
                     ")" +
                     " && !execution(* ChameleonHash..*(..))" +
                     " && !execution(* EllipticCurve..*(..))" +

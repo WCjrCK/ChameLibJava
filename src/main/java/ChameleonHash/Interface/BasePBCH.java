@@ -11,7 +11,7 @@ public interface BasePBCH<
         P extends Policy,
         A extends Attributes,
         M extends Message,
-        H extends HashValue<H>,
+        H extends HashValue<H, P>,
         R extends Randomness
         > {
     PP createPublicParam(PBCHConfig config);
@@ -24,5 +24,5 @@ public interface BasePBCH<
 
     boolean Verify(PP pp, MPK mpk, M m, H h, R r);
 
-    void Collision(R r_p, PP pp, MPK mpk, SK sk, M m, P P, H h, R r, M m_p);
+    void Collision(R r_p, PP pp, MPK mpk, SK sk, M m, H h, R r, M m_p);
 }

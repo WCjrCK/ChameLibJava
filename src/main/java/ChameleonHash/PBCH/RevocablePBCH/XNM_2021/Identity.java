@@ -1,10 +1,9 @@
-package ChameleonHash.CH.LabelCH.AM_2004;
+package ChameleonHash.PBCH.RevocablePBCH.XNM_2021;
 
-import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
-public class PublicKey extends ChameleonHash.CH.LabelCH.Components.PublicKey {
-    protected MultivePoint h;
+public class Identity extends ChameleonHash.PBCH.RevocablePBCH.Components.Identity {
+    Encryption.ABE.RevocableABE.XNM_2021.Identity RABE_id;
 
     @Override
     public final ElementCounter TheoSize() {

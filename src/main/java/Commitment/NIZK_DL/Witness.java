@@ -1,12 +1,12 @@
-package Commitment.EQUAL_DL;
+package Commitment.NIZK_DL;
 
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
-public class Relation extends Commitment.Components.Relation {
-    Scalar x;
-    MultivePoint g_1, g_2, y_1, y_2;
+public class Witness extends Commitment.Components.Witness {
+    public Scalar x;
+    public MultivePoint g, y;
 
     @Override
     public final ElementCounter TheoSize() {

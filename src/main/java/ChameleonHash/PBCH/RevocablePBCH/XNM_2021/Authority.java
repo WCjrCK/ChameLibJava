@@ -1,39 +1,36 @@
 package ChameleonHash.PBCH.RevocablePBCH.XNM_2021;
 
-import Encryption.ABE.BaseABE.Components.MasterPublicKey;
-import Encryption.ABE.BaseABE.Components.MasterSecretKey;
-import Encryption.ABE.RevocableABE.Components.Info;
-import Encryption.ABE.RevocableABE.Components.PublicParam;
-import Encryption.ABE.RevocableABE.Components.Revocated;
-import Encryption.ABE.RevocableABE.Components.State;
-import Encryption.ABE.RevocableABE.Components.UpdateKey;
-import Encryption.ABE.RevocableABE.Components.User;
 import utils.ElementCounter;
 
-public abstract class Authority<
-        PP extends PublicParam,
-        MPK extends MasterPublicKey,
-        MSK extends MasterSecretKey,
-        S extends State,
-        R extends Revocated,
-        UK extends UpdateKey,
-        I extends Info,
-        U extends User
-        > {
-    public MSK msk;
-    public S st;
-    public R rl;
-    public UK uk;
+public class Authority extends ChameleonHash.PBCH.RevocablePBCH.Components.Authority<
+        PublicParam, MasterPublicKey, MasterSecretKey, State, Revocated, UpdateKey, Info, User> {
+    @Override
+    public void Setup(MasterPublicKey masterPublicKey, PublicParam publicParam) {
 
-    public abstract void Setup(MPK mpk, PP pp);
+    }
 
-    public abstract void KeyGen(U user, PP pp, MPK mpk);
+    @Override
+    public void KeyGen(User user, PublicParam publicParam, MasterPublicKey masterPublicKey) {
 
-    public abstract void KeyUpdate(PP pp, MPK mpk, I info);
+    }
 
-    public abstract void DecryptKeyGen(U user, PP pp, MPK mpk);
+    @Override
+    public void KeyUpdate(PublicParam publicParam, MasterPublicKey masterPublicKey, Info info) {
 
-    public abstract void Revoke(PP pp, MPK mpk, U user, I info);
+    }
 
-    public abstract ElementCounter TheoSize();
+    @Override
+    public void DecryptKeyGen(User user, PublicParam publicParam, MasterPublicKey masterPublicKey) {
+
+    }
+
+    @Override
+    public void Revoke(PublicParam publicParam, MasterPublicKey masterPublicKey, User user, Info info) {
+
+    }
+
+    @Override
+    public ElementCounter TheoSize() {
+        return null;
+    }
 }

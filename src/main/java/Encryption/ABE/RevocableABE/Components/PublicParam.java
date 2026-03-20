@@ -12,6 +12,7 @@ public abstract class PublicParam<
         R extends Revocated,
         A extends Authority,
         U extends User,
+        ID extends Identity,
         I extends Info,
         KU extends UpdateKey<I>,
         SK extends SecretKey,
@@ -40,6 +41,8 @@ public abstract class PublicParam<
     public abstract R createRevocated();
 
     public abstract U createUser(String ID);
+
+    public abstract ID createIdentity(String ID);
 
     public abstract SK createSecretKey();
 

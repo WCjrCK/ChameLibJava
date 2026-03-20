@@ -4,7 +4,9 @@ import EllipticCurve.Curve.Curve;
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 
-public class Scheme implements Commitment.Interface.NIZK_DL<Proof, Relation> {
+//Schnorr Non-interactive Zero-Knowledge Proof
+
+public class Scheme implements Commitment.Interface.NIZK_DL<Proof, Witness> {
     protected Curve curve;
 
     public Scheme(Curve curve) {
@@ -12,16 +14,16 @@ public class Scheme implements Commitment.Interface.NIZK_DL<Proof, Relation> {
     }
 
     @Override
-    public final Relation createRelation(MultivePoint g, MultivePoint y) {
-        Relation res = new Relation();
+    public final Witness createRelation(MultivePoint g, MultivePoint y) {
+        Witness res = new Witness();
         res.g = g;
         res.y = y;
         return res;
     }
 
     @Override
-    public final Relation createRelation(Scalar x, MultivePoint g, MultivePoint y) {
-        Relation res = new Relation();
+    public final Witness createRelation(Scalar x, MultivePoint g, MultivePoint y) {
+        Witness res = new Witness();
         res.x = x;
         res.g = g;
         res.y = y;
@@ -29,7 +31,7 @@ public class Scheme implements Commitment.Interface.NIZK_DL<Proof, Relation> {
     }
 
     @Override
-    public final Proof Commitment(Relation data) {
+    public final Proof Prove(Witness data) {
         if(!data.g.pow(data.x).isEqual(data.y)) throw new RuntimeException("输入数据不满足 g^x == y");
         Proof res = new Proof();
         res.curve = curve;

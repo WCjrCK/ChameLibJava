@@ -5,9 +5,9 @@ import utils.ElementCounter;
 import java.util.HashMap;
 
 public class Revocated extends Encryption.ABE.RevocableABE.Components.Revocated {
-    public HashMap<User, Integer> revocated = new HashMap<>();
+    public HashMap<Identity, Integer> revocated = new HashMap<>();
 
-    public void Add(User user, Info info) {
+    public void Add(Identity user, Info info) {
         revocated.put(user, info.timestamp);
     }
 

@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Proof extends Commitment.Components.Proof<Proof, Relation> {
+public class Proof extends Commitment.Components.Proof<Proof, Witness> {
     protected Curve curve;
     public Scalar gamma;
     public MultivePoint alpha_1, alpha_2;
@@ -40,7 +40,7 @@ public class Proof extends Commitment.Components.Proof<Proof, Relation> {
         alpha_2 = o.alpha_2;
     }
 
-    public final boolean Check(Relation data) {
+    public final boolean Check(Witness data) {
         Scalar beta = H(String.format("%s|%s|%s|%s", data.y_1, data.y_2, alpha_1, alpha_2));
         return data.g_1.pow(gamma).div(alpha_1).isEqual(data.y_1.pow(beta)) &&
                 data.g_2.pow(gamma).div(alpha_2).isEqual(data.y_2.pow(beta));

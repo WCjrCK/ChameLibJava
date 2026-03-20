@@ -3,12 +3,12 @@ package ChameleonHash.CH.LabelCH.AM_2004;
 import ChameleonHash.CH.CH;
 import ChameleonHash.CH.CHConfig;
 import ChameleonHash.Interface.LabelCH;
-import EllipticCurve.Point.MultivePoint;
+import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.Scalar;
 
 /*
- * Key exposure free chameleon hash schemes based on discrete logarithm problem
- * P4. CH_inf: a key exposure free chameleon hash scheme
+ * On the Key Exposure Problem in Chameleon Hashes
+ * P12. Scheme based on SDH and DL
  */
 
 public class Scheme extends CH
@@ -19,23 +19,21 @@ public class Scheme extends CH
     }
 
     @Override
-    public void Setup(PublicParam pp) {}
+    public void Setup(PublicParam pp) {
+        pp.g = pp.curve.getRandomPoint(CurveGroup.G1);
+    }
 
     @Override
     public void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp) {
         sk.x = pp.curve.getRandomScalar();
-        pk.g = pp.curve.getRandomPoint(pp.curveGroup);
-        pk.h = pk.g.pow(sk.x);
+        pk.h = pp.g.pow(sk.x);
     }
 
     @Override
     public void Hash(HashValue h, Randomness r, PublicParam pp, PublicKey pk, Message m, Label L) {
         Scalar r_ = pp.curve.getRandomScalar();
-        r.g_r = pk.g.pow(r_);
-        MultivePoint geh = pk.g.pow(pp.H(L.L)).mul(pk.h);
-        MultivePoint gehr = geh.pow(r_);
-        h.h = pk.g.pow(pp.H(m.m)).mul(gehr);
-        r.pi = pp.nizkScheme.Commitment(pp.nizkScheme.createRelation(r_, pk.g, r.g_r, geh, gehr));
+        r.g_r = pp.g.pow(r_);
+        h.h = pp.g.pow(pp.H(m.m)).mul(r.g_r.pow(pp.H(L.L)).mul(pk.h.pow(r_)));
     }
 
     @Override
@@ -47,10 +45,7 @@ public class Scheme extends CH
             HashValue h,
             Randomness r
     ) {
-        MultivePoint geh = pk.g.pow(pp.H(L.L)).mul(pk.h);
-        MultivePoint gehr = h.h.div(pk.g.pow(pp.H(m.m)));
-        return r.pi.Check(pp.nizkScheme.createRelation(pk.g, r.g_r, geh, gehr)) ||
-                r.pi.Check(pp.nizkScheme.createRelation(pk.g, geh, r.g_r, gehr));
+        return pp.curve.Pairing(pp.g, h.h.div(pp.g.pow(pp.H(m.m)))).isEqual(pp.curve.Pairing(r.g_r, pp.g.pow(pp.H(L.L)).mul(pk.h)));
     }
 
     @Override
@@ -68,7 +63,6 @@ public class Scheme extends CH
         Scalar e = pp.H(L.L);
         Scalar x_e = sk.x.add(e);
         Scalar H_m_p = pp.H(m_p.m);
-        r_p.g_r = r.g_r.mul(pk.g.pow(pp.H(m.m).sub(H_m_p).div(x_e)));
-        r_p.pi = pp.nizkScheme.Commitment(pp.nizkScheme.createRelation(x_e, pk.g, pk.g.pow(e).mul(pk.h), r_p.g_r, h.h.div(pk.g.pow(H_m_p))));
+        r_p.g_r = r.g_r.mul(pp.g.pow(pp.H(m.m).sub(H_m_p).div(x_e)));
     }
 }

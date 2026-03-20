@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class State extends Encryption.ABE.RevocableABE.Components.State {
     private int empty_leaf_id;
-    private HashMap<User, Integer> id_2_node;
+    private HashMap<Identity, Integer> id_2_node;
     public MultivePoint[] g_theta;
     public BitSet tag_g;
     public BitSet tag;
@@ -26,7 +26,7 @@ public class State extends Encryption.ABE.RevocableABE.Components.State {
         return (id - 1) >> 1;
     }
 
-    public int Pick(User user) {
+    public int Pick(Identity user) {
         if(!id_2_node.containsKey(user)) {
             if(empty_leaf_id == g_theta.length) throw new RuntimeException("用户容量已满");
             id_2_node.put(user, empty_leaf_id);
@@ -42,7 +42,7 @@ public class State extends Encryption.ABE.RevocableABE.Components.State {
 
     public void GetUpdateKeyNode(Revocated rl, Info info) {
         tag.set(0, g_theta.length);
-        for(Map.Entry<User, Integer> e : rl.revocated.entrySet()) {
+        for(Map.Entry<Identity, Integer> e : rl.revocated.entrySet()) {
             if(e.getValue() <= info.timestamp && id_2_node.containsKey(e.getKey())) {
                 int node_id = id_2_node.get(e.getKey());
                 tag.set(node_id, false);

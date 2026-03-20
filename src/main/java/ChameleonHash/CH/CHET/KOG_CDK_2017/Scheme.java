@@ -28,21 +28,21 @@ public class Scheme extends CH
     public final void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp) {
         sk.x = pp.curve.getRandomScalar();
         pk.h = pp.g.pow(sk.x);
-        pk.pi_pk = pp.NIZK_DL.Commitment(pp.NIZK_DL.createRelation(sk.x, pp.g, pk.h));
+        pk.pi_pk = pp.NIZK_DL.Prove(pp.NIZK_DL.createRelation(sk.x, pp.g, pk.h));
         pp.PKEScheme.KeyGen(pk.pke_pk, sk.pke_sk, pp.pke_pp);
     }
 
     @Override
-    public final void Hash(HashValue h, Randomness r, PublicParam pp, PublicKey pk, Message m, ETrapdoor etd) {
+    public final void Hash(HashValue h, Randomness r, ETrapdoor etd, PublicParam pp, PublicKey pk, Message m) {
         if(!pk.pi_pk.Check(pp.NIZK_DL.createRelation(pp.g, pk.h))) throw new RuntimeException("NIZK验证失败");
         Scalar r_ = pp.curve.getRandomScalar();
         etd.etd = pp.curve.getRandomScalar();
         h.h_p = pp.g.pow(etd.etd);
-        h.pi_t = pp.NIZK_DL.Commitment(pp.NIZK_DL.createRelation(etd.etd, pp.g, h.h_p));
+        h.pi_t = pp.NIZK_DL.Prove(pp.NIZK_DL.createRelation(etd.etd, pp.g, h.h_p));
         pp.PKEScheme.Encrypt(r.C, pp.pke_pp, pk.pke_pk, pp.pke_pp.createPlainText(r_.toString()));
         Scalar a = pp.H(m.m);
         r.p = pk.h.pow(r_);
-        r.pi_p = pp.NIZK_DL.Commitment(pp.NIZK_DL.createRelation(r_, pk.h, r.p));
+        r.pi_p = pp.NIZK_DL.Prove(pp.NIZK_DL.createRelation(r_, pk.h, r.p));
         h.b = r.p.mul(h.h_p.pow(a));
     }
 
@@ -74,7 +74,7 @@ public class Scheme extends CH
         Scalar r_p_ = r_.add(a.sub(a_p).mul(etd.etd).div(sk.x));
         r_p.p = pk.h.pow(r_p_);
         pp.PKEScheme.Encrypt(r_p.C, pp.pke_pp, pk.pke_pk, pp.pke_pp.createPlainText(r_p_.toString()));
-        r_p.pi_p = pp.NIZK_DL.Commitment(pp.NIZK_DL.createRelation(r_p_, pk.h, r_p.p));
+        r_p.pi_p = pp.NIZK_DL.Prove(pp.NIZK_DL.createRelation(r_p_, pk.h, r_p.p));
     }
 }
 

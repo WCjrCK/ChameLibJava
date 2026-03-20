@@ -4,12 +4,14 @@ import ChameleonHash.CH.CHConfig;
 import ChameleonHash.CH.CHName;
 import ChameleonHash.Interface.BAPBCH;
 import ChameleonHash.Interface.BasePBCH;
+import ChameleonHash.Interface.RevocablePBCH;
 import ChameleonHash.PBCH.BAPBCH.BAPBCHFactory;
 import ChameleonHash.PBCH.BAPBCH.Components.User;
 import ChameleonHash.PBCH.BasePBCH.BasePBCHFactory;
 import ChameleonHash.PBCH.BasePBCH.Components.*;
 import ChameleonHash.PBCH.PBCHConfig;
 import ChameleonHash.PBCH.PBCHName;
+import ChameleonHash.PBCH.RevocablePBCH.RevocablePBCHFactory;
 import ChameleonHash.SchemeCurveRequire;
 import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveGroup;
@@ -34,8 +36,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PBCHTest {
     static List<PBCHName> skipList = List.of(new PBCHName[]{
-            PBCHName.DSS_2019,
+//            PBCHName.DSS_2019,
             PBCHName.TLL_2020,
+            PBCHName.XNM_2021,
     });
 
     public static Stream<Arguments> GetAllPBCHSchemeCurve() {
@@ -67,7 +70,7 @@ public class PBCHTest {
 
     private void testFunction(PBCHConfig schemeConfig) {
         if (schemeConfig.schemeName.has_blackbox_accountability) testBAPBCH(schemeConfig);
-//        else if (schemeConfig.schemeName.has_ET) testCHET(schemeConfig);
+        else if (schemeConfig.schemeName.revocable) testRPBCH(schemeConfig);
         else testBasePBCH(schemeConfig);
     }
 
@@ -113,7 +116,7 @@ public class PBCHTest {
         assertTrue(scheme.Verify(pp, mpk, m2, h2, r2), "H(m2) valid");
         assertFalse(scheme.Verify(pp, mpk, m1, h2, r2), "H(m1) invalid");
 
-        scheme.Collision(r_p, pp, mpk, sk1, m1, P, h1, r1, m2);
+        scheme.Collision(r_p, pp, mpk, sk1, m1, h1, r1, m2);
         assertTrue(scheme.Verify(pp, mpk, m2, h1, r_p), "Adapt(m2) valid");
         assertFalse(scheme.Verify(pp, mpk, m1, h1, r_p), "Adapt(m1) invalid");
     }
@@ -129,13 +132,13 @@ public class PBCHTest {
         Policy P = pp.createPolicy("A&(DDDD|(BB&CCC))");
 
         User u1 = pp.createUser(((int) schemeConfig.params.get("id_len")) / 3);
-        scheme.AssignUser(u1, mpk, msk);
+        scheme.AssignUser(u1, pp, mpk, msk);
         u1.S.addAttr("A");
         u1.S.addAttr("DDDD");
         scheme.KeyGen(u1, pp, mpk, msk);
 
         User u2 = pp.createUser(u1, ((int) schemeConfig.params.get("id_len")) / 2);
-        scheme.AssignUser(u2, mpk, msk);
+        scheme.AssignUser(u2, pp, mpk, msk);
         u2.S.addAttr("BB");
         u2.S.addAttr("CCC");
         scheme.KeyGen(u2, pp, mpk, msk);
@@ -195,6 +198,83 @@ public class PBCHTest {
 //        assertFalse(scheme.Verify(pp, mpk, m1, h1, r_p), "Adapt(m1) invalid");
     }
 
+    private void testRPBCH(PBCHConfig schemeConfig) {
+        RevocablePBCH scheme = RevocablePBCHFactory.createScheme(schemeConfig);
+        ChameleonHash.PBCH.RevocablePBCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
+        ChameleonHash.PBCH.RevocablePBCH.Components.MasterPublicKey mpk = pp.createMasterPublicKey();
+        ChameleonHash.PBCH.RevocablePBCH.Components.MasterSecretKey msk = pp.createMasterSecretKey();
+
+        scheme.Setup(pp, mpk, msk);
+
+        ChameleonHash.PBCH.RevocablePBCH.Components.Policy P = pp.createPolicy("A&(DDDD|(BB&CCC))");
+
+//        ChameleonHash.PBCH.RevocablePBCH.Components.User u1 = pp.createUser();
+//        scheme.AssignUser(u1, pp, mpk, msk);
+//        u1.S.addAttr("A");
+//        u1.S.addAttr("DDDD");
+//        scheme.KeyGen(u1, pp, mpk, msk);
+//
+//        User u2 = pp.createUser(u1, ((int) schemeConfig.params.get("id_len")) / 2);
+//        scheme.AssignUser(u2, mpk, msk);
+//        u2.S.addAttr("BB");
+//        u2.S.addAttr("CCC");
+//        scheme.KeyGen(u2, pp, mpk, msk);
+//
+//        HashValue h1 = pp.createHashValue();
+//        Randomness r1 = pp.createRandomness();
+//
+//        Message m1 = pp.createMessage("msg1");
+//        Message m2 = pp.createMessage("msg2");
+//
+//        scheme.Hash(h1, r1, pp, mpk, u1, m1, P);
+//        assertTrue(scheme.Verify(pp, mpk, m1, h1, r1), "H(m1) valid");
+//        assertFalse(scheme.Verify(pp, mpk, m2, h1, r1), "H(m2) invalid");
+//
+//        HashValue h2 = pp.createHashValue();
+//        Randomness r2 = pp.createRandomness();
+//
+//        scheme.Hash(h2, r2, pp, mpk, u2, m2, P);
+//        assertTrue(scheme.Verify(pp, mpk, m2, h2, r2), "H(m2) valid");
+//        assertFalse(scheme.Verify(pp, mpk, m1, h2, r2), "H(m1) invalid");
+//        assertFalse(scheme.Verify(pp, mpk, m2, h1, r2), "H(m1) invalid");
+//        assertFalse(scheme.Verify(pp, mpk, m2, h2, r1), "H(m1) invalid");
+//
+//        Randomness r_p = pp.createRandomness();
+//
+//        scheme.Collision(r_p, pp, mpk, msk, u1, m1, P, h1, r1, m2);
+//        assertTrue(scheme.Verify(pp, mpk, m2, h1, r_p), "Adapt(m2) valid");
+//        assertFalse(scheme.Verify(pp, mpk, m1, h1, r_p), "Adapt(m1) invalid");
+//
+//        scheme.Collision(r_p, pp, mpk, msk, u1, m2, P, h2, r2, m1);
+//        assertTrue(scheme.Verify(pp, mpk, m1, h2, r_p), "Adapt(m1) valid");
+//        assertFalse(scheme.Verify(pp, mpk, m2, h2, r_p), "Adapt(m2) invalid");
+//
+//        scheme.Adapt(r1_p, h1, r1, SP, mpk, msk, u1, MSP, m1, m2);
+//        assertTrue(scheme.Check(h1, r1_p, SP, mpk, m2), "Adapt(m2) valid");
+//        assertFalse(scheme.Check(h1, r1_p, SP, mpk, m1), "Adapt(m1) invalid");
+//
+//        scheme.Adapt(r1_p, h2, r2, SP, mpk, msk, u1, MSP, m2, m1);
+//        assertTrue(scheme.Check(h2, r1_p, SP, mpk, m1), "Adapt(m1) valid");
+//        assertFalse(scheme.Check(h2, r1_p, SP, mpk, m2), "Adapt(m2) invalid");
+//
+//        scheme.Adapt(r1_p, h2, r2, SP, mpk, msk, u2, MSP, m2, m1);
+//        assertFalse(scheme.Check(h2, r1_p, SP, mpk, m1), "policy false");
+//        assertFalse(scheme.Check(h2, r1_p, SP, mpk, m2), "policy false");
+//
+//        scheme.Hash(h1, r1, pp, mpk, m1, P);
+//
+//        assertTrue(scheme.Verify(pp, mpk, m1, h1, r1), "H(m1) valid");
+//        assertFalse(scheme.Verify(pp, mpk, m2, h1, r1), "H(m2) invalid");
+//
+//        scheme.Hash(h2, r2, pp, mpk, m2, P);
+//        assertTrue(scheme.Verify(pp, mpk, m2, h2, r2), "H(m2) valid");
+//        assertFalse(scheme.Verify(pp, mpk, m1, h2, r2), "H(m1) invalid");
+//
+//        scheme.Collision(r_p, pp, mpk, sk1, m1, P, h1, r1, m2);
+//        assertTrue(scheme.Verify(pp, mpk, m2, h1, r_p), "Adapt(m2) valid");
+//        assertFalse(scheme.Verify(pp, mpk, m1, h1, r_p), "Adapt(m1) invalid");
+    }
+
     @DisplayName("test abstract implement")
     @ParameterizedTest(name = "test scheme {0} curve {1}")
     @MethodSource("UnitTest.CHScheme.PBCHTest#GetAllPBCHSchemeCurve")
@@ -212,6 +292,7 @@ public class PBCHTest {
         seParam.put("transformation", "AES/ECB/PKCS5Padding");
         params.put("se_config", new SEConfig(SEName.AES, seParam));
         params.put("id_len", 32);
+        params.put("max_user", 2048);
 
         PBCHConfig schemeConfig = new PBCHConfig(schemeName, curveConfig, params);
         testFunction(schemeConfig);
@@ -235,6 +316,7 @@ public class PBCHTest {
         seParam.put("transformation", "AES/ECB/PKCS5Padding");
         params.put("se_config", new SEConfig(SEName.AES, seParam));
         params.put("id_len", 32);
+        params.put("max_user", 2048);
 
         PBCHConfig schemeConfig = new PBCHConfig(schemeName, curveConfig, params);
         testFunction(schemeConfig);

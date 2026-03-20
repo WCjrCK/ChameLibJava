@@ -11,30 +11,36 @@ import Encryption.ABE.RevocableABE.XNM_2021.PlainText;
 
 import java.util.Arrays;
 
+/*
+ * Revocable Policy-Based Chameleon Hash
+ * P13. 5.2 Proposed RPCH
+ */
+
 public class Scheme extends PBCH
         implements RevocablePBCH<
                 PublicParam, MasterPublicKey, MasterSecretKey, State, Revocated, UpdateKey,
-                PublicKey, SecretKey, DecryptKey, User, Attributes, Info, Policy, Message, HashValue, Randomness
+                PublicKey, SecretKey, DecryptKey, Identity, Attributes, Info, Policy, Message, HashValue, Randomness
                 >{
     @Override
     public PublicParam createPublicParam(PBCHConfig config) {
-        return null;
+        return new PublicParam(config);
     }
 
     @Override
     public void Setup(PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk) {
+        pp.CHET.Setup(pp.CHET_pp);
         pp.CHET.KeyGen(mpk.CHET_pk, msk.CHET_sk, pp.CHET_pp);
         pp.RABE.Setup(mpk.RABE_mpk, msk.RABE_msk, pp.RABE_pp);
     }
 
-    @Override
-    public void AssignUser(User user, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk) {
-//        pp.RABE.
-    }
+//    @Override
+//    public void AssignUser(User user, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk) {
+////        pp.RABE.
+//    }
 
     @Override
-    public void KeyGen(SecretKey sk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Revocated rl, User user, UpdateKey uk, DecryptKey dk, Attributes S) {
-        pp.RABE.KeyGen(user.RABE_user, pp.RABE_pp, mpk.RABE_mpk, msk.RABE_msk, st.RABE_st);
+    public void KeyGen(SecretKey sk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Revocated rl, Identity id, UpdateKey uk, DecryptKey dk, Attributes S) {
+        pp.RABE.KeyGen(sk.RABE_sk, pp.RABE_pp, mpk.RABE_mpk, msk.RABE_msk, st.RABE_st, id.RABE_id, S.toRABEAttr());
         sk.CHET_sk.CopyFrom(msk.CHET_sk);
     }
 
@@ -51,14 +57,14 @@ public class Scheme extends PBCH
     }
 
     @Override
-    public void Revoke(Revocated rl, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, User user, Info info) {
-        pp.RABE.Revoke(rl.RABE_rl, user.RABE_user, info.RABE_info);
+    public void Revoke(Revocated rl, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Identity id, Info info) {
+        pp.RABE.Revoke(rl.RABE_rl, id.RABE_id, info.RABE_info);
     }
 
     @Override
-    public void Hash(HashValue h, Randomness r, PublicParam pp, MasterPublicKey mpk, User user, PublicKey pk, Message m, Policy P, Info info) {
+    public void Hash(HashValue h, Randomness r, PublicParam pp, MasterPublicKey mpk, Identity id, PublicKey pk, Message m, Policy P, Info info) {
         ETrapdoor etd = pp.CHET_pp.createETrapdoor();
-        pp.CHET.Hash(h.CHET_h, r.CHET_r, pp.CHET_pp, mpk.CHET_pk, m.CHET_m, etd);
+        pp.CHET.Hash(h.CHET_h, r.CHET_r, etd, pp.CHET_pp, mpk.CHET_pk, m.CHET_m);
         byte[] rb = new byte[16];
         pp.rand.nextBytes(rb);
         byte[] kb = new byte[16];

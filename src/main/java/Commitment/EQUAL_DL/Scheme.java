@@ -3,7 +3,7 @@ package Commitment.EQUAL_DL;
 import Commitment.NIZKConfig;
 
 public class Scheme {
-    public static Proof Commitment(NIZKConfig config, Relation data) {
+    public static Proof Commitment(NIZKConfig config, Witness data) {
         if(!data.g_1.pow(data.x).isEqual(data.y_1)) throw new RuntimeException("输入数据不满足 g_1^x == y_1");
         if(!data.g_2.pow(data.x).isEqual(data.y_2)) throw new RuntimeException("输入数据不满足 g_2^x == y_2");
         Proof res = new Proof();

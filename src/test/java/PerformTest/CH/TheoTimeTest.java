@@ -176,7 +176,7 @@ public class TheoTimeTest {
             ChameleonHash.CH.CHET.Components.Randomness r = pp.createRandomness();
 
             try (AutoCloseable ignored = TraceScope.begin()) {
-                scheme.Hash(h, r, pp, pk, m, etd);
+                scheme.Hash(h, r, etd, pp, pk, m);
                 theo_time_cost.write(TraceScope.getData() + ",");
                 System.out.println("Hash cost:" + TraceScope.getData());
                 TraceScope.getUnknownFunc();

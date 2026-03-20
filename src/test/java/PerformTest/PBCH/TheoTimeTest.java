@@ -136,7 +136,7 @@ public class TheoTimeTest {
             }
 
             try (AutoCloseable ignored = TraceScope.begin()) {
-                scheme.Collision(r_p, pp, mpk, sk, m, P, h, r, m_p);
+                scheme.Collision(r_p, pp, mpk, sk, m, h, r, m_p);
                 theo_time_cost.write(TraceScope.getData());
                 System.out.println("Col cost:" + TraceScope.getData());
                 TraceScope.getUnknownFunc();
@@ -169,7 +169,7 @@ public class TheoTimeTest {
             Policy P = pp.createPolicy("A&(DDDD|(BB&CCC))");
             User u = pp.createUser(((int) schemeConfig.params.get("id_len")) / 3);
             try (AutoCloseable ignored = TraceScope.begin()) {
-                scheme.AssignUser(u, mpk, msk);
+                scheme.AssignUser(u, pp, mpk, msk);
                 theo_time_cost.write(TraceScope.getData() + ",");
                 System.out.println("AssignUser cost:" + TraceScope.getData());
                 TraceScope.getUnknownFunc();
@@ -180,7 +180,7 @@ public class TheoTimeTest {
             u.S.addAttr("DDDD");
 
             User u_p = pp.createUser(u, (((int) schemeConfig.params.get("id_len")) / 3) * 2);
-            scheme.AssignUser(u_p, mpk, msk);
+            scheme.AssignUser(u_p, pp, mpk, msk);
             u_p.S.addAttr("A");
             u_p.S.addAttr("DDDD");
 

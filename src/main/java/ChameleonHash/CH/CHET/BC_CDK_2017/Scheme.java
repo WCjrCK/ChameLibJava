@@ -6,7 +6,7 @@ import ChameleonHash.Interface.CHET;
 
 /*
  * Chameleon-Hashes with Ephemeral Trapdoors And Applications to Invisible Sanitizable Signatures
- * P12. Construction 2 (CHET in Known-Order Groups)
+ * P11. Black-Box Construction: Bootstrapping
  */
 
 public class Scheme extends CH
@@ -27,7 +27,7 @@ public class Scheme extends CH
     }
 
     @Override
-    public final void Hash(HashValue h, Randomness r, PublicParam pp, PublicKey pk, Message m, ETrapdoor etd) {
+    public final void Hash(HashValue h, Randomness r, ETrapdoor etd, PublicParam pp, PublicKey pk, Message m) {
         pp.CHScheme.KeyGen(h.ch_pk, etd.ch_sk, pp.ch_pp);
         pp.CHScheme.Hash(h.h_1, r.r_1, pp.ch_pp, pk.ch_pk, m.m);
         pp.CHScheme.Hash(h.h_2, r.r_2, pp.ch_pp, h.ch_pk, m.m);

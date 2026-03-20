@@ -11,7 +11,7 @@ public abstract class PublicParam<
         A extends Attributes,
         U extends User,
         M extends Message,
-        H extends HashValue<H>,
+        H extends HashValue<H, P>,
         R extends Randomness
         >
         extends ChameleonHash.PBCH.BasePBCH.Components.PublicParam<MPK, MSK, SK, P, A, M, H, R> {

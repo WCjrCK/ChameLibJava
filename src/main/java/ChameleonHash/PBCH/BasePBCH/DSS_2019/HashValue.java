@@ -3,7 +3,7 @@ package ChameleonHash.PBCH.BasePBCH.DSS_2019;
 import Encryption.ABE.BaseABE.FAME.CipherText;
 import utils.ElementCounter;
 
-public class HashValue extends ChameleonHash.PBCH.BasePBCH.Components.HashValue<HashValue> {
+public class HashValue extends ChameleonHash.PBCH.BasePBCH.Components.HashValue<HashValue, Policy> {
     protected ChameleonHash.CH.CHET.Components.HashValue CHET_h;
     protected CipherText FAME_ct;
     protected Encryption.SE.Components.CipherText SE_ct;

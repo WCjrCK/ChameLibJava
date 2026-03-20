@@ -117,7 +117,7 @@ public class TheoStorageTest {
             ChameleonHash.CH.CHET.Components.HashValue h = pp.createHashValue();
             ChameleonHash.CH.CHET.Components.Randomness r = pp.createRandomness();
             ETrapdoor etd = pp.createETrapdoor();
-            scheme.Hash(h, r, pp, pk, m, etd);
+            scheme.Hash(h, r, etd, pp, pk, m);
 
             System.out.println("PublicParam: " + pp.TheoSize());
             System.out.println("PublicKey: " + pk.TheoSize());

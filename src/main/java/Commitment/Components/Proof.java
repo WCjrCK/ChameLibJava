@@ -2,7 +2,7 @@ package Commitment.Components;
 
 import utils.ElementCounter;
 
-public abstract class Proof<P extends Proof, R extends Relation> {
+public abstract class Proof<P extends Proof, R extends Witness> {
     public abstract ElementCounter TheoSize();
 
     public abstract void CopyFrom(P o);

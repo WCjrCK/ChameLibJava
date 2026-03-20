@@ -12,7 +12,7 @@ import Encryption.ABE.RevocableABE.Components.Attributes;
 
 public class Scheme extends ABE
         implements RevocableABE<PublicParam, MasterPublicKey, MasterSecretKey,
-        State, Revocated, User, UpdateKey, Info, SecretKey, DecryptKey, Policy, PlainText, CipherText>  {
+        State, Revocated, Identity, UpdateKey, Info, SecretKey, DecryptKey, Policy, PlainText, CipherText>  {
     Core core = new Core();
     @Override
     public void Setup(MasterPublicKey mpk, MasterSecretKey msk, State st, Revocated rl, UpdateKey uk, PublicParam pp) {
@@ -20,8 +20,8 @@ public class Scheme extends ABE
     }
 
     @Override
-    public void KeyGen(SecretKey sk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Revocated rl, User user, UpdateKey uk, DecryptKey dk, Attributes S) {
-        core.KeyGen(user, pp, mpk, msk, st);
+    public void KeyGen(SecretKey sk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Revocated rl, Identity id, UpdateKey uk, DecryptKey dk, Attributes S) {
+        core.KeyGen(sk, pp, mpk, msk, st, id, S);
     }
 
     @Override
@@ -45,8 +45,8 @@ public class Scheme extends ABE
     }
 
     @Override
-    public void Revoke(Revocated rl, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, User user, Info info) {
-        core.Revoke(rl, user, info);
+    public void Revoke(Revocated rl, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Identity id, Info info) {
+        core.Revoke(rl, id, info);
     }
 
     @Override

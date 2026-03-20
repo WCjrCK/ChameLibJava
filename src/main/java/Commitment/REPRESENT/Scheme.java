@@ -4,7 +4,7 @@ import Commitment.NIZKConfig;
 import EllipticCurve.Point.Scalar;
 
 public class Scheme {
-    public static Proof Commitment(NIZKConfig config, Relation data) {
+    public static Proof Commitment(NIZKConfig config, Witness data) {
         if(!data.y.isEqual(data.g_1.pow(data.x_1).mul(data.g_2.pow(data.x_2)))) throw new RuntimeException("输入数据不满足 y == g_1^x_1 * g_2^x_2");
         Proof res = new Proof();
         res.curve = config.curve;

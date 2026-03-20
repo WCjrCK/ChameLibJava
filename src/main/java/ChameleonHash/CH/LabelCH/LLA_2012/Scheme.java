@@ -19,21 +19,22 @@ public class Scheme extends CH
     }
 
     @Override
-    public void Setup(PublicParam pp) {}
+    public void Setup(PublicParam pp) {
+        pp.g = pp.curve.getRandomPoint(pp.curveGroup);
+    }
 
     @Override
     public void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp) {
-        pk.g = pp.curve.getRandomPoint(pp.curveGroup);
         sk.alpha = pp.curve.getRandomScalar();
         sk.x_1 = pp.curve.getRandomScalar();
         sk.x_2 = pp.curve.getRandomScalar();
-        pk.y_1 = pk.g.pow(sk.x_1);
+        pk.y_1 = pp.g.pow(sk.x_1);
         pk.omega_1 = pk.y_1.pow(sk.alpha);
-        pk.y_2 = pk.g.pow(sk.x_2);
+        pk.y_2 = pp.g.pow(sk.x_2);
     }
 
     public void CalHash(HashValue h, PublicParam pp, PublicKey pk, Message m, Label L, Randomness r) {
-        h.S = pk.g.pow(m.m).mul(L.L.mul(pk.y_2.pow(pp.H1(L.L, L.R, L.L))).pow(r.r));
+        h.S = pp.g.pow(m.m).mul(L.L.mul(pk.y_2.pow(pp.H1(L.L, L.R, L.L))).pow(r.r));
     }
 
     @Override

@@ -1,8 +1,7 @@
 package ChameleonHash.CH.LabelCH.AM_2004;
 
 import ChameleonHash.CH.CHConfig;
-import Commitment.NIZK_DH_PAIR.Scheme;
-import EllipticCurve.Curve.CurveGroup;
+import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
@@ -12,15 +11,10 @@ import java.security.NoSuchAlgorithmException;
 
 public class PublicParam
         extends ChameleonHash.CH.LabelCH.Components.PublicParam<PublicKey, SecretKey, Message, Label, HashValue, Randomness> {
-    protected CurveGroup curveGroup;
-    protected Scheme nizkScheme;
+    protected MultivePoint g;
 
     public PublicParam(CHConfig config) {
         super(config.curveConfig);
-        if (!config.params.containsKey("curve_group")) throw new IllegalArgumentException("未设置方案所在群（curve_group）");
-        curveGroup = (CurveGroup) config.params.get("curve_group");
-        if(curveGroup != CurveGroup.G1 && curveGroup != CurveGroup.G2 && curveGroup != CurveGroup.GT) throw new IllegalArgumentException("方案未适配指定群： " + curveGroup);
-        nizkScheme = new Scheme(curve);
     }
 
     @Override

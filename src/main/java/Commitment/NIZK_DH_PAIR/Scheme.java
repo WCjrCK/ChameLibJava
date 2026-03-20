@@ -5,7 +5,7 @@ import EllipticCurve.Curve.Curve;
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 
-public class Scheme implements NIZK_DH_PAIR<Proof, Relation> {
+public class Scheme implements NIZK_DH_PAIR<Proof, Witness> {
     protected Curve curve;
 
     public Scheme(Curve curve) {
@@ -13,8 +13,8 @@ public class Scheme implements NIZK_DH_PAIR<Proof, Relation> {
     }
 
     @Override
-    public final Relation createRelation(Scalar x, MultivePoint g, MultivePoint u, MultivePoint h, MultivePoint v) {
-        Relation res = new Relation();
+    public final Witness createRelation(Scalar x, MultivePoint g, MultivePoint u, MultivePoint h, MultivePoint v) {
+        Witness res = new Witness();
         res.x = x;
         res.u = u;
         res.g = g;
@@ -24,8 +24,8 @@ public class Scheme implements NIZK_DH_PAIR<Proof, Relation> {
     }
 
     @Override
-    public final Relation createRelation(MultivePoint g, MultivePoint u, MultivePoint h, MultivePoint v) {
-        Relation res = new Relation();
+    public final Witness createRelation(MultivePoint g, MultivePoint u, MultivePoint h, MultivePoint v) {
+        Witness res = new Witness();
         res.u = u;
         res.g = g;
         res.v = v;
@@ -34,7 +34,7 @@ public class Scheme implements NIZK_DH_PAIR<Proof, Relation> {
     }
 
     @Override
-    public final Proof Commitment(Relation data) {
+    public final Proof Prove(Witness data) {
         if(!data.u.isEqual(data.g.pow(data.x))) throw new RuntimeException("输入数据不满足 u != g^x");
         if(!data.v.isEqual(data.h.pow(data.x))) throw new RuntimeException("输入数据不满足 v != h^x");
         Proof res = new Proof();

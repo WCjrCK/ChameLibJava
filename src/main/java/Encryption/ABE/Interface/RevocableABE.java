@@ -9,7 +9,7 @@ public interface RevocableABE<
         MSK extends MasterSecretKey,
         S extends State,
         R extends Revocated,
-        U extends User,
+        ID extends Identity,
         UK extends UpdateKey<I>,
         I extends Info,
         SK extends SecretKey,
@@ -20,7 +20,7 @@ public interface RevocableABE<
         > {
     void Setup(MPK mpk, MSK msk, S st, R rl, UK uk, PP pp);
 
-    void KeyGen(SK sk, PP pp, MPK mpk, MSK msk, S st, R rl, U user, UK uk, DK dk, Attributes S);
+    void KeyGen(SK sk, PP pp, MPK mpk, MSK msk, S st, R rl, ID id, UK uk, DK dk, Attributes S);
 
     void KeyUpdate(UK uk, PP pp, MPK mpk, MSK msk, S st, R rl, I info);
 
@@ -30,7 +30,7 @@ public interface RevocableABE<
 
     void Decrypt(PT pt, PP pp, MPK mpk, DK dk, SK sk, Attributes S, CT ct, P P);
 
-    void Revoke(R rl, PP pp, MPK mpk, MSK msk, S st, U user, I info);
+    void Revoke(R rl, PP pp, MPK mpk, MSK msk, S st, ID id, I info);
 
     PP createPublicParam(ABEConfig abeConfig);
 }

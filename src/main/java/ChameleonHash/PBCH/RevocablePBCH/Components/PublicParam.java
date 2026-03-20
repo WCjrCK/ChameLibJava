@@ -14,7 +14,9 @@ public abstract class PublicParam<
         PK extends PublicKey,
         SK extends SecretKey,
         DK extends DecryptKey,
+        Auth extends Authority,
         U extends User,
+        ID extends Identity,
         A extends Attributes,
         I extends Info,
         P extends Policy,
@@ -46,7 +48,11 @@ public abstract class PublicParam<
 
     public abstract M createMessage(String msg);
 
-    public abstract U createUser();
+    public abstract Auth createAuthority();
+
+    public abstract U createUser(String ID);
+
+    public abstract ID createIdentity(String ID);
 
     public abstract SK createSecretKey();
 

@@ -23,7 +23,7 @@ import java.util.Random;
 public class PublicParam
         extends ChameleonHash.PBCH.RevocablePBCH.Components.PublicParam<
         MasterPublicKey, MasterSecretKey, State, Revocated, UpdateKey,
-        PublicKey, SecretKey, DecryptKey, User, Attributes, Info, Policy, Message, HashValue, Randomness>
+        PublicKey, SecretKey, DecryptKey, Authority, User, Identity, Attributes, Info, Policy, Message, HashValue, Randomness>
 {
     protected Core RABE = new Core();
     protected Encryption.ABE.RevocableABE.XNM_2021.PublicParam RABE_pp;
@@ -56,12 +56,18 @@ public class PublicParam
 
     @Override
     public MasterPublicKey createMasterPublicKey() {
-        return null;
+        MasterPublicKey res = new MasterPublicKey();
+        res.CHET_pk = CHET_pp.createPublicKey();
+        res.RABE_mpk = RABE_pp.createMasterPublicKey();
+        return res;
     }
 
     @Override
     public MasterSecretKey createMasterSecretKey() {
-        return null;
+        MasterSecretKey res = new MasterSecretKey();
+        res.CHET_sk = CHET_pp.createSecretKey();
+        res.RABE_msk = RABE_pp.createMasterSecretKey();
+        return res;
     }
 
     @Override
@@ -86,7 +92,9 @@ public class PublicParam
 
     @Override
     public Info createInfo() {
-        return null;
+        Info res = new Info();
+        res.RABE_info = RABE_pp.createInfo();
+        return res;
     }
 
     @Override
@@ -100,8 +108,20 @@ public class PublicParam
     }
 
     @Override
-    public User createUser() {
+    public Authority createAuthority() {
         return null;
+    }
+
+    @Override
+    public User createUser(String ID) {
+        return null;
+    }
+
+    @Override
+    public Identity createIdentity(String ID) {
+        Identity res = new Identity();
+        res.RABE_id = RABE_pp.createIdentity(ID);
+        return res;
     }
 
     @Override

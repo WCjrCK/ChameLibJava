@@ -46,7 +46,7 @@ public class Scheme extends PBCH
     }
 
     @Override
-    public void AssignUser(User user, MasterPublicKey mpk, MasterSecretKey msk) {
+    public void AssignUser(User user, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk) {
         user.ID_hat = mpk.FAME_mpk.g;
         user.ID_hat_h = mpk.FAME_mpk.h;
         for(int i = 0;i < user.ID.length;++i) {

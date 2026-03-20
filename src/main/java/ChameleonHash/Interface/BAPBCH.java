@@ -19,7 +19,7 @@ public interface BAPBCH<
 
     void Setup(PP pp, MPK mpk, MSK msk);
 
-    void AssignUser(U user, MPK mpk, MSK msk);
+    void AssignUser(U user, PP pp, MPK mpk, MSK msk);
 
     void KeyGen(U user, PP pp, MPK mpk, MSK msk);
 

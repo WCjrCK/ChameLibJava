@@ -12,7 +12,7 @@ public abstract class PublicParam<
         P extends Policy,
         A extends Attributes,
         M extends Message,
-        H extends HashValue<H>,
+        H extends HashValue<H, P>,
         R extends Randomness
         > {
     public final Curve curve;

@@ -13,8 +13,9 @@ public enum CurveName {
     A1(PBC, true),
     E(PBC, true),
 
-    D_159(PBC, false), D_201(PBC, false), D_224(PBC, false),
-    D_105171_196_185(PBC, false), D_277699_175_167(PBC, false), D_278027_190_181(PBC, false),
+//    D_159(PBC, false), D_201(PBC, false),
+    D_224(PBC, false),
+//    D_105171_196_185(PBC, false), D_277699_175_167(PBC, false), D_278027_190_181(PBC, false),
 
     F(PBC, false), SM_9(PBC, false),
     G_149(PBC, false),

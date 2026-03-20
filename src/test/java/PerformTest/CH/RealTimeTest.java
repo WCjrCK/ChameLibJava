@@ -3,13 +3,17 @@ package PerformTest.CH;
 import ChameleonHash.CH.BaseCH.BaseCHFactory;
 import ChameleonHash.CH.BaseCH.Components.*;
 import ChameleonHash.CH.CHConfig;
+import ChameleonHash.CH.CHET.CHETFactory;
 import ChameleonHash.CH.CHName;
 import ChameleonHash.CH.LabelCH.LabelCHFactory;
 import ChameleonHash.Interface.BaseCH;
+import ChameleonHash.Interface.CHET;
 import ChameleonHash.Interface.LabelCH;
 import ChameleonHash.SchemeCurveRequire;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
+import Encryption.PKE.PKEConfig;
+import Encryption.PKE.PKEName;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -39,10 +43,24 @@ public class RealTimeTest {
     static HashMap<CHName, Integer> SNToIdx = new HashMap<>();
 
     static List<CHName> skipList = List.of(new CHName[]{
+            CHName.CCT_2024,
+            CHName.DKS_2020,
             CHName.LLA_2012,
-//            CHScheme.CH_CZK_2004,
-//            CHScheme.CH_CZT_2011,
-//            CHScheme.CH_CCT_2024,
+            CHName.CZT_2011,
+            CHName.CZK_2004,
+            CHName.AM_2004,
+
+//            CHName.BC_CDK_2017,
+            CHName.KOG_CDK_2017,
+            CHName.DSS_2020
+    });
+
+    static List<CurveName> runningCurve = List.of(new CurveName[]{
+            CurveName.A,
+            CurveName.A1,
+            CurveName.E,
+            CurveName.D_224,
+            CurveName.BN254
     });
 
     public static Stream<Arguments> GetAllCHSchemeCurve() {
@@ -51,6 +69,7 @@ public class RealTimeTest {
                 .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP)
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
+                                .filter(b -> runningCurve.contains(b))
                                 .filter(b -> b != SECP256K1)
                                 .filter(b -> b != PBC_CUSTOM)
                                 .filter(a::checkCurve)
@@ -64,6 +83,7 @@ public class RealTimeTest {
                 .filter(a -> a.schemeCurveRequire == SchemeCurveRequire.ALL)
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
+                                .filter(b -> runningCurve.contains(b))
                                 .filter(b -> b != SECP256K1)
                                 .filter(b -> b != PBC_CUSTOM)
                                 .filter(b -> !b.isSymmetic())
@@ -78,6 +98,7 @@ public class RealTimeTest {
                 .filter(a -> a.schemeCurveRequire == SchemeCurveRequire.SINGLEGROUP)
                 .flatMap(
                         a -> EnumSet.allOf(CurveName.class).stream()
+                                .filter(b -> runningCurve.contains(b))
                                 .filter(b -> b != SECP256K1)
                                 .filter(b -> b != PBC_CUSTOM)
                                 .filter(a::checkCurve)
@@ -91,11 +112,12 @@ public class RealTimeTest {
 
     @BeforeAll
     static void initTest() {
-        repeat_cnt = 1000;
+        repeat_cnt = 100;
         for (CHName value : CHName.values()) new File(String.format("./data/CH/%s", value.name())).mkdirs();
         try {
             int i = 0;
             for (CHName value : CHName.values()) {
+                if (skipList.contains(value)) continue;
                 BufferedWriter tmp;
                 if (value.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP) {
                     tmp = new BufferedWriter(new FileWriter(String.format("./data/CH/%s/real_time_cost_%d.csv", value.name(), repeat_cnt)));
@@ -136,7 +158,9 @@ public class RealTimeTest {
     @Nested
     class CHRTCTest {
         private void testFunc(BufferedWriter real_time_test, CHConfig schemeConfig) throws IOException {
+            System.out.println("Running " + schemeConfig.schemeName);
             if (schemeConfig.schemeName.has_label) testLabelCH(real_time_test, schemeConfig);
+            else if (schemeConfig.schemeName.has_ET) testCHET(real_time_test, schemeConfig);
             else testBaseCH(real_time_test, schemeConfig);
         }
 
@@ -224,6 +248,96 @@ public class RealTimeTest {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            real_time_test.flush();
+        }
+
+        private void testCHET(BufferedWriter real_time_test, CHConfig config) throws IOException {
+            real_time_test.write(config.curveConfig.curveName.name());
+            double[] time_cost = {0, 0, 0, 0, 0};
+
+            CHET scheme = CHETFactory.createScheme(config);
+            ChameleonHash.CH.CHET.Components.PublicParam pp = scheme.createPublicParam(config);
+
+            int stage_id = -1;
+            {
+                long start = System.nanoTime();
+                for(int i = 0;i < repeat_cnt;++i) scheme.Setup(pp);
+                long end = System.nanoTime();
+                double duration = (end - start) / 1.0e6;
+                time_cost[++stage_id] = duration / repeat_cnt;
+            }
+
+            ChameleonHash.CH.CHET.Components.PublicKey[] pk = new ChameleonHash.CH.CHET.Components.PublicKey[repeat_cnt];
+            ChameleonHash.CH.CHET.Components.SecretKey[] sk = new ChameleonHash.CH.CHET.Components.SecretKey[repeat_cnt];
+            ChameleonHash.CH.CHET.Components.HashValue[] h = new ChameleonHash.CH.CHET.Components.HashValue[repeat_cnt];
+            ChameleonHash.CH.CHET.Components.Randomness[] r = new ChameleonHash.CH.CHET.Components.Randomness[repeat_cnt];
+            ChameleonHash.CH.CHET.Components.Randomness[] r_p = new ChameleonHash.CH.CHET.Components.Randomness[repeat_cnt];
+            ChameleonHash.CH.CHET.Components.Message[] m = new ChameleonHash.CH.CHET.Components.Message[repeat_cnt];
+            ChameleonHash.CH.CHET.Components.Message[] m_p = new ChameleonHash.CH.CHET.Components.Message[repeat_cnt];
+            ChameleonHash.CH.CHET.Components.ETrapdoor[] etd = new ChameleonHash.CH.CHET.Components.ETrapdoor[repeat_cnt];
+            for (int i = 0; i < repeat_cnt; i++) {
+                sk[i] = pp.createSecretKey();
+                h[i] = pp.createHashValue();
+
+                r[i] = pp.createRandomness();
+                r_p[i] = pp.createRandomness();
+
+                pk[i] = pp.createPublicKey();
+                m[i] = pp.createMessage("msg_" + i);
+                m_p[i] = pp.createMessage("msg_" + i + "_p");
+                etd[i] = pp.createETrapdoor();
+            }
+
+            {
+                long start = System.nanoTime();
+                for(int i = 0;i < repeat_cnt;++i) scheme.KeyGen(pk[i], sk[i], pp);
+                long end = System.nanoTime();
+                double duration = (end - start) / 1.0e6;
+                time_cost[++stage_id] = duration / repeat_cnt;
+            }
+
+            {
+                long start = System.nanoTime();
+                for(int i = 0;i < repeat_cnt;++i) scheme.Hash(h[i], r[i], etd[i], pp, pk[i], m[i]);
+                long end = System.nanoTime();
+                double duration = (end - start) / 1.0e6;
+                time_cost[++stage_id] = duration / repeat_cnt;
+            }
+
+            {
+                boolean res = true;
+                long start = System.nanoTime();
+                for(int i = 0;i < repeat_cnt;++i) res &= scheme.Verify(pp, pk[i], m[i], h[i], r[i]);
+                long end = System.nanoTime();
+                double duration = (end - start) / 1.0e6;
+                time_cost[++stage_id] = duration / repeat_cnt;
+                assertTrue(res, "Hash Check Failed");
+            }
+
+            for(int i = 0;i < repeat_cnt;++i) scheme.Verify(pp, pk[i], m[i], h[i], r[i]);
+
+            {
+                long start = System.nanoTime();
+                for(int i = 0;i < repeat_cnt;++i) scheme.Collision(r_p[i], pp, pk[i], sk[i], m[i], etd[i], h[i], r[i], m_p[i]);
+                long end = System.nanoTime();
+                double duration = (end - start) / 1.0e6;
+                time_cost[++stage_id] = duration / repeat_cnt;
+            }
+
+            {
+                boolean res = true;
+                for(int i = 0;i < repeat_cnt;++i) res &= scheme.Verify(pp, pk[i], m_p[i], h[i], r_p[i]);
+                assertTrue(res, "Adapt Check Failed");
+            }
+            try {
+                for (double x : time_cost) real_time_test.write(String.format(",%.6f", x));
+                real_time_test.write("\n");
+                for (double x : time_cost) System.out.printf(",%.6f", x);
+                System.out.println();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            real_time_test.flush();
         }
 
         private void testLabelCH(BufferedWriter real_time_test, CHConfig config) throws IOException {
@@ -313,6 +427,7 @@ public class RealTimeTest {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            real_time_test.flush();
         }
 
         @DisplayName("test direct scheme")
@@ -322,7 +437,10 @@ public class RealTimeTest {
             Map<String, Object> params = new HashMap<>();
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", false);
+            params.put("pke_config", new PKEConfig(PKEName.RSA));
             EllipticCurve.Curve.Config curveConfig = new EllipticCurve.Curve.Config(curveName, curve_param);
+            CHConfig BC_CH = new CHConfig(CHName.CCT_2024, curveConfig, params);
+            params.put("ch_config", BC_CH);
             CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
             System.out.print(curveName.name());
             if(tsc.get(SNToIdx.get(schemeName)) != null) testFunc(tsc.get(SNToIdx.get(schemeName)), schemeConfig);
@@ -335,7 +453,10 @@ public class RealTimeTest {
             Map<String, Object> params = new HashMap<>();
             Map<String, Object> curve_param = new HashMap<>();
             curve_param.put("swap_G1G2", true);
+            params.put("pke_config", new PKEConfig(PKEName.RSA));
             EllipticCurve.Curve.Config curveConfig = new EllipticCurve.Curve.Config(curveName, curve_param);
+            CHConfig BC_CH = new CHConfig(CHName.CCT_2024, curveConfig, params);
+            params.put("ch_config", BC_CH);
             CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
             System.out.print(curveName + " swap G1G2");
             if(tscsgg.get(SNToIdx.get(schemeName)) != null) testFunc(tscsgg.get(SNToIdx.get(schemeName)), schemeConfig);
@@ -348,7 +469,10 @@ public class RealTimeTest {
             Map<String, Object> params = new HashMap<>();
             Map<String, Object> curve_param = new HashMap<>();
             params.put("curve_group", curveGroup);
+            params.put("pke_config", new PKEConfig(PKEName.RSA));
             EllipticCurve.Curve.Config curveConfig = new EllipticCurve.Curve.Config(curveName, curve_param);
+            CHConfig BC_CH = new CHConfig(CHName.CCT_2024, curveConfig, params);
+            params.put("ch_config", BC_CH);
             CHConfig schemeConfig = new CHConfig(schemeName, curveConfig, params);
             switch (curveGroup) {
                 case G1:

@@ -4,6 +4,7 @@ import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
 import EllipticCurve.Point.Scalar;
 import Encryption.ABE.ABEConfig;
+import Encryption.ABE.RevocableABE.Components.Attributes;
 
 public class Core {
     public PublicParam createPublicParam(ABEConfig abeConfig) {
@@ -14,20 +15,20 @@ public class Core {
         pp.FAME.Setup(mpk.FAME_mpk, msk.FAME_msk, pp.FAME_pp);
     }
 
-    public void KeyGen(User user, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st) {
-        pp.FAME.KeyGen(user.sk.FAME_sk, pp.FAME_pp, mpk.FAME_mpk, msk.FAME_msk, user.S.toBaseABEAttr());
+    public void KeyGen(SecretKey sk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Identity id, Attributes S) {
+        pp.FAME.KeyGen(sk.FAME_sk, pp.FAME_pp, mpk.FAME_mpk, msk.FAME_msk, S.toBaseABEAttr());
 
-        int theta = st.Pick(user);
-        user.sk.node_id = theta;
+        int theta = st.Pick(id);
+        sk.node_id = theta;
         if(!st.tag_g.get(theta)) st.Setg(theta, pp.curve.getRandomPoint(CurveGroup.G1));
-        user.sk.sk_theta.put(theta, user.sk.FAME_sk.sk_p[2].div(st.g_theta[theta]));
+        sk.sk_theta.put(theta, sk.FAME_sk.sk_p[2].div(st.g_theta[theta]));
         while(theta != 0) {
             theta = st.GetFNodeId(theta);
             if(!st.tag_g.get(theta)) st.Setg(theta, pp.curve.getRandomPoint(CurveGroup.G1));
-            user.sk.sk_theta.put(theta, user.sk.FAME_sk.sk_p[2].div(st.g_theta[theta]));
+            sk.sk_theta.put(theta, sk.FAME_sk.sk_p[2].div(st.g_theta[theta]));
         }
         // hide g^d3g^{-rho_p}/g_theta
-        user.sk.FAME_sk.sk_p[2] = pp.curve.getRandomPoint(CurveGroup.G1);
+        sk.FAME_sk.sk_p[2] = pp.curve.getRandomPoint(CurveGroup.G1);
     }
 
     public void KeyUpdate(UpdateKey uk, PublicParam pp, MasterPublicKey mpk, State st, Revocated rl, Info info) {
@@ -99,7 +100,7 @@ public class Core {
         }
     }
 
-    public void Revoke(Revocated rl, User user, Info info) {
-        rl.Add(user, info);
+    public void Revoke(Revocated rl, Identity id, Info info) {
+        rl.Add(id, info);
     }
 }

@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 public class PublicParam
         extends ChameleonHash.CH.LabelCH.Components.PublicParam<PublicKey, SecretKey, Message, Label, HashValue, Randomness> {
     public CurveGroup curveGroup;
+    protected MultivePoint g;
 
     public PublicParam(CHConfig config) {
         super(config.curveConfig);

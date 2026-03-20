@@ -126,7 +126,7 @@ public class TheoStorageTest {
             Policy P = pp.createPolicy("A&(DDDD|(BB&CCC))");
 
             User u = pp.createUser(((int) schemeConfig.params.get("id_len")) / 3);
-            scheme.AssignUser(u, mpk, msk);
+            scheme.AssignUser(u, pp, mpk, msk);
             u.S.addAttr("A");
             u.S.addAttr("DDDD");
             scheme.KeyGen(u, pp, mpk, msk);
