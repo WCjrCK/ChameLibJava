@@ -6,7 +6,6 @@ import ChameleonHash.PBCH.PBCH;
 import ChameleonHash.PBCH.PBCHConfig;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.Scalar;
-import Encryption.ABE.BaseABE.FAME.CipherText;
 import Encryption.ABE.BaseABE.FAME.PlainText;
 
 import java.util.Arrays;
@@ -79,16 +78,16 @@ public class Scheme extends PBCH
         System.arraycopy(tmp, 2, kb, 0, l1);
         int l2 = tmp[tmp.length / 2 + 1];
         if(l2 < 0 || l2 + tmp.length / 2 + 2 >= tmp.length) throw new RuntimeException("解码失败");
-        byte[] rb = new byte[l2];
-        System.arraycopy(tmp, tmp.length / 2 + 2, rb, 0, l2);
+//        byte[] rb = new byte[l2];
+//        System.arraycopy(tmp, tmp.length / 2 + 2, rb, 0, l2);
 
-        Scalar u_1 = pp.H(Arrays.toString(rb) + "|" + h.P.P.MSP.formula);
-        Scalar u_2 = pp.H(h.P.P.MSP.formula + "|" + Arrays.toString(rb));
+//        Scalar u_1 = pp.H(Arrays.toString(rb) + "|" + h.P.P.MSP.formula);
+//        Scalar u_2 = pp.H(h.P.P.MSP.formula + "|" + Arrays.toString(rb));
 
-        CipherText FAME_ct = pp.FAME_pp.createCipherText();
-        pp.FAME.Encrypt(FAME_ct, pp.FAME_pp, mpk.FAME_mpk, h.P.P, FAME_pt, u_1, u_2);
+//        CipherText FAME_ct = pp.FAME_pp.createCipherText();
+//        pp.FAME.Encrypt(FAME_ct, pp.FAME_pp, mpk.FAME_mpk, h.P.P, FAME_pt, u_1, u_2);
+//        if(!FAME_ct.isEqual(h.FAME_ct)) throw new RuntimeException("FAME 密文有误");
 
-        if(!FAME_ct.isEqual(h.FAME_ct)) throw new RuntimeException("FAME 密文有误");
         Encryption.SE.Components.PlainText SE_pt = pp.SE_pp.createPlainText("");
         pp.SEScheme.Decrypt(SE_pt, pp.SE_pp, pp.SE_pp.createSecretKey(kb), h.SE_ct);
 

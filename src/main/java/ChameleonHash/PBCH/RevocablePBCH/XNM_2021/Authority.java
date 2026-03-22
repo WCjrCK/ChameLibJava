@@ -5,27 +5,27 @@ import utils.ElementCounter;
 public class Authority extends ChameleonHash.PBCH.RevocablePBCH.Components.Authority<
         PublicParam, MasterPublicKey, MasterSecretKey, State, Revocated, UpdateKey, Info, User> {
     @Override
-    public void Setup(MasterPublicKey masterPublicKey, PublicParam publicParam) {
+    public void Setup(MasterPublicKey mpk, PublicParam pp) {
+        (new Scheme()).Setup(pp, mpk, msk);
+    }
+
+    @Override
+    public void KeyGen(User user, PublicParam pp, MasterPublicKey mpk) {
 
     }
 
     @Override
-    public void KeyGen(User user, PublicParam publicParam, MasterPublicKey masterPublicKey) {
+    public void KeyUpdate(PublicParam pp, MasterPublicKey mpk, Info info) {
 
     }
 
     @Override
-    public void KeyUpdate(PublicParam publicParam, MasterPublicKey masterPublicKey, Info info) {
+    public void DecryptKeyGen(User user, PublicParam pp, MasterPublicKey mpk) {
 
     }
 
     @Override
-    public void DecryptKeyGen(User user, PublicParam publicParam, MasterPublicKey masterPublicKey) {
-
-    }
-
-    @Override
-    public void Revoke(PublicParam publicParam, MasterPublicKey masterPublicKey, User user, Info info) {
+    public void Revoke(PublicParam pp, MasterPublicKey mpk, User user, Info info) {
 
     }
 

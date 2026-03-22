@@ -2,6 +2,7 @@ package Encryption.ABE.utils;
 
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Point.Scalar;
+import Encryption.ABE.BaseABE.Components.Attributes;
 import MathStructure.LSSS;
 
 import java.util.ArrayDeque;
@@ -27,10 +28,55 @@ public class BooleanFormulaParser {
         }
     }
 
+    public static class GeneratedFormula {
+        public final String formula;
+        public final AttributeList satisfyingAttributes;
+
+        private GeneratedFormula(String formula, AttributeList satisfyingAttributes) {
+            this.formula = formula;
+            this.satisfyingAttributes = satisfyingAttributes;
+        }
+
+        public Attributes toAttributes() {
+            Attributes res = new Attributes();
+            for (String attr : satisfyingAttributes.attrs) res.addAttr(attr);
+            return res;
+        }
+    }
+
+    public static GeneratedFormula generateSatisfiableFormula(int n, int m) {
+        if (n < 1) throw new IllegalArgumentException("n must be at least 1");
+        if (m < 1) throw new IllegalArgumentException("m must be at least 1");
+        if (m > n) {
+            throw new IllegalArgumentException("n must be greater than or equal to m, because parsed columns = 1 + number of '&' gates");
+        }
+
+        AttributeList satisfyingAttributes = new AttributeList();
+        String formula = attributeName(1);
+        if (n == 1) {
+            satisfyingAttributes.attrs.add(formula);
+            return new GeneratedFormula(formula, satisfyingAttributes);
+        }
+
+        for (int i = 2; i <= m; ++i) formula = "(" + formula + "&" + attributeName(i) + ")";
+        for (int i = Math.max(2, m + 1); i <= n; ++i) formula = "(" + formula + "|" + attributeName(i) + ")";
+
+        if (n == m) {
+            for (int i = 1; i <= n; ++i) satisfyingAttributes.attrs.add(attributeName(i));
+        } else {
+            satisfyingAttributes.attrs.add(attributeName(n));
+        }
+        return new GeneratedFormula(formula, satisfyingAttributes);
+    }
+
+    private static String attributeName(int index) {
+        return "ATTR_" + index;
+    }
+
     public static void parse(LSSS pi, Curve curve, String BooleanFormulas) {
         TokenType[] tokens;
         int[][] range;
-        int n, m, x = 0;
+        int n, m, x = -1;
         String formula;
         formula = BooleanFormulas;
         n = 0;

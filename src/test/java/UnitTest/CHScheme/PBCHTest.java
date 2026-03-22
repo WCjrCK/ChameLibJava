@@ -36,9 +36,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PBCHTest {
     static List<PBCHName> skipList = List.of(new PBCHName[]{
-//            PBCHName.DSS_2019,
+            PBCHName.DSS_2019,
             PBCHName.TLL_2020,
-            PBCHName.XNM_2021,
+//            PBCHName.XNM_2021,
     });
 
     public static Stream<Arguments> GetAllPBCHSchemeCurve() {
@@ -208,11 +208,11 @@ public class PBCHTest {
 
         ChameleonHash.PBCH.RevocablePBCH.Components.Policy P = pp.createPolicy("A&(DDDD|(BB&CCC))");
 
-//        ChameleonHash.PBCH.RevocablePBCH.Components.User u1 = pp.createUser();
+        ChameleonHash.PBCH.RevocablePBCH.Components.User u1 = pp.createUser("u1");
 //        scheme.AssignUser(u1, pp, mpk, msk);
-//        u1.S.addAttr("A");
-//        u1.S.addAttr("DDDD");
-//        scheme.KeyGen(u1, pp, mpk, msk);
+        u1.S.addAttr("A");
+        u1.S.addAttr("DDDD");
+//        scheme.KeyGen(u1.sk, pp, mpk, msk, st, rl, u1.id, );
 //
 //        User u2 = pp.createUser(u1, ((int) schemeConfig.params.get("id_len")) / 2);
 //        scheme.AssignUser(u2, mpk, msk);
