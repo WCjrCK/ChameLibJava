@@ -3,9 +3,9 @@ package ChameleonHash.PBCH.MAPBCH.MXN_2022;
 import utils.ElementCounter;
 
 public class SecretKeyGroup extends ChameleonHash.PBCH.MAPBCH.Components.SecretKeyGroup {
-    protected Encryption.ABE.MAABE.Components.SecretKeyGroup MAABE_SKG;
+    protected Encryption.ABE.MAABE.RW_2015.SecretKeyGroup MAABE_SKG;
 
-    public SecretKeyGroup(Encryption.ABE.MAABE.Components.SecretKeyGroup skg) {
+    public SecretKeyGroup(Encryption.ABE.MAABE.RW_2015.SecretKeyGroup skg) {
         MAABE_SKG = skg;
     }
 

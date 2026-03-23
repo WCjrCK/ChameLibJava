@@ -1,6 +1,5 @@
 package UnitTest.CurveLib;
 
-import curve.params;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
@@ -19,15 +18,41 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static utils.Func.InitialLib;
 
 @DisplayName("jPBC base test")
 public class JPBCTest {
+    public class params {
+        public static final String base_path = "jpbc/params/";
+
+        //    public static final String a_param_80 = base_path + "a_80.properties";
+//    public static final String a_param_112 = base_path + "a_112.properties";
+//    public static final String a_param_128 = base_path + "a_128.properties";
+//    public static final String a_param_160 = base_path + "a_160.properties";
+        public static final String a_param = base_path + "a.properties";
+
+        public static final String a1_param = base_path + "a1.properties";
+
+        public static final String d159_param = base_path + "d_159.properties";
+        public static final String d201_param = base_path + "d_201.properties";
+        public static final String d224_param = base_path + "d_224.properties";
+        public static final String d105171_196_185_param = base_path + "d_105171_196_185.properties";
+        public static final String d277699_175_167_param = base_path + "d_277699_175_167.properties";
+        public static final String d278027_190_181_param = base_path + "d_278027_190_181.properties";
+
+        public static final String e_param = base_path + "e.properties";
+
+        public static final String f_param = base_path + "f.properties";
+        public static final String sm9_param = base_path + "sm_9.properties";
+
+        public static final String g149_param = base_path + "g_149.properties";
+    }
+
     @BeforeEach
     void initTest() {
         assertTrue(PairingFactory.getInstance().isPBCAvailable(),
                 "need config lib: http://gas.dia.unisa.it/projects/jpbc/docs/pbcwrapper.html");
-        InitialLib();
+        System.loadLibrary("mcljava");
+        PairingFactory.getInstance().setUsePBCWhenPossible(true);
     }
 
     void baseRun(Pairing pairing) {

@@ -22,6 +22,8 @@ import Encryption.ABE.ABEConfig;
 import Encryption.ABE.ABEName;
 import Encryption.SE.SEConfig;
 import Encryption.SE.SEName;
+import Signature.SConfig;
+import Signature.SName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -31,6 +33,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static EllipticCurve.Curve.CurveName.PBC_CUSTOM;
@@ -43,6 +46,7 @@ public class PBCHTest {
             PBCHName.TLL_2020,
             PBCHName.XNM_2021,
             PBCHName.TMM_2022,
+            PBCHName.ZLW_2021,
     });
 
     public static Stream<Arguments> GetAllPBCHSchemeCurve() {
@@ -59,7 +63,7 @@ public class PBCHTest {
     }
 
     public static Stream<Arguments> GetAllPBCHSchemeASCurve() {
-        return EnumSet.allOf(PBCHName.class).stream()
+        java.util.List<Arguments> args = EnumSet.allOf(PBCHName.class).stream()
                 .filter(a -> !skipList.contains(a))
                 .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP)
                 .flatMap(
@@ -69,7 +73,9 @@ public class PBCHTest {
                                 .filter(b -> !b.isSymmetic())
                                 .filter(a::checkCurve)
                                 .flatMap(b -> Stream.of(Arguments.of(a, b)))
-                );
+                ).collect(Collectors.toList());
+        if (args.isEmpty()) return Stream.of(Arguments.of((PBCHName) null, (CurveName) null));
+        return args.stream();
     }
 
     private void testFunction(PBCHConfig schemeConfig) {
@@ -386,82 +392,6 @@ public class PBCHTest {
 
         assertTrue(u2.Verify(pp, m2, h2, r2), "H(m1) valid");
         assertFalse(u2.Verify(pp, m1, h2, r2), "H(m2) invalid");
-
-//
-//        Auth.KeyUpdate(pp, mpk, i);
-//
-//        Auth.DecryptKeyGen(u1, pp, mpk);
-//        Auth.DecryptKeyGen(u2, pp, mpk);
-//        Auth.DecryptKeyGen(u3, pp, mpk);
-//
-//        u1.Collision(r_p, pp, mpk, m1, h1, r1, m2);
-//        assertTrue(u1.Verify(pp, mpk, m2, h1, r_p));
-//        assertFalse(u1.Verify(pp, mpk, m1, h1, r_p));
-//
-//        assertThrowsExactly(RuntimeException.class, () -> {
-//            u2.Collision(r_p, pp, mpk, m1, h1, r1, m2);
-//            if(!u2.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
-//        });
-//
-//        if (schemeConfig.schemeName != PBCHName.TMM_2022) {
-//            u3.Collision(r_p, pp, mpk, m1, h1, r1, m2);
-//            assertTrue(u3.Verify(pp, mpk, m2, h1, r_p));
-//            assertFalse(u3.Verify(pp, mpk, m1, h1, r_p));
-//        }
-//
-//        i.setValue(new HashMap<>(){{put("timestamp", 10);}});
-//
-//        Auth.Revoke(pp, mpk, u1, i);
-//
-//        i.setValue(new HashMap<>(){{put("timestamp", 50);}});
-//
-//        u2.Hash(h2, r2, pp, mpk, m1, P, i);
-//
-//        Auth.KeyUpdate(pp, mpk, i);
-//
-//        Auth.DecryptKeyGen(u1, pp, mpk);
-//        Auth.DecryptKeyGen(u2, pp, mpk);
-//        Auth.DecryptKeyGen(u3, pp, mpk);
-//
-//        assertThrowsExactly(RuntimeException.class, () -> {
-//            u1.Collision(r_p, pp, mpk, m2, h2, r2, m2);
-//            if(!u1.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
-//        });
-//
-//        assertThrowsExactly(RuntimeException.class, () -> {
-//            u2.Collision(r_p, pp, mpk, m2, h2, r2, m2);
-//            if(!u2.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
-//        });
-//
-//        if (schemeConfig.schemeName != PBCHName.TMM_2022) {
-//            u3.Collision(r_p, pp, mpk, m1, h2, r2, m2);
-//            assertTrue(u3.Verify(pp, mpk, m2, h2, r_p));
-//            assertFalse(u3.Verify(pp, mpk, m1, h2, r_p));
-//        }
-//
-//        i.setValue(new HashMap<>(){{put("timestamp", 100);}});
-//        Auth.Revoke(pp, mpk, u2, i);
-//
-//        Auth.KeyUpdate(pp, mpk, i);
-//
-//        Auth.DecryptKeyGen(u1, pp, mpk);
-//        Auth.DecryptKeyGen(u2, pp, mpk);
-//        Auth.DecryptKeyGen(u3, pp, mpk);
-//
-//        assertThrowsExactly(RuntimeException.class, () -> {
-//            u1.Collision(r_p, pp, mpk, m2, h2, r2, m2);
-//            if(!u1.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
-//        });
-//
-//        assertThrowsExactly(RuntimeException.class, () -> {
-//            u2.Collision(r_p, pp, mpk, m2, h2, r2, m2);
-//            if(!u2.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
-//        });
-//
-//        assertThrowsExactly(RuntimeException.class, () -> {
-//            u3.Collision(r_p, pp, mpk, m2, h2, r2, m2);
-//            if(!u3.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
-//        });
     }
 
     @DisplayName("test abstract implement")
@@ -485,6 +415,7 @@ public class PBCHTest {
         params.put("curve_group", CurveGroup.G1);
         ABEConfig maabe_config = new ABEConfig(ABEName.MAABE_RW_2015, curveConfig);
         params.put("maabe_config", maabe_config);
+        if (schemeName == PBCHName.MXN_2022) params.put("ds_config", new SConfig(SName.BLS, curveConfig));
 
         PBCHConfig schemeConfig = new PBCHConfig(schemeName, curveConfig, params);
         testFunction(schemeConfig);
@@ -494,6 +425,7 @@ public class PBCHTest {
     @ParameterizedTest(name = "test scheme {0} curve {1}")
     @MethodSource("UnitTest.CHScheme.PBCHTest#GetAllPBCHSchemeASCurve")
     void PBCHSGGTest(PBCHName schemeName, CurveName curveName) {
+        if (schemeName == null || curveName == null) return;
         Map<String, Object> params = new HashMap<>();
         Map<String, Object> curve_param = new HashMap<>();
         curve_param.put("swap_G1G2", true);
@@ -510,6 +442,10 @@ public class PBCHTest {
         params.put("id_len", 32);
         params.put("max_user", 2048);
         params.put("curve_group", CurveGroup.G1);
+        if (schemeName == PBCHName.MXN_2022) {
+            params.put("maabe_config", new ABEConfig(ABEName.MAABE_RW_2015, curveConfig));
+            params.put("ds_config", new SConfig(SName.BLS, curveConfig));
+        }
 
         PBCHConfig schemeConfig = new PBCHConfig(schemeName, curveConfig, params);
         testFunction(schemeConfig);

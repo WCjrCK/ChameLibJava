@@ -16,6 +16,7 @@ public enum PBCHName {
     XNM_2021(ALL, ChameleonHash.PBCH.RevocablePBCH.XNM_2021.Scheme.class, false, true, false),
     TMM_2022(ALL, ChameleonHash.PBCH.RevocablePBCH.TMM_2022.Scheme.class, false, true, false),
     ZLW_2021(SYMMETRIC, ChameleonHash.PBCH.MAPBCH.ZLW_2021.Scheme.class, false, false, true),
+    MXN_2022(SYMMETRIC, ChameleonHash.PBCH.MAPBCH.MXN_2022.Scheme.class, false, false, true),
     ;
 
     public final SchemeCurveRequire schemeCurveRequire;

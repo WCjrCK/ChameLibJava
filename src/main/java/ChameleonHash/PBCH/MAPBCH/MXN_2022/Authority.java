@@ -3,7 +3,7 @@ package ChameleonHash.PBCH.MAPBCH.MXN_2022;
 import utils.ElementCounter;
 
 public class Authority extends ChameleonHash.PBCH.MAPBCH.Components.Authority<PublicParam, PublicKey, SecretKey, Identity, Attribute> {
-    protected Encryption.ABE.MAABE.Components.Authority MAABE_auth;
+    protected Encryption.ABE.MAABE.RW_2015.Authority MAABE_auth;
     private final Scheme scheme = new Scheme();
 
     @Override

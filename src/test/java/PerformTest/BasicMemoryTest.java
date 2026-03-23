@@ -2,7 +2,6 @@ package PerformTest;
 
 import EllipticCurve.Curve.*;
 import EllipticCurve.Point.Point;
-import PBCTest.BasicParam;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -10,13 +9,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.openjdk.jol.info.GraphLayout;
 
-import static utils.Func.InitialLib;
-
 @Disabled
 public class BasicMemoryTest extends BasicParam {
     @BeforeAll
     static void initTest() {
-        InitialLib();
         repeat_cnt = 1000;
     }
 

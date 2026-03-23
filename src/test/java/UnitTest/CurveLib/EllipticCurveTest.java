@@ -3,6 +3,7 @@ package UnitTest.CurveLib;
 import EllipticCurve.Curve.*;
 import EllipticCurve.Point.AdditivePoint;
 import EllipticCurve.Point.MultivePoint;
+import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -14,12 +15,12 @@ import java.security.NoSuchAlgorithmException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static utils.Func.InitialLib;
 
 public class EllipticCurveTest {
     @BeforeEach
     void initTest() {
-        InitialLib();
+        System.loadLibrary("mcljava");
+        PairingFactory.getInstance().setUsePBCWhenPossible(true);
     }
 
     @DisplayName("test elliptic curve")

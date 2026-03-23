@@ -3,7 +3,7 @@ package ChameleonHash.PBCH.MAPBCH.MXN_2022;
 import utils.ElementCounter;
 
 public class Attribute extends ChameleonHash.PBCH.MAPBCH.Components.Attribute {
-    protected Encryption.ABE.MAABE.Components.Attribute MAABE_attr;
+    protected Encryption.ABE.MAABE.RW_2015.Attribute MAABE_attr;
 
     @Override
     public boolean equals(Object o) {

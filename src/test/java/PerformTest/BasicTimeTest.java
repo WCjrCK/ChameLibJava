@@ -13,8 +13,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static utils.Func.InitialLib;
-
 @SuppressWarnings("rawtypes")
 public class BasicTimeTest extends BasicParam {
     static CurveGroup[] idxgroup = {CurveGroup.G1, CurveGroup.G2, CurveGroup.GT, CurveGroup.Zp};
@@ -22,7 +20,6 @@ public class BasicTimeTest extends BasicParam {
     @BeforeAll
     static void initTest() {
         repeat_cnt = 10000;
-        InitialLib();
         try {
             File_Writer = new BufferedWriter(new FileWriter(String.format("./data/Basic_Time_%d.csv", repeat_cnt)));
         } catch (IOException e) {

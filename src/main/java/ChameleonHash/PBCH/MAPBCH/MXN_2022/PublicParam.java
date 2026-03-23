@@ -4,21 +4,28 @@ import ChameleonHash.CH.CHConfig;
 import ChameleonHash.CH.CHET.CHETFactory;
 import ChameleonHash.Interface.CHET;
 import ChameleonHash.PBCH.PBCHConfig;
+import EllipticCurve.Point.Scalar;
 import Encryption.ABE.ABEConfig;
-import Encryption.ABE.Interface.MAABE;
-import Encryption.ABE.MAABE.MAABEFactory;
+import Encryption.ABE.ABEName;
+import Encryption.ABE.MAABE.RW_2015.Core;
+import Encryption.SE.SE;
+import Encryption.SE.SEConfig;
+import Encryption.SE.SEFactory;
 import Signature.S;
 import Signature.SConfig;
 import Signature.SFactory;
 import utils.ElementCounter;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 public class PublicParam extends ChameleonHash.PBCH.MAPBCH.Components.PublicParam<
         PublicKey, SecretKey, Authority, User, Identity, Attribute, Policy,
         Message, HashValue, Randomness> {
-    protected MAABE MAABE;
-    protected Encryption.ABE.MAABE.Components.PublicParam MAABE_pp;
+    protected Core MAABE = new Core();
+    protected Encryption.ABE.MAABE.RW_2015.PublicParam MAABE_pp;
 
     protected CHET CHET;
     protected ChameleonHash.CH.CHET.Components.PublicParam CHET_pp;
@@ -30,12 +37,13 @@ public class PublicParam extends ChameleonHash.PBCH.MAPBCH.Components.PublicPara
     protected Signature.Components.PublicKey DS_pk;
     protected Signature.Components.SecretKey DS_sk;
 
+    protected SE SE;
+    protected Encryption.SE.Components.PublicParam SE_pp;
+
     protected PublicParam(PBCHConfig config) {
         super(config.curveConfig);
 
-        ABEConfig maabeConfig = (ABEConfig) Objects.requireNonNull(config.params.get("maabe_config"), "未设置黑盒 MA-ABE 方案（maabe_config）");
-        MAABE = MAABEFactory.createMAABE(maabeConfig);
-        MAABE_pp = MAABE.createPublicParam(maabeConfig);
+        MAABE_pp = MAABE.createPublicParam(new ABEConfig(ABEName.MAABE_RW_2015, config.curveConfig));
 
         CHConfig chetConfig = (CHConfig) Objects.requireNonNull(config.params.get("chet_config"), "未设置黑盒 CHET 方案（chet_config）");
         CHET = CHETFactory.createScheme(chetConfig);
@@ -48,6 +56,19 @@ public class PublicParam extends ChameleonHash.PBCH.MAPBCH.Components.PublicPara
         DS_pp = DS.createPublicParam(dsConfig);
         DS_pk = DS_pp.createPublicKey();
         DS_sk = DS_pp.createSecretKey();
+
+        SEConfig seConfig = (SEConfig) Objects.requireNonNull(config.params.get("se_config"), "未设置黑盒对称加密方案（se_config）");
+        SE = SEFactory.createSE(seConfig);
+        SE_pp = SE.createPublicParam(seConfig);
+    }
+
+    public final Scalar H(String m) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            return curve.HashToZp(digest.digest(m.getBytes(StandardCharsets.UTF_8)));
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -66,14 +87,15 @@ public class PublicParam extends ChameleonHash.PBCH.MAPBCH.Components.PublicPara
 
     @Override
     public User createUser(String ID) {
-        User res = new User();
-        res.MAABE_user = MAABE_pp.createUser(ID);
+        User res = new User(ID);
+        res.MAABE_user = MAABE_pp.createUser("0" + ID);
+        res.DS_sigma_gid = DS_pp.createSignValue();
         return res;
     }
 
     @Override
     public Identity createIdentity(String ID) {
-        return new Identity(MAABE_pp.createIdentity(ID));
+        return new Identity(ID, MAABE_pp.createIdentity("0" + ID));
     }
 
     public Attribute createAttribute(String attr) {
@@ -107,6 +129,7 @@ public class PublicParam extends ChameleonHash.PBCH.MAPBCH.Components.PublicPara
     public HashValue createHashValue() {
         HashValue res = new HashValue();
         res.CHET_h = CHET_pp.createHashValue();
+        res.SE_ct = SE_pp.createCipherText();
         res.MAABE_ct = MAABE_pp.createCipherText();
         return res;
     }

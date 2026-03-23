@@ -1,44 +1,40 @@
 package ChameleonHash.PBCH.MAPBCH.MXN_2022;
 
-import ChameleonHash.CH.DEPRECATED.CH_ET_BC_CDK_2017.Native;
+import ChameleonHash.CH.CHET.Components.ETrapdoor;
 import ChameleonHash.Interface.MAPBCH;
 import ChameleonHash.PBCH.PBCH;
 import ChameleonHash.PBCH.PBCHConfig;
 import EllipticCurve.Curve.CurveGroup;
-import EllipticCurve.Point.MultivePoint;
-import Encryption.AES_RAW;
-import utils.Hash;
+import EllipticCurve.Point.Scalar;
+import Encryption.ABE.MAABE.RW_2015.Core;
+import Encryption.SE.Components.PlainText;
 
-import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
 public class Scheme extends PBCH
         implements MAPBCH<
         PublicParam, Authority, User, PublicKeyGroup, PublicKey, SecretKeyGroup, SecretKey,
         Identity, Attribute, Policy, Message, HashValue, Randomness> {
-    private byte[] encodeBytes(PublicParam pp, byte[] data) {
-        MultivePoint templatePoint = pp.curve.createPoint(CurveGroup.GT);
-        byte[] encoded = templatePoint.toBytes();
+    private final SecureRandom rand = new SecureRandom();
+    private final Core maabeCore = new Core();
+
+    private byte[] encodeSplitBytes(PublicParam pp, byte[] left, byte[] right) {
+        byte[] encoded = pp.curve.getZero(CurveGroup.GT).toBytes();
         int split = encoded.length / 2;
         int cap1 = split - 2;
         int cap2 = encoded.length - split - 2;
-        if (data.length > cap1 + cap2)
-            throw new IllegalArgumentException("ETrapdoor 序列化结果过长，无法编码进 GT 元素");
+        if (left.length > cap1 || right.length > cap2)
+            throw new IllegalArgumentException("随机盐或对称密钥过长，无法编码进 GT 元素");
 
-        int l1 = Math.min(data.length, cap1);
-        int l2 = data.length - l1;
-        if (l2 > cap2) {
-            l2 = cap2;
-            l1 = data.length - l2;
-        }
-
-        encoded[1] = (byte) l1;
-        encoded[split + 1] = (byte) l2;
-        System.arraycopy(data, 0, encoded, 2, l1);
-        System.arraycopy(data, l1, encoded, split + 2, l2);
+        encoded[1] = (byte) left.length;
+        System.arraycopy(left, 0, encoded, 2, left.length);
+        encoded[split + 1] = (byte) right.length;
+        System.arraycopy(right, 0, encoded, split + 2, right.length);
         return encoded;
     }
 
-    private byte[] decodeBytes(byte[] data) {
+    private byte[][] decodeSplitBytes(byte[] data) {
         int split = data.length / 2;
         int l1 = Byte.toUnsignedInt(data[1]);
         int l2 = Byte.toUnsignedInt(data[split + 1]);
@@ -46,10 +42,38 @@ public class Scheme extends PBCH
         int cap2 = data.length - split - 2;
         if (l1 > cap1 || l2 > cap2) throw new RuntimeException("GT 解码失败");
 
-        byte[] res = new byte[l1 + l2];
-        System.arraycopy(data, 2, res, 0, l1);
-        System.arraycopy(data, split + 2, res, l1, l2);
-        return res;
+        byte[] left = new byte[l1];
+        System.arraycopy(data, 2, left, 0, l1);
+        byte[] right = new byte[l2];
+        System.arraycopy(data, split + 2, right, 0, l2);
+        return new byte[][]{left, right};
+    }
+
+    private void deterministicEncrypt(
+            Encryption.ABE.MAABE.RW_2015.CipherText ct,
+            PublicParam pp,
+            PublicKeyGroup pkg,
+            Encryption.ABE.MAABE.RW_2015.Policy P,
+            Encryption.ABE.MAABE.RW_2015.PlainText pt,
+            byte[] r_t
+    ) {
+        int rows = P.MSP.M.length;
+        int cols = P.MSP.M[0].length;
+        String seed = Arrays.toString(r_t);
+        String formula = P.MSP.formula;
+
+        Scalar[] t_x = new Scalar[rows];
+        for (int i = 1; i <= rows; ++i) t_x[i - 1] = pp.H(String.format("%s%s0%d", seed, formula, i));
+
+        Scalar[] v = new Scalar[cols];
+        v[0] = pp.H(String.format("%s%s", seed, formula));
+        for (int i = 2; i <= cols; ++i) v[i - 1] = pp.H(String.format("%s%s1%d", seed, formula, i));
+
+        Scalar[] w = new Scalar[cols];
+        w[0] = pp.MAABE_pp.curve.getZeroScalar();
+        for (int i = 2; i <= cols; ++i) w[i - 1] = pp.H(String.format("%s%s2%d", seed, formula, i));
+
+        maabeCore.Encrypt(ct, pp.MAABE_pp, pkg.MAABE_PKG, P, pt, v, w, t_x);
     }
 
     @Override
@@ -73,32 +97,30 @@ public class Scheme extends PBCH
 
     @Override
     public void UserSetup(User user, PublicParam pp) {
-        DS.Sign(mod.sigma_gid, sk.sk_DS, pp.pp_DS, "1" + mod.gid);
-        mod.sk_gid = sk.sk_CH;
+        pp.DS.Sign(user.DS_sigma_gid, pp.DS_pp, pp.DS_sk, pp.DS_pp.createMessage("1" + user.gid));
     }
 
     @Override
     public void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp, Authority auth, Identity id, Attribute attr) {
-        if(!DS.Verify(pp.pp_DS, pk.pk_DS, mod.sigma_gid, "1" + mod.gid)) throw new RuntimeException("illegal signature");
-        MA_ABE.KeyGen(auth.MA_ABE_Auth, mod.sk_gid_A, A, pp.GP_MA_ABE, "0" + mod.gid);
+        if (!pp.DS.Verify(pp.DS_pp, pp.DS_pk, id.DS_sigma_gid, pp.DS_pp.createMessage("1" + id.id)))
+            throw new RuntimeException("签名不正确");
+        pp.MAABE.KeyGen(pk.MAABE_pk, sk.MAABE_sk, pp.MAABE_pp, auth.MAABE_auth, id.MAABE_id, attr.MAABE_attr);
     }
 
     @Override
     public void Hash(HashValue h, Randomness r, PublicParam pp, Identity id, PublicKeyGroup pkg, Policy P, Message m) {
-        Native.ETrapdoor etd = new Native.ETrapdoor();
-        CH_ET.Hash(H.h, R.r, etd, pk.pk_CH, m);
+        ETrapdoor etd = pp.CHET_pp.createETrapdoor();
+        pp.CHET.Hash(h.CHET_h, r.CHET_r, etd, pp.CHET_pp, pp.CHET_pk, m.CHET_m);
+
         byte[] r_t = new byte[16];
         rand.nextBytes(r_t);
         byte[] k = new byte[16];
         rand.nextBytes(k);
-        AES_RAW.PlainText pt_SE = new AES_RAW.PlainText();
-        pt_SE.pt = etd.sk_ch_2.d.toByteArray();
-        AES_RAW.Encrypt(H.c_SE, pt_SE, k);
 
-        Hash.EncText enc = new Hash.EncText();
-        Hash.Encode(enc, pp.GP_MA_ABE.GP.GT, new Hash.PlaText(k, r_t));
-        ABE.MA_ABE.PBC.PlainText pt_MA_ABE = new ABE.MA_ABE.PBC.PlainText(enc.K);
-        genEncMAABE(H.c_MA_ABE, pt_MA_ABE, PKG, MSP, pp, r_t);
+        pp.SE.Encrypt(h.SE_ct, pp.SE_pp, pp.SE_pp.createSecretKey(k), pp.SE_pp.createPlainText(pp.CHET_pp.serializeETrapdoor(etd)));
+
+        Encryption.ABE.MAABE.RW_2015.PlainText pt = pp.MAABE_pp.createPlainText(encodeSplitBytes(pp, k, r_t));
+        deterministicEncrypt(h.MAABE_ct, pp, pkg, P.MAABE_P, pt, r_t);
     }
 
     @Override
@@ -108,19 +130,28 @@ public class Scheme extends PBCH
 
     @Override
     public void Collision(Randomness r_p, PublicParam pp, Identity id, PublicKeyGroup pkg, SecretKeyGroup skg, Message m, HashValue h, Randomness r, Message m_p) {
-        ABE.MA_ABE.PBC.PlainText pt_MA_ABE = new ABE.MA_ABE.PBC.PlainText(pp.GP_MA_ABE.GP.GetGTElement());
-        ABE.MA_ABE.PBC.CipherText ct_MA_ABE = new ABE.MA_ABE.PBC.CipherText();
-        MA_ABE.Decrypt(pt_MA_ABE, pp.GP_MA_ABE, SKG.MA_ABE_SKG, MSP, H.c_MA_ABE);
-        Hash.PlaText pla = new Hash.PlaText();
-        Hash.Decode(pla, new Hash.EncText(pt_MA_ABE.m));
-        genEncMAABE(ct_MA_ABE, pt_MA_ABE, PKG, MSP, pp, pla.r);
-        if(!ct_MA_ABE.isEqual(H.c_MA_ABE)) throw new RuntimeException("illegal decrypt");
+        if (Arrays.equals(pp.CHET_pp.serializeMessage(m.CHET_m), pp.CHET_pp.serializeMessage(m_p.CHET_m))) {
+            pp.CHET_pp.deserializeRandomness(r_p.CHET_r, pp.CHET_pp.serializeRandomness(r.CHET_r));
+            return;
+        }
 
-        Native.ETrapdoor etd = new Native.ETrapdoor();
+        Encryption.ABE.MAABE.RW_2015.PlainText pt = pp.MAABE_pp.createPlainText("");
+        pp.MAABE.Decrypt(pt, pp.MAABE_pp, id.MAABE_id, skg.MAABE_SKG, h.MAABE_ct);
 
-        AES_RAW.PlainText pt_SE = new AES_RAW.PlainText();
-        AES_RAW.Decrypt(pt_SE, H.c_SE, pla.k);
-        etd.sk_ch_2.d = new BigInteger(pt_SE.pt);
-        CH_ET.Adapt(R_p.r, H.h, R.r, etd, pk.pk_CH, sk.sk_CH, m, m_p);
+        byte[][] decoded = decodeSplitBytes(pt.toBytes());
+        byte[] k = decoded[0];
+        byte[] r_t = decoded[1];
+
+        Encryption.ABE.MAABE.RW_2015.CipherText ct = pp.MAABE_pp.createCipherText();
+        deterministicEncrypt(ct, pp, pkg, h.MAABE_ct.P, pp.MAABE_pp.createPlainText(encodeSplitBytes(pp, k, r_t)), r_t);
+        if (!ct.isEqual(h.MAABE_ct)) throw new RuntimeException("MAABE重加密错误");
+
+        PlainText SE_pt = pp.SE_pp.createPlainText("");
+        pp.SE.Decrypt(SE_pt, pp.SE_pp, pp.SE_pp.createSecretKey(k), h.SE_ct);
+
+        ETrapdoor etd = pp.CHET_pp.createETrapdoor();
+        pp.CHET_pp.deserializeETrapdoor(etd, SE_pt.getBytes());
+
+        pp.CHET.Collision(r_p.CHET_r, pp.CHET_pp, pp.CHET_pk, pp.CHET_sk, m.CHET_m, etd, h.CHET_h, r.CHET_r, m_p.CHET_m);
     }
 }

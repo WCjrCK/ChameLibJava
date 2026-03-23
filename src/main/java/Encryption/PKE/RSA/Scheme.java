@@ -6,8 +6,6 @@ import java.math.BigInteger;
 import java.util.Map;
 import java.util.Random;
 
-import static utils.Func.phi;
-
 public class Scheme extends PKE<PublicParam, PublicKey, SecretKey, PlainText, CipherText> {
     @Override
     public final PublicParam createPublicParam(Map<String, Object> params) {
@@ -26,7 +24,7 @@ public class Scheme extends PKE<PublicParam, PublicKey, SecretKey, PlainText, Ci
         do {
             sk.p = BigInteger.probablePrime(pp.p_bit, rand);
             sk.q = BigInteger.probablePrime(pp.q_bit, rand);
-            phi = phi(sk.p, sk.q);
+            phi = sk.p.subtract(BigInteger.ONE).multiply(sk.q.subtract(BigInteger.ONE));
         } while (phi.gcd(pk.e).compareTo(BigInteger.ONE) != 0);
         pk.N = sk.p.multiply(sk.q);
         sk.d = pk.e.modInverse(phi);

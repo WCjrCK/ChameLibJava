@@ -2,23 +2,34 @@ package ChameleonHash.PBCH.MAPBCH.MXN_2022;
 
 import utils.ElementCounter;
 
-public class Identity extends ChameleonHash.PBCH.MAPBCH.Components.Identity {
-    protected final Encryption.ABE.MAABE.Components.Identity MAABE_id;
+import java.util.Objects;
 
-    protected Identity(Encryption.ABE.MAABE.Components.Identity id) {
-        this.MAABE_id = id;
+public class Identity extends ChameleonHash.PBCH.MAPBCH.Components.Identity {
+    protected final String id;
+    protected final Encryption.ABE.MAABE.RW_2015.Identity MAABE_id;
+    protected final Signature.Components.SignValue DS_sigma_gid;
+
+    protected Identity(String id, Encryption.ABE.MAABE.RW_2015.Identity MAABE_id) {
+        this(id, MAABE_id, null);
+    }
+
+    protected Identity(String id, Encryption.ABE.MAABE.RW_2015.Identity MAABE_id, Signature.Components.SignValue DS_sigma_gid) {
+        this.id = Objects.requireNonNull(id, "身份不能为空");
+        this.MAABE_id = Objects.requireNonNull(MAABE_id, "MA-ABE 身份不能为空");
+        this.DS_sigma_gid = DS_sigma_gid;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Identity)) return false;
-        return MAABE_id.equals(((Identity) o).MAABE_id);
+        Identity other = (Identity) o;
+        return id.equals(other.id) && MAABE_id.equals(other.MAABE_id);
     }
 
     @Override
     public int hashCode() {
-        return MAABE_id.hashCode();
+        return Objects.hash(id, MAABE_id);
     }
 
     @Override

@@ -1,13 +1,13 @@
 package UnitTest.CurveLib;
 
 import com.herumi.mcl.*;
+import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static utils.Func.InitialLib;
 
 @SuppressWarnings("SuspiciousNameCombination")
 @DisplayName("MCL base test")
@@ -15,7 +15,8 @@ import static utils.Func.InitialLib;
 public class MCLTest {
     @BeforeEach
     void initTest() {
-        InitialLib();
+        System.loadLibrary("mcljava");
+        PairingFactory.getInstance().setUsePBCWhenPossible(true);
     }
 
     public static void BLSsignature(G2 Q) {

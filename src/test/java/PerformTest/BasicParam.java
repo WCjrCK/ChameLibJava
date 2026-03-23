@@ -3,7 +3,6 @@ package PerformTest;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
 import org.junit.jupiter.params.provider.Arguments;
-import utils.BooleanFormulaParser;
 
 import java.io.BufferedWriter;
 import java.util.EnumSet;
@@ -132,25 +131,6 @@ public class BasicParam {
 //                )
 //        );
 //    }
-
-    public static String RandomPolicyGenerator(BooleanFormulaParser.AttributeList access, boolean addit, int dep) {
-        boolean endit = (RAND.nextInt(1 << dep) <= 1);
-        boolean isAND = RAND.nextBoolean();
-        String L, R;
-        if (endit) {
-            L = String.valueOf(RAND.nextLong());
-            R = String.valueOf(RAND.nextLong());
-            if (addit) {
-                access.attrs.add(L);
-                if (isAND) access.attrs.add(R);
-            }
-        } else {
-            L = RandomPolicyGenerator(access, addit, dep - 1);
-            R = RandomPolicyGenerator(access, addit && isAND, dep - 1);
-        }
-        if (isAND) return String.format("(%s&%s)", L, R);
-        else return String.format("(%s|%s)", L, R);
-    }
 
     public boolean CalDiff(int index, int[] ops, double real_time) {
         double expect_time = 0;
