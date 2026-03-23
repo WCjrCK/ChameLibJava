@@ -4,12 +4,14 @@ import ChameleonHash.CH.CHConfig;
 import ChameleonHash.CH.CHName;
 import ChameleonHash.Interface.BAPBCH;
 import ChameleonHash.Interface.BasePBCH;
+import ChameleonHash.Interface.RevocablePBCH;
 import ChameleonHash.PBCH.BAPBCH.BAPBCHFactory;
 import ChameleonHash.PBCH.BAPBCH.Components.User;
 import ChameleonHash.PBCH.BasePBCH.BasePBCHFactory;
 import ChameleonHash.PBCH.BasePBCH.Components.*;
 import ChameleonHash.PBCH.PBCHConfig;
 import ChameleonHash.PBCH.PBCHName;
+import ChameleonHash.PBCH.RevocablePBCH.RevocablePBCHFactory;
 import ChameleonHash.SchemeCurveRequire;
 import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveGroup;
@@ -38,14 +40,21 @@ import static PerformTest.BasicParam.repeat_cnt;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RealTimeTest {
+    private static final int DEFAULT_POLICY_MATRIX_N = 64;
+    private static final int DEFAULT_POLICY_MATRIX_M = 32;
+
     static List<BufferedWriter> tsc = new ArrayList<>();
     static List<BufferedWriter> tscsgg = new ArrayList<>();
     static List<List<BufferedWriter>> tscnm = new ArrayList<>();
     static List<List<BufferedWriter>> tscnmsgg = new ArrayList<>();
+    static List<List<BufferedWriter>> tscmaxuser = new ArrayList<>();
+    static List<List<BufferedWriter>> tscmaxusersgg = new ArrayList<>();
     static HashMap<PBCHName, Integer> SNToIdx = new HashMap<>();
 
     static List<PBCHName> skipList = List.of(
-            PBCHName.XNM_2021
+            PBCHName.DSS_2019,
+            PBCHName.TLL_2020 // ,
+//            PBCHName.XNM_2021
     );
 
     static List<CurveName> runningCurve = List.of(
@@ -68,6 +77,8 @@ public class RealTimeTest {
 //            new int[]{40, 5},
 //            new int[]{50, 5}
     );
+
+    static List<Integer> totalUserList = List.of(512, 1024, 2048, 4096, 8192);
 
     public static Stream<Arguments> GetAllPBCHSchemeCurve() {
         return EnumSet.allOf(PBCHName.class).stream()
@@ -129,6 +140,38 @@ public class RealTimeTest {
                 );
     }
 
+    public static Stream<Arguments> GetAllRPBCHSchemeCurveTotalUser() {
+        return EnumSet.allOf(PBCHName.class).stream()
+                .filter(a -> !skipList.contains(a))
+                .filter(a -> a.revocable)
+                .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP)
+                .flatMap(
+                        a -> EnumSet.allOf(CurveName.class).stream()
+                                .filter(runningCurve::contains)
+                                .filter(b -> b != SECP256K1)
+                                .filter(b -> b != PBC_CUSTOM)
+                                .filter(a::checkCurve)
+                                .flatMap(b -> totalUserList.stream().flatMap(c -> Stream.of(Arguments.of(a, b, c))))
+                );
+    }
+
+    public static Stream<Arguments> GetAllRPBCHSchemeASCurveTotalUser() {
+        return EnumSet.allOf(PBCHName.class).stream()
+                .filter(a -> !skipList.contains(a))
+                .filter(a -> a.revocable)
+                .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP)
+                .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SYMMETRIC)
+                .flatMap(
+                        a -> EnumSet.allOf(CurveName.class).stream()
+                                .filter(runningCurve::contains)
+                                .filter(b -> b != SECP256K1)
+                                .filter(b -> b != PBC_CUSTOM)
+                                .filter(b -> !b.isSymmetic())
+                                .filter(a::checkCurve)
+                                .flatMap(b -> totalUserList.stream().flatMap(c -> Stream.of(Arguments.of(a, b, c))))
+                );
+    }
+
     @BeforeAll
     static void initTest() {
         repeat_cnt = 10;
@@ -137,6 +180,7 @@ public class RealTimeTest {
             int i = 0;
             for (PBCHName value : PBCHName.values()) {
                 if (skipList.contains(value)) continue;
+
                 tsc.add(createWriter(String.format("./data/PBCH/%s/real_time_cost_%d.csv", value.name(), repeat_cnt), value));
                 if (value.schemeCurveRequire == SchemeCurveRequire.SYMMETRIC) {
                     tscsgg.add(null);
@@ -157,10 +201,28 @@ public class RealTimeTest {
                 tscnm.add(nmWriter);
                 tscnmsgg.add(nmSwapWriter);
 
+                if (value.revocable) {
+                    List<BufferedWriter> maxUserWriter = new ArrayList<>();
+                    List<BufferedWriter> maxUserSwapWriter = new ArrayList<>();
+                    for (int totalUser : totalUserList) {
+                        maxUserWriter.add(createWriter(String.format("./data/PBCH/%s/real_time_cost_max_user_%d_%d.csv", value.name(), totalUser, repeat_cnt), value));
+                        if (value.schemeCurveRequire == SchemeCurveRequire.SYMMETRIC) {
+                            maxUserSwapWriter.add(null);
+                        } else {
+                            maxUserSwapWriter.add(createWriter(String.format("./data/PBCH/%s/real_time_cost_max_user_%d_swapG1G2_%d.csv", value.name(), totalUser, repeat_cnt), value));
+                        }
+                    }
+                    tscmaxuser.add(maxUserWriter);
+                    tscmaxusersgg.add(maxUserSwapWriter);
+                } else {
+                    tscmaxuser.add(null);
+                    tscmaxusersgg.add(null);
+                }
+
                 SNToIdx.put(value, i);
                 ++i;
             }
-            System.out.println("\t\t\tSetUp, KeyGen/Assign, Hash, Ver, Col");
+            System.out.println("\t\t\tSee CSV header for detailed timing columns");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -173,11 +235,16 @@ public class RealTimeTest {
     }
 
     private static String getCsvHeader(PBCHName schemeName) {
+        if (schemeName.revocable) return "Curve, SetUp, KeyGen, KeyUpdate, DecryptKeyGen, Hash, Ver, Col, Revoke\n";
         if (schemeName.has_blackbox_accountability) return "Curve, SetUp, AssignUser, KeyGen, Hash, Ver, Col\n";
         return "Curve, SetUp, KeyGen, Hash, Ver, Col\n";
     }
 
     private static PBCHConfig buildConfig(PBCHName schemeName, CurveName curveName, boolean swapG1G2) {
+        return buildConfig(schemeName, curveName, swapG1G2, 2048);
+    }
+
+    private static PBCHConfig buildConfig(PBCHName schemeName, CurveName curveName, boolean swapG1G2, int maxUser) {
         Map<String, Object> curveParam = new HashMap<>();
         curveParam.put("swap_G1G2", swapG1G2);
         Config curveConfig = new Config(curveName, curveParam);
@@ -195,12 +262,12 @@ public class RealTimeTest {
         params.put("se_config", new SEConfig(SEName.AES, seParam));
 
         params.put("id_len", 32);
-        params.put("max_user", 2048);
+        params.put("max_user", maxUser);
         return new PBCHConfig(schemeName, curveConfig, params);
     }
 
-    private static PolicyCase defaultPolicyCase() {
-        return new PolicyCase("A&(DDDD|(BB&CCC))", new HashSet<>(Set.of("A", "DDDD")));
+    private static PolicyCase defaultPerformancePolicyCase() {
+        return matrixPolicyCase(DEFAULT_POLICY_MATRIX_N, DEFAULT_POLICY_MATRIX_M);
     }
 
     private static PolicyCase matrixPolicyCase(int n, int m) {
@@ -215,8 +282,28 @@ public class RealTimeTest {
         throw new IllegalArgumentException(String.format("unsupported matrix size n=%d, m=%d", n, m));
     }
 
+    private static int totalUserIndex(int totalUser) {
+        int idx = totalUserList.indexOf(totalUser);
+        if (idx >= 0) return idx;
+        throw new IllegalArgumentException(String.format("unsupported max_user=%d", totalUser));
+    }
+
     private static void addAttrs(Attributes attrs, Set<String> satisfyingAttrs) {
         for (String attr : satisfyingAttrs) attrs.addAttr(attr);
+    }
+
+    private static void addAttrs(ChameleonHash.PBCH.RevocablePBCH.Components.Attributes attrs, Set<String> satisfyingAttrs) {
+        for (String attr : satisfyingAttrs) attrs.addAttr(attr);
+    }
+
+    private static void setTimestamp(ChameleonHash.PBCH.RevocablePBCH.Components.Info info, int timestamp) {
+        HashMap<String, Object> value = new HashMap<>();
+        value.put("timestamp", timestamp);
+        info.setValue(value);
+    }
+
+    private static double avgMillis(long totalNanoTime) {
+        return totalNanoTime / 1.0e6 / repeat_cnt;
     }
 
     private static void writeTimeCost(BufferedWriter realTimeTest, double[] timeCost) throws IOException {
@@ -227,15 +314,14 @@ public class RealTimeTest {
         realTimeTest.flush();
     }
 
-    private void testFunc(BufferedWriter realTimeTest, PBCHConfig schemeConfig, PolicyCase policyCase) throws IOException {
+    private void testFunc(BufferedWriter realTimeTest, PBCHConfig schemeConfig, PolicyCaseGenerator policyCaseGenerator) throws IOException {
         System.out.println("Running " + schemeConfig.schemeName);
-        if (schemeConfig.schemeName.has_blackbox_accountability) testBAPBCH(realTimeTest, schemeConfig, policyCase);
-        else if (schemeConfig.schemeName.revocable) {
-            throw new UnsupportedOperationException("Revocable PBCH real-time test is not enabled yet");
-        } else testBasePBCH(realTimeTest, schemeConfig, policyCase);
+        if (schemeConfig.schemeName.has_blackbox_accountability) testBAPBCH(realTimeTest, schemeConfig, policyCaseGenerator);
+        else if (schemeConfig.schemeName.revocable) testRevocablePBCH(realTimeTest, schemeConfig, policyCaseGenerator);
+        else testBasePBCH(realTimeTest, schemeConfig, policyCaseGenerator);
     }
 
-    private void testBasePBCH(BufferedWriter realTimeTest, PBCHConfig schemeConfig, PolicyCase policyCase) throws IOException {
+    private void testBasePBCH(BufferedWriter realTimeTest, PBCHConfig schemeConfig, PolicyCaseGenerator policyCaseGenerator) throws IOException {
         realTimeTest.write(schemeConfig.curveConfig.curveName.name());
         double[] timeCost = {0, 0, 0, 0, 0};
 
@@ -249,10 +335,10 @@ public class RealTimeTest {
             long start = System.nanoTime();
             for (int i = 0; i < repeat_cnt; ++i) scheme.Setup(pp, mpk, msk);
             long end = System.nanoTime();
-            timeCost[++stageId] = (end - start) / 1.0e6 / repeat_cnt;
+            timeCost[++stageId] = avgMillis(end - start);
         }
 
-        Policy P = pp.createPolicy(policyCase.formula);
+        Policy[] policies = new Policy[repeat_cnt];
         Attributes[] attrs = new Attributes[repeat_cnt];
         SecretKey[] sk = new SecretKey[repeat_cnt];
         HashValue[] h = new HashValue[repeat_cnt];
@@ -261,6 +347,8 @@ public class RealTimeTest {
         Message[] m = new Message[repeat_cnt];
         Message[] m_p = new Message[repeat_cnt];
         for (int i = 0; i < repeat_cnt; ++i) {
+            PolicyCase policyCase = policyCaseGenerator.generate();
+            policies[i] = pp.createPolicy(policyCase.formula);
             attrs[i] = pp.createAttributes();
             addAttrs(attrs[i], policyCase.satisfyingAttrs);
             sk[i] = pp.createSecretKey();
@@ -275,14 +363,14 @@ public class RealTimeTest {
             long start = System.nanoTime();
             for (int i = 0; i < repeat_cnt; ++i) scheme.KeyGen(sk[i], pp, mpk, msk, attrs[i]);
             long end = System.nanoTime();
-            timeCost[++stageId] = (end - start) / 1.0e6 / repeat_cnt;
+            timeCost[++stageId] = avgMillis(end - start);
         }
 
         {
             long start = System.nanoTime();
-            for (int i = 0; i < repeat_cnt; ++i) scheme.Hash(h[i], r[i], pp, mpk, m[i], P);
+            for (int i = 0; i < repeat_cnt; ++i) scheme.Hash(h[i], r[i], pp, mpk, m[i], policies[i]);
             long end = System.nanoTime();
-            timeCost[++stageId] = (end - start) / 1.0e6 / repeat_cnt;
+            timeCost[++stageId] = avgMillis(end - start);
         }
 
         {
@@ -290,7 +378,7 @@ public class RealTimeTest {
             long start = System.nanoTime();
             for (int i = 0; i < repeat_cnt; ++i) res &= scheme.Verify(pp, mpk, m[i], h[i], r[i]);
             long end = System.nanoTime();
-            timeCost[++stageId] = (end - start) / 1.0e6 / repeat_cnt;
+            timeCost[++stageId] = avgMillis(end - start);
             assertTrue(res, "Hash Check Failed");
         }
 
@@ -298,7 +386,7 @@ public class RealTimeTest {
             long start = System.nanoTime();
             for (int i = 0; i < repeat_cnt; ++i) scheme.Collision(r_p[i], pp, mpk, sk[i], m[i], h[i], r[i], m_p[i]);
             long end = System.nanoTime();
-            timeCost[++stageId] = (end - start) / 1.0e6 / repeat_cnt;
+            timeCost[++stageId] = avgMillis(end - start);
         }
 
         {
@@ -310,7 +398,7 @@ public class RealTimeTest {
         writeTimeCost(realTimeTest, timeCost);
     }
 
-    private void testBAPBCH(BufferedWriter realTimeTest, PBCHConfig schemeConfig, PolicyCase policyCase) throws IOException {
+    private void testBAPBCH(BufferedWriter realTimeTest, PBCHConfig schemeConfig, PolicyCaseGenerator policyCaseGenerator) throws IOException {
         realTimeTest.write(schemeConfig.curveConfig.curveName.name());
         double[] timeCost = {0, 0, 0, 0, 0, 0};
 
@@ -324,10 +412,11 @@ public class RealTimeTest {
             long start = System.nanoTime();
             for (int i = 0; i < repeat_cnt; ++i) scheme.Setup(pp, mpk, msk);
             long end = System.nanoTime();
-            timeCost[++stageId] = (end - start) / 1.0e6 / repeat_cnt;
+            timeCost[++stageId] = avgMillis(end - start);
         }
 
-        Policy P = pp.createPolicy(policyCase.formula);
+        Policy[] policies = new Policy[repeat_cnt];
+        PolicyCase[] policyCases = new PolicyCase[repeat_cnt];
         User[] users = new User[repeat_cnt];
         HashValue[] h = new HashValue[repeat_cnt];
         Randomness[] r = new Randomness[repeat_cnt];
@@ -336,6 +425,8 @@ public class RealTimeTest {
         Message[] m_p = new Message[repeat_cnt];
         int userIdLen = Math.max(1, ((int) schemeConfig.params.get("id_len")) / 3);
         for (int i = 0; i < repeat_cnt; ++i) {
+            policyCases[i] = policyCaseGenerator.generate();
+            policies[i] = pp.createPolicy(policyCases[i].formula);
             users[i] = pp.createUser(userIdLen);
             h[i] = pp.createHashValue();
             r[i] = pp.createRandomness();
@@ -348,23 +439,23 @@ public class RealTimeTest {
             long start = System.nanoTime();
             for (int i = 0; i < repeat_cnt; ++i) scheme.AssignUser(users[i], pp, mpk, msk);
             long end = System.nanoTime();
-            timeCost[++stageId] = (end - start) / 1.0e6 / repeat_cnt;
+            timeCost[++stageId] = avgMillis(end - start);
         }
 
-        for (int i = 0; i < repeat_cnt; ++i) addAttrs(users[i].S, policyCase.satisfyingAttrs);
+        for (int i = 0; i < repeat_cnt; ++i) addAttrs(users[i].S, policyCases[i].satisfyingAttrs);
 
         {
             long start = System.nanoTime();
             for (int i = 0; i < repeat_cnt; ++i) scheme.KeyGen(users[i], pp, mpk, msk);
             long end = System.nanoTime();
-            timeCost[++stageId] = (end - start) / 1.0e6 / repeat_cnt;
+            timeCost[++stageId] = avgMillis(end - start);
         }
 
         {
             long start = System.nanoTime();
-            for (int i = 0; i < repeat_cnt; ++i) scheme.Hash(h[i], r[i], pp, mpk, users[i], m[i], P);
+            for (int i = 0; i < repeat_cnt; ++i) scheme.Hash(h[i], r[i], pp, mpk, users[i], m[i], policies[i]);
             long end = System.nanoTime();
-            timeCost[++stageId] = (end - start) / 1.0e6 / repeat_cnt;
+            timeCost[++stageId] = avgMillis(end - start);
         }
 
         {
@@ -372,15 +463,15 @@ public class RealTimeTest {
             long start = System.nanoTime();
             for (int i = 0; i < repeat_cnt; ++i) res &= scheme.Verify(pp, mpk, m[i], h[i], r[i]);
             long end = System.nanoTime();
-            timeCost[++stageId] = (end - start) / 1.0e6 / repeat_cnt;
+            timeCost[++stageId] = avgMillis(end - start);
             assertTrue(res, "Hash Check Failed");
         }
 
         {
             long start = System.nanoTime();
-            for (int i = 0; i < repeat_cnt; ++i) scheme.Collision(r_p[i], pp, mpk, msk, users[i], m[i], P, h[i], r[i], m_p[i]);
+            for (int i = 0; i < repeat_cnt; ++i) scheme.Collision(r_p[i], pp, mpk, msk, users[i], m[i], policies[i], h[i], r[i], m_p[i]);
             long end = System.nanoTime();
-            timeCost[++stageId] = (end - start) / 1.0e6 / repeat_cnt;
+            timeCost[++stageId] = avgMillis(end - start);
         }
 
         {
@@ -392,27 +483,129 @@ public class RealTimeTest {
         writeTimeCost(realTimeTest, timeCost);
     }
 
-//    @DisplayName("test PBCH real time cost")
-//    @Nested
-//    class PBCHRTCTest {
-//        @DisplayName("test direct scheme")
-//        @ParameterizedTest(name = "test scheme {0} in curve {1}")
-//        @MethodSource("PerformTest.PBCH.RealTimeTest#GetAllPBCHSchemeCurve")
-//        public void DSTest(PBCHName schemeName, CurveName curveName) throws IOException {
-//            PBCHConfig schemeConfig = buildConfig(schemeName, curveName, false);
-//            System.out.print(curveName.name());
-//            if (tsc.get(SNToIdx.get(schemeName)) != null) testFunc(tsc.get(SNToIdx.get(schemeName)), schemeConfig, defaultPolicyCase());
-//        }
-//
-//        @DisplayName("swap G1 and G2")
-//        @ParameterizedTest(name = "test scheme {0} in curve {1} with swap G1 and G2")
-//        @MethodSource("PerformTest.PBCH.RealTimeTest#GetAllPBCHSchemeASCurve")
-//        public void SGGTest(PBCHName schemeName, CurveName curveName) throws IOException {
-//            PBCHConfig schemeConfig = buildConfig(schemeName, curveName, true);
-//            System.out.print(curveName + " swap G1G2");
-//            if (tscsgg.get(SNToIdx.get(schemeName)) != null) testFunc(tscsgg.get(SNToIdx.get(schemeName)), schemeConfig, defaultPolicyCase());
-//        }
-//    }
+    private void testRevocablePBCH(BufferedWriter realTimeTest, PBCHConfig schemeConfig, PolicyCaseGenerator policyCaseGenerator) throws IOException {
+        realTimeTest.write(schemeConfig.curveConfig.curveName.name());
+        double[] timeCost = {0, 0, 0, 0, 0, 0, 0, 0};
+
+        RevocablePBCH scheme = RevocablePBCHFactory.createScheme(schemeConfig);
+        ChameleonHash.PBCH.RevocablePBCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
+        ChameleonHash.PBCH.RevocablePBCH.Components.MasterPublicKey mpk = pp.createMasterPublicKey();
+        ChameleonHash.PBCH.RevocablePBCH.Components.Authority auth = pp.createAuthority();
+
+        {
+            long start = System.nanoTime();
+            for (int i = 0; i < repeat_cnt; ++i) auth.Setup(mpk, pp);
+            long end = System.nanoTime();
+            timeCost[0] = avgMillis(end - start);
+        }
+
+        ChameleonHash.PBCH.RevocablePBCH.Components.User[] users = new ChameleonHash.PBCH.RevocablePBCH.Components.User[repeat_cnt];
+        ChameleonHash.PBCH.RevocablePBCH.Components.Policy[] policies = new ChameleonHash.PBCH.RevocablePBCH.Components.Policy[repeat_cnt];
+        ChameleonHash.PBCH.RevocablePBCH.Components.Info[] infos = new ChameleonHash.PBCH.RevocablePBCH.Components.Info[repeat_cnt];
+        ChameleonHash.PBCH.RevocablePBCH.Components.Info[] revokeInfos = new ChameleonHash.PBCH.RevocablePBCH.Components.Info[repeat_cnt];
+        ChameleonHash.PBCH.RevocablePBCH.Components.HashValue[] h = new ChameleonHash.PBCH.RevocablePBCH.Components.HashValue[repeat_cnt];
+        ChameleonHash.PBCH.RevocablePBCH.Components.Randomness[] r = new ChameleonHash.PBCH.RevocablePBCH.Components.Randomness[repeat_cnt];
+        ChameleonHash.PBCH.RevocablePBCH.Components.Randomness[] r_p = new ChameleonHash.PBCH.RevocablePBCH.Components.Randomness[repeat_cnt];
+        ChameleonHash.PBCH.RevocablePBCH.Components.Message[] m = new ChameleonHash.PBCH.RevocablePBCH.Components.Message[repeat_cnt];
+        ChameleonHash.PBCH.RevocablePBCH.Components.Message[] m_p = new ChameleonHash.PBCH.RevocablePBCH.Components.Message[repeat_cnt];
+
+        for (int i = 0; i < repeat_cnt; ++i) {
+            PolicyCase policyCase = policyCaseGenerator.generate();
+            users[i] = pp.createUser("user_" + i);
+            addAttrs(users[i].S, policyCase.satisfyingAttrs);
+            policies[i] = pp.createPolicy(policyCase.formula);
+            infos[i] = pp.createInfo();
+            revokeInfos[i] = pp.createInfo();
+            setTimestamp(infos[i], 20 * (i + 1));
+            setTimestamp(revokeInfos[i], 20 * (i + 1) + 10);
+            h[i] = pp.createHashValue();
+            r[i] = pp.createRandomness();
+            r_p[i] = pp.createRandomness();
+            m[i] = pp.createMessage("msg_" + i);
+            m_p[i] = pp.createMessage("msg_" + i + "_p");
+        }
+
+        long keyGenCost = 0;
+        long keyUpdateCost = 0;
+        long decryptKeyGenCost = 0;
+        long hashCost = 0;
+        long verifyCost = 0;
+        long collisionCost = 0;
+        long revokeCost = 0;
+        boolean hashRes = true;
+        boolean adaptRes = true;
+
+        for (int i = 0; i < repeat_cnt; ++i) {
+            long start = System.nanoTime();
+            auth.KeyGen(users[i], pp, mpk);
+            keyGenCost += System.nanoTime() - start;
+
+            start = System.nanoTime();
+            users[i].Hash(h[i], r[i], pp, mpk, m[i], policies[i], infos[i]);
+            hashCost += System.nanoTime() - start;
+
+            start = System.nanoTime();
+            hashRes &= scheme.Verify(pp, mpk, users[i].pk, m[i], h[i], r[i]);
+            verifyCost += System.nanoTime() - start;
+
+            start = System.nanoTime();
+            auth.KeyUpdate(pp, mpk, infos[i]);
+            keyUpdateCost += System.nanoTime() - start;
+
+            start = System.nanoTime();
+            auth.DecryptKeyGen(users[i], pp, mpk);
+            decryptKeyGenCost += System.nanoTime() - start;
+
+            start = System.nanoTime();
+            users[i].Collision(r_p[i], pp, mpk, m[i], h[i], r[i], m_p[i]);
+            collisionCost += System.nanoTime() - start;
+
+            adaptRes &= scheme.Verify(pp, mpk, users[i].pk, m_p[i], h[i], r_p[i]);
+
+            start = System.nanoTime();
+            auth.Revoke(pp, mpk, users[i], revokeInfos[i]);
+            revokeCost += System.nanoTime() - start;
+        }
+
+        assertTrue(hashRes, "Hash Check Failed");
+        assertTrue(adaptRes, "Adapt Check Failed");
+
+        timeCost[1] = avgMillis(keyGenCost);
+        timeCost[2] = avgMillis(keyUpdateCost);
+        timeCost[3] = avgMillis(decryptKeyGenCost);
+        timeCost[4] = avgMillis(hashCost);
+        timeCost[5] = avgMillis(verifyCost);
+        timeCost[6] = avgMillis(collisionCost);
+        timeCost[7] = avgMillis(revokeCost);
+
+        writeTimeCost(realTimeTest, timeCost);
+    }
+
+    @DisplayName("test PBCH real time cost")
+    @Nested
+    class PBCHRTCTest {
+        @DisplayName("test direct scheme")
+        @ParameterizedTest(name = "test scheme {0} in curve {1}")
+        @MethodSource("PerformTest.PBCH.RealTimeTest#GetAllPBCHSchemeCurve")
+        public void DSTest(PBCHName schemeName, CurveName curveName) throws IOException {
+            PBCHConfig schemeConfig = buildConfig(schemeName, curveName, false);
+            System.out.print(curveName.name());
+            if (tsc.get(SNToIdx.get(schemeName)) != null) {
+                testFunc(tsc.get(SNToIdx.get(schemeName)), schemeConfig, RealTimeTest::defaultPerformancePolicyCase);
+            }
+        }
+
+        @DisplayName("swap G1 and G2")
+        @ParameterizedTest(name = "test scheme {0} in curve {1} with swap G1 and G2")
+        @MethodSource("PerformTest.PBCH.RealTimeTest#GetAllPBCHSchemeASCurve")
+        public void SGGTest(PBCHName schemeName, CurveName curveName) throws IOException {
+            PBCHConfig schemeConfig = buildConfig(schemeName, curveName, true);
+            System.out.print(curveName + " swap G1G2");
+            if (tscsgg.get(SNToIdx.get(schemeName)) != null) {
+                testFunc(tscsgg.get(SNToIdx.get(schemeName)), schemeConfig, RealTimeTest::defaultPerformancePolicyCase);
+            }
+        }
+    }
 
     @DisplayName("test PBCH real time cost diff matrix size")
     @Nested
@@ -425,7 +618,7 @@ public class RealTimeTest {
             System.out.print(curveName.name() + " n=" + n + " m=" + m);
             int matrixIdx = matrixIndex(n, m);
             if (tscnm.get(SNToIdx.get(schemeName)).get(matrixIdx) != null) {
-                testFunc(tscnm.get(SNToIdx.get(schemeName)).get(matrixIdx), schemeConfig, matrixPolicyCase(n, m));
+                testFunc(tscnm.get(SNToIdx.get(schemeName)).get(matrixIdx), schemeConfig, () -> matrixPolicyCase(n, m));
             }
         }
 
@@ -437,7 +630,35 @@ public class RealTimeTest {
             System.out.print(curveName + " swap G1G2 n=" + n + " m=" + m);
             int matrixIdx = matrixIndex(n, m);
             if (tscnmsgg.get(SNToIdx.get(schemeName)).get(matrixIdx) != null) {
-                testFunc(tscnmsgg.get(SNToIdx.get(schemeName)).get(matrixIdx), schemeConfig, matrixPolicyCase(n, m));
+                testFunc(tscnmsgg.get(SNToIdx.get(schemeName)).get(matrixIdx), schemeConfig, () -> matrixPolicyCase(n, m));
+            }
+        }
+    }
+
+    @DisplayName("test RPBCH real time cost diff max user")
+    @Nested
+    class PBCHRTCMaxUserTest {
+        @DisplayName("test direct scheme")
+        @ParameterizedTest(name = "test scheme {0} in curve {1} with max_user {2}")
+        @MethodSource("PerformTest.PBCH.RealTimeTest#GetAllRPBCHSchemeCurveTotalUser")
+        public void DSTest(PBCHName schemeName, CurveName curveName, int totalUser) throws IOException {
+            PBCHConfig schemeConfig = buildConfig(schemeName, curveName, false, totalUser);
+            System.out.print(curveName.name() + " max_user=" + totalUser);
+            int totalUserIdx = totalUserIndex(totalUser);
+            if (tscmaxuser.get(SNToIdx.get(schemeName)) != null && tscmaxuser.get(SNToIdx.get(schemeName)).get(totalUserIdx) != null) {
+                testFunc(tscmaxuser.get(SNToIdx.get(schemeName)).get(totalUserIdx), schemeConfig, RealTimeTest::defaultPerformancePolicyCase);
+            }
+        }
+
+        @DisplayName("swap G1 and G2")
+        @ParameterizedTest(name = "test scheme {0} in curve {1} with max_user {2} and swap G1 G2")
+        @MethodSource("PerformTest.PBCH.RealTimeTest#GetAllRPBCHSchemeASCurveTotalUser")
+        public void SGGTest(PBCHName schemeName, CurveName curveName, int totalUser) throws IOException {
+            PBCHConfig schemeConfig = buildConfig(schemeName, curveName, true, totalUser);
+            System.out.print(curveName + " swap G1G2 max_user=" + totalUser);
+            int totalUserIdx = totalUserIndex(totalUser);
+            if (tscmaxusersgg.get(SNToIdx.get(schemeName)) != null && tscmaxusersgg.get(SNToIdx.get(schemeName)).get(totalUserIdx) != null) {
+                testFunc(tscmaxusersgg.get(SNToIdx.get(schemeName)).get(totalUserIdx), schemeConfig, RealTimeTest::defaultPerformancePolicyCase);
             }
         }
     }
@@ -450,6 +671,8 @@ public class RealTimeTest {
                 closeWriter(tscsgg.get(i));
                 closeWriterList(tscnm.get(i));
                 closeWriterList(tscnmsgg.get(i));
+                closeWriterList(tscmaxuser.get(i));
+                closeWriterList(tscmaxusersgg.get(i));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -463,6 +686,10 @@ public class RealTimeTest {
     private static void closeWriterList(List<BufferedWriter> writers) throws IOException {
         if (writers == null) return;
         for (BufferedWriter writer : writers) closeWriter(writer);
+    }
+
+    private interface PolicyCaseGenerator {
+        PolicyCase generate();
     }
 
     private static final class PolicyCase {

@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 public class Scheme extends PBCH
         implements RevocablePBCH<
-                PublicParam, MasterPublicKey, MasterSecretKey, State,
+                PublicParam, MasterPublicKey, MasterSecretKey, State, PublicKey,
                 SecretKey, Identity, Attributes, Info, Policy, Message, HashValue, Randomness
                 >{
     @Override
@@ -39,7 +39,7 @@ public class Scheme extends PBCH
 //    }
 
     @Override
-    public void KeyGen(SecretKey sk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Identity id, Attributes S) {
+    public void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Identity id, Attributes S) {
         pp.RABE.KeyGen(sk.RABE_sk, pp.RABE_pp, mpk.RABE_mpk, msk.RABE_msk, st.RABE_st, id.RABE_id, S.toRABEAttr());
         sk.CHET_sk.CopyFrom(msk.CHET_sk);
     }
@@ -52,8 +52,6 @@ public class Scheme extends PBCH
     @Override
     public void DecryptKeyGen(SecretKey sk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st) {
         pp.RABE.DecryptKeyGen(sk.RABE_sk, pp.RABE_pp, mpk.RABE_mpk, msk.RABE_msk, st.RABE_st);
-//        dk.info.RABE_info = sk.RABE_sk.dk.info;
-//        dk.CHET_sk.CopyFrom(sk.CHET_sk);
     }
 
     @Override
@@ -62,7 +60,7 @@ public class Scheme extends PBCH
     }
 
     @Override
-    public void Hash(HashValue h, Randomness r, PublicParam pp, MasterPublicKey mpk, Identity id, Message m, Policy P, Info info) {
+    public void Hash(HashValue h, Randomness r, PublicParam pp, MasterPublicKey mpk, PublicKey pk, Identity id, Message m, Policy P, Info info) {
         ETrapdoor etd = pp.CHET_pp.createETrapdoor();
         pp.CHET.Hash(h.CHET_h, r.CHET_r, etd, pp.CHET_pp, mpk.CHET_pk, m.CHET_m);
         byte[] rb = new byte[16];
@@ -88,12 +86,12 @@ public class Scheme extends PBCH
     }
 
     @Override
-    public boolean Verify(PublicParam pp, MasterPublicKey mpk, Message m, HashValue h, Randomness r) {
+    public boolean Verify(PublicParam pp, MasterPublicKey mpk, PublicKey pk, Message m, HashValue h, Randomness r) {
         return pp.CHET.Verify(pp.CHET_pp, mpk.CHET_pk, m.CHET_m, h.CHET_h, r.CHET_r);
     }
 
     @Override
-    public void Collision(Randomness r_p, PublicParam pp, MasterPublicKey mpk, SecretKey sk, Message m, HashValue h, Randomness r, Message m_p) {
+    public void Collision(Randomness r_p, PublicParam pp, MasterPublicKey mpk, PublicKey pk, SecretKey sk, Message m, HashValue h, Randomness r, Message m_p) {
         PlainText RABE_pt = pp.RABE_pp.createPlainText("");
         pp.RABE.Decrypt(RABE_pt, pp.RABE_pp, sk.RABE_sk, h.RABE_ct);
         byte[] tmp = RABE_pt.FAME_pt.m.toBytes();

@@ -1,23 +1,16 @@
-package ChameleonHash.PBCH.RevocablePBCH.XNM_2021;
+package ChameleonHash.PBCH.RevocablePBCH.TMM_2022;
 
-import ChameleonHash.CH.CHConfig;
-import ChameleonHash.CH.CHET.CHETFactory;
-import ChameleonHash.Interface.CHET;
 import ChameleonHash.PBCH.PBCHConfig;
-import EllipticCurve.Point.Scalar;
+import EllipticCurve.Curve.CurveGroup;
+import EllipticCurve.Point.MultivePoint;
 import Encryption.ABE.ABEConfig;
 import Encryption.ABE.ABEName;
-import Encryption.ABE.RevocableABE.XNM_2021.Core;
-import Encryption.SE.SE;
-import Encryption.SE.SEConfig;
-import Encryption.SE.SEFactory;
+import Encryption.ABE.RevocableABE.TMM_2022.Core;
 import utils.ElementCounter;
-import utils.Serializer;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Objects;
 import java.util.Random;
 
 public class PublicParam
@@ -26,18 +19,24 @@ public class PublicParam
         SecretKey, Authority, User, Identity, Attributes, Info, Policy, Message, HashValue, Randomness>
 {
     protected Core RABE = new Core();
-    protected Encryption.ABE.RevocableABE.XNM_2021.PublicParam RABE_pp;
-    protected CHET CHET;
-    protected ChameleonHash.CH.CHET.Components.PublicParam CHET_pp;
-    protected SE SE;
-    protected Encryption.SE.Components.PublicParam SE_pp;
+    protected Encryption.ABE.RevocableABE.TMM_2022.PublicParam RABE_pp;
+    protected CurveGroup curveGroup;
     Random rand = new Random();
 
-    public final Scalar H(String m) {
+    public final MultivePoint H(String m) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(m.getBytes(StandardCharsets.UTF_8));
-            return curve.HashToZp(hash);
+            switch (curveGroup) {
+                case G1:
+                    return curve.HashToG1(hash);
+                case G2:
+                    return curve.HashToG2(hash);
+                case GT:
+                    return curve.HashToGT(hash);
+                default:
+                    throw new IllegalArgumentException("方案未适配指定群： " + curveGroup);
+            }
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
@@ -45,19 +44,15 @@ public class PublicParam
 
     protected PublicParam(PBCHConfig config) {
         super(config.curveConfig);
-        RABE_pp = RABE.createPublicParam(new ABEConfig(ABEName.RABE_XNM_2021, config.curveConfig, config.params));
-        CHConfig CHETConfig = (CHConfig) Objects.requireNonNull(config.params.get("chet_config"), "未设置黑盒CHET方案（chet_config）");
-        CHET = CHETFactory.createScheme(CHETConfig);
-        CHET_pp = CHET.createPublicParam(CHETConfig);
-        SEConfig SEConfig = (SEConfig) Objects.requireNonNull(config.params.get("se_config"), "未设置黑盒对称加密方案（se_config）");
-        SE = SEFactory.createSE(SEConfig);
-        SE_pp = SE.createPublicParam(SEConfig);
+        if (!config.params.containsKey("curve_group")) throw new IllegalArgumentException("未设置方案所在群（curve_group）");
+        curveGroup = (CurveGroup) config.params.get("curve_group");
+        if (curveGroup == CurveGroup.Zp) throw new IllegalArgumentException("方案未适配指定群： " + curveGroup);
+        RABE_pp = RABE.createPublicParam(new ABEConfig(ABEName.RABE_TMM_2022, config.curveConfig, config.params));
     }
 
     @Override
     public MasterPublicKey createMasterPublicKey() {
         MasterPublicKey res = new MasterPublicKey();
-        res.CHET_pk = CHET_pp.createPublicKey();
         res.RABE_mpk = RABE_pp.createMasterPublicKey();
         return res;
     }
@@ -65,7 +60,6 @@ public class PublicParam
     @Override
     public MasterSecretKey createMasterSecretKey() {
         MasterSecretKey res = new MasterSecretKey();
-        res.CHET_sk = CHET_pp.createSecretKey();
         res.RABE_msk = RABE_pp.createMasterSecretKey();
         return res;
     }
@@ -87,7 +81,13 @@ public class PublicParam
     @Override
     public Message createMessage(String msg) {
         Message res = new Message();
-        res.CHET_m = CHET_pp.createMessage(msg);
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(msg.getBytes(StandardCharsets.UTF_8));
+            res.m = curve.HashToZp(hash);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return res;
     }
 
@@ -126,7 +126,6 @@ public class PublicParam
     @Override
     public SecretKey createSecretKey() {
         SecretKey res = new SecretKey();
-        res.CHET_sk = CHET_pp.createSecretKey();
         res.RABE_sk = RABE_pp.createSecretKey();
         return res;
     }
@@ -146,27 +145,18 @@ public class PublicParam
     @Override
     public HashValue createHashValue() {
         HashValue res = new HashValue();
-        res.SE_ct = SE_pp.createCipherText();
-        res.CHET_h = CHET_pp.createHashValue();
         res.RABE_ct = RABE_pp.createCipherText();
         return res;
     }
 
     @Override
     public Randomness createRandomness() {
-        Randomness res = new Randomness();
-        res.CHET_r = CHET_pp.createRandomness();
-        return res;
+        return new Randomness();
     }
 
     @Override
     public String toString() {
         return "";
-    }
-
-    public byte[] serializeInfo(Info target) {
-        Objects.requireNonNull(target, "Info 不能为空");
-        return Serializer.pack(RABE_pp.serializeInfo(target.RABE_info));
     }
 
     @Override

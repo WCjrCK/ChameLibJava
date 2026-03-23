@@ -1,4 +1,4 @@
-package ChameleonHash.PBCH.RevocablePBCH.XNM_2021;
+package ChameleonHash.PBCH.RevocablePBCH.TMM_2022;
 
 import utils.ElementCounter;
 

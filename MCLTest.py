@@ -21,7 +21,6 @@ done = [
 #     'RPCH_XNM_2021'
 ]
 
-# os.system(f'mvn -Dtest=UnitTest.CurveLib.MCLTest.BasicTimeTest test')
 
 for scheme_type in ['CH', 'IBCH', 'PBCH']:
     os.makedirs(f'./data/MCL/{scheme_type}', exist_ok=True)

@@ -4,7 +4,7 @@ import EllipticCurve.Point.Scalar;
 import utils.ElementCounter;
 
 public class PlainText extends Encryption.ABE.RevocableABE.Components.PlainText<PlainText> {
-    Scalar m;
+    public Scalar m;
 
     public boolean isEqual(PlainText o) {
         return m.isEqual(o.m);

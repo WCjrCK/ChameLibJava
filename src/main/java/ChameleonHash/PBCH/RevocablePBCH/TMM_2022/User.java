@@ -1,11 +1,11 @@
-package ChameleonHash.PBCH.RevocablePBCH.XNM_2021;
+package ChameleonHash.PBCH.RevocablePBCH.TMM_2022;
 
 import utils.ElementCounter;
 
 public class User
         extends ChameleonHash.PBCH.RevocablePBCH.Components.User<
         PublicParam, MasterPublicKey, PublicKey, SecretKey, Identity, Attributes, Info, Policy, Message, HashValue, Randomness> {
-    Encryption.ABE.RevocableABE.XNM_2021.User RABE_user;
+    Encryption.ABE.RevocableABE.TMM_2022.User RABE_user;
 
     @Override
     public void Hash(HashValue h, Randomness r, PublicParam pp, MasterPublicKey mpk, Message m, Policy P, Info info) {

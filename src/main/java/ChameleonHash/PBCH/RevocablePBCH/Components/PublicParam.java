@@ -9,10 +9,8 @@ public abstract class PublicParam<
         MPK extends MasterPublicKey,
         MSK extends MasterSecretKey,
         S extends State,
-        RL extends Revocated,
-        UK extends UpdateKey,
+        PK extends PublicKey,
         SK extends SecretKey,
-        DK extends DecryptKey,
         Auth extends Authority,
         U extends User,
         ID extends Identity,
@@ -35,12 +33,6 @@ public abstract class PublicParam<
 
     public abstract S createState();
 
-    public abstract RL createRevocated();
-
-    public abstract UK createUpdateKey();
-
-    public abstract DK createDecryptKey();
-
     public abstract I createInfo();
 
     public abstract M createMessage(String msg);
@@ -50,6 +42,8 @@ public abstract class PublicParam<
     public abstract U createUser(String ID);
 
     public abstract ID createIdentity(String ID);
+
+    public abstract PK createPublicKey();
 
     public abstract SK createSecretKey();
 

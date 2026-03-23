@@ -14,6 +14,7 @@ public enum PBCHName {
     DSS_2019(ALL, ChameleonHash.PBCH.BasePBCH.DSS_2019.Scheme.class, false, false),
     TLL_2020(ALL, ChameleonHash.PBCH.BAPBCH.TLL_2020.Scheme.class, true, false),
     XNM_2021(ALL, ChameleonHash.PBCH.RevocablePBCH.XNM_2021.Scheme.class, false, true),
+    TMM_2022(ALL, ChameleonHash.PBCH.RevocablePBCH.TMM_2022.Scheme.class, false, true),
     ;
 
     public final SchemeCurveRequire schemeCurveRequire;

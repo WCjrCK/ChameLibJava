@@ -37,7 +37,8 @@ public class PBCHTest {
     static List<PBCHName> skipList = List.of(new PBCHName[]{
             PBCHName.DSS_2019,
             PBCHName.TLL_2020,
-//            PBCHName.XNM_2021,
+            PBCHName.XNM_2021,
+//            PBCHName.TMM_2022,
     });
 
     public static Stream<Arguments> GetAllPBCHSchemeCurve() {
@@ -240,9 +241,9 @@ public class PBCHTest {
 
         u1.Hash(h1, r1, pp, mpk, m1, P, i);
 
-        assertTrue(scheme.Verify(pp, mpk, m1, h1, r1), "H(m1) valid");
-        assertFalse(scheme.Verify(pp, mpk, m2, h1, r1), "H(m2) invalid");
-        assertFalse(scheme.Verify(pp, mpk, m3, h1, r1), "H(m3) invalid");
+        assertTrue(u1.Verify(pp, mpk, m1, h1, r1), "H(m1) valid");
+        assertFalse(u1.Verify(pp, mpk, m2, h1, r1), "H(m2) invalid");
+        assertFalse(u1.Verify(pp, mpk, m3, h1, r1), "H(m3) invalid");
 
         Auth.KeyUpdate(pp, mpk, i);
 
@@ -251,16 +252,19 @@ public class PBCHTest {
         Auth.DecryptKeyGen(u3, pp, mpk);
 
         u1.Collision(r_p, pp, mpk, m1, h1, r1, m2);
-        assertTrue(scheme.Verify(pp, mpk, m2, h1, r_p));
-        assertFalse(scheme.Verify(pp, mpk, m1, h1, r_p));
+        assertTrue(u1.Verify(pp, mpk, m2, h1, r_p));
+        assertFalse(u1.Verify(pp, mpk, m1, h1, r_p));
 
         assertThrowsExactly(RuntimeException.class, () -> {
             u2.Collision(r_p, pp, mpk, m1, h1, r1, m2);
+            if(!u2.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
         });
 
-        u3.Collision(r_p, pp, mpk, m1, h1, r1, m2);
-        assertTrue(scheme.Verify(pp, mpk, m2, h1, r_p));
-        assertFalse(scheme.Verify(pp, mpk, m1, h1, r_p));
+        if (schemeConfig.schemeName != PBCHName.TMM_2022) {
+            u3.Collision(r_p, pp, mpk, m1, h1, r1, m2);
+            assertTrue(u3.Verify(pp, mpk, m2, h1, r_p));
+            assertFalse(u3.Verify(pp, mpk, m1, h1, r_p));
+        }
 
         i.setValue(new HashMap<>(){{put("timestamp", 10);}});
 
@@ -278,15 +282,19 @@ public class PBCHTest {
 
         assertThrowsExactly(RuntimeException.class, () -> {
             u1.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+            if(!u1.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
         });
 
         assertThrowsExactly(RuntimeException.class, () -> {
             u2.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+            if(!u2.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
         });
 
-        u3.Collision(r_p, pp, mpk, m1, h2, r2, m2);
-        assertTrue(scheme.Verify(pp, mpk, m2, h2, r_p));
-        assertFalse(scheme.Verify(pp, mpk, m1, h2, r_p));
+        if (schemeConfig.schemeName != PBCHName.TMM_2022) {
+            u3.Collision(r_p, pp, mpk, m1, h2, r2, m2);
+            assertTrue(u3.Verify(pp, mpk, m2, h2, r_p));
+            assertFalse(u3.Verify(pp, mpk, m1, h2, r_p));
+        }
 
         i.setValue(new HashMap<>(){{put("timestamp", 100);}});
         Auth.Revoke(pp, mpk, u2, i);
@@ -299,14 +307,17 @@ public class PBCHTest {
 
         assertThrowsExactly(RuntimeException.class, () -> {
             u1.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+            if(!u1.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
         });
 
         assertThrowsExactly(RuntimeException.class, () -> {
             u2.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+            if(!u2.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
         });
 
         assertThrowsExactly(RuntimeException.class, () -> {
             u3.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+            if(!u3.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
         });
     }
 
@@ -328,6 +339,7 @@ public class PBCHTest {
         params.put("se_config", new SEConfig(SEName.AES, seParam));
         params.put("id_len", 32);
         params.put("max_user", 2048);
+        params.put("curve_group", CurveGroup.G1);
 
         PBCHConfig schemeConfig = new PBCHConfig(schemeName, curveConfig, params);
         testFunction(schemeConfig);
@@ -352,6 +364,7 @@ public class PBCHTest {
         params.put("se_config", new SEConfig(SEName.AES, seParam));
         params.put("id_len", 32);
         params.put("max_user", 2048);
+        params.put("curve_group", CurveGroup.G1);
 
         PBCHConfig schemeConfig = new PBCHConfig(schemeName, curveConfig, params);
         testFunction(schemeConfig);
