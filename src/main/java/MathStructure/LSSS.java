@@ -18,6 +18,12 @@ public class LSSS {
         return res;
     }
 
+    public Scalar Prodith(Scalar[] y, int i) {
+        Scalar res = y[0].mul(M[i][0]);
+        for(int j = 1;j < M[i].length;++j) res = res.add(y[j].mul(M[i][j]));
+        return res;
+    }
+
     public Scalar[] Solve(Curve curve, Attributes S) {
         Scalar[] b = new Scalar[M[0].length];
         b[0] = curve.getOneScalar();

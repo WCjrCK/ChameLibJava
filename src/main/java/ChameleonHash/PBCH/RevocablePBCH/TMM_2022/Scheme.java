@@ -6,8 +6,8 @@ import ChameleonHash.PBCH.PBCHConfig;
 import Encryption.ABE.RevocableABE.TMM_2022.PlainText;
 
 /*
- * Revocable Policy-Based Chameleon Hash
- * P13. 5.2 Proposed RPCH
+ * Revocable Policy-Based ChameleonHash for Blockchain Rewriting
+ * P9. 4.2. The proposed RPCH scheme
  */
 
 public class Scheme extends PBCH

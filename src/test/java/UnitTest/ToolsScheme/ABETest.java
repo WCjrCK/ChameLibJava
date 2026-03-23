@@ -6,7 +6,10 @@ import Encryption.ABE.ABEConfig;
 import Encryption.ABE.ABEName;
 import Encryption.ABE.BaseABE.Components.Attributes;
 import Encryption.ABE.BaseABE.FAME.*;
+import Encryption.ABE.Interface.MAABE;
 import Encryption.ABE.Interface.RevocableABE;
+import Encryption.ABE.MAABE.MAABEFactory;
+import Encryption.ABE.MAABE.RW_2015.Attribute;
 import Encryption.ABE.RevocableABE.Components.Authority;
 import Encryption.ABE.RevocableABE.Components.Info;
 import Encryption.ABE.RevocableABE.Components.User;
@@ -50,6 +53,16 @@ public class ABETest {
                                                 c -> Stream.of(Arguments.of(c, a, b))
                                         )
                                 )
+                );
+    }
+
+    public static Stream<Arguments> GetAllMAABECurveSym() {
+        return EnumSet.allOf(CurveName.class).stream()
+                .filter(CurveName::isSymmetic)
+                .filter(a -> a != PBC_CUSTOM)
+                .flatMap(a -> EnumSet.allOf(ABEName.class).stream()
+                        .filter(c -> c.multi_auth)
+                        .flatMap(c -> Stream.of(Arguments.of(c, a)))
                 );
     }
 
@@ -222,6 +235,65 @@ public class ABETest {
 
             u3.Decrypt(pt3, pp, mpk, ct2);
             assertFalse(pt3.isEqual(pt2), "different time");
+        }
+    }
+
+    @DisplayName("test MAABE")
+    @ParameterizedTest(name = "test scheme {0} curve {1}")
+    @MethodSource("UnitTest.ToolsScheme.ABETest#GetAllMAABECurveSym")
+    void MAABE(ABEName abeName, CurveName curve) {
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> curve_param = new HashMap<>();
+        Config curveConfig = new Config(curve, curve_param);
+
+        params.put("max_user", 1024);
+        int auth_num = 4;
+
+        ABEConfig schemeConfig = new ABEConfig(abeName, curveConfig, params);
+        {
+            MAABE scheme = MAABEFactory.createMAABE(schemeConfig);
+            Encryption.ABE.MAABE.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
+            scheme.Setup(pp);
+
+            Encryption.ABE.MAABE.Components.Authority Auth[] = new Encryption.ABE.MAABE.Components.Authority[auth_num];
+            for(int i = 0;i <auth_num;++i) Auth[i] = pp.createAuthority();
+            for(int i = 0;i <auth_num;++i) Auth[i].Setup(pp);
+            Auth[0].controled_attr.add(new Attribute("A"));
+            Auth[1].controled_attr.add(new Attribute("BB"));
+            Auth[2].controled_attr.add(new Attribute("CCC"));
+            Auth[3].controled_attr.add(new Attribute("DDDD"));
+
+            Encryption.ABE.MAABE.Components.User u1 = pp.createUser("user1");
+            u1.owned_attr.add(new Attribute("A"));
+            u1.owned_attr.add(new Attribute("DDDD"));
+            for(int i = 0;i <auth_num;++i) u1.KeyGen(pp, Auth[i]);
+
+            Encryption.ABE.MAABE.Components.User u2 = pp.createUser("user2");
+            u2.owned_attr.add(new Attribute("BB"));
+            u2.owned_attr.add(new Attribute("CCC"));
+            for(int i = 0;i <auth_num;++i) u2.KeyGen(pp, Auth[i]);
+
+            Encryption.ABE.MAABE.Components.PlainText pt1 = pp.createPlainText("msg1");
+            Encryption.ABE.MAABE.Components.PlainText pt_p = pp.createPlainText("msg3");
+            Encryption.ABE.MAABE.Components.CipherText ct1 = pp.createCipherText();
+            Encryption.ABE.MAABE.Components.Policy P = pp.createPolicy("A&(DDDD|(BB&CCC))");
+            u1.Encrypt(ct1, pp, P, pt1);
+
+            u1.Decrypt(pt_p, pp, ct1);
+            assertTrue(pt_p.isEqual(pt1));
+
+            Encryption.ABE.MAABE.Components.PlainText pt2 = pp.createPlainText("msg2");
+            Encryption.ABE.MAABE.Components.CipherText ct2 = pp.createCipherText();
+
+            u2.Encrypt(ct2, pp, P, pt2);
+
+            pt_p = pp.createPlainText("msg3");
+            u1.Decrypt(pt_p, pp, ct2);
+            assertTrue(pt_p.isEqual(pt2));
+
+            pt_p = pp.createPlainText("msg3");
+            u2.Decrypt(pt_p, pp, ct2);
+            assertFalse(pt_p.isEqual(pt2));
         }
     }
 }

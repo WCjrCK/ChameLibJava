@@ -13,7 +13,7 @@ import Encryption.ABE.RevocableABE.Components.Attributes;
 public class Scheme extends ABE
         implements RevocableABE<PublicParam, MasterPublicKey, MasterSecretKey,
         State, Identity, Info, SecretKey, Policy, PlainText, CipherText>  {
-    Core core = new Core();
+    private final Core core = new Core();
     @Override
     public void Setup(MasterPublicKey mpk, MasterSecretKey msk, State st, PublicParam pp) {
         core.Setup(mpk, msk, pp);
