@@ -13,16 +13,19 @@ public abstract class User<
         ID extends Identity,
         P extends Policy,
         PT extends PlainText<PT>,
-        CT extends CipherText<CT, P>
+        CT extends CipherText<CT, P>,
+        A extends Attribute
         > {
     public PKG pkg;
     public SKG skg;
-    public Set<Attribute> owned_attr = new HashSet<>();
+    public Set<A> owned_attr = new HashSet<>();
     public final ID id;
 
     protected User(ID id) {
         this.id = id;
     }
+
+    public abstract void AddAttr(A attr);
 
     public abstract void KeyGen(PP pp, AUTH auth);
 

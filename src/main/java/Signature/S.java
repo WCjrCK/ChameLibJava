@@ -9,7 +9,7 @@ public abstract class S<
         M extends Message,
         S extends SignValue
         > {
-    public abstract PP createPublicParam(Config config);
+    public abstract PP createPublicParam(SConfig config);
 
     public abstract void Setup(PP pp);
 

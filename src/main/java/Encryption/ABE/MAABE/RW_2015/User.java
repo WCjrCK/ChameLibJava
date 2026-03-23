@@ -1,11 +1,10 @@
 package Encryption.ABE.MAABE.RW_2015;
 
-import Encryption.ABE.MAABE.Components.Attribute;
 import utils.ElementCounter;
 
 public class User extends Encryption.ABE.MAABE.Components.User<
         PublicParam, Authority, PublicKeyGroup, SecretKeyGroup,
-        Identity, Policy, PlainText, CipherText> {
+        Identity, Policy, PlainText, CipherText, Attribute> {
     private final Core core = new Core();
     
     protected User(Identity id) {
@@ -13,15 +12,19 @@ public class User extends Encryption.ABE.MAABE.Components.User<
     }
 
     @Override
+    public void AddAttr(Attribute attr) {
+        owned_attr.add(attr);
+    }
+
+    @Override
     public void KeyGen(PublicParam pp, Authority auth) {
         for (Attribute attr : auth.controled_attr) {
             PublicKey pk = pp.createPublicKey();
             SecretKey sk = pp.createSecretKey();
-            auth.KeyGen(pk, sk, pp, id, (Encryption.ABE.MAABE.RW_2015.Attribute) attr);
-            pkg.AddPK(pk, (Encryption.ABE.MAABE.RW_2015.Attribute) attr);
-            if (owned_attr.contains(attr)) skg.AddSK(sk, (Encryption.ABE.MAABE.RW_2015.Attribute) attr);
+            auth.KeyGen(pk, sk, pp, id, attr);
+            pkg.AddPK(pk, attr);
+            if (owned_attr.contains(attr)) skg.AddSK(sk, attr);
         }
-
     }
 
     @Override

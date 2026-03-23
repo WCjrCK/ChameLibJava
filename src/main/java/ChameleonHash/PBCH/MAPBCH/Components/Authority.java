@@ -1,23 +1,14 @@
-package Encryption.ABE.MAABE.Components;
+package ChameleonHash.PBCH.MAPBCH.Components;
 
 import utils.ElementCounter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public abstract class Authority<
         PP extends PublicParam,
-        APK extends AuthPublicKey,
-        ASK extends AuthSecretKey,
         PK extends PublicKey,
         SK extends SecretKey,
         ID extends Identity,
         A extends Attribute
         > {
-    public APK apk;
-    public ASK ask;
-    public Set<A> controled_attr = new HashSet<>();
-
     public abstract void AddAttr(A attr);
 
     public abstract void Setup(PP pp);

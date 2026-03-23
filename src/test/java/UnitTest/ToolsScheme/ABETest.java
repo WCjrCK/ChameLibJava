@@ -258,19 +258,19 @@ public class ABETest {
             Encryption.ABE.MAABE.Components.Authority Auth[] = new Encryption.ABE.MAABE.Components.Authority[auth_num];
             for(int i = 0;i <auth_num;++i) Auth[i] = pp.createAuthority();
             for(int i = 0;i <auth_num;++i) Auth[i].Setup(pp);
-            Auth[0].controled_attr.add(new Attribute("A"));
-            Auth[1].controled_attr.add(new Attribute("BB"));
-            Auth[2].controled_attr.add(new Attribute("CCC"));
-            Auth[3].controled_attr.add(new Attribute("DDDD"));
+            Auth[0].AddAttr(new Attribute("A"));
+            Auth[1].AddAttr(new Attribute("BB"));
+            Auth[2].AddAttr(new Attribute("CCC"));
+            Auth[3].AddAttr(new Attribute("DDDD"));
 
             Encryption.ABE.MAABE.Components.User u1 = pp.createUser("user1");
-            u1.owned_attr.add(new Attribute("A"));
-            u1.owned_attr.add(new Attribute("DDDD"));
+            u1.AddAttr(new Attribute("A"));
+            u1.AddAttr(new Attribute("DDDD"));
             for(int i = 0;i <auth_num;++i) u1.KeyGen(pp, Auth[i]);
 
             Encryption.ABE.MAABE.Components.User u2 = pp.createUser("user2");
-            u2.owned_attr.add(new Attribute("BB"));
-            u2.owned_attr.add(new Attribute("CCC"));
+            u2.AddAttr(new Attribute("BB"));
+            u2.AddAttr(new Attribute("CCC"));
             for(int i = 0;i <auth_num;++i) u2.KeyGen(pp, Auth[i]);
 
             Encryption.ABE.MAABE.Components.PlainText pt1 = pp.createPlainText("msg1");

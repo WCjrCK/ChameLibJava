@@ -3,7 +3,7 @@ package Signature.BLS;
 import EllipticCurve.Curve.Curve;
 import EllipticCurve.Curve.CurveFactory;
 import EllipticCurve.Point.MultivePoint;
-import Signature.Config;
+import Signature.SConfig;
 import utils.ElementCounter;
 
 import java.nio.charset.StandardCharsets;
@@ -16,7 +16,7 @@ public class PublicParam
 
     public Curve curve;
 
-    protected PublicParam(Config config) {
+    protected PublicParam(SConfig config) {
         curve = CurveFactory.create(config.curveConfig);
     }
 

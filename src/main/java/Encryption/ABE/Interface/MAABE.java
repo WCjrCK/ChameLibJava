@@ -10,6 +10,7 @@ public interface MAABE<
         SK extends SecretKey,
         SKG extends SecretKeyGroup,
         Auth extends Authority,
+        U extends User,
         ID extends Identity,
         A extends Attribute,
         P extends Policy,
@@ -19,6 +20,8 @@ public interface MAABE<
     void Setup(PP pp);
 
     void AuthSetup(Auth auth, PP pp);
+
+    void UserSetup(U user, PP pp);
 
     void KeyGen(PK pk, SK sk, PP pp, Auth auth, ID id, A attr);
 

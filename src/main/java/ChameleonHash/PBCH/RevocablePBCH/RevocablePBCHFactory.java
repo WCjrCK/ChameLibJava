@@ -8,6 +8,7 @@ public class RevocablePBCHFactory {
 
     public static RevocablePBCH createScheme(PBCHConfig config) {
         try {
+            assert config.schemeName.revocable;
             return (RevocablePBCH) config.schemeName.schemeClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new IllegalArgumentException("尚未支持当前方案：" + config.schemeName.name());

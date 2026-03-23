@@ -4,11 +4,13 @@ import ChameleonHash.CH.CHConfig;
 import ChameleonHash.CH.CHName;
 import ChameleonHash.Interface.BAPBCH;
 import ChameleonHash.Interface.BasePBCH;
+import ChameleonHash.Interface.MAPBCH;
 import ChameleonHash.Interface.RevocablePBCH;
 import ChameleonHash.PBCH.BAPBCH.BAPBCHFactory;
 import ChameleonHash.PBCH.BAPBCH.Components.User;
 import ChameleonHash.PBCH.BasePBCH.BasePBCHFactory;
 import ChameleonHash.PBCH.BasePBCH.Components.*;
+import ChameleonHash.PBCH.MAPBCH.MAPBCHFactory;
 import ChameleonHash.PBCH.PBCHConfig;
 import ChameleonHash.PBCH.PBCHName;
 import ChameleonHash.PBCH.RevocablePBCH.RevocablePBCHFactory;
@@ -16,6 +18,8 @@ import ChameleonHash.SchemeCurveRequire;
 import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
+import Encryption.ABE.ABEConfig;
+import Encryption.ABE.ABEName;
 import Encryption.SE.SEConfig;
 import Encryption.SE.SEName;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +42,7 @@ public class PBCHTest {
             PBCHName.DSS_2019,
             PBCHName.TLL_2020,
             PBCHName.XNM_2021,
-//            PBCHName.TMM_2022,
+            PBCHName.TMM_2022,
     });
 
     public static Stream<Arguments> GetAllPBCHSchemeCurve() {
@@ -71,6 +75,7 @@ public class PBCHTest {
     private void testFunction(PBCHConfig schemeConfig) {
         if (schemeConfig.schemeName.has_blackbox_accountability) testBAPBCH(schemeConfig);
         else if (schemeConfig.schemeName.revocable) testRPBCH(schemeConfig);
+        else if (schemeConfig.schemeName.multi_auth) testMAPBCH(schemeConfig);
         else testBasePBCH(schemeConfig);
     }
 
@@ -321,6 +326,144 @@ public class PBCHTest {
         });
     }
 
+    private void testMAPBCH(PBCHConfig schemeConfig) {
+        MAPBCH scheme = MAPBCHFactory.createScheme(schemeConfig);
+        ChameleonHash.PBCH.MAPBCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
+        scheme.Setup(pp);
+
+        int auth_num = 6;
+
+        ChameleonHash.PBCH.MAPBCH.Components.Authority Auth[] = new ChameleonHash.PBCH.MAPBCH.Components.Authority[auth_num];
+
+        for(int i = 0;i <auth_num;++i) Auth[i] = pp.createAuthority();
+        for(int i = 0;i <auth_num;++i) Auth[i].Setup(pp);
+        Auth[0].AddAttr(pp.createAttribute("A"));
+        Auth[1].AddAttr(pp.createAttribute("BB"));
+        Auth[2].AddAttr(pp.createAttribute("CCC"));
+        Auth[3].AddAttr(pp.createAttribute("DDDD"));
+
+        ChameleonHash.PBCH.MAPBCH.Components.User u1 = pp.createUser("user1");
+        u1.Setup(pp);
+        u1.AddAttr(pp.createAttribute("A"));
+        u1.AddAttr(pp.createAttribute("DDDD"));
+        for(int i = 0;i <auth_num;++i) u1.KeyGen(pp, Auth[i]);
+
+        ChameleonHash.PBCH.MAPBCH.Components.User u2 = pp.createUser("user2");
+        u2.Setup(pp);
+        u2.AddAttr(pp.createAttribute("BB"));
+        u2.AddAttr(pp.createAttribute("CCC"));
+        for(int i = 0;i <auth_num;++i) u2.KeyGen(pp, Auth[i]);
+
+        ChameleonHash.PBCH.MAPBCH.Components.Message m1 = pp.createMessage("msg1");
+        ChameleonHash.PBCH.MAPBCH.Components.Message m2 = pp.createMessage("msg2");
+
+        ChameleonHash.PBCH.MAPBCH.Components.HashValue h1 = pp.createHashValue();
+        ChameleonHash.PBCH.MAPBCH.Components.HashValue h2 = pp.createHashValue();
+
+        ChameleonHash.PBCH.MAPBCH.Components.Randomness r1 = pp.createRandomness();
+        ChameleonHash.PBCH.MAPBCH.Components.Randomness r2 = pp.createRandomness();
+        ChameleonHash.PBCH.MAPBCH.Components.Randomness r_p = pp.createRandomness();
+
+        ChameleonHash.PBCH.MAPBCH.Components.Policy P = pp.createPolicy("A&(DDDD|(BB&CCC))");
+
+        u1.Hash(h1, r1, pp, P, m1);
+
+        assertTrue(u1.Verify(pp, m1, h1, r1), "H(m1) valid");
+        assertFalse(u1.Verify(pp, m2, h1, r1), "H(m2) invalid");
+
+        assertThrowsExactly(RuntimeException.class, () -> {
+            u2.Collision(r_p, pp, m1, h1, r1, m2);
+            assertFalse(u1.Verify(pp, m2, h1, r_p), "H(m1) valid");
+            assertFalse(u1.Verify(pp, m1, h1, r_p), "H(m2) invalid");
+        });
+
+        u1.Collision(r_p, pp, m1, h1, r1, m2);
+
+        assertTrue(u1.Verify(pp, m2, h1, r_p), "H(m1) valid");
+        assertFalse(u1.Verify(pp, m1, h1, r_p), "H(m2) invalid");
+
+        u2.Hash(h2, r2, pp, P, m2);
+
+        assertTrue(u2.Verify(pp, m2, h2, r2), "H(m1) valid");
+        assertFalse(u2.Verify(pp, m1, h2, r2), "H(m2) invalid");
+
+//
+//        Auth.KeyUpdate(pp, mpk, i);
+//
+//        Auth.DecryptKeyGen(u1, pp, mpk);
+//        Auth.DecryptKeyGen(u2, pp, mpk);
+//        Auth.DecryptKeyGen(u3, pp, mpk);
+//
+//        u1.Collision(r_p, pp, mpk, m1, h1, r1, m2);
+//        assertTrue(u1.Verify(pp, mpk, m2, h1, r_p));
+//        assertFalse(u1.Verify(pp, mpk, m1, h1, r_p));
+//
+//        assertThrowsExactly(RuntimeException.class, () -> {
+//            u2.Collision(r_p, pp, mpk, m1, h1, r1, m2);
+//            if(!u2.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
+//        });
+//
+//        if (schemeConfig.schemeName != PBCHName.TMM_2022) {
+//            u3.Collision(r_p, pp, mpk, m1, h1, r1, m2);
+//            assertTrue(u3.Verify(pp, mpk, m2, h1, r_p));
+//            assertFalse(u3.Verify(pp, mpk, m1, h1, r_p));
+//        }
+//
+//        i.setValue(new HashMap<>(){{put("timestamp", 10);}});
+//
+//        Auth.Revoke(pp, mpk, u1, i);
+//
+//        i.setValue(new HashMap<>(){{put("timestamp", 50);}});
+//
+//        u2.Hash(h2, r2, pp, mpk, m1, P, i);
+//
+//        Auth.KeyUpdate(pp, mpk, i);
+//
+//        Auth.DecryptKeyGen(u1, pp, mpk);
+//        Auth.DecryptKeyGen(u2, pp, mpk);
+//        Auth.DecryptKeyGen(u3, pp, mpk);
+//
+//        assertThrowsExactly(RuntimeException.class, () -> {
+//            u1.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+//            if(!u1.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
+//        });
+//
+//        assertThrowsExactly(RuntimeException.class, () -> {
+//            u2.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+//            if(!u2.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
+//        });
+//
+//        if (schemeConfig.schemeName != PBCHName.TMM_2022) {
+//            u3.Collision(r_p, pp, mpk, m1, h2, r2, m2);
+//            assertTrue(u3.Verify(pp, mpk, m2, h2, r_p));
+//            assertFalse(u3.Verify(pp, mpk, m1, h2, r_p));
+//        }
+//
+//        i.setValue(new HashMap<>(){{put("timestamp", 100);}});
+//        Auth.Revoke(pp, mpk, u2, i);
+//
+//        Auth.KeyUpdate(pp, mpk, i);
+//
+//        Auth.DecryptKeyGen(u1, pp, mpk);
+//        Auth.DecryptKeyGen(u2, pp, mpk);
+//        Auth.DecryptKeyGen(u3, pp, mpk);
+//
+//        assertThrowsExactly(RuntimeException.class, () -> {
+//            u1.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+//            if(!u1.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
+//        });
+//
+//        assertThrowsExactly(RuntimeException.class, () -> {
+//            u2.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+//            if(!u2.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
+//        });
+//
+//        assertThrowsExactly(RuntimeException.class, () -> {
+//            u3.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+//            if(!u3.Verify(pp, mpk, m2, h1, r_p)) throw new RuntimeException();
+//        });
+    }
+
     @DisplayName("test abstract implement")
     @ParameterizedTest(name = "test scheme {0} curve {1}")
     @MethodSource("UnitTest.CHScheme.PBCHTest#GetAllPBCHSchemeCurve")
@@ -340,6 +483,8 @@ public class PBCHTest {
         params.put("id_len", 32);
         params.put("max_user", 2048);
         params.put("curve_group", CurveGroup.G1);
+        ABEConfig maabe_config = new ABEConfig(ABEName.MAABE_RW_2015, curveConfig);
+        params.put("maabe_config", maabe_config);
 
         PBCHConfig schemeConfig = new PBCHConfig(schemeName, curveConfig, params);
         testFunction(schemeConfig);

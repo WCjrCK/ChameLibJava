@@ -5,7 +5,7 @@ import Encryption.ABE.Interface.MAABE;
 
 public class Scheme implements MAABE<
         PublicParam, PublicKey, PublicKeyGroup, SecretKey,
-        SecretKeyGroup, Authority, Identity, Attribute, Policy, PlainText, CipherText> {
+        SecretKeyGroup, Authority, User, Identity, Attribute, Policy, PlainText, CipherText> {
     private final Core core = new Core();
 
     @Override
@@ -21,6 +21,9 @@ public class Scheme implements MAABE<
     public void AuthSetup(Authority auth, PublicParam pp) {
         core.AuthSetup(auth, pp);
     }
+
+    @Override
+    public void UserSetup(User user, PublicParam pp) {}
 
     @Override
     public void KeyGen(PublicKey pk, SecretKey sk, PublicParam pp, Authority auth, Identity id, Attribute attr) {

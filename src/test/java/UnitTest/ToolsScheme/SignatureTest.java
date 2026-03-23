@@ -4,6 +4,7 @@ import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveName;
 import Signature.Components.*;
 import Signature.S;
+import Signature.SConfig;
 import Signature.SFactory;
 import Signature.SName;
 import org.junit.jupiter.api.DisplayName;
@@ -57,7 +58,7 @@ public class SignatureTest {
             System.out.println("利用 PBC 的 type A 曲线参数测试自定义参数模式");
         }
         Config curveConfig = new Config(curveName, curve_param);
-        Signature.Config schemeConfig = new Signature.Config(sName, curveConfig, params);
+        SConfig schemeConfig = new SConfig(sName, curveConfig, params);
         S scheme = SFactory.createS(schemeConfig);
         PublicParam pp = scheme.createPublicParam(schemeConfig);
         scheme.Setup(pp);

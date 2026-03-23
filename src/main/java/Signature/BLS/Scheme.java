@@ -1,12 +1,12 @@
 package Signature.BLS;
 
 import EllipticCurve.Curve.CurveGroup;
-import Signature.Config;
 import Signature.S;
+import Signature.SConfig;
 
 public class Scheme extends S<PublicParam, PublicKey, SecretKey, Message, SignValue> {
     @Override
-    public final PublicParam createPublicParam(Config config) {
+    public final PublicParam createPublicParam(SConfig config) {
         return new PublicParam(config);
     }
 

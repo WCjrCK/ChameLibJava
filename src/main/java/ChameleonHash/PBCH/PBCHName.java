@@ -11,24 +11,27 @@ import static ChameleonHash.SchemeCurveRequire.ALL;
 import static ChameleonHash.SchemeCurveRequire.SYMMETRIC;
 
 public enum PBCHName {
-    DSS_2019(ALL, ChameleonHash.PBCH.BasePBCH.DSS_2019.Scheme.class, false, false),
-    TLL_2020(ALL, ChameleonHash.PBCH.BAPBCH.TLL_2020.Scheme.class, true, false),
-    XNM_2021(ALL, ChameleonHash.PBCH.RevocablePBCH.XNM_2021.Scheme.class, false, true),
-    TMM_2022(ALL, ChameleonHash.PBCH.RevocablePBCH.TMM_2022.Scheme.class, false, true),
+    DSS_2019(ALL, ChameleonHash.PBCH.BasePBCH.DSS_2019.Scheme.class, false, false, false),
+    TLL_2020(ALL, ChameleonHash.PBCH.BAPBCH.TLL_2020.Scheme.class, true, false, false),
+    XNM_2021(ALL, ChameleonHash.PBCH.RevocablePBCH.XNM_2021.Scheme.class, false, true, false),
+    TMM_2022(ALL, ChameleonHash.PBCH.RevocablePBCH.TMM_2022.Scheme.class, false, true, false),
+    ZLW_2021(SYMMETRIC, ChameleonHash.PBCH.MAPBCH.ZLW_2021.Scheme.class, false, false, true),
     ;
 
     public final SchemeCurveRequire schemeCurveRequire;
     public final Class<?> schemeClass;
     public final boolean has_blackbox_accountability;
     public final boolean revocable;
+    public final boolean multi_auth;
 
     private static final Map<String, PBCHName> LOOKUP = new ConcurrentHashMap<>();
 
-    PBCHName(SchemeCurveRequire scr, Class<?> schemeClass, boolean hba, boolean revocable) {
+    PBCHName(SchemeCurveRequire scr, Class<?> schemeClass, boolean hba, boolean revocable, boolean multi_auth) {
         schemeCurveRequire = scr;
         this.schemeClass = schemeClass;
         this.has_blackbox_accountability = hba;
         this.revocable = revocable;
+        this.multi_auth = multi_auth;
     }
 
     static {

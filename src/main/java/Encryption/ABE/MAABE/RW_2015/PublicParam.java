@@ -1,5 +1,6 @@
 package Encryption.ABE.MAABE.RW_2015;
 
+import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Point.MultivePoint;
 import Encryption.ABE.ABEConfig;
 import Encryption.ABE.utils.BooleanFormulaParser;
@@ -11,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class PublicParam extends Encryption.ABE.MAABE.Components.PublicParam<
         AuthPublicKey, AuthSecretKey, Authority, User, Policy,
-        Identity, PublicKeyGroup, SecretKeyGroup, PublicKey, SecretKey, PlainText, CipherText> {
+        Identity, Attribute, PublicKeyGroup, SecretKeyGroup, PublicKey, SecretKey, PlainText, CipherText> {
     MultivePoint g, egg;
 
 
@@ -67,6 +68,11 @@ public class PublicParam extends Encryption.ABE.MAABE.Components.PublicParam<
     }
 
     @Override
+    public Attribute createAttribute(String attr) {
+        return new Attribute(attr);
+    }
+
+    @Override
     public PublicKey createPublicKey() {
         return new PublicKey();
     }
@@ -98,6 +104,13 @@ public class PublicParam extends Encryption.ABE.MAABE.Components.PublicParam<
     public PlainText createPlainText(String msg) {
         PlainText res = new PlainText();
         res.m = curve.HashToGT(hash(msg));
+        return res;
+    }
+
+    @Override
+    public PlainText createPlainText(byte[] data) {
+        PlainText res = new PlainText();
+        res.m = curve.createPointFromBytes(CurveGroup.GT, data);
         return res;
     }
 

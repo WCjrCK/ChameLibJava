@@ -7,6 +7,11 @@ public class Authority extends Encryption.ABE.MAABE.Components.Authority<
         PublicKey, SecretKey, Identity, Attribute> {
     private final Core core = new Core();
 
+    @Override
+    public void AddAttr(Attribute attr) {
+        controled_attr.add(attr);
+    }
+
     public void Setup(PublicParam pp) {
         core.AuthSetup(this, pp);
     }

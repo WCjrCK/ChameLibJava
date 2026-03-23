@@ -4,10 +4,15 @@ import EllipticCurve.Point.MultivePoint;
 import utils.ElementCounter;
 
 public class PlainText extends Encryption.ABE.MAABE.Components.PlainText<PlainText> {
-    MultivePoint m;
+    public MultivePoint m;
 
     public boolean isEqual(PlainText o) {
         return m.isEqual(o.m);
+    }
+
+    @Override
+    public byte[] toBytes() {
+        return m.toBytes();
     }
 
     @Override

@@ -8,10 +8,11 @@ import utils.ElementCounter;
 public abstract class PublicParam<
         APK extends AuthPublicKey,
         ASK extends AuthSecretKey,
-        A extends Authority,
+        AUTH extends Authority,
         U extends User,
         P extends Policy,
         ID extends Identity,
+        A extends Attribute,
         PKG extends PublicKeyGroup,
         SKG extends SecretKeyGroup,
         PK extends PublicKey,
@@ -35,6 +36,8 @@ public abstract class PublicParam<
 
     public abstract ID createIdentity(String ID);
 
+    public abstract A createAttribute(String attr);
+
     public abstract PK createPublicKey();
 
     public abstract PKG createPublicKeyGroup();
@@ -43,9 +46,11 @@ public abstract class PublicParam<
 
     public abstract SKG createSecretKeyGroup();
 
-    public abstract A createAuthority();
+    public abstract AUTH createAuthority();
 
     public abstract PT createPlainText(String msg);
+
+    public abstract PT createPlainText(byte[] data);
 
     public abstract CT createCipherText();
 
