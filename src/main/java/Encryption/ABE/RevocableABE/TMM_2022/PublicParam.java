@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class PublicParam
         extends Encryption.ABE.RevocableABE.Components.PublicParam<
-        MasterPublicKey, MasterSecretKey, State, Revocated, Authority, User, Identity,
+        MasterPublicKey, MasterSecretKey, State, Revocated, Authority, User, Policy, Identity,
         Info, UpdateKey, SecretKey, DecryptKey, PlainText, CipherText> {
     protected FAMECore FAME = new FAMECore();
     protected Encryption.ABE.BaseABE.FAME.PublicParam FAME_pp;
@@ -29,8 +29,6 @@ public class PublicParam
         Authority res = new Authority();
         res.msk = createMasterSecretKey();
         res.st = createState();
-        res.rl = createRevocated();
-        res.uk = createKeyUpdater();
         return res;
     }
 
@@ -40,7 +38,10 @@ public class PublicParam
 
     @Override
     public State createState() {
-        return new State(MAX_USER);
+        State res = new State(MAX_USER);
+        res.rl = createRevocated();
+        res.uk = createKeyUpdater();
+        return res;
     }
 
     @Override
@@ -52,7 +53,6 @@ public class PublicParam
     public User createUser(String ID) {
         User res = new User(createIdentity(ID));
         res.sk = createSecretKey();
-        res.dk = createDecryptKey();
         res.S = createAttributes();
         return res;
     }
@@ -115,6 +115,7 @@ public class PublicParam
     public SecretKey createSecretKey() {
         SecretKey res = new SecretKey();
         res.FAME_sk = FAME_pp.createSecretKey();
+        res.dk = createDecryptKey();
         return res;
     }
 

@@ -6,15 +6,13 @@ public abstract class User<
         PP extends PublicParam,
         MPK extends MasterPublicKey,
         SK extends SecretKey,
-        DK extends DecryptKey,
         I extends Info,
         ID extends Identity,
         P extends Policy,
         PT extends PlainText<PT>,
-        CT extends CipherText<CT>
+        CT extends CipherText<CT, P>
         > {
     public SK sk;
-    public DK dk;
     public Attributes S;
     public final ID id;
 

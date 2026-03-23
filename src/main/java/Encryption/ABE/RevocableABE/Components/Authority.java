@@ -7,15 +7,11 @@ public abstract class Authority<
         MPK extends MasterPublicKey,
         MSK extends MasterSecretKey,
         S extends State,
-        R extends Revocated,
-        UK extends UpdateKey,
         I extends Info,
         U extends User
         > {
     public MSK msk;
     public S st;
-    public R rl;
-    public UK uk;
 
     public abstract void Setup(MPK mpk, PP pp);
 

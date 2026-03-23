@@ -10,7 +10,7 @@ public abstract class PublicParam<
         MSK extends MasterSecretKey,
         SK extends SecretKey,
         PT extends PlainText<PT>,
-        CT extends CipherText<CT>
+        CT extends CipherText
         > {
     public final Curve curve;
 

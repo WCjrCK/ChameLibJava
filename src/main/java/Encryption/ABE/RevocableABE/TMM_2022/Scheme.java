@@ -12,26 +12,26 @@ import Encryption.ABE.RevocableABE.Components.Attributes;
 
 public class Scheme extends ABE
         implements RevocableABE<PublicParam, MasterPublicKey, MasterSecretKey,
-        State, Revocated, Identity, UpdateKey, Info, SecretKey, DecryptKey, Policy, PlainText, CipherText>  {
+        State, Identity, Info, SecretKey, Policy, PlainText, CipherText>  {
     Core core = new Core();
     @Override
-    public void Setup(MasterPublicKey mpk, MasterSecretKey msk, State st, Revocated rl, UpdateKey uk, PublicParam pp) {
+    public void Setup(MasterPublicKey mpk, MasterSecretKey msk, State st, PublicParam pp) {
         core.Setup(mpk, msk, pp);
     }
 
     @Override
-    public void KeyGen(SecretKey sk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Revocated rl, Identity id, UpdateKey uk, DecryptKey dk, Attributes S) {
+    public void KeyGen(SecretKey sk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Identity id, Attributes S) {
         core.KeyGen(sk, pp, mpk, msk, st, id, S);
     }
 
     @Override
-    public void KeyUpdate(UpdateKey uk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Revocated rl, Info info) {
-        core.KeyUpdate(uk, pp, mpk, st, rl, info);
+    public void KeyUpdate(State st, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, Info info) {
+        core.KeyUpdate(st, pp, mpk, info);
     }
 
     @Override
-    public void DecryptKeyGen(DecryptKey dk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Revocated rl, UpdateKey uk, SecretKey sk, Attributes S) {
-        core.DecryptKeyGen(dk, pp, mpk, msk, st, rl, uk, sk);
+    public void DecryptKeyGen(SecretKey sk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st) {
+        core.DecryptKeyGen(sk, st);
     }
 
     @Override
@@ -40,13 +40,13 @@ public class Scheme extends ABE
     }
 
     @Override
-    public void Decrypt(PlainText pt, PublicParam pp, MasterPublicKey mpk, DecryptKey dk, SecretKey sk, Attributes S, CipherText ct, Policy P) {
-        core.Decrypt(pt, pp, dk, ct, P);
+    public void Decrypt(PlainText pt, PublicParam pp, MasterPublicKey mpk, SecretKey sk, CipherText ct) {
+        core.Decrypt(pt, pp, sk, ct);
     }
 
     @Override
-    public void Revoke(Revocated rl, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Identity id, Info info) {
-        core.Revoke(rl, id, info);
+    public void Revoke(State st, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, Identity id, Info info) {
+        core.Revoke(st, id, info);
     }
 
     @Override

@@ -31,14 +31,14 @@ public class Core {
         sk.FAME_sk.sk_p[2] = pp.curve.getRandomPoint(CurveGroup.G1);
     }
 
-    public void KeyUpdate(UpdateKey uk, PublicParam pp, MasterPublicKey mpk, State st, Revocated rl, Info info) {
-        st.GetUpdateKeyNode(rl, info);
-        uk.info = info;
+    public void KeyUpdate(State st, PublicParam pp, MasterPublicKey mpk, Info info) {
+        st.GetUpdateKeyNode(st.rl, info);
+        st.uk.info = info;
         Scalar r_theta;
         for(int theta = 0;theta < st.g_theta.length;++theta) {
             if(st.tag.get(theta) && st.tag_g.get(theta)) {
                 r_theta = pp.curve.getRandomScalar();
-                uk.AddKey(theta,
+                st.uk.AddKey(theta,
                         st.g_theta[theta].mul(pp.H(String.valueOf(info.timestamp)).pow(r_theta)),
                         mpk.FAME_mpk.h.pow(r_theta)
                 );
@@ -46,8 +46,8 @@ public class Core {
         }
     }
 
-    public void DecryptKeyGen(DecryptKey dk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Revocated rl, UpdateKey uk, SecretKey sk) {
-        st.GetUpdateKeyNode(rl, uk.info);
+    public void DecryptKeyGen(SecretKey sk, State st) {
+        st.GetUpdateKeyNode(st.rl, st.uk.info);
 
         int node_id = sk.node_id, theta = -1;
         if(st.tag.get(node_id)) theta = node_id;
@@ -57,12 +57,12 @@ public class Core {
         }
 
         if(theta != -1) {
-            dk.CopyFromSK(sk);
-            dk.info = uk.info;
-            dk.node_id = sk.node_id;
+            sk.dk.CopyFromSK(sk);
+            sk.dk.info = st.uk.info;
+            sk.dk.node_id = sk.node_id;
 
-            dk.FAME_sk.sk_p[2] = sk.sk_theta.get(theta).mul(uk.ku_theta_G1.get(theta));
-            dk.sk_0_4 = uk.ku_theta_G2.get(theta);
+            sk.dk.FAME_sk.sk_p[2] = sk.sk_theta.get(theta).mul(st.uk.ku_theta_G1.get(theta));
+            sk.dk.sk_0_4 = st.uk.ku_theta_G2.get(theta);
         }
     }
 
@@ -87,11 +87,11 @@ public class Core {
         for(int i = 0;i < tmp.length;++i) ct.ct[i] ^= tmp[i];
     }
 
-    public void Decrypt(PlainText pt, PublicParam pp, DecryptKey dk, CipherText ct, Policy P) {
+    public void Decrypt(PlainText pt, PublicParam pp, SecretKey sk, CipherText ct) {
         Encryption.ABE.BaseABE.FAME.PlainText FAME_pt = pp.FAME_pp.createPlainText("");
-        pp.FAME.Decrypt(FAME_pt, pp.FAME_pp, dk.FAME_sk, ct.FAME_ct, P.FAME_p);
+        pp.FAME.Decrypt(FAME_pt, pp.FAME_pp, sk.dk.FAME_sk, ct.FAME_ct);
 
-        byte[] tmp = FAME_pt.m.mul(pp.curve.Pairing(ct.ct_0_4, dk.sk_0_4)).inv().toBytes();
+        byte[] tmp = FAME_pt.m.mul(pp.curve.Pairing(ct.ct_0_4, sk.dk.sk_0_4)).inv().toBytes();
         for(int i = 0;i < tmp.length;++i) tmp[i] ^= ct.ct[i];
         try {
             pt.m = pp.curve.createScalarFromBytes(tmp);
@@ -100,7 +100,7 @@ public class Core {
         }
     }
 
-    public void Revoke(Revocated rl, Identity id, Info info) {
-        rl.Add(id, info);
+    public void Revoke(State st, Identity id, Info info) {
+        st.rl.Add(id, info);
     }
 }

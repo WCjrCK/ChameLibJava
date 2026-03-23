@@ -2,7 +2,7 @@ package Encryption.ABE.RevocableABE.XNM_2021;
 
 import utils.ElementCounter;
 
-public class Authority extends Encryption.ABE.RevocableABE.Components.Authority<PublicParam, MasterPublicKey, MasterSecretKey, State, Revocated, UpdateKey, Info, User> {
+public class Authority extends Encryption.ABE.RevocableABE.Components.Authority<PublicParam, MasterPublicKey, MasterSecretKey, State, Info, User> {
     @Override
     public void Setup(MasterPublicKey mpk, PublicParam pp) {
         (new Core()).Setup(mpk, msk, pp);
@@ -15,17 +15,17 @@ public class Authority extends Encryption.ABE.RevocableABE.Components.Authority<
 
     @Override
     public void KeyUpdate(PublicParam pp, MasterPublicKey mpk, Info info) {
-        (new Core()).KeyUpdate(uk, pp, mpk, st, rl, info);
+        (new Core()).KeyUpdate(st, pp, mpk, info);
     }
 
     @Override
     public void DecryptKeyGen(User user, PublicParam pp, MasterPublicKey mpk) {
-        (new Core()).DecryptKeyGen(user.dk, pp, mpk, msk, st, rl, uk, user.sk);
+        (new Core()).DecryptKeyGen(user.sk, pp, mpk, msk, st);
     }
 
     @Override
     public void Revoke(PublicParam pp, MasterPublicKey mpk, User user, Info info) {
-        (new Core()).Revoke(rl, user.id, info);
+        (new Core()).Revoke(st, user.id, info);
     }
 
     @Override

@@ -172,10 +172,11 @@ public class FAMECore {
                 for(int j = 1; j <= n2; ++j) ct.ct[i][l - 1] = ct.ct[i][l - 1].mul(Hjl[j - 1][l - 1].pow(P.MSP.M[i][j - 1]));
             }
         }
+        ct.P = P;
     }
 
-    public void Decrypt(PlainText pt, PublicParam pp, SecretKey sk, CipherText ct, Policy P) {
-        Scalar[] gamma = P.MSP.Solve(pp.curve, sk.S);
+    public void Decrypt(PlainText pt, PublicParam pp, SecretKey sk, CipherText ct) {
+        Scalar[] gamma = ct.P.MSP.Solve(pp.curve, sk.S);
         MultivePoint num = ct.ct_p, tmp = pp.curve.createPoint(CurveGroup.G1);
         for(int t = 0;t < 3;++t) {
             boolean fir = true;
@@ -191,8 +192,8 @@ public class FAMECore {
         for(int t = 0;t < 3;++t) {
             tmp = sk.sk_p[t];
             for(int i = 0;i < ct.ct.length;++i) {
-                if(sk.Attr2id.get(P.MSP.policy[i]) == null) continue;
-                tmp = tmp.mul(sk.sk_y[sk.Attr2id.get(P.MSP.policy[i])][t].pow(gamma[i]));
+                if(sk.Attr2id.get(ct.P.MSP.policy[i]) == null) continue;
+                tmp = tmp.mul(sk.sk_y[sk.Attr2id.get(ct.P.MSP.policy[i])][t].pow(gamma[i]));
             }
             if(t == 0) den = pp.curve.Pairing(tmp, ct.ct_0[t]);
             else den = den.mul(pp.curve.Pairing(tmp, ct.ct_0[t]));

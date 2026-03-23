@@ -154,7 +154,7 @@ public class Scheme extends PBCH
         R_ = Arrays.copyOf(R_, R_.length / 2);
 
         PlainText pt_RABE = pp.FAME_pp.createPlainText("");
-        pp.FAME.Decrypt(pt_RABE, pp.FAME_pp, moder_p.sk.FAME_sk, r.FAME_ct, P.P);
+        pp.FAME.Decrypt(pt_RABE, pp.FAME_pp, moder_p.sk.FAME_sk, r.FAME_ct);
 
         byte[] r_ = pt_RABE.m.inv().toBytes();
         for(int i = 0;i < r_.length;++i) r_[i] ^= r.ct[i];

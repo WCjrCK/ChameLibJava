@@ -3,7 +3,7 @@ package Encryption.ABE.RevocableABE.TMM_2022;
 import utils.ElementCounter;
 
 public class User extends Encryption.ABE.RevocableABE.Components.User<
-        PublicParam, MasterPublicKey, SecretKey, DecryptKey, Info, Identity, Policy, PlainText, CipherText> {
+        PublicParam, MasterPublicKey, SecretKey, Info, Identity, Policy, PlainText, CipherText> {
     public User(Identity id) {
         super(id);
     }
@@ -15,7 +15,7 @@ public class User extends Encryption.ABE.RevocableABE.Components.User<
 
     @Override
     public void Decrypt(PlainText pt, PublicParam pp, MasterPublicKey mpk, Policy P, CipherText ct) {
-        (new Core()).Decrypt(pt, pp, dk, ct, P);
+        (new Core()).Decrypt(pt, pp, sk, ct);
     }
 
     @Override

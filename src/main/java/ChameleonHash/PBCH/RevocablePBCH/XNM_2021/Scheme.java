@@ -46,19 +46,19 @@ public class Scheme extends PBCH
 
     @Override
     public void KeyUpdate(UpdateKey uk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Revocated rl, Info info) {
-        pp.RABE.KeyUpdate(uk.RABE_uk, pp.RABE_pp, mpk.RABE_mpk, st.RABE_st, rl.RABE_rl, info.RABE_info);
+        pp.RABE.KeyUpdate(st.RABE_st, pp.RABE_pp, mpk.RABE_mpk, info.RABE_info);
     }
 
     @Override
     public void DecryptKeyGen(DecryptKey dk, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Revocated rl, UpdateKey uk, SecretKey sk, Attributes S) {
-        pp.RABE.DecryptKeyGen(dk.RABE_dk, pp.RABE_pp, mpk.RABE_mpk, msk.RABE_msk, st.RABE_st, rl.RABE_rl, uk.RABE_uk, sk.RABE_sk);
+        pp.RABE.DecryptKeyGen(sk.RABE_sk, pp.RABE_pp, mpk.RABE_mpk, msk.RABE_msk, st.RABE_st);
         dk.info.RABE_info = dk.RABE_dk.info;
         dk.CHET_sk.CopyFrom(sk.CHET_sk);
     }
 
     @Override
     public void Revoke(Revocated rl, PublicParam pp, MasterPublicKey mpk, MasterSecretKey msk, State st, Identity id, Info info) {
-        pp.RABE.Revoke(rl.RABE_rl, id.RABE_id, info.RABE_info);
+        pp.RABE.Revoke(st.RABE_st, id.RABE_id, info.RABE_info);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class Scheme extends PBCH
     @Override
     public void Collision(Randomness r_p, PublicParam pp, MasterPublicKey mpk, PublicKey pk, SecretKey sk, DecryptKey dk, Message m, Policy P, HashValue h, Randomness r, Message m_p) {
         PlainText RABE_pt = pp.RABE_pp.createPlainText("");
-        pp.RABE.Decrypt(RABE_pt, pp.RABE_pp, dk.RABE_dk, h.RABE_ct, P.RABE_P);
+        pp.RABE.Decrypt(RABE_pt, pp.RABE_pp, sk.RABE_sk, h.RABE_ct);
         byte[] tmp = RABE_pt.FAME_pt.m.toBytes();
         int l1 = tmp[1];
         if(l1 < 0 || l1 + 2 >= tmp.length) throw new RuntimeException("解码失败");

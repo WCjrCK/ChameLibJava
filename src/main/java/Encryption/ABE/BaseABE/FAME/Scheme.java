@@ -33,8 +33,8 @@ public class Scheme extends ABE
     }
 
     @Override
-    public void Decrypt(PlainText pt, PublicParam pp, MasterPublicKey mpk, SecretKey sk, CipherText ct, Policy P) {
-        Core.Decrypt(pt, pp, sk, ct, P);
+    public void Decrypt(PlainText pt, PublicParam pp, MasterPublicKey mpk, SecretKey sk, CipherText ct) {
+        Core.Decrypt(pt, pp, sk, ct);
     }
 
     @Override

@@ -10,7 +10,7 @@ public interface BaseABE<
         SK extends SecretKey,
         P extends Policy,
         PT extends PlainText<PT>,
-        CT extends CipherText<CT>
+        CT extends CipherText<CT, P>
         > {
     void Setup(MPK mpk, MSK msk, PP pp);
 
@@ -18,7 +18,7 @@ public interface BaseABE<
 
     void Encrypt(CT ct, PP pp, MPK mpk, P P, PT pt);
 
-    void Decrypt(PT pt, PP pp, MPK mpk, SK sk, CT ct, P P);
+    void Decrypt(PT pt, PP pp, MPK mpk, SK sk, CT ct);
 
     PP createPublicParam(ABEConfig abeConfig);
 }

@@ -7,7 +7,7 @@ import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 
-public class State extends Encryption.ABE.RevocableABE.Components.State {
+public class State extends Encryption.ABE.RevocableABE.Components.State<Revocated, UpdateKey> {
     private int empty_leaf_id;
     private HashMap<Identity, Integer> id_2_node;
     public MultivePoint[] g_theta;

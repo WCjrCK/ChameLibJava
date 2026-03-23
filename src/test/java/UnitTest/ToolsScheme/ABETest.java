@@ -103,14 +103,14 @@ public class ABETest {
         CipherText ct2 = pp.createCipherText();
 
         scheme.Encrypt(ct1, pp, mpk, p, m1);
-        scheme.Decrypt(m3, pp, mpk, sk1, ct1, p);
+        scheme.Decrypt(m3, pp, mpk, sk1, ct1);
         assertTrue(m3.isEqual(m1), "decrypt(sk1, ct1) != m1");
 
         scheme.Encrypt(ct2, pp, mpk, p, m2);
-        scheme.Decrypt(m3, pp, mpk, sk1, ct2, p);
+        scheme.Decrypt(m3, pp, mpk, sk1, ct2);
         assertTrue(m3.isEqual(m2), "decrypt(sk1, ct2) != m2");
 
-        scheme.Decrypt(m3, pp, mpk, sk2, ct1, p);
+        scheme.Decrypt(m3, pp, mpk, sk2, ct1);
         assertFalse(m3.isEqual(m1), "decrypt(sk2, ct1) invalid");
         assertFalse(m3.isEqual(m2), "decrypt(sk2, ct1) invalid");
     }

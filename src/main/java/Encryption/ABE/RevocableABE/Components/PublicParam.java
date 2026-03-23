@@ -12,13 +12,14 @@ public abstract class PublicParam<
         R extends Revocated,
         A extends Authority,
         U extends User,
+        P extends Policy,
         ID extends Identity,
         I extends Info,
         KU extends UpdateKey<I>,
         SK extends SecretKey,
         DK extends DecryptKey<I>,
         PT extends PlainText<PT>,
-        CT extends CipherText<CT>
+        CT extends CipherText<CT, P>
         > {
     public final Curve curve;
 
@@ -30,7 +31,7 @@ public abstract class PublicParam<
         return new Attributes();
     }
 
-    public abstract Policy createPolicy(String BooleanFormulas);
+    public abstract P createPolicy(String BooleanFormulas);
 
     public abstract MPK createMasterPublicKey();
 

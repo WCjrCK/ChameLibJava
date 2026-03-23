@@ -8,29 +8,26 @@ public interface RevocableABE<
         MPK extends MasterPublicKey,
         MSK extends MasterSecretKey,
         S extends State,
-        R extends Revocated,
         ID extends Identity,
-        UK extends UpdateKey<I>,
         I extends Info,
         SK extends SecretKey,
-        DK extends DecryptKey<I>,
         P extends Policy,
         PT extends PlainText<PT>,
-        CT extends CipherText<CT>
+        CT extends CipherText<CT, P>
         > {
-    void Setup(MPK mpk, MSK msk, S st, R rl, UK uk, PP pp);
+    void Setup(MPK mpk, MSK msk, S st, PP pp);
 
-    void KeyGen(SK sk, PP pp, MPK mpk, MSK msk, S st, R rl, ID id, UK uk, DK dk, Attributes S);
+    void KeyGen(SK sk, PP pp, MPK mpk, MSK msk, S st, ID id, Attributes S);
 
-    void KeyUpdate(UK uk, PP pp, MPK mpk, MSK msk, S st, R rl, I info);
+    void KeyUpdate(S st, PP pp, MPK mpk, MSK msk, I info);
 
-    void DecryptKeyGen(DK dk, PP pp, MPK mpk, MSK msk, S st, R rl, UK uk, SK sk, Attributes S);
+    void DecryptKeyGen(SK sk, PP pp, MPK mpk, MSK msk, S st);
 
     void Encrypt(CT ct, PP pp, MPK mpk, P P, PT pt, I info);
 
-    void Decrypt(PT pt, PP pp, MPK mpk, DK dk, SK sk, Attributes S, CT ct, P P);
+    void Decrypt(PT pt, PP pp, MPK mpk, SK sk, CT ct);
 
-    void Revoke(R rl, PP pp, MPK mpk, MSK msk, S st, ID id, I info);
+    void Revoke(S st, PP pp, MPK mpk, MSK msk, ID id, I info);
 
     PP createPublicParam(ABEConfig abeConfig);
 }
