@@ -8,11 +8,7 @@ public interface RevocablePBCH<
         MPK extends MasterPublicKey,
         MSK extends MasterSecretKey,
         S extends State,
-        RL extends Revocated,
-        UK extends UpdateKey,
-        PK extends PublicKey,
         SK extends SecretKey,
-        DK extends DecryptKey,
         ID extends Identity,
         A extends Attributes,
         I extends Info,
@@ -27,17 +23,17 @@ public interface RevocablePBCH<
 
 //    void AssignUser(U user, PP pp, MPK mpk, MSK msk);
 
-    void KeyGen(SK sk, PP pp, MPK mpk, MSK msk, S st, RL rl, ID id, UK uk, DK dk, A S);
+    void KeyGen(SK sk, PP pp, MPK mpk, MSK msk, S st, ID id, A S);
 
-    void KeyUpdate(UK uk, PP pp, MPK mpk, MSK msk, S st, RL rl, I info);
+    void KeyUpdate(S st, PP pp, MPK mpk, MSK msk, I info);
 
-    void DecryptKeyGen(DK dk, PP pp, MPK mpk, MSK msk, S st, RL rl, UK uk, SK sk, A S);
+    void DecryptKeyGen(SK sk, PP pp, MPK mpk, MSK msk, S st);
 
-    void Revoke(RL rl, PP pp, MPK mpk, MSK msk, S st, ID id, I info);
+    void Revoke(S st, PP pp, MPK mpk, MSK msk, ID id, I info);
 
-    void Hash(H h, R r, PP pp, MPK mpk, ID id, PK pk, M m, P P, I info);
+    void Hash(H h, R r, PP pp, MPK mpk, ID id, M m, P P, I info);
 
-    boolean Verify(PP pp, MPK mpk, PK pk, M m, H h, R r);
+    boolean Verify(PP pp, MPK mpk, M m, H h, R r);
 
-    void Collision(R r_p, PP pp, MPK mpk, PK pk, SK sk, DK dk, M m, P P, H h, R r, M m_p);
+    void Collision(R r_p, PP pp, MPK mpk, SK sk, M m, H h, R r, M m_p);
 }

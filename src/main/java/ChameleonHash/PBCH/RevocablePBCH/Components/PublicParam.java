@@ -11,7 +11,6 @@ public abstract class PublicParam<
         S extends State,
         RL extends Revocated,
         UK extends UpdateKey,
-        PK extends PublicKey,
         SK extends SecretKey,
         DK extends DecryptKey,
         Auth extends Authority,
@@ -43,8 +42,6 @@ public abstract class PublicParam<
     public abstract DK createDecryptKey();
 
     public abstract I createInfo();
-
-    public abstract PK createPublicKey();
 
     public abstract M createMessage(String msg);
 

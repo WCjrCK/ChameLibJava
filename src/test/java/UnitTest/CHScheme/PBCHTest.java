@@ -31,8 +31,7 @@ import java.util.stream.Stream;
 
 import static EllipticCurve.Curve.CurveName.PBC_CUSTOM;
 import static EllipticCurve.Curve.CurveName.SECP256K1;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PBCHTest {
     static List<PBCHName> skipList = List.of(new PBCHName[]{
@@ -202,77 +201,113 @@ public class PBCHTest {
         RevocablePBCH scheme = RevocablePBCHFactory.createScheme(schemeConfig);
         ChameleonHash.PBCH.RevocablePBCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
         ChameleonHash.PBCH.RevocablePBCH.Components.MasterPublicKey mpk = pp.createMasterPublicKey();
-        ChameleonHash.PBCH.RevocablePBCH.Components.MasterSecretKey msk = pp.createMasterSecretKey();
 
-        scheme.Setup(pp, mpk, msk);
+        ChameleonHash.PBCH.RevocablePBCH.Components.Authority Auth = pp.createAuthority();
+        Auth.Setup(mpk, pp);
+
+        ChameleonHash.PBCH.RevocablePBCH.Components.User u1 = pp.createUser("u1");
+        u1.S.addAttr("A");
+        u1.S.addAttr("DDDD");
+        Auth.KeyGen(u1, pp, mpk);
+
+        ChameleonHash.PBCH.RevocablePBCH.Components.User u2 = pp.createUser("u2");
+        u2.S.addAttr("BB");
+        u2.S.addAttr("CCC");
+        Auth.KeyGen(u2, pp, mpk);
+
+        ChameleonHash.PBCH.RevocablePBCH.Components.User u3 = pp.createUser("u3");
+        u3.S.addAttr("A");
+        u3.S.addAttr("BB");
+        u3.S.addAttr("CCC");
+        Auth.KeyGen(u3, pp, mpk);
+
+        ChameleonHash.PBCH.RevocablePBCH.Components.Message m1 = pp.createMessage("msg1");
+        ChameleonHash.PBCH.RevocablePBCH.Components.Message m2 = pp.createMessage("msg2");
+        ChameleonHash.PBCH.RevocablePBCH.Components.Message m3 = pp.createMessage("msg3");
+
+        ChameleonHash.PBCH.RevocablePBCH.Components.HashValue h1 = pp.createHashValue();
+        ChameleonHash.PBCH.RevocablePBCH.Components.HashValue h2 = pp.createHashValue();
+        ChameleonHash.PBCH.RevocablePBCH.Components.HashValue h3 = pp.createHashValue();
+        ChameleonHash.PBCH.RevocablePBCH.Components.Randomness r1 = pp.createRandomness();
+        ChameleonHash.PBCH.RevocablePBCH.Components.Randomness r2 = pp.createRandomness();
+        ChameleonHash.PBCH.RevocablePBCH.Components.Randomness r3 = pp.createRandomness();
+        ChameleonHash.PBCH.RevocablePBCH.Components.Randomness r_p = pp.createRandomness();
 
         ChameleonHash.PBCH.RevocablePBCH.Components.Policy P = pp.createPolicy("A&(DDDD|(BB&CCC))");
 
-        ChameleonHash.PBCH.RevocablePBCH.Components.User u1 = pp.createUser("u1");
-//        scheme.AssignUser(u1, pp, mpk, msk);
-        u1.S.addAttr("A");
-        u1.S.addAttr("DDDD");
-//        scheme.KeyGen(u1.sk, pp, mpk, msk, st, rl, u1.id, );
-//
-//        User u2 = pp.createUser(u1, ((int) schemeConfig.params.get("id_len")) / 2);
-//        scheme.AssignUser(u2, mpk, msk);
-//        u2.S.addAttr("BB");
-//        u2.S.addAttr("CCC");
-//        scheme.KeyGen(u2, pp, mpk, msk);
-//
-//        HashValue h1 = pp.createHashValue();
-//        Randomness r1 = pp.createRandomness();
-//
-//        Message m1 = pp.createMessage("msg1");
-//        Message m2 = pp.createMessage("msg2");
-//
-//        scheme.Hash(h1, r1, pp, mpk, u1, m1, P);
-//        assertTrue(scheme.Verify(pp, mpk, m1, h1, r1), "H(m1) valid");
-//        assertFalse(scheme.Verify(pp, mpk, m2, h1, r1), "H(m2) invalid");
-//
-//        HashValue h2 = pp.createHashValue();
-//        Randomness r2 = pp.createRandomness();
-//
-//        scheme.Hash(h2, r2, pp, mpk, u2, m2, P);
-//        assertTrue(scheme.Verify(pp, mpk, m2, h2, r2), "H(m2) valid");
-//        assertFalse(scheme.Verify(pp, mpk, m1, h2, r2), "H(m1) invalid");
-//        assertFalse(scheme.Verify(pp, mpk, m2, h1, r2), "H(m1) invalid");
-//        assertFalse(scheme.Verify(pp, mpk, m2, h2, r1), "H(m1) invalid");
-//
-//        Randomness r_p = pp.createRandomness();
-//
-//        scheme.Collision(r_p, pp, mpk, msk, u1, m1, P, h1, r1, m2);
-//        assertTrue(scheme.Verify(pp, mpk, m2, h1, r_p), "Adapt(m2) valid");
-//        assertFalse(scheme.Verify(pp, mpk, m1, h1, r_p), "Adapt(m1) invalid");
-//
-//        scheme.Collision(r_p, pp, mpk, msk, u1, m2, P, h2, r2, m1);
-//        assertTrue(scheme.Verify(pp, mpk, m1, h2, r_p), "Adapt(m1) valid");
-//        assertFalse(scheme.Verify(pp, mpk, m2, h2, r_p), "Adapt(m2) invalid");
-//
-//        scheme.Adapt(r1_p, h1, r1, SP, mpk, msk, u1, MSP, m1, m2);
-//        assertTrue(scheme.Check(h1, r1_p, SP, mpk, m2), "Adapt(m2) valid");
-//        assertFalse(scheme.Check(h1, r1_p, SP, mpk, m1), "Adapt(m1) invalid");
-//
-//        scheme.Adapt(r1_p, h2, r2, SP, mpk, msk, u1, MSP, m2, m1);
-//        assertTrue(scheme.Check(h2, r1_p, SP, mpk, m1), "Adapt(m1) valid");
-//        assertFalse(scheme.Check(h2, r1_p, SP, mpk, m2), "Adapt(m2) invalid");
-//
-//        scheme.Adapt(r1_p, h2, r2, SP, mpk, msk, u2, MSP, m2, m1);
-//        assertFalse(scheme.Check(h2, r1_p, SP, mpk, m1), "policy false");
-//        assertFalse(scheme.Check(h2, r1_p, SP, mpk, m2), "policy false");
-//
-//        scheme.Hash(h1, r1, pp, mpk, m1, P);
-//
-//        assertTrue(scheme.Verify(pp, mpk, m1, h1, r1), "H(m1) valid");
-//        assertFalse(scheme.Verify(pp, mpk, m2, h1, r1), "H(m2) invalid");
-//
-//        scheme.Hash(h2, r2, pp, mpk, m2, P);
-//        assertTrue(scheme.Verify(pp, mpk, m2, h2, r2), "H(m2) valid");
-//        assertFalse(scheme.Verify(pp, mpk, m1, h2, r2), "H(m1) invalid");
-//
-//        scheme.Collision(r_p, pp, mpk, sk1, m1, P, h1, r1, m2);
-//        assertTrue(scheme.Verify(pp, mpk, m2, h1, r_p), "Adapt(m2) valid");
-//        assertFalse(scheme.Verify(pp, mpk, m1, h1, r_p), "Adapt(m1) invalid");
+        ChameleonHash.PBCH.RevocablePBCH.Components.Info i = pp.createInfo();
+        i.setValue(new HashMap<>(){{put("timestamp", 5);}});
+
+        u1.Hash(h1, r1, pp, mpk, m1, P, i);
+
+        assertTrue(scheme.Verify(pp, mpk, m1, h1, r1), "H(m1) valid");
+        assertFalse(scheme.Verify(pp, mpk, m2, h1, r1), "H(m2) invalid");
+        assertFalse(scheme.Verify(pp, mpk, m3, h1, r1), "H(m3) invalid");
+
+        Auth.KeyUpdate(pp, mpk, i);
+
+        Auth.DecryptKeyGen(u1, pp, mpk);
+        Auth.DecryptKeyGen(u2, pp, mpk);
+        Auth.DecryptKeyGen(u3, pp, mpk);
+
+        u1.Collision(r_p, pp, mpk, m1, h1, r1, m2);
+        assertTrue(scheme.Verify(pp, mpk, m2, h1, r_p));
+        assertFalse(scheme.Verify(pp, mpk, m1, h1, r_p));
+
+        assertThrowsExactly(RuntimeException.class, () -> {
+            u2.Collision(r_p, pp, mpk, m1, h1, r1, m2);
+        });
+
+        u3.Collision(r_p, pp, mpk, m1, h1, r1, m2);
+        assertTrue(scheme.Verify(pp, mpk, m2, h1, r_p));
+        assertFalse(scheme.Verify(pp, mpk, m1, h1, r_p));
+
+        i.setValue(new HashMap<>(){{put("timestamp", 10);}});
+
+        Auth.Revoke(pp, mpk, u1, i);
+
+        i.setValue(new HashMap<>(){{put("timestamp", 50);}});
+
+        u2.Hash(h2, r2, pp, mpk, m1, P, i);
+
+        Auth.KeyUpdate(pp, mpk, i);
+
+        Auth.DecryptKeyGen(u1, pp, mpk);
+        Auth.DecryptKeyGen(u2, pp, mpk);
+        Auth.DecryptKeyGen(u3, pp, mpk);
+
+        assertThrowsExactly(RuntimeException.class, () -> {
+            u1.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+        });
+
+        assertThrowsExactly(RuntimeException.class, () -> {
+            u2.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+        });
+
+        u3.Collision(r_p, pp, mpk, m1, h2, r2, m2);
+        assertTrue(scheme.Verify(pp, mpk, m2, h2, r_p));
+        assertFalse(scheme.Verify(pp, mpk, m1, h2, r_p));
+
+        i.setValue(new HashMap<>(){{put("timestamp", 100);}});
+        Auth.Revoke(pp, mpk, u2, i);
+
+        Auth.KeyUpdate(pp, mpk, i);
+
+        Auth.DecryptKeyGen(u1, pp, mpk);
+        Auth.DecryptKeyGen(u2, pp, mpk);
+        Auth.DecryptKeyGen(u3, pp, mpk);
+
+        assertThrowsExactly(RuntimeException.class, () -> {
+            u1.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+        });
+
+        assertThrowsExactly(RuntimeException.class, () -> {
+            u2.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+        });
+
+        assertThrowsExactly(RuntimeException.class, () -> {
+            u3.Collision(r_p, pp, mpk, m2, h2, r2, m2);
+        });
     }
 
     @DisplayName("test abstract implement")

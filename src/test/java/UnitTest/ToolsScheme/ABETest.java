@@ -141,18 +141,17 @@ public class ABETest {
             User u1 = pp.createUser("user1");
             u1.S.addAttr("A");
             u1.S.addAttr("DDDD");
+            Auth.KeyGen(u1, pp, mpk);
 
             User u2 = pp.createUser("user2");
             u2.S.addAttr("BB");
             u2.S.addAttr("CCC");
+            Auth.KeyGen(u2, pp, mpk);
 
             User u3 = pp.createUser("user3");
             u3.S.addAttr("A");
             u3.S.addAttr("BB");
             u3.S.addAttr("CCC");
-
-            Auth.KeyGen(u1, pp, mpk);
-            Auth.KeyGen(u2, pp, mpk);
             Auth.KeyGen(u3, pp, mpk);
 
             Encryption.ABE.RevocableABE.Components.PlainText pt1 = pp.createPlainText("msg1");
@@ -174,13 +173,13 @@ public class ABETest {
             Auth.DecryptKeyGen(u2, pp, mpk);
             Auth.DecryptKeyGen(u3, pp, mpk);
 
-            u1.Decrypt(pt3, pp, mpk, P, ct1);
+            u1.Decrypt(pt3, pp, mpk, ct1);
             assertTrue(pt3.isEqual(pt1), "decrypt(dk_1_1, ct1) == m1");
 
-            u2.Decrypt(pt3, pp, mpk, P, ct1);
+            u2.Decrypt(pt3, pp, mpk, ct1);
             assertFalse(pt3.isEqual(pt1), "policy false");
 
-            u3.Decrypt(pt3, pp, mpk, P, ct1);
+            u3.Decrypt(pt3, pp, mpk, ct1);
             assertTrue(pt3.isEqual(pt1), "decrypt(dk_3_1, ct1) == m1");
 
 
@@ -196,13 +195,13 @@ public class ABETest {
             Auth.DecryptKeyGen(u2, pp, mpk);
             Auth.DecryptKeyGen(u3, pp, mpk);
 
-            u1.Decrypt(pt3, pp, mpk, P, ct2);
+            u1.Decrypt(pt3, pp, mpk, ct2);
             assertFalse(pt3.isEqual(pt2), "banned id1");
 
-            u2.Decrypt(pt3, pp, mpk, P, ct2);
+            u2.Decrypt(pt3, pp, mpk, ct2);
             assertFalse(pt3.isEqual(pt2), "policy false");
 
-            u3.Decrypt(pt3, pp, mpk, P, ct2);
+            u3.Decrypt(pt3, pp, mpk, ct2);
             assertTrue(pt3.isEqual(pt2), "decrypt(dk_3_1, ct1) == m1");
 
 
@@ -215,13 +214,13 @@ public class ABETest {
             Auth.DecryptKeyGen(u2, pp, mpk);
             Auth.DecryptKeyGen(u3, pp, mpk);
 
-            u1.Decrypt(pt3, pp, mpk, P, ct2);
+            u1.Decrypt(pt3, pp, mpk, ct2);
             assertFalse(pt3.isEqual(pt2), "different time");
 
-            u2.Decrypt(pt3, pp, mpk, P, ct2);
+            u2.Decrypt(pt3, pp, mpk, ct2);
             assertFalse(pt3.isEqual(pt2), "different time");
 
-            u3.Decrypt(pt3, pp, mpk, P, ct2);
+            u3.Decrypt(pt3, pp, mpk, ct2);
             assertFalse(pt3.isEqual(pt2), "different time");
         }
     }

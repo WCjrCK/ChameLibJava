@@ -14,7 +14,7 @@ public class User extends Encryption.ABE.RevocableABE.Components.User<
     }
 
     @Override
-    public void Decrypt(PlainText pt, PublicParam pp, MasterPublicKey mpk, Policy P, CipherText ct) {
+    public void Decrypt(PlainText pt, PublicParam pp, MasterPublicKey mpk, CipherText ct) {
         (new Core()).Decrypt(pt, pp, sk, ct);
     }
 

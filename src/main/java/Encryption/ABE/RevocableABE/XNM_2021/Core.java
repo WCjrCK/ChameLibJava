@@ -77,6 +77,7 @@ public class Core {
     public void Encrypt(CipherText ct, PublicParam pp, MasterPublicKey mpk, Policy P, PlainText pt, Info info, Scalar s_1, Scalar s_2) {
         ct.ct_0_4 = pp.H(String.valueOf(info.timestamp)).pow(s_1.add(s_2));
         pp.FAME.Encrypt(ct.FAME_ct, pp.FAME_pp, mpk.FAME_mpk, P.FAME_p, pt.FAME_pt, s_1, s_2);
+        ct.P = P;
     }
 
     public void Decrypt(PlainText pt, PublicParam pp, SecretKey sk, CipherText ct) {

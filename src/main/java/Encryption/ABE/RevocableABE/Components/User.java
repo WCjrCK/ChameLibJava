@@ -22,7 +22,7 @@ public abstract class User<
 
     public abstract void Encrypt(CT ct, PP pp, MPK mpk, P P, PT pt, I info);
 
-    public abstract void Decrypt(PT pt, PP pp, MPK mpk, P P, CT ct);
+    public abstract void Decrypt(PT pt, PP pp, MPK mpk, CT ct);
 
     public abstract ElementCounter TheoSize();
 }

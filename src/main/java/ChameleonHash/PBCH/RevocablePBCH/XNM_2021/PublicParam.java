@@ -23,7 +23,7 @@ import java.util.Random;
 public class PublicParam
         extends ChameleonHash.PBCH.RevocablePBCH.Components.PublicParam<
         MasterPublicKey, MasterSecretKey, State, Revocated, UpdateKey,
-        PublicKey, SecretKey, DecryptKey, Authority, User, Identity, Attributes, Info, Policy, Message, HashValue, Randomness>
+        SecretKey, DecryptKey, Authority, User, Identity, Attributes, Info, Policy, Message, HashValue, Randomness>
 {
     protected Core RABE = new Core();
     protected Encryption.ABE.RevocableABE.XNM_2021.PublicParam RABE_pp;
@@ -72,22 +72,24 @@ public class PublicParam
 
     @Override
     public State createState() {
-        return null;
+        State res = new State();
+        res.RABE_st = RABE_pp.createState();
+        return res;
     }
 
     @Override
     public Revocated createRevocated() {
-        return null;
+        return new Revocated();
     }
 
     @Override
     public UpdateKey createUpdateKey() {
-        return null;
+        return new UpdateKey();
     }
 
     @Override
     public DecryptKey createDecryptKey() {
-        return null;
+        return new DecryptKey();
     }
 
     @Override
@@ -98,23 +100,29 @@ public class PublicParam
     }
 
     @Override
-    public PublicKey createPublicKey() {
-        return null;
-    }
-
-    @Override
     public Message createMessage(String msg) {
-        return null;
+        Message res = new Message();
+        res.CHET_m = CHET_pp.createMessage(msg);
+        return res;
     }
 
     @Override
     public Authority createAuthority() {
-        return null;
+        Authority res = new Authority();
+        res.msk = createMasterSecretKey();
+        res.st = createState();
+        return res;
     }
 
     @Override
     public User createUser(String ID) {
-        return null;
+        User res = new User();
+        res.RABE_user = RABE_pp.createUser(ID);
+        res.id = new Identity();
+        res.id.RABE_id = res.RABE_user.id;
+        res.S = createAttributes();
+        res.sk = createSecretKey();
+        return res;
     }
 
     @Override
@@ -126,27 +134,38 @@ public class PublicParam
 
     @Override
     public SecretKey createSecretKey() {
-        return null;
+        SecretKey res = new SecretKey();
+        res.CHET_sk = CHET_pp.createSecretKey();
+        res.RABE_sk = RABE_pp.createSecretKey();
+        return res;
     }
 
     @Override
     public Policy createPolicy(String BooleanFormula) {
-        return null;
+        Policy res = new Policy();
+        res.RABE_P = RABE_pp.createPolicy(BooleanFormula);
+        return res;
     }
 
     @Override
     public Attributes createAttributes() {
-        return null;
+        return new Attributes();
     }
 
     @Override
     public HashValue createHashValue() {
-        return null;
+        HashValue res = new HashValue();
+        res.SE_ct = SE_pp.createCipherText();
+        res.CHET_h = CHET_pp.createHashValue();
+        res.RABE_ct = RABE_pp.createCipherText();
+        return res;
     }
 
     @Override
     public Randomness createRandomness() {
-        return null;
+        Randomness res = new Randomness();
+        res.CHET_r = CHET_pp.createRandomness();
+        return res;
     }
 
     @Override
