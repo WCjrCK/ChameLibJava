@@ -4,11 +4,13 @@ import ChameleonHash.CH.CHConfig;
 import ChameleonHash.CH.CHName;
 import ChameleonHash.Interface.BAPBCH;
 import ChameleonHash.Interface.BasePBCH;
+import ChameleonHash.Interface.MAPBCH;
 import ChameleonHash.Interface.RevocablePBCH;
 import ChameleonHash.PBCH.BAPBCH.BAPBCHFactory;
 import ChameleonHash.PBCH.BAPBCH.Components.User;
 import ChameleonHash.PBCH.BasePBCH.BasePBCHFactory;
 import ChameleonHash.PBCH.BasePBCH.Components.*;
+import ChameleonHash.PBCH.MAPBCH.MAPBCHFactory;
 import ChameleonHash.PBCH.PBCHConfig;
 import ChameleonHash.PBCH.PBCHName;
 import ChameleonHash.PBCH.RevocablePBCH.RevocablePBCHFactory;
@@ -16,9 +18,13 @@ import ChameleonHash.SchemeCurveRequire;
 import EllipticCurve.Curve.Config;
 import EllipticCurve.Curve.CurveGroup;
 import EllipticCurve.Curve.CurveName;
+import Encryption.ABE.ABEConfig;
+import Encryption.ABE.ABEName;
 import Encryption.ABE.utils.BooleanFormulaParser;
 import Encryption.SE.SEConfig;
 import Encryption.SE.SEName;
+import Signature.SConfig;
+import Signature.SName;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -42,6 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class RealTimeTest {
     private static final int DEFAULT_POLICY_MATRIX_N = 64;
     private static final int DEFAULT_POLICY_MATRIX_M = 32;
+    private static final int DEFAULT_AUTHORITY_NUM = 4;
 
     static List<BufferedWriter> tsc = new ArrayList<>();
     static List<BufferedWriter> tscsgg = new ArrayList<>();
@@ -49,36 +56,41 @@ public class RealTimeTest {
     static List<List<BufferedWriter>> tscnmsgg = new ArrayList<>();
     static List<List<BufferedWriter>> tscmaxuser = new ArrayList<>();
     static List<List<BufferedWriter>> tscmaxusersgg = new ArrayList<>();
+    static List<List<BufferedWriter>> tscauthnum = new ArrayList<>();
     static HashMap<PBCHName, Integer> SNToIdx = new HashMap<>();
 
     static List<PBCHName> skipList = List.of(
-            PBCHName.DSS_2019,
-            PBCHName.TLL_2020 // ,
-//            PBCHName.XNM_2021
+//            PBCHName.DSS_2019,
+//            PBCHName.TLL_2020,
+            PBCHName.XNM_2021,
+            PBCHName.TMM_2022,
+            PBCHName.ZLW_2021,
+            PBCHName.MXN_2022
     );
 
     static List<CurveName> runningCurve = List.of(
             CurveName.A,
-            CurveName.A1,
-            CurveName.E,
+//            CurveName.A1,
+//            CurveName.E,
             CurveName.D_224,
             CurveName.BN254
     );
 
     static List<int[]> matrixSizeList = List.of(
-//            new int[]{64, 10},
-            new int[]{64, 20} // ,
-//            new int[]{64, 30},
-//            new int[]{64, 40},
-//            new int[]{64, 50},
-//            new int[]{10, 5},
-//            new int[]{20, 5},
-//            new int[]{30, 5},
-//            new int[]{40, 5},
-//            new int[]{50, 5}
+            new int[]{64, 10},
+            new int[]{64, 20},
+            new int[]{64, 30},
+            new int[]{64, 40},
+            new int[]{64, 50},
+            new int[]{10, 5},
+            new int[]{20, 5},
+            new int[]{30, 5},
+            new int[]{40, 5},
+            new int[]{50, 5}
     );
 
     static List<Integer> totalUserList = List.of(512, 1024, 2048, 4096, 8192);
+    static List<Integer> authorityNumList = List.of(4, 8, 16, 32, 64);
 
     public static Stream<Arguments> GetAllPBCHSchemeCurve() {
         return EnumSet.allOf(PBCHName.class).stream()
@@ -172,6 +184,21 @@ public class RealTimeTest {
                 );
     }
 
+    public static Stream<Arguments> GetAllMAPBCHSchemeCurveAuthorityNum() {
+        return EnumSet.allOf(PBCHName.class).stream()
+                .filter(a -> !skipList.contains(a))
+                .filter(a -> a.multi_auth)
+                .filter(a -> a.schemeCurveRequire != SchemeCurveRequire.SINGLEGROUP)
+                .flatMap(
+                        a -> EnumSet.allOf(CurveName.class).stream()
+                                .filter(runningCurve::contains)
+                                .filter(b -> b != SECP256K1)
+                                .filter(b -> b != PBC_CUSTOM)
+                                .filter(a::checkCurve)
+                                .flatMap(b -> authorityNumList.stream().flatMap(c -> Stream.of(Arguments.of(a, b, c))))
+                );
+    }
+
     @BeforeAll
     static void initTest() {
         repeat_cnt = 10;
@@ -219,6 +246,16 @@ public class RealTimeTest {
                     tscmaxusersgg.add(null);
                 }
 
+                if (value.multi_auth) {
+                    List<BufferedWriter> authNumWriter = new ArrayList<>();
+                    for (int authorityNum : authorityNumList) {
+                        authNumWriter.add(createWriter(String.format("./data/PBCH/%s/real_time_cost_auth_num_%d_%d.csv", value.name(), authorityNum, repeat_cnt), value));
+                    }
+                    tscauthnum.add(authNumWriter);
+                } else {
+                    tscauthnum.add(null);
+                }
+
                 SNToIdx.put(value, i);
                 ++i;
             }
@@ -237,14 +274,19 @@ public class RealTimeTest {
     private static String getCsvHeader(PBCHName schemeName) {
         if (schemeName.revocable) return "Curve, SetUp, KeyGen, KeyUpdate, DecryptKeyGen, Hash, Ver, Col, Revoke\n";
         if (schemeName.has_blackbox_accountability) return "Curve, SetUp, AssignUser, KeyGen, Hash, Ver, Col\n";
+        if (schemeName.multi_auth) return "Curve, SetUp, AuthSetUp, UserSetUp, KeyGen, Hash, Ver, Col\n";
         return "Curve, SetUp, KeyGen, Hash, Ver, Col\n";
     }
 
     private static PBCHConfig buildConfig(PBCHName schemeName, CurveName curveName, boolean swapG1G2) {
-        return buildConfig(schemeName, curveName, swapG1G2, 2048);
+        return buildConfig(schemeName, curveName, swapG1G2, 2048, DEFAULT_AUTHORITY_NUM);
     }
 
     private static PBCHConfig buildConfig(PBCHName schemeName, CurveName curveName, boolean swapG1G2, int maxUser) {
+        return buildConfig(schemeName, curveName, swapG1G2, maxUser, DEFAULT_AUTHORITY_NUM);
+    }
+
+    private static PBCHConfig buildConfig(PBCHName schemeName, CurveName curveName, boolean swapG1G2, int maxUser, int authorityNum) {
         Map<String, Object> curveParam = new HashMap<>();
         curveParam.put("swap_G1G2", swapG1G2);
         Config curveConfig = new Config(curveName, curveParam);
@@ -263,6 +305,10 @@ public class RealTimeTest {
 
         params.put("id_len", 32);
         params.put("max_user", maxUser);
+        params.put("authority_num", authorityNum);
+        params.put("curve_group", CurveGroup.G1);
+        if (schemeName.multi_auth) params.put("maabe_config", new ABEConfig(ABEName.MAABE_RW_2015, curveConfig));
+        if (schemeName == PBCHName.MXN_2022) params.put("ds_config", new SConfig(SName.BLS, curveConfig));
         return new PBCHConfig(schemeName, curveConfig, params);
     }
 
@@ -288,12 +334,42 @@ public class RealTimeTest {
         throw new IllegalArgumentException(String.format("unsupported max_user=%d", totalUser));
     }
 
+    private static int authorityNumIndex(int authorityNum) {
+        int idx = authorityNumList.indexOf(authorityNum);
+        if (idx >= 0) return idx;
+        throw new IllegalArgumentException(String.format("unsupported authority_num=%d", authorityNum));
+    }
+
     private static void addAttrs(Attributes attrs, Set<String> satisfyingAttrs) {
         for (String attr : satisfyingAttrs) attrs.addAttr(attr);
     }
 
     private static void addAttrs(ChameleonHash.PBCH.RevocablePBCH.Components.Attributes attrs, Set<String> satisfyingAttrs) {
         for (String attr : satisfyingAttrs) attrs.addAttr(attr);
+    }
+
+    private static void addAttrs(ChameleonHash.PBCH.MAPBCH.Components.User user, ChameleonHash.PBCH.MAPBCH.Components.PublicParam pp, Set<String> satisfyingAttrs) {
+        for (String attr : satisfyingAttrs) user.AddAttr(pp.createAttribute(attr));
+    }
+
+    private static Set<String> extractPolicyAttrs(String formula) {
+        Set<String> attrs = new LinkedHashSet<>();
+        for (String token : formula.split("[()&|]+")) {
+            if (!token.isEmpty()) attrs.add(token);
+        }
+        return attrs;
+    }
+
+    private static void assignPolicyAttrsToAuthorities(
+            ChameleonHash.PBCH.MAPBCH.Components.PublicParam pp,
+            ChameleonHash.PBCH.MAPBCH.Components.Authority[] authorities,
+            Set<String> policyAttrs
+    ) {
+        int idx = 0;
+        for (String attr : policyAttrs) {
+            authorities[idx % authorities.length].AddAttr(pp.createAttribute(attr));
+            ++idx;
+        }
     }
 
     private static void setTimestamp(ChameleonHash.PBCH.RevocablePBCH.Components.Info info, int timestamp) {
@@ -318,7 +394,9 @@ public class RealTimeTest {
         System.out.println("Running " + schemeConfig.schemeName);
         if (schemeConfig.schemeName.has_blackbox_accountability) testBAPBCH(realTimeTest, schemeConfig, policyCaseGenerator);
         else if (schemeConfig.schemeName.revocable) testRevocablePBCH(realTimeTest, schemeConfig, policyCaseGenerator);
+        else if (schemeConfig.schemeName.multi_auth) testMAPBCH(realTimeTest, schemeConfig, policyCaseGenerator);
         else testBasePBCH(realTimeTest, schemeConfig, policyCaseGenerator);
+        realTimeTest.flush();
     }
 
     private void testBasePBCH(BufferedWriter realTimeTest, PBCHConfig schemeConfig, PolicyCaseGenerator policyCaseGenerator) throws IOException {
@@ -477,6 +555,104 @@ public class RealTimeTest {
         {
             boolean res = true;
             for (int i = 0; i < repeat_cnt; ++i) res &= scheme.Verify(pp, mpk, m_p[i], h[i], r_p[i]);
+            assertTrue(res, "Adapt Check Failed");
+        }
+
+        writeTimeCost(realTimeTest, timeCost);
+    }
+
+    private void testMAPBCH(BufferedWriter realTimeTest, PBCHConfig schemeConfig, PolicyCaseGenerator policyCaseGenerator) throws IOException {
+        realTimeTest.write(schemeConfig.curveConfig.curveName.name());
+        double[] timeCost = {0, 0, 0, 0, 0, 0, 0};
+
+        MAPBCH scheme = MAPBCHFactory.createScheme(schemeConfig);
+        ChameleonHash.PBCH.MAPBCH.Components.PublicParam pp = scheme.createPublicParam(schemeConfig);
+        int authNum = (int) schemeConfig.params.getOrDefault("authority_num", DEFAULT_AUTHORITY_NUM);
+
+        int stageId = -1;
+        {
+            long start = System.nanoTime();
+            for (int i = 0; i < repeat_cnt; ++i) scheme.Setup(pp);
+            long end = System.nanoTime();
+            timeCost[++stageId] = avgMillis(end - start);
+        }
+
+        PolicyCase[] policyCases = new PolicyCase[repeat_cnt];
+        ChameleonHash.PBCH.MAPBCH.Components.Policy[] policies = new ChameleonHash.PBCH.MAPBCH.Components.Policy[repeat_cnt];
+        ChameleonHash.PBCH.MAPBCH.Components.User[] users = new ChameleonHash.PBCH.MAPBCH.Components.User[repeat_cnt];
+        ChameleonHash.PBCH.MAPBCH.Components.Authority[][] authorities = new ChameleonHash.PBCH.MAPBCH.Components.Authority[repeat_cnt][authNum];
+        ChameleonHash.PBCH.MAPBCH.Components.HashValue[] h = new ChameleonHash.PBCH.MAPBCH.Components.HashValue[repeat_cnt];
+        ChameleonHash.PBCH.MAPBCH.Components.Randomness[] r = new ChameleonHash.PBCH.MAPBCH.Components.Randomness[repeat_cnt];
+        ChameleonHash.PBCH.MAPBCH.Components.Randomness[] r_p = new ChameleonHash.PBCH.MAPBCH.Components.Randomness[repeat_cnt];
+        ChameleonHash.PBCH.MAPBCH.Components.Message[] m = new ChameleonHash.PBCH.MAPBCH.Components.Message[repeat_cnt];
+        ChameleonHash.PBCH.MAPBCH.Components.Message[] m_p = new ChameleonHash.PBCH.MAPBCH.Components.Message[repeat_cnt];
+        for (int i = 0; i < repeat_cnt; ++i) {
+            policyCases[i] = policyCaseGenerator.generate();
+            policies[i] = pp.createPolicy(policyCases[i].formula);
+            users[i] = pp.createUser("user_" + i);
+            for (int j = 0; j < authNum; ++j) authorities[i][j] = pp.createAuthority();
+            h[i] = pp.createHashValue();
+            r[i] = pp.createRandomness();
+            r_p[i] = pp.createRandomness();
+            m[i] = pp.createMessage("msg_" + i);
+            m_p[i] = pp.createMessage("msg_" + i + "_p");
+        }
+
+        {
+            long start = System.nanoTime();
+            for (int i = 0; i < repeat_cnt; ++i)
+                for (int j = 0; j < authNum; ++j) authorities[i][j].Setup(pp);
+            long end = System.nanoTime();
+            timeCost[++stageId] = avgMillis(end - start);
+        }
+
+        for (int i = 0; i < repeat_cnt; ++i) {
+            assignPolicyAttrsToAuthorities(pp, authorities[i], extractPolicyAttrs(policyCases[i].formula));
+        }
+
+        {
+            long start = System.nanoTime();
+            for (int i = 0; i < repeat_cnt; ++i) users[i].Setup(pp);
+            long end = System.nanoTime();
+            timeCost[++stageId] = avgMillis(end - start);
+        }
+
+        for (int i = 0; i < repeat_cnt; ++i) addAttrs(users[i], pp, policyCases[i].satisfyingAttrs);
+
+        {
+            long start = System.nanoTime();
+            for (int i = 0; i < repeat_cnt; ++i)
+                for (int j = 0; j < authNum; ++j) users[i].KeyGen(pp, authorities[i][j]);
+            long end = System.nanoTime();
+            timeCost[++stageId] = avgMillis(end - start);
+        }
+
+        {
+            long start = System.nanoTime();
+            for (int i = 0; i < repeat_cnt; ++i) users[i].Hash(h[i], r[i], pp, policies[i], m[i]);
+            long end = System.nanoTime();
+            timeCost[++stageId] = avgMillis(end - start);
+        }
+
+        {
+            boolean res = true;
+            long start = System.nanoTime();
+            for (int i = 0; i < repeat_cnt; ++i) res &= users[i].Verify(pp, m[i], h[i], r[i]);
+            long end = System.nanoTime();
+            timeCost[++stageId] = avgMillis(end - start);
+            assertTrue(res, "Hash Check Failed");
+        }
+
+        {
+            long start = System.nanoTime();
+            for (int i = 0; i < repeat_cnt; ++i) users[i].Collision(r_p[i], pp, m[i], h[i], r[i], m_p[i]);
+            long end = System.nanoTime();
+            timeCost[++stageId] = avgMillis(end - start);
+        }
+
+        {
+            boolean res = true;
+            for (int i = 0; i < repeat_cnt; ++i) res &= users[i].Verify(pp, m_p[i], h[i], r_p[i]);
             assertTrue(res, "Adapt Check Failed");
         }
 
@@ -663,6 +839,22 @@ public class RealTimeTest {
         }
     }
 
+    @DisplayName("test MAPBCH real time cost diff authority num")
+    @Nested
+    class PBCHRTCAuthorityNumTest {
+        @DisplayName("test direct scheme")
+        @ParameterizedTest(name = "test scheme {0} in curve {1} with authority_num {2}")
+        @MethodSource("PerformTest.PBCH.RealTimeTest#GetAllMAPBCHSchemeCurveAuthorityNum")
+        public void DSTest(PBCHName schemeName, CurveName curveName, int authorityNum) throws IOException {
+            PBCHConfig schemeConfig = buildConfig(schemeName, curveName, false, 2048, authorityNum);
+            System.out.print(curveName.name() + " authority_num=" + authorityNum);
+            int authorityNumIdx = authorityNumIndex(authorityNum);
+            if (tscauthnum.get(SNToIdx.get(schemeName)) != null && tscauthnum.get(SNToIdx.get(schemeName)).get(authorityNumIdx) != null) {
+                testFunc(tscauthnum.get(SNToIdx.get(schemeName)).get(authorityNumIdx), schemeConfig, RealTimeTest::defaultPerformancePolicyCase);
+            }
+        }
+    }
+
     @AfterAll
     static void endTest() {
         try {
@@ -673,6 +865,7 @@ public class RealTimeTest {
                 closeWriterList(tscnmsgg.get(i));
                 closeWriterList(tscmaxuser.get(i));
                 closeWriterList(tscmaxusersgg.get(i));
+                closeWriterList(tscauthnum.get(i));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
