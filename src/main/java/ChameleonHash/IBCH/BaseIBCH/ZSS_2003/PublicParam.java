@@ -13,6 +13,7 @@ public class PublicParam
         extends ChameleonHash.IBCH.BaseIBCH.Components.PublicParam<MasterSecretKey, SecretKey, Message, Identity, HashValue, Randomness> {
     protected AdditivePoint P;
     protected AdditivePoint P_pub;
+    protected AdditivePoint p;
 
     public PublicParam(IBCHConfig config) {
         super(config.curveConfig);

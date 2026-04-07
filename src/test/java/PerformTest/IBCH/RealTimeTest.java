@@ -40,7 +40,7 @@ public class RealTimeTest {
             IBCHName.CZS_2014,
             IBCHName.LSX_2022,
 //            IBCHName.XSL_2021,
-            IBCHName.LJF_2025,
+//            IBCHName.LJF_2025,
     });
 
     static List<IBCHName> diff_id_list = List.of(new IBCHName[]{
@@ -52,11 +52,15 @@ public class RealTimeTest {
             CurveName.A1,
             CurveName.E,
             CurveName.D_224,
-            CurveName.BN254
+            CurveName.F,
+            CurveName.SM_9,
+            CurveName.G_149,
+            CurveName.BN254,
+            CurveName.BLS12_381
     });
 
-//    static List<Integer> test_id_len = List.of(16, 32, 64, 128, 256);
-    static List<Integer> test_id_len = List.of(512, 1024, 2048, 4096, 8192);
+    static List<Integer> test_id_len = List.of(16, 32, 64, 128, 256);
+//    static List<Integer> test_id_len = List.of(512, 1024, 2048, 4096, 8192);
 
     public static Stream<Arguments> GetAllIBCHSchemeCurve() {
         return EnumSet.allOf(IBCHName.class).stream()

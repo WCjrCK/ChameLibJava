@@ -27,12 +27,14 @@ public class Scheme extends IBCH
         msk.alpha = pp.curve.getRandomScalar();
         msk.beta = pp.curve.getRandomScalar();
         pp.g = pp.curve.getRandomPoint(CurveGroup.G1);
+        pp.G = pp.curve.getRandomPoint(CurveGroup.G2);
         pp.g_1 = pp.g.pow(msk.alpha);
+        pp.G_1 = pp.G.pow(msk.alpha);
         pp.g_2 = pp.g.pow(msk.beta);
         pp.h_2 = pp.curve.getRandomPoint(CurveGroup.G1);
         pp.u_2 = pp.h_2.pow(msk.alpha);
-        pp.egg = pp.curve.Pairing(pp.g, pp.g);
-        pp.eg_2g = pp.curve.Pairing(pp.g_2, pp.g);
+        pp.egg = pp.curve.Pairing(pp.g, pp.G);
+        pp.eg_2g = pp.curve.Pairing(pp.g_2, pp.G);
     }
 
     @Override
@@ -47,7 +49,8 @@ public class Scheme extends IBCH
     }
 
     public void CalHash(HashValue h, PublicParam pp, Identity ID, Message m, Label L, Randomness r) {
-        h.h = pp.eg_2g.pow(m.m).mul(pp.egg.pow(r.r_1)).mul(pp.curve.Pairing(r.r_2, pp.g_1.div(pp.g.pow(ID.ID)))).mul(pp.curve.Pairing(pp.u_2.div(pp.h_2.pow(ID.ID)).pow(L.L), r.r_3));
+//        h.h = pp.eg_2g.pow(m.m).mul(pp.egg.pow(r.r_1)).mul(pp.curve.Pairing(r.r_2, pp.g_1.div(pp.g.pow(ID.ID)))).mul(pp.curve.Pairing(pp.u_2.div(pp.h_2.pow(ID.ID)).pow(L.L), r.r_3));
+        h.h = pp.eg_2g.pow(m.m).mul(pp.egg.pow(r.r_1)).mul(pp.curve.Pairing(r.r_2, pp.G_1.div(pp.G.pow(ID.ID)))).mul(pp.curve.Pairing(pp.u_2.div(pp.h_2.pow(ID.ID)).pow(L.L), r.r_3));
     }
 
     @Override
@@ -60,7 +63,7 @@ public class Scheme extends IBCH
     ) {
         r.r_1 = pp.curve.getRandomScalar();
         r.r_2 = pp.curve.getRandomPoint(CurveGroup.G1);
-        r.r_3 = pp.curve.getRandomPoint(CurveGroup.G1);
+        r.r_3 = pp.curve.getRandomPoint(CurveGroup.G2);
         CalHash(h, pp, ID, m, L, r);
     }
 
@@ -92,7 +95,8 @@ public class Scheme extends IBCH
     ) {
         Scalar t_p = pp.curve.getRandomScalar();
         MultivePoint td_2 = sk.td_2.mul(pp.u_2.div(pp.h_2.pow(ID.ID)).pow(L.L.mul(t_p)));
-        MultivePoint td_3 = pp.g_1.div(pp.g.pow(ID.ID)).pow(t_p);
+//        MultivePoint td_3 = pp.g_1.div(pp.g.pow(ID.ID)).pow(t_p);
+        MultivePoint td_3 = pp.G_1.div(pp.G.pow(ID.ID)).pow(t_p);
         Scalar delta_m = m.m.sub(m_p.m);
         r_p.r_1 = r.r_1.add(sk.td_1.mul(delta_m));
         r_p.r_2 = r.r_2.mul(td_2.pow(delta_m));

@@ -24,6 +24,7 @@ public class S2 extends IBCH
     ) {
         msk.s = pp.curve.getRandomScalar();
         pp.P = pp.curve.getRandomPoint(CurveGroup.G1);
+        pp.p = pp.curve.getRandomPoint(CurveGroup.G2);
         pp.P_pub = pp.P.mul(msk.s);
     }
 
@@ -34,11 +35,11 @@ public class S2 extends IBCH
             MasterSecretKey msk,
             Identity ID
     ) {
-        sk.S_ID = pp.P.div(msk.s.add(pp.H1(ID.ID)));
+        sk.S_ID = pp.p.div(msk.s.add(pp.H1(ID.ID)));
     }
 
     public void CalHash(HashValue h, PublicParam pp, Identity ID, Message m, Randomness r) {
-        h.h = pp.curve.Pairing(pp.P, pp.P).mul(pp.curve.Pairing(pp.P_pub.add(pp.P.mul(pp.H1(ID.ID))), r.R)).pow(pp.H1(m.m));
+        h.h = pp.curve.Pairing(pp.P, pp.p).mul(pp.curve.Pairing(pp.P_pub.add(pp.P.mul(pp.H1(ID.ID))), r.R)).pow(pp.H1(m.m));
     }
 
     @Override
@@ -49,7 +50,7 @@ public class S2 extends IBCH
             Identity ID,
             Message m
     ) {
-        r.R = pp.curve.getRandomPoint(CurveGroup.G1);
+        r.R = pp.curve.getRandomPoint(CurveGroup.G2);
         CalHash(h, pp, ID, m, r);
     }
 

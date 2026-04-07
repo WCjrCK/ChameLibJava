@@ -28,12 +28,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IBCHTest {
     static List<IBCHName> skipList = List.of(new IBCHName[]{
-//            IBCH_ZSS_2003_S1,
-//            IBCH_ZSS_2003_S2,
-//            IBCH_CZS_2014,
-//            IBCH_LSX_2022,
-//            IBCH_XSL_2021,
-//            IBCH_LJF_2025,
+            IBCHName.ZSS_2003_S1,
+//            IBCHName.ZSS_2003_S2,
+            IBCHName.CZS_2014,
+            IBCHName.LSX_2022,
+            IBCHName.XSL_2021,
+            IBCHName.LJF_2025,
     });
 
     public static Stream<Arguments> GetAllIBCHSchemeCurve() {

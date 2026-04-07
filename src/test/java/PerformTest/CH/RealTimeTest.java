@@ -48,9 +48,9 @@ public class RealTimeTest {
             CHName.LLA_2012,
             CHName.CZT_2011,
             CHName.CZK_2004,
-            CHName.AM_2004,
+//            CHName.AM_2004,
 
-//            CHName.BC_CDK_2017,
+            CHName.BC_CDK_2017,
             CHName.KOG_CDK_2017,
             CHName.DSS_2020
     });

@@ -80,7 +80,6 @@ public class Scheme extends PBCH
         ETrapdoor etd = pp.CHET_pp.createETrapdoor();
         pp.CHET.Hash(h.CHET_h, r.CHET_r, etd, pp.CHET_pp, pp.CHET_pk, m.CHET_m);
 
-        Encryption.ABE.MAABE.Components.PlainText pt = pp.MAABE_pp.createPlainText("");
         pp.MAABE.Encrypt(h.MAABE_ct, pp.MAABE_pp, pkg.MAABE_PKG, P.MAABE_P, pp.MAABE_pp.createPlainText(encodeBytes(pp, pp.CHET_pp.serializeETrapdoor(etd))));
     }
 
